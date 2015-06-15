@@ -434,6 +434,20 @@ def toa_errors_additive(tfft, b, sigma_t):
     return sigma_tau, sigma_b
 
 
+def tfresids(params, tfft, pfft):
+    """
+    """
+    b=params[0]
+    tau=params[1]
+    Nfft = np.size(pfft)
+    Nsum = Nfft/2
+    arg=(2.*np.pi*tau/float(Nfft)) * np.arange(0., Nfft, 1.)
+    phasevec = np.cos(arg) - 1j*np.sin(arg)
+    #resids = abs(pfft[1:Nsum] - b*tfft[1:Nsum]*phasevec[1:Nsum])
+    resids = np.abs(pfft[1:Nsum] - b*tfft[1:Nsum]*phasevec[1:Nsum])
+    return resids
+
+
 
 def get_toa3(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, norder=2):
     """
@@ -465,7 +479,7 @@ def get_toa3(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, 
     # find coarse estimates for scale factor and tau from CCF maximum 
     #  (quadratically interpolated)
     ccf = np.correlate(template, profile, 'full')
-    lags = np.arange(-size(profile)+1., size(profile), 1.)
+    lags = np.arange(-np.size(profile)+1., np.size(profile), 1.)
     ccfmaxloc = ccf.argmax()
     ccffit = ccf[ccfmaxloc-(nlagsfit-1)/2:ccfmaxloc+(nlagsfit-1)/2+1]
     lagfit = lags[ccfmaxloc-(nlagsfit-1)/2:ccfmaxloc+(nlagsfit-1)/2+1]

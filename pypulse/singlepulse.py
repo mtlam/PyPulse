@@ -12,9 +12,9 @@ import utils as u
 import scipy.optimize as optimize
 
 import sys
-sys.path.append('/home/dizzy4/mlam/source/jimcode')
-import waveforms
-get_toa = waveforms.get_toa3
+#sys.path.append('/home/dizzy4/mlam/source/jimcode')
+#import waveforms
+#get_toa = waveforms.get_toa3
 #import ffttoa
 #get_toa = ffttoa.get_toa
 get_toa = u.get_toa3 #try this one
@@ -253,10 +253,7 @@ class SinglePulse:
                     plt.show()
                     raise SystemExit
             return get_toa(template,self.data,1)
-        try: #problem?
-            return get_toa(template,self.data,self.getOffpulseNoise())#,nlagsfit=1001)
-        except:
-            return None
+        return get_toa(template,self.data,self.getOffpulseNoise())
 
         
     #define this so a positive shift is forward
