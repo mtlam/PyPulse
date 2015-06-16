@@ -1,6 +1,5 @@
 '''
-Michel Lam
-6/10/2015
+Michel Lam 2015
 Loads a parameter file
 
 Look at fit flags?
@@ -10,15 +9,15 @@ Now takes either a list of strings or a filename
 
 
 if 3 or 5, maybe no fit flag
-are the noise model parameters always -f or -fe? Maybe look for -letter? Yes
+Noise model parameters take a flag, should I store which flag that is? (e.g. store the "-f" or "-fe"?)
 '''
 
 import decimal as d
 import numpy as np
 import re
 
-num = re.compile('(\d+[.]\d+D[+]\d+)|(-?\d+[.]\d+)')
-#flagre = re.compile()
+numre = re.compile('(\d+[.]\d+D[+]\d+)|(-?\d+[.]\d+)')
+flagre = re.compile('-[a-zA-Z]')
 
 
 #numwrap could be float
@@ -41,7 +40,7 @@ class Par:
             splitline = line.strip().split()
             self.paramlist.append(splitline[0])
 
-            if splitline[1][:2] == '-f' and len(splitline)>=4:
+            if flagre.match(splitline[1][:2]) and len(splitline)>=4:
                 key = splitline[2]
                 value = numwrap(splitline[3])
                 self.parameters[(splitline[0],key)] = value
@@ -49,13 +48,13 @@ class Par:
                     error = numwrap(splitline[-1])
                     self.errors[(splitline[0],key)] = error
             else:
-                if num.match(splitline[1]):
+                if numre.match(splitline[1]):
                     value = numwrap(splitline[1].replace('D','e'))
                 else:
                     value = splitline[1]
 
                 if len(splitline) == 4:
-                    if num.match(splitline[-1]):
+                    if numre.match(splitline[-1]):
                         error = numwrap(splitline[-1].replace('D','e'))
                     else:
                         error = splitline[-1]
@@ -127,7 +126,7 @@ class Par:
 
 
 if __name__=='__main__':
-    p = Par("/home/dizzy4/NANOdata/NANOGrav_9y/par/J1909-3744_NANOGrav_8yv0.gls.par")#,numwrap=float)
+    p = Par("/home/michael/Research/NANOGravData/NANOGrav_9y/par/J1909-3744_NANOGrav_9yv0.gls.par")#,numwrap=float)
     print p.parameters['F0']
     from matplotlib.pyplot import *
     ts,dmxs,errs = p.getDMseries()
