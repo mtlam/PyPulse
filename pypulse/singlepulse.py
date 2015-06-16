@@ -261,7 +261,7 @@ class SinglePulse:
         """
         Shift the pulse by some phase.
         """
-        x = waveforms.shiftit(self.data,-1*shift)
+        x = u.shiftit(self.data,-1*shift)
         if save:
             self.data = x
         return x
