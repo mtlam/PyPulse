@@ -18,5 +18,6 @@ Archive
 
 
 Usage: 
-ar = Archive(FILENAME)
-ar.tscrunch() #averages the pulse in time
+
+    ar = Archive(FILENAME)
+    ar.tscrunch() #averages the pulse in time
