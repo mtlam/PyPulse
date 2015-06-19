@@ -124,11 +124,3 @@ class Par:
     def getName(self):
         return self.parameters["PSR"]
 
-
-if __name__=='__main__':
-    p = Par("/home/michael/Research/NANOGravData/NANOGrav_9y/par/J1909-3744_NANOGrav_9yv0.gls.par")#,numwrap=float)
-    print p.parameters['F0']
-    from matplotlib.pyplot import *
-    ts,dmxs,errs = p.getDMseries()
-    errorbar(ts,dmxs,yerr=errs,fmt='k.')
-    show()
