@@ -12,11 +12,6 @@ import utils as u
 import scipy.optimize as optimize
 
 import sys
-#sys.path.append('/home/dizzy4/mlam/source/jimcode')
-#import waveforms
-#get_toa = waveforms.get_toa3
-#import ffttoa
-#get_toa = ffttoa.get_toa
 get_toa = u.get_toa3 #try this one
 
 #ACF=lambda p: np.correlate(p,p,"full") #no longer used
