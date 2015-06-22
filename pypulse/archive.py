@@ -323,15 +323,17 @@ class Archive:
 
 
 
-    def dedisperse(self,barycentric=True,reverse=False):
+    def dedisperse(self,DM=None,barycentric=True,reverse=False):
         """
         De-disperse the pulses
+        if DM is given, use this value to compute the time_delays
         """
         Faxis = self.getAxis('F')
         nsubint = self.getNsubint()
         npol = self.getNpol()
         nbin = self.getNbin()
-        DM = self.getDM()
+        if DM is None:
+            DM = self.getDM()
         cfreq = self.getCenterFrequency()
         time_delays = 4.149e3*DM*(cfreq**(-2) - np.power(Faxis,-2)) #DM in MHz, delays in seconds
         bin_delays = (time_delays / self.getPeriod())*nbin
