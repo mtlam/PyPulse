@@ -366,9 +366,6 @@ class Archive:
             self.average_profile = self.average_profile[0,:] + self.average_profile[1,:] #polarization add
         else:
             self.average_profile = self.average_profile[0,:]
-        #lt.plot(self.average_profile)
-        #lt.show()
-        #aise SystemExit
         self.calculateOffpulseWindow()
 
     def calculateOffpulseWindow(self):
