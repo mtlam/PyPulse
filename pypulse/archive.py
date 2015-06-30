@@ -351,12 +351,12 @@ class Archive:
                 for k in K:
                     self.data[j,k,i,:] = u.shiftit(self.data[j,k,i,:],sign*delay)
         return self
-    def dededisperse(self,barycentric=True): 
+    def dededisperse(self,DM=None,barycentric=True): 
         """
         Remove the dedispersion of the pulses
         Note: Errors might propagate?
         """
-        self.dedisperse(barycentric=barycentric,reverse=True)
+        self.dedisperse(DM=DM,barycentric=barycentric,reverse=True)
         return self
 
 
