@@ -356,6 +356,30 @@ def FWHM(series,norm=True,simple=False,notcentered=False):
 
 
 
+'''
+Return weighted sample mean and std
+http://en.wikipedia.org/wiki/Weighted_mean#Weighted_sample_variance
+'''
+def weighted_moments(series,weights,unbiased=False,harmonic=False):
+    if len(series)==1:
+        return series,1.0/np.sqrt(weights)
+    series=np.array(series)
+    weights=np.array(weights)
+    weightsum=np.sum(weights)
+    weightedmean = np.sum(weights*series)/weightsum
+    weightedvariance = np.sum(weights*np.power(series-weightedmean,2))
+    if harmonic:
+        return weightedmean, harmonic_mean(1.0/weights)
+    elif unbiased:
+        weightsquaredsum=np.sum(np.power(weights,2))
+        return weightedmean, np.sqrt(weightedvariance * weightsum / (weightsum**2 - weightsquaredsum))
+    else:
+        return weightedmean, np.sqrt(weightedvariance / weightsum)
+
+
+
+
+
 ### ==================================================
 ### Optimizations of JMC's code
 ### ==================================================
