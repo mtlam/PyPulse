@@ -37,9 +37,9 @@ Par = par.Par
 import decimal as d
 Decimal = d.Decimal
 try:
-    import pyfits
-except:
     import astropy.io.fits as pyfits
+except:
+    import pyfits
 
 
 
