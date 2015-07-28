@@ -763,7 +763,9 @@ class Archive:
                 ax = fig.add_subplot(111)
             if shape[0] == 1 and shape[1] == 1: #fix this to match mode
                 Fedges = self.getAxis('F',edges=True) #is this true?
-                u.imshow(self.getData(),ax=ax,extent=[0,1,Fedges[0],Fedges[-1]],cmap=plt.cm.afmhot)
+                cmap = plt.cm.afmhot
+                cmap.set_bad(color='k',alpha=1.0)
+                u.imshow(self.getData(),ax=ax,extent=[0,1,Fedges[0],Fedges[-1]],cmap=cmap)
                 ax.set_xlabel("Pulse Phase")
                 ax.set_ylabel("Frequency (MHz)")
                 ax.set_title("%s %s\nFreq %0.3f MHz BW: %0.3f Length %0.3f S/N %0.3f"%(self.getName(),self.filename,self.getCenterFrequency(weighted=wcfreq),self.getBandwidth(),self.getDuration(),self.getSN()))#get the basename?
