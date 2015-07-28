@@ -24,7 +24,6 @@ pyfits.open() use memmap via lowmem flag
 Check if time() still works.
 '''
 
-
 import numpy as np
 import numpy.ma as ma
 import gc as g
@@ -618,7 +617,7 @@ class Archive:
         Fit all of the pulses with a given template
         """
         nums = np.array(nums)
-        if windowsize != None:
+        if windowsize is not None:
             sptemp = SP.SinglePulse(template,windowsize=windowsize)
             opw = sptemp.opw
             kwargs["opw"] = opw #apply this windowing to alll single pulses
