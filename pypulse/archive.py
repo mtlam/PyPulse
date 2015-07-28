@@ -39,7 +39,7 @@ Decimal = d.Decimal
 try:
     import astropy.io.fits as pyfits
 except:
-    import pyfits 
+    import pyfits
 
 
 
