@@ -82,8 +82,11 @@ class Archive:
     def load(self,filename,prepare=True,center_pulse=True,remove_baseline=True,weight=True):
         if filename is None: #Needed?
             filename = self.filename
-
-        hdulist = pyfits.open(filename,ignore_missing_end=True)
+        try:
+            hdulist = pyfits.open(filename,ignore_missing_end=True)
+        except IOError:
+            print "Filename not found"
+            raise SystemExit
         self.header = hdulist[0].header
         
         self.history = History(hdulist['HISTORY'])
