@@ -38,6 +38,8 @@ class Par:
         self.errors = dict()
         for line in lines:
             splitline = line.strip().split()
+            if len(splitline) == 0:
+                continue
             self.paramlist.append(splitline[0])
 
             if flagre.match(splitline[1][:2]) and len(splitline)>=4:
