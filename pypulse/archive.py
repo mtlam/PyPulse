@@ -10,9 +10,9 @@ ar.pavplot()
 
 TODO:
 
-
-#hdulist['SUBINT'].header <-- useful?
 Check POL_TYPE in the above to figure out how to pscrunch
+
+Add emulate_psrchive mode
 
 Allow for chopping of subints, frequencies, etc?
 HISTORY may not exist for raw files
@@ -22,7 +22,6 @@ Flip order of arguments in scrunching?
 pyfits.open() use memmap via lowmem flag
 
 Check if time() still works.
-
 '''
 
 
@@ -96,22 +95,23 @@ class Archive:
         self.params = Par(map(lambda x: x[0],hdulist['PSRPARAM'].data),numwrap=float)
 
         self.subintinfo = dict()
-        for i,column in enumerate(hdulist['SUBINT'].columns[:-5]):
+        for i,column in enumerate(hdulist['SUBINT'].columns[:-3]):#[:-5]):
             self.subintinfo[column.name] = hdulist['SUBINT'].data[column.name]
+        self.subintheader = dict()
+        for i,key in enumerate(hdulist['SUBINT'].header):
+            self.subintheader[key] = hdulist['SUBINT'].header[key]
+
 
         self.durations = self.subintinfo['TSUBINT']
 
         DATA = hdulist['SUBINT'].data['DATA']
         #Definitions in Base/Formats/PSRFITS/ProfileColumn.C
-        #DAT_FREQ = hdulist['SUBINT'].data['DAT_FREQ']
+        DAT_FREQ = hdulist['SUBINT'].data['DAT_FREQ']
         DAT_WTS = hdulist['SUBINT'].data['DAT_WTS']
         if not weight:
             DAT_WTS = np.ones(np.shape(DAT_WTS))
         DAT_SCL = hdulist['SUBINT'].data['DAT_SCL']#.flatten()
         DAT_OFFS = hdulist['SUBINT'].data['DAT_OFFS']#.flatten()
-        
-
-
 
         # This guarantees reshape to (t,pol,freq,phase) dimensions but is extremely slow
         #DATA = np.reshape(DATA,(nsubint,npol,nchan,nbin),order='C')
@@ -131,6 +131,7 @@ class Archive:
         J = range(npol)
         K = range(nchan)
 
+
         if nsubint == 1 and npol == 1 and nchan == 1:
             self.data = (DAT_SCL*DATA+DAT_OFFS)*DAT_WTS
         elif nsubint == 1 and npol == 1:
@@ -148,6 +149,15 @@ class Archive:
                     jnchan = j*nchan
                     for k in K:
                         self.data[i,j,k,:] = (DAT_SCL[i,jnchan+k]*DATA[i,j,k,:]+DAT_OFFS[i,jnchan+k])*DAT_WTS[i,k]
+
+        bw = self.getBandwidth()
+        #if bw < 0:
+        #    print "foo"
+        #    tempdata = np.copy(self.data)
+        #    MAX = K[-1]
+        #    for k in K:
+        #        self.data[:,:,k,:] = tempdata[:,:,MAX-k,:]
+            
             
         if prepare:
             self.pscrunch()
@@ -323,7 +333,7 @@ class Archive:
 
 
 
-    def dedisperse(self,DM=None,barycentric=True,reverse=False):
+    def dedisperse(self,DM=None,barycentric=True,reverse=False,wcfreq=False):
         """
         De-disperse the pulses
         if DM is given, use this value to compute the time_delays
@@ -334,8 +344,8 @@ class Archive:
         nbin = self.getNbin()
         if DM is None:
             DM = self.getDM()
-        cfreq = self.getCenterFrequency()
-        time_delays = 4.149e3*DM*(cfreq**(-2) - np.power(Faxis,-2)) #DM in MHz, delays in seconds
+        cfreq = self.getCenterFrequency(weighted=wcfreq)
+        time_delays = 4.149e3*DM*(cfreq**(-2) - np.power(Faxis,-2)) #freq in MHz, delays in seconds
         bin_delays = (time_delays / self.getPeriod())*nbin
         bin_delays = bin_delays % nbin
         if reverse:
@@ -517,12 +527,12 @@ class Archive:
     
 
 
-    def getAxis(self,flag=None,edges=False):
+    def getAxis(self,flag=None,edges=False,wcfreq=False):
         """
         Get F/T axes for plotting
         If edges: do not return centers for each. Better for imshow plotting because of extents.
         """
-        if flag=='T':
+        if flag == 'T':
             durations = self.durations
             csum = np.cumsum(durations)
             edgearr = np.concatenate(([0],csum))
@@ -530,14 +540,19 @@ class Archive:
                 return edgearr
             else: #centered
                 return csum-np.diff(edgearr)/2.0
-        elif flag=='F':
+        elif flag == 'F':
+            return self.subintinfo['DAT_FREQ'][0] #temporary replacement
             nchan = self.getNchan()
-            fc = self.getCenterFrequency()
+            fc = self.getCenterFrequency(weighted=wcfreq)
             bw = self.getBandwidth()
             df = np.abs(bw)/nchan
             if edges:
-                return np.array((np.arange(nchan+1) - (nchan+1)/2.0 + 0.5)*df + fc)
-            return np.array((np.arange(nchan) - nchan/2.0 + 0.5)*df + fc) #unweighted frequencies!
+                arr = np.array((np.arange(nchan+1) - (nchan+1)/2.0 + 0.5)*df + fc)
+            else:
+                arr = np.array((np.arange(nchan) - nchan/2.0 + 0.5)*df + fc) #unweighted frequencies!
+            if bw < 0.0:
+                return arr[::-1] #???
+            return arr
 
         else: #do both?
             pass
@@ -709,7 +724,7 @@ class Archive:
         """
         data = self.getData()
         if len(np.shape(data))==1:
-            if ax==None:
+            if ax is None:
                 plt.plot(data)
             else:
                 ax.plot(data)
@@ -723,7 +738,7 @@ class Archive:
         """
         data = self.getData(setnan=0.0)
         if len(np.shape(data))==2:
-            if mask!=None:
+            if mask is not None:
                 u.imshow(ma.masked_array(data),ax=ax,mask=mask)
             else:
                 u.imshow(data,ax=ax) 
@@ -736,26 +751,30 @@ class Archive:
         return ax
 
 
-    def pavplot(self,mode="GTpd",show=True):#,ax=None,mask=None,show=True):
+    def pavplot(self,ax=None,mode="GTpd",show=True,wcfreq=True):#,ax=None,mask=None,show=True):
         """
         Produces a pav-like plot for comparison
         """
-
-        shape = self.shape(squeeze=False)
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        if shape[0] == 1 and shape[1] == 1: #fix this to match mode
-            Fedges = self.getAxis('F',edges=True) #is this true?
-            u.imshow(self.getData(),ax=ax,extent=[0,1,Fedges[0],Fedges[-1]],cmap=plt.cm.afmhot)
-            ax.set_xlabel("Pulse Phase")
-            ax.set_ylabel("Frequency (MHz)")
-            ax.set_title("%s %s\nFreq %0.3f MHz BW: %0.3f Length %0.3f S/N %0.3f"%(self.getName(),self.filename,self.getCenterFrequency(),self.getBandwidth(),self.getDuration(),self.getSN()))#get the basename?
-            ax2 = ax.twinx()
-            ax2.set_ylim(0,self.getNchan())
-            ax2.set_ylabel("Index")
-            if show:
-                plt.show()
-
+        data = self.getData(setnan=0.0)
+        if len(np.shape(data))==2:
+            shape = self.shape(squeeze=False)
+            if ax is None:
+                fig = plt.figure()
+                ax = fig.add_subplot(111)
+            if shape[0] == 1 and shape[1] == 1: #fix this to match mode
+                Fedges = self.getAxis('F',edges=True) #is this true?
+                u.imshow(self.getData(),ax=ax,extent=[0,1,Fedges[0],Fedges[-1]],cmap=plt.cm.afmhot)
+                ax.set_xlabel("Pulse Phase")
+                ax.set_ylabel("Frequency (MHz)")
+                ax.set_title("%s %s\nFreq %0.3f MHz BW: %0.3f Length %0.3f S/N %0.3f"%(self.getName(),self.filename,self.getCenterFrequency(weighted=wcfreq),self.getBandwidth(),self.getDuration(),self.getSN()))#get the basename?
+                ax2 = ax.twinx()
+                ax2.set_ylim(0,self.getNchan())
+                ax2.set_ylabel("Index")
+                if show:
+                    plt.show()
+        else:
+            print "Invalid dimensions"
+        return ax
 
 
     def joyDivision(self,border=0.1,labels=False,album=True,**kwargs):
@@ -949,11 +968,18 @@ class Archive:
         return self.header['ANT_X'],self.header['ANT_Y'],self.header['ANT_Z']
 
 
-    def getBandwidth(self):
-        return self.header['OBSBW']
+    def getBandwidth(self,header=False):
+        if header:
+            return self.header['OBSBW']
+        else:
+            return self.subintheader['CHAN_BW']*self.subintheader['NCHAN']
     def getDuration(self):
         return np.sum(self.subintinfo['TSUBINT']) #This is constant.
-    def getCenterFrequency(self):
+    def getCenterFrequency(self,weighted=False):
+        if weighted:
+            DAT_FREQ = self.subintinfo['DAT_FREQ']
+            DAT_WTS = self.subintinfo['DAT_WTS']
+            return np.sum(DAT_FREQ*DAT_WTS)/np.sum(DAT_WTS) 
         return self.history.getLatest("CTR_FREQ")
 
     def getTelescope(self):
