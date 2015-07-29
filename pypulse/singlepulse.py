@@ -36,7 +36,7 @@ windowsize: Override mpw,ipw,opw, define an offpulse window about the minimum of
 class SinglePulse:
     def __init__(self,data,mpw=None,ipw=None,opw=None,prepare=False,align=None,period=None,windowsize=None):
         if len(np.shape(data)) != 1:
-            return None #issue error here?
+            raise IndexError("SinglePulse received incorrect data shape")
 
         self.data=np.array(data)
         if mpw is not None:
