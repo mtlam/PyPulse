@@ -340,6 +340,9 @@ class Archive:
         De-disperse the pulses
         if DM is given, use this value to compute the time_delays
         """
+        nchan = self.getNchan()
+        if nchan == 1: #do not dedisperse
+            return self
         Faxis = self.getAxis('F')
         nsubint = self.getNsubint()
         npol = self.getNpol()
