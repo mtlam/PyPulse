@@ -132,13 +132,20 @@ class Archive:
         I = range(nsubint)
         J = range(npol)
         K = range(nchan)
+        
+        
+        if np.size(DAT_WTS) == 1:
+            DAT_WTS[0] == 1.0
+        else:
+            #DAT_WTS = u.normalize(DAT_WTS) #close???
+            DAT_WTS /= np.max(DAT_WTS) #close???
 
-
+        #print DAT_WTS,DAT_OFFS
         if nsubint == 1 and npol == 1 and nchan == 1:
             self.data = (DAT_SCL*DATA+DAT_OFFS)*DAT_WTS
         elif nsubint == 1 and npol == 1:
             for k in K:
-                self.data[0,0,k,:] = (DAT_SCL[0,k]*DATA[0,0,k,:]+DAT_OFFS[0,k])*DAT_WTS[0]
+                self.data[0,0,k,:] = (DAT_SCL[0,k]*DATA[0,0,k,:]+DAT_OFFS[0,k])*DAT_WTS[0] #dat WTS[0]?
         elif nsubint == 1 and nchan == 1:               
             for j in J:
                 self.data[0,j,0,:] = (DAT_SCL[0,j]*DATA[0,j,0,:]+DAT_OFFS[0,j])*DAT_WTS[0]
@@ -274,10 +281,17 @@ class Archive:
         Q = A-B
         U = 2C
         V = 2D
+
+        Note: What about circular versus linear, npol==2, etc.?
         """
-        A = self.data[:,0,:,:]
-        B = self.data[:,1,:,:]
-        self.data[:,0,:,:] = A+B
+        #print self.subintheader['POL_TYPE']
+        if self.subintheader['POL_TYPE'] == "AABBCRCI": #Coherence:
+            A = self.data[:,0,:,:]
+            B = self.data[:,1,:,:]
+            self.data[:,0,:,:] = A+B
+        elif self.subintheader['POL_TYPE'] == "IQUV": #Stokes
+            I = self.data[:,0,:,:] #No need to average the other dimensions?
+            self.data[:,0,:,:] = I
         self.data = self.data[:,0:1,:,:] #keeps the shape
         return self
 
