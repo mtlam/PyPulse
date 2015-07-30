@@ -284,7 +284,6 @@ class Archive:
 
         Note: What about circular versus linear, npol==2, etc.?
         """
-        #print self.subintheader['POL_TYPE']
         if self.subintheader['POL_TYPE'] == "AABBCRCI": #Coherence:
             A = self.data[:,0,:,:]
             B = self.data[:,1,:,:]
