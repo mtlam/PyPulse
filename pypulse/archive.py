@@ -133,11 +133,11 @@ class Archive:
         J = range(npol)
         K = range(nchan)
         
-        
+
+
         if np.size(DAT_WTS) == 1:
-            DAT_WTS[0] == 1.0
+            DAT_WTS[0] = 1.0
         else:
-            #DAT_WTS = u.normalize(DAT_WTS) #close???
             DAT_WTS /= np.max(DAT_WTS) #close???
 
         #print DAT_WTS,DAT_OFFS
@@ -283,7 +283,10 @@ class Archive:
         V = 2D
 
         Note: What about circular versus linear, npol==2, etc.?
+        Should this modify npol? How to avoid double pscrunching?
         """
+        if self.shape(squeeze=False)[1] == 1:
+            return self
         if self.subintheader['POL_TYPE'] == "AABBCRCI": #Coherence:
             A = self.data[:,0,:,:]
             B = self.data[:,1,:,:]
