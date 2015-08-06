@@ -394,7 +394,7 @@ class Archive:
     def calculateAverageProfile(self):
         self.average_profile = np.mean(np.mean(self.data,axis=2),axis=0)
         if np.shape(self.average_profile)[0] != 1:
-            self.average_profile = self.average_profile[0,:] + self.average_profile[1,:] #polarization add
+            self.average_profile = self.average_profile[0,:] + self.average_profile[1,:] #polarization add, not necessarily true if in the different basis!
         else:
             self.average_profile = self.average_profile[0,:]
         self.calculateOffpulseWindow()
