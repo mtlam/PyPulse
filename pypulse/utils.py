@@ -224,9 +224,9 @@ Allow for intervals or number of bins
 bins: Provide an array of bins
 '''
 def histogram(values,interval=1.0,bottom=None,full=False,bins=None,plot=False,show=True,horizontal=False,normalize=False,logbins=False,**kwargs):
-    if bins==None:
+    if bins is None:
         factor=1.0/interval
-        if bottom==None:
+        if bottom is None:
             minval=(np.fix(factor*min(values))-1)/factor
         else:
             minval=bottom
@@ -258,33 +258,35 @@ def histogram(values,interval=1.0,bottom=None,full=False,bins=None,plot=False,sh
 #Need to take into account logbins!
 #Must be left aligned!
 def plothistogram(center,hist,interval=1.0,bins=None,steps=False,show=True,horizontal=False,logbins=False,centerbin=False,ax=None,**kwargs):
-    if steps or bins!=None:
+    if steps or bins is not None:
         binsize = np.mean(np.diff(center))
         center = np.concatenate(([center[0]-binsize],center,[center[-1]+binsize]))
         if centerbin:
             center -= binsize/2.0
         hist = np.concatenate(([0],hist,[0]))
-        if ax==None:
-            plt.plot(center,hist,drawstyle='steps-mid',**kwargs)
+        if ax is None:
+            p,=plt.plot(center,hist,drawstyle='steps-mid',**kwargs)
         else:
-            ax.plot(center,hist,drawstyle='steps-mid',**kwargs)
+            p,=ax.plot(center,hist,drawstyle='steps-mid',**kwargs)
     else:
         if centerbin:
             binsize = np.mean(np.diff(center))
             center -= binsize/2.0
 
         if horizontal:
-            if ax==None:
-                plt.barh(center,hist,height=interval,align='center',**kwargs)
+            if ax is None:
+                p=plt.barh(center,hist,height=interval,align='center',**kwargs)
             else:
-                ax.barh(center,hist,height=interval,align='center',**kwargs)
+                p=ax.barh(center,hist,height=interval,align='center',**kwargs)
         else:
-            if ax==None:
-                plt.bar(center,hist,width=interval,align='center',**kwargs)
+            if ax is None:
+                p=plt.bar(center,hist,width=interval,align='center',**kwargs)
             else:
-                ax.bar(center,hist,width=interval,align='center',**kwargs)
+                p=ax.bar(center,hist,width=interval,align='center',**kwargs)
     if show:
         plt.show()
+    return p
+
 
 
 
@@ -296,11 +298,11 @@ def normalize(array,simple=False,minimum=None):
     if simple:
         return array/np.max(array)
     maximum=np.max(array)
-    if minimum==None:
+    if minimum is None:
         minimum=np.min(array)
     return (array-minimum)/(maximum-minimum)
 def normalize_area(array,x=None,full=False):
-    if x==None:
+    if x is None:
         x=np.arange(len(array))
     area=np.trapz(array,x=x)
     if full:
