@@ -862,7 +862,7 @@ class Archive:
 
 
             
-
+    ### NOTE: THIS NEEDS TO BE CHECKED WITH THE NEW CHANGES ###
         
     def time(self,template,filename,MJD=False,simple=False,**kwargs):
         """
