@@ -112,7 +112,6 @@ class Par:
             PM = PM * (MAS_TO_RAD/YR_TO_S) #mas/yr -> rad/s
             PX = self.get("PX") #mas
             D = (1/PX)*1000*PC_TO_M #kpc -> m
-            PX = PX * MAS_TO_RAD #mas -> rad
             Pdot_pm = P*PM**2 *(D/c) #s/s
             return Pdot-Pdot_pm
         else:
