@@ -19,6 +19,10 @@ import re
 numre = re.compile('(\d+[.]\d+D[+]\d+)|(-?\d+[.]\d+)')
 flagre = re.compile('-[a-zA-Z]')
 
+c = 2.9979e8
+PC_TO_M = 3.086e16
+MAS_TO_RAD = np.pi/(360*60*60*1000)
+YR_TO_S = 3.154e7
 
 #numwrap could be float
 class Par:
@@ -94,12 +98,25 @@ class Par:
             return self.parameters['P0']
         if 'F0' in self.parameters:
             return self.numwrap(1)/self.parameters['F0']
-    def getPeriodDot(self):
+    def getPeriodDot(self,shklovskii=False):
         if 'P1' in self.parameters:
-            return self.parameters['P1']
-        if 'F1' in self.parameters:
-            return self.numwrap(-1.0)*self.parameters['F1'] / (self.parameters['F0']**2)
-        return None
+            Pdot = self.parameters['P1']
+        elif 'F1' in self.parameters:
+            Pdot = self.numwrap(-1.0)*self.parameters['F1'] / (self.parameters['F0']**2)
+        else:
+            return None
+        if shklovskii and "PMRA" in keys and "PMDEC" in keys and "PX" in keys: #Correct for the shklovskii effect
+            P = self.getPeriod() #s
+            PM = np.sqrt(self.get("PMRA")**2 + self.get("PMDEC")**2) #mas/yr
+            PM = PM * (MAS_TO_RAD/YR_TO_S) #rad/s
+            PX = self.get("PX") * MAS_TO_RAD #rad
+            D = (1/PX)*1000*PC_TO_M #m
+            Pdot_pm = P*PM**2 *(D/c)
+            
+            return Pdot-Pdot_pm
+        else:
+            return Pdot
+            
     def getDM(self):
         return self.get('DM')
     def getDMX(self):
