@@ -124,5 +124,8 @@ class Par:
         DM = self.getDM()
         return ts,dmxs + float(DM), errs #float from possible decimal!
     def getName(self):
-        return self.parameters["PSR"]
-
+        if "PSR" in self.parameters:
+            return self.parameters["PSR"]
+        elif "PSRJ" in self.parameters:
+            return self.parameters["PSRJ"]
+        return None
