@@ -44,6 +44,8 @@ class Par:
             splitline = line.strip().split()
             if len(splitline) == 0:
                 continue
+            if splitline[0][0] == "#":
+                continue
             self.paramlist.append(splitline[0])
 
             if flagre.match(splitline[1][:2]) and len(splitline)>=4:
