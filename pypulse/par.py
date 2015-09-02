@@ -114,9 +114,11 @@ class Par:
         keys = self.parameters.keys()
         if shklovskii and "PMRA" in keys and "PMDEC" in keys and "PX" in keys: #Correct for the shklovskii effect
             P = self.getPeriod() #s
+            PX = self.get("PX") #mas
+            if PX == 0:
+                return Pdot
             PM = np.sqrt(self.get("PMRA")**2 + self.get("PMDEC")**2) #mas/yr
             PM = PM * (MAS_TO_RAD/YR_TO_S) #mas/yr -> rad/s
-            PX = self.get("PX") #mas
             D = (1/PX)*1000*PC_TO_M #kpc -> m
             Pdot_pm = P*PM**2 *(D/c) #s/s
             return Pdot-Pdot_pm
