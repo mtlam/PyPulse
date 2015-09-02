@@ -21,7 +21,7 @@ flagre = re.compile('-[a-zA-Z]')
 
 c = 2.9979e8
 PC_TO_M = 3.086e16
-MAS_TO_RAD = np.pi/(360*60*60*1000)
+MAS_TO_RAD = np.pi/(180*60*60*1000)
 YR_TO_S = 3.154e7
 
 #numwrap could be float
