@@ -17,6 +17,7 @@ import numpy as np
 import re
 
 numre = re.compile('(\d+[.]\d+D[+]\d+)|(-?\d+[.]\d+)')
+intre = re.compile('-\d+')
 flagre = re.compile('-[a-zA-Z]')
 
 c = 2.9979e8
@@ -58,12 +59,16 @@ class Par:
             else:
                 if numre.match(splitline[1]):
                     value = numwrap(splitline[1].replace('D','e'))
+                elif intre.match(splitline[1]):
+                    value = int(splitline[1])
                 else:
                     value = splitline[1]
 
                 if len(splitline) == 4:
                     if numre.match(splitline[-1]):
                         error = numwrap(splitline[-1].replace('D','e'))
+                    elif intre.match(splitline[1]):
+                        error = int(splitline[-1])
                     else:
                         error = splitline[-1]
                     self.errors[splitline[0]] = error
