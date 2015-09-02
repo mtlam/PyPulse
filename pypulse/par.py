@@ -60,6 +60,8 @@ class Par:
                     value = numwrap(splitline[1].replace('D','e'))
                 elif splitline[1].isdigit():
                     value = int(splitline[1])
+                elif splitline[1][1:].isdigit() and (splitline[1][0] == "+" or splitline[1][0] == "-"):
+                    value = int(splitline[1])
                 else:
                     value = splitline[1]
 
@@ -67,6 +69,8 @@ class Par:
                     if numre.match(splitline[-1]):
                         error = numwrap(splitline[-1].replace('D','e'))
                     elif splitline[1].isdigit():
+                        error = int(splitline[-1])
+                    elif splitline[1][1:].isdigit() and (splitline[1][0] == "+" or splitline[1][0] == "-"):
                         error = int(splitline[-1])
                     else:
                         error = splitline[-1]
@@ -112,12 +116,17 @@ class Par:
         else:
             return None
         keys = self.parameters.keys()
-        if shklovskii and "PMRA" in keys and "PMDEC" in keys and "PX" in keys: #Correct for the shklovskii effect
+        if shklovskii:#Correct for the shklovskii effect
+            PM = self.getPM()
+            if PM is None or "PX" not in keys:
+                return Pdot
+
             P = self.getPeriod() #s
             PX = self.get("PX") #mas
-            if PX == 0:
+            PXerr = self.get("PX",error=True)
+            if PX <= 0 or (PXerr is not None and PXerr>=np.abs(PX)):
                 return Pdot
-            PM = np.sqrt(self.get("PMRA")**2 + self.get("PMDEC")**2) #mas/yr
+        
             PM = PM * (MAS_TO_RAD/YR_TO_S) #mas/yr -> rad/s
             D = (1/PX)*1000*PC_TO_M #kpc -> m
             Pdot_pm = P*PM**2 *(D/c) #s/s
@@ -125,6 +134,24 @@ class Par:
         else:
             return Pdot
             
+    def getPM(self):
+        keys = self.parameters.keys()
+        PM = None
+        if "PMRA" in keys and "PMDEC" in keys:
+            PM = np.sqrt(self.get("PMRA")**2 + self.get("PMDEC")**2) #mas/yr
+        elif "PMRA" in keys:
+            PM = abs(self.get("PMRA"))
+        elif "PMDEC" in keys:
+            PM = abs(self.get("PMDEC"))
+        elif "PMLAMBDA" in keys and "PMBETA" in keys:
+            PM = np.sqrt(self.get("PMLAMBDA")**2 + self.get("PMBETA")**2) #mas/yr
+        elif "PMLAMBDA" in keys:
+            PM = abs(self.get("PMLAMBDA"))
+        elif "PMBETA" in keys:
+            PM = abs(self.get("PMBETA"))
+        return PM
+
+
     def getDM(self):
         return self.get('DM')
     def getDMX(self):
