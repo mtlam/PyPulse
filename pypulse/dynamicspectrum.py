@@ -178,19 +178,24 @@ class DynamicSpectrum:
         
         try:
             delta_t_d = (optimize.brentq(lambda y: fit(SHAPE[0]/2,y)-baseline-amplitude/2.0,(SHAPE[1]-1)/2,SHAPE[1]*2)-(SHAPE[1]-1)/2) #FWHM test
-            print "delta_t_d %0.3f minutes"%(np.sqrt(2)*(delta_t_d/(2*np.sqrt(2*np.log(2)))))
+            if self.verbose:
+                print "delta_t_d %0.3f minutes"%(np.sqrt(2)*(delta_t_d/(2*np.sqrt(2*np.log(2)))))
         except ValueError:
-            print "ERROR in delta_t_d"
+            if self.verbose:
+                print "ERROR in delta_t_d"
             delta_t_d = SHAPE[1]
 
         try:
             delta_nu_d = (optimize.brentq(lambda x: fit(x,SHAPE[1]/2)-baseline-amplitude/2.0,(SHAPE[0]-1)/2,SHAPE[0])-(SHAPE[0]-1)/2)
-            print "delta_nu_d %0.3f MHz"%(np.sqrt(2)*(delta_nu_d/(2*np.sqrt(2*np.log(2)))))
+            if self.verbose:
+                print "delta_nu_d %0.3f MHz"%(np.sqrt(2)*(delta_nu_d/(2*np.sqrt(2*np.log(2)))))
         except ValueError:
-            print "ERROR in delta_nu_d"
+            if self.verbose:
+                print "ERROR in delta_nu_d"
             delta_nu_d = SHAPE[0]
 
-        print "dnu/dt %0.3f MHz/min" % (np.tan(rotation))#((dF/dT)*np.tan(rotation))
+        if self.verbose:
+            print "dnu/dt %0.3f MHz/min" % (np.tan(rotation))#((dF/dT)*np.tan(rotation))
 
         fig = plt.figure()
         ax = fig.add_subplot(211)
