@@ -37,10 +37,16 @@ class DynamicSpectrum:
             self.T = T
             self.Fcenter = None
             self.Tcenter = None
+            self.dF = None
+            self.dT = None
             if F is not None:
-                self.Fcenter = np.diff(self.F)/2.0 + self.F[:-1]
+                d = np.diff(self.F)
+                self.Fcenter = d/2.0 + self.F[:-1]
+                self.dF = np.mean(d)
             if T is not None:
-                self.Tcenter = np.diff(self.T)/2.0 + self.T[:-1]
+                d = np.diff(self.T)
+                self.Tcenter = d/2.0 + self.T[:-1]
+                self.dT = np.mean(d)
             if extras is None:
                 self.extras = dict()
             else:
