@@ -191,9 +191,9 @@ class DynamicSpectrum:
         SHAPE = np.shape(plotacf)
         
         try:
-            delta_t_d = (optimize.brentq(lambda y: fit(SHAPE[0]/2,y)-baseline-amplitude/2.0,(SHAPE[1]-1)/2,SHAPE[1]*2)-(SHAPE[1]-1)/2)*dT #FWHM test
+            delta_t_d = (optimize.brentq(lambda y: fit(SHAPE[0]/2,y)-baseline-amplitude/np.e,(SHAPE[1]-1)/2,SHAPE[1]*2)-(SHAPE[1]-1)/2)*dT #FWHM test
             if self.verbose:
-                print "delta_t_d %0.3f minutes"%(np.sqrt(2)*(delta_t_d/(2*np.sqrt(2*np.log(2)))))
+                print "delta_t_d %0.3f minutes"%delta_t_d
         except ValueError:
             if self.verbose:
                 print "ERROR in delta_t_d"
@@ -202,7 +202,7 @@ class DynamicSpectrum:
         try:
             delta_nu_d = (optimize.brentq(lambda x: fit(x,SHAPE[1]/2)-baseline-amplitude/2.0,(SHAPE[0]-1)/2,SHAPE[0])-(SHAPE[0]-1)/2)*dF
             if self.verbose:
-                print "delta_nu_d %0.3f MHz"%(np.sqrt(2)*(delta_nu_d/(2*np.sqrt(2*np.log(2)))))
+                print "delta_nu_d %0.3f MHz"%delta_nu_d
         except ValueError:
             if self.verbose:
                 print "ERROR in delta_nu_d"
@@ -226,7 +226,7 @@ class DynamicSpectrum:
         #ax.set_xlim(len(xs)-20,len(xs)+20)
         #ax.set_ylim(len(ys)-10,len(ys)+10)
         plt.show()
-
+        return delta_t_d,delta_nu_d,rotation
 
 
 
