@@ -211,22 +211,22 @@ class DynamicSpectrum:
         if self.verbose:
             print "dnu/dt %0.3f MHz/min" % ((dF/dT)*np.tan(rotation))#((dF/dT)*np.tan(rotation))
 
-        fig = plt.figure()
-        ax = fig.add_subplot(211)
-        u.imshow(self.data)
-        ax = fig.add_subplot(212)
+            fig = plt.figure()
+            ax = fig.add_subplot(211)
+            u.imshow(self.data)
+            ax = fig.add_subplot(212)
 
-        u.imshow(plotacf)
-        plt.colorbar()
-        levels = (amplitude*np.array([1.0,0.5,1.0/np.e]))+baseline
-        levels = (amplitude*np.array([0.5]))+baseline
-        print levels
+            u.imshow(plotacf)
+            plt.colorbar()
+            levels = (amplitude*np.array([1.0,0.5,1.0/np.e]))+baseline
+            levels = (amplitude*np.array([0.5]))+baseline
+            print levels
 
-        ax.contour(fit(*np.indices(plotacf.shape)),levels, colors='k')
-        #ax.set_xlim(len(xs)-20,len(xs)+20)
-        #ax.set_ylim(len(ys)-10,len(ys)+10)
-        plt.show()
-        return delta_t_d,delta_nu_d,rotation
+            ax.contour(fit(*np.indices(plotacf.shape)),levels, colors='k')
+            #ax.set_xlim(len(xs)-20,len(xs)+20)
+            #ax.set_ylim(len(ys)-10,len(ys)+10)
+            plt.show()
+        return delta_t_d,delta_nu_d,rotation #need to report errors
 
 
 
