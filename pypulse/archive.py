@@ -1,18 +1,18 @@
 '''
 Michael Lam 2015
 
-EXAMPLE USAGE:
+PSRFITS specification: www.atnf.csiro.au/people/pulsar/index.html?n=Main.Psrfits
 
+EXAMPLE USAGE:
 ar = Archive(filename)
 ar.tscrunch()
 ar.pavplot()
-
 
 TODO:
 
 Check POL_TYPE in the above to figure out how to pscrunch
 
-Add emulate_psrchive mode
+Add emulate_psrchive mode?
 
 Allow for chopping of subints, frequencies, etc?
 HISTORY may not exist for raw files
