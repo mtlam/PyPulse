@@ -104,7 +104,6 @@ class Archive:
             self.subintheader[key] = hdulist['SUBINT'].header[key]
 
 
-        self.durations = self.subintinfo['TSUBINT']
 
         DATA = hdulist['SUBINT'].data['DATA']
         #Definitions in Base/Formats/PSRFITS/ProfileColumn.C
@@ -114,6 +113,8 @@ class Archive:
             DAT_WTS = np.ones(np.shape(DAT_WTS))
         DAT_SCL = hdulist['SUBINT'].data['DAT_SCL']#.flatten()
         DAT_OFFS = hdulist['SUBINT'].data['DAT_OFFS']#.flatten()
+
+
 
         # This guarantees reshape to (t,pol,freq,phase) dimensions but is extremely slow
         #DATA = np.reshape(DATA,(nsubint,npol,nchan,nbin),order='C')
@@ -167,6 +168,10 @@ class Archive:
         #    for k in K:
         #        self.data[:,:,k,:] = tempdata[:,:,MAX-k,:]
             
+        # All time-tagging info
+        self.durations = self.subintinfo['TSUBINT']
+        self.subint_starts = np.array(map(Decimal,self.subintinfo['OFFS_SUB']),dtype=np.dtype(Decimal))-self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)+self.getMJD(full=False,numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part
+        self.channel_delays = np.zeros(len(nchan)) #used to keep track of frequency-dependent channel delays, should be in Decimal?
             
         if prepare:
             self.pscrunch()
@@ -378,6 +383,7 @@ class Archive:
         K = range(npol)
            
         for i,delay in enumerate(bin_delays):
+            self.channel_delays[i] += delay
             for j in J:
                 for k in K:
                     self.data[j,k,i,:] = u.shiftit(self.data[j,k,i,:],sign*delay)
@@ -469,6 +475,7 @@ class Archive:
                 for k in xrange(nchan):
                     self.data[i,j,k,:] = np.roll(self.data[i,j,k,:],diff)
         self.average_profile = np.roll(self.average_profile,diff)
+        self.channel_delays += diff
         self.calculateOffpulseWindow()
         return self
 
@@ -922,10 +929,12 @@ class Archive:
         output = "FORMAT 1\n"
 
         t0 = 0.0
+        start_time = self.getMJD(full=True,numwrap=Decimal)
         for i,T in enumerate(Taxis):
             tobs = self.durations[i]
             if MJD:
-                t0 = Decimal(integration.get_start_time().in_days())
+                t0 = start_time + self.subint_starts[i]
+                #t0 = Decimal(integration.get_start_time().in_days())
             for j,F in enumerate(Faxis):
                 if checknan(tauhat[i,j]):
                     continue
@@ -969,12 +978,12 @@ class Archive:
 
     def getName(self):
         return self.header['SRC_NAME']
-    def getMJD(self,full=False):
+    def getMJD(self,full=False,numwrap=float):
         if full:
-            return self.header['STT_IMJD']+self.header['STT_SMJD']/86400.0
-        return self.header['STT_IMJD']
-    def getTbin(self): #get the time per bin
-        return self.getPeriod() / self.getNbin()
+            return numwrap(self.header['STT_IMJD'])+(numwrap(self.header['STT_SMJD'])+numwrap(self.header['STT_OFFS']))/numwrap(86400)
+        return numwrap(self.header['STT_IMJD'])+numwrrap(self.header['STT_OFFS'])
+    def getTbin(self,numwrap=float): #get the time per bin
+        return numwrap(self.getPeriod()) / numwrap(self.getNbin())
     def getDM(self):
         return self.params.getDM()
     #def setDM(self,value):
@@ -982,8 +991,8 @@ class Archive:
     ### Get coords info in header
     def getCoords(self,parse=True): #use get/set coorinates? Use astropy?
         if parse:
-            RA = tuple(map(lambda x: float(x),self.header['RA'].split(":")))
-            dec = tuple(map(lambda x: float(x),self.header['DEC'].split(":")))
+            RA = tuple(map(float,self.header['RA'].split(":")))
+            dec = tuple(map(float,self.header['DEC'].split(":")))
         else:
             RA = self.header['RA']
             dec = self.header['DEC']
