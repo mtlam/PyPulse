@@ -63,3 +63,13 @@ Usage:
     t,dmx,dmxerr = p.getDMseries() #returns the DM parameters in a nice time-series. Note that errors are those given in the par file, which may not be the "correct" ones (more info to be provided later)
     print p.get("PX") #prints the parallax
     print p.get("PX",error=True) #prints the error on the parallax
+
+Tim
+___
+
+A class for parsing pulsar TOA files
+
+Usage:
+    t = Tim(FILENAME) #automatically parses each TOA with the TOA() class
+    print t.toas[0].getMJD() #prints the MJD of the first TOA as a python Decimal
+    print t.toas[0].get('snr') #prints the value of the -snr flag of the TOA if it is available
