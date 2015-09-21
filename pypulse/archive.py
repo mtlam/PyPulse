@@ -387,6 +387,7 @@ class Archive:
             for j in J:
                 for k in K:
                     self.data[j,k,i,:] = u.shiftit(self.data[j,k,i,:],sign*delay)
+        self.calculateAverageProfile() #re-calculate the average profile
         return self
     def dededisperse(self,DM=None,barycentric=True): 
         """
