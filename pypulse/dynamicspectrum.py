@@ -53,6 +53,7 @@ class DynamicSpectrum:
                 self.extras = extras
 
         # Pre-define variables
+        self.baseline_removed = False
         self.acf = None
                 
 
@@ -83,10 +84,12 @@ class DynamicSpectrum:
             return total/float(N)
 
 
-    def remove_baseline(self,function="gaussian"):
+    def remove_baseline(self,function="gaussian",redo=False):
         """
         Attempts to remove the baseline amplitude from the dynamic spectrum
         """
+        if redo == False and self.baseline_removed == True:
+            return self
         flatdata = self.data.flatten()
         interval = np.power(10,np.floor(np.log10(np.ptp(flatdata/100)))) #~100 divisions, but bins to an even power of 10
         center,hist = u.histogram(flatdata,interval=interval)
@@ -108,20 +111,20 @@ class DynamicSpectrum:
             peak = 0.0
 
         self.data -= peak
+        self.baseline_removed = True
         return self
         
     def acf2d(self,remove_baseline=True,speed='fast',mode='full'):
         """
         Calculate the two-dimensional auto-correlation function of the dynamic spectrum
         """
-        if remove_baseline:
-            self.remove_baseline()
+        data = self.getData(remove_baseline=remove_baseline)
 
         # Have if statement to apply mask: set ones in the norm to 0.0
 
-        ones = np.ones(np.shape(self.data))
+        ones = np.ones(np.shape(data))
         norm = fftconvolve(ones,np.flipud(np.fliplr(ones)),mode=mode)
-        acf = fftconvolve(self.data,np.flipud(np.fliplr(self.data)),mode=mode)/norm
+        acf = fftconvolve(data,np.flipud(np.fliplr(data)),mode=mode)/norm
 
 
         # Replace the central noise spike with that of the next highest of its neighbors
@@ -365,4 +368,13 @@ class DynamicSpectrum:
 
 
 
+    def getData(self,remove_baseline=True):
+        if remove_baseline:
+            self.remove_baseline()
+        return self.data
+
+    def getACF(self,remove_baseline=True): 
+        if self.acf is None:
+            return self.acf2d(remove_baseline=remove_baseline)
+        return self.acf
 
