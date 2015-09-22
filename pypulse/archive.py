@@ -171,7 +171,7 @@ class Archive:
         # All time-tagging info
         self.durations = self.subintinfo['TSUBINT']
         self.subint_starts = np.array(map(Decimal,self.subintinfo['OFFS_SUB']),dtype=np.dtype(Decimal))-self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)+self.getMJD(full=False,numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part
-        self.channel_delays = np.zeros(len(nchan)) #used to keep track of frequency-dependent channel delays, should be in Decimal?
+        self.channel_delays = np.zeros(nchan) #used to keep track of frequency-dependent channel delays, should be in Decimal?
             
         if prepare:
             self.pscrunch()
@@ -982,7 +982,7 @@ class Archive:
     def getMJD(self,full=False,numwrap=float):
         if full:
             return numwrap(self.header['STT_IMJD'])+(numwrap(self.header['STT_SMJD'])+numwrap(self.header['STT_OFFS']))/numwrap(86400)
-        return numwrap(self.header['STT_IMJD'])+numwrrap(self.header['STT_OFFS'])
+        return numwrap(self.header['STT_IMJD'])+numwrap(self.header['STT_OFFS'])
     def getTbin(self,numwrap=float): #get the time per bin
         return numwrap(self.getPeriod()) / numwrap(self.getNbin())
     def getDM(self):
