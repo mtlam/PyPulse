@@ -1011,6 +1011,8 @@ class Archive:
             return self.subintheader['CHAN_BW']*self.subintheader['NCHAN']
     def getDuration(self):
         return np.sum(self.subintinfo['TSUBINT']) #This is constant.
+    def getDurations(self):
+        return self.durations
     def getCenterFrequency(self,weighted=False):
         if weighted:
             DAT_FREQ = self.subintinfo['DAT_FREQ']
