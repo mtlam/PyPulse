@@ -42,6 +42,11 @@ except:
 
 
 
+
+
+
+
+
 class Archive:
     def __init__(self,filename,prepare=True,lowmem=False,verbose=True,weight=True,center_pulse=True,remove_baseline=True):
         ## Parse filename here?
@@ -94,7 +99,7 @@ class Archive:
         nchan = self.history.getLatest("NCHAN")
         nbin = self.history.getLatest("NBIN")
 
-        self.params = Par(map(lambda x: x[0],hdulist['PSRPARAM'].data),numwrap=float)
+        self.params = Par(list(map(lambda x: x[0],hdulist['PSRPARAM'].data)),numwrap=float)
 
         self.subintinfo = dict()
         for i,column in enumerate(hdulist['SUBINT'].columns[:-3]):#[:-5]):
@@ -170,7 +175,7 @@ class Archive:
             
         # All time-tagging info
         self.durations = self.subintinfo['TSUBINT']
-        self.subint_starts = np.array(map(Decimal,self.subintinfo['OFFS_SUB']),dtype=np.dtype(Decimal))-self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)+self.getMJD(full=False,numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part
+        self.subint_starts = np.array(list(map(Decimal,self.subintinfo['OFFS_SUB'])),dtype=np.dtype(Decimal))-self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)+self.getMJD(full=False,numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part
         self.channel_delays = np.zeros(nchan) #used to keep track of frequency-dependent channel delays, should be in Decimal?
             
         if prepare:
@@ -919,7 +924,7 @@ class Archive:
 
         if MJD:
             shape = np.shape(tauhat)
-            tauhatdec = np.reshape(np.array(map(Decimal,tauhat.flatten()),dtype=np.dtype(Decimal)),shape)
+            tauhatdec = np.reshape(np.array(list(map(Decimal,tauhat.flatten())),dtype=np.dtype(Decimal)),shape)
             tauhat = tauhatdec * Decimal(dt/86400.0) #day units
             checknan = lambda x: x.is_nan()
         else:
