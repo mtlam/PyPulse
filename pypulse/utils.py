@@ -204,7 +204,7 @@ def decimate(x,window_len):#,mean=True,remainder=False):
         return x
     length = len(x)
     retval = np.zeros(length/window_len)
-    counts = np.zeros_like(re1tval)
+    counts = np.zeros_like(retval)
     for i in range(window_len):
         retval+=x[i:length:window_len]
     return retval/window_len
