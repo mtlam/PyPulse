@@ -52,7 +52,7 @@ class Archive:
         self.center_pulse = center_pulse
         self.remove_baseline = remove_baseline
         if verbose:
-            print "Loading: %s" % self.filename
+            print("Loading: %s" % self.filename)
             t0=time.time()
 
         self.load(self.filename,prepare=prepare,center_pulse=center_pulse,remove_baseline=remove_baseline,weight=weight)
@@ -60,7 +60,7 @@ class Archive:
             self.data_orig = np.copy(self.data)
         if verbose:
             t1=time.time()
-            print "Load time: %0.2f s" % (t1-t0)
+            print("Load time: %0.2f s" % (t1-t0))
 
         #self.reset(False) #put prepare into here?, copying to arch is done here
 
@@ -69,7 +69,7 @@ class Archive:
 
         #if verbose and prepare:
         #    t2=time.time()
-        #    print "Prep time: %0.2f s" % (t2-t1)
+        #    print("Prep time: %0.2f s" % (t2-t1))
 
     def __repr__(self):
         return "Archive(%r,prepare=%r,lowmem=%r,verbose=%r)" % (self.filename,self.prepare,self.lowmem,self.verbose)
@@ -84,7 +84,7 @@ class Archive:
         try:
             hdulist = pyfits.open(filename,ignore_missing_end=True)
         except IOError:
-            print "Filename not found"
+            print("Filename not found")
             raise SystemExit
         self.header = hdulist[0].header
         
@@ -202,7 +202,7 @@ class Archive:
         self.data_orig = None
         if self.verbose:
             t1=time.time()
-            print "Unload time: %0.2f s" % (t1-t0)
+            print("Unload time: %0.2f s" % (t1-t0))
         g.collect()
 
 
@@ -253,7 +253,7 @@ class Archive:
         if factor == 1:
             return self
         if factor is None and nsubint is not None:
-            factor = self.getNsubint()/nsubint
+            factor = self.getNsubint()//nsubint
             if self.getNsubint()%nsubint != 0:
                 factor += 1
     
@@ -311,7 +311,7 @@ class Archive:
         if factor == 1:
             return self
         if factor is None and nchan is not None:
-            factor = self.getNchan()/nchan
+            factor = self.getNchan()//nchan
             if self.getNchan()%nchan != 0:
                 factor += 1
 
@@ -337,7 +337,7 @@ class Archive:
         if factor == 1:
             return self
         if factor is None and nchan is not None:
-            factor = self.getNchan()/nchan
+            factor = self.getNchan()//nchan
             if self.getNchan()%nchan != 0:
                 factor += 1
         else:
@@ -410,7 +410,7 @@ class Archive:
         self.calculateOffpulseWindow()
 
     def calculateOffpulseWindow(self):
-        self.spavg = SP.SinglePulse(self.average_profile,windowsize=int(self.getNbin()/8))
+        self.spavg = SP.SinglePulse(self.average_profile,windowsize=int(self.getNbin()//8))
         self.opw = self.spavg.opw
 
 
@@ -519,7 +519,7 @@ class Archive:
             filename = self.filename
             filename = ".".join(filename.split(".")[:-1])+"."+ext
         if self.verbose:
-            print "Saving: %s" % filename
+            print("Saving: %s" % filename)
         if ascii:
             shape = self.shape(squeeze=False)
             nsubint = self.getNsubint()
@@ -726,7 +726,7 @@ class Archive:
                     return wrapfunc(gs),wrapfunc(baseline),wrapfunc(sig_gs)
                 for i in I:
                     if verbose:
-                        print i,I[-1]
+                        print("i,%i"%(i,I[-1]))
                     for j in J:
                         sp = SP.SinglePulse(data[i,j],mpw=mpw,align=align)
                         baseline = sp.getOffpulseNoise(mean=True) #get mean value of offpulse
@@ -763,7 +763,7 @@ class Archive:
             if show:
                 plt.show()
         else:
-            print "Invalid dimensions"
+            print("Invalid dimensions")
     def imshow(self,ax=None,cbar=False,mask=None,show=True):
         """
         Basic imshow of data
@@ -779,7 +779,7 @@ class Archive:
             if show:
                 plt.show()
         else:
-            print "Invalid dimensions"
+            print("Invalid dimensions")
         return ax
 
 
@@ -807,7 +807,7 @@ class Archive:
                 if show:
                     plt.show()
         else:
-            print "Invalid dimensions"
+            print("Invalid dimensions")
         return ax
 
 
@@ -865,7 +865,7 @@ class Archive:
                 ax.set_yticklabels([])
             plt.show()
         else:
-            print "Invalid dimensions"
+            print("Invalid dimensions")
 
 
 
