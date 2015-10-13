@@ -183,7 +183,7 @@ class DynamicSpectrum:
         if self.verbose:
             paramnames = ["amplitude","center_x","center_y","width_x","width_y","rotation","baseline"]
             if pcov is not None:
-                paramerrors = np.array(map(np.sqrt,np.diagonal(pcov))) #multiply by s_sq!!!!!
+                paramerrors = np.array(list(map(np.sqrt,np.diagonal(pcov)))) #multiply by s_sq!!!!!
             else:
                 paramerrors = np.zeros_like(params)
             for i,param in enumerate(params):
