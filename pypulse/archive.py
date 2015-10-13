@@ -86,6 +86,7 @@ class Archive:
 
 
     def load(self,filename,prepare=True,center_pulse=True,remove_baseline=True,weight=True):
+        """Loads a PSRFITS file and processes"""
         if filename is None: #Needed?
             filename = self.filename
         try:
@@ -200,9 +201,7 @@ class Archive:
         self.gc()
 
     def gc(self):
-        """
-        Manually clear the data cube for python garbage collection
-        """
+        """Manually clear the data cube for python garbage collection"""
         if self.verbose:
             t0=time.time()
         self.data = None
@@ -214,14 +213,10 @@ class Archive:
 
 
     def shape(self,squeeze=True):
-        """
-        Return the current shape of the data array
-        """
+        """Return the current shape of the data array"""
         return np.shape(self.getData(squeeze=squeeze))
     def reset(self,prepare=True):
-        """
-        Replace the arch with the original clone
-        """
+        """Replace the arch with the original clone"""
         if self.lowmem:
             self.data = self.load(self.filename,prepare=prepare)            
         else:
@@ -232,9 +227,7 @@ class Archive:
 
 
     def scrunch(self,arg='Dp'):
-        """
-        average the data cube along different axes
-        """
+        """average the data cube along different axes"""
         if 'T' in arg:
             self.data[0,:,:,:] = np.mean(self.data,axis=0) 
             self.data = self.data[0:1,:,:,:] #resize
@@ -252,9 +245,7 @@ class Archive:
         return self
 
     def tscrunch(self,nsubint=None,factor=None):
-        """
-        average the data cube along the time dimension
-        """
+        """average the data cube along the time dimension"""
         if nsubint == 1 or (factor is None and nsubint is None):
             return self.scrunch('T')
         if factor == 1:
@@ -310,9 +301,7 @@ class Archive:
         return self
 
     def fscrunch(self,nchan=None,factor=None):
-        """
-        average the data cube along the frequency dimension
-        """
+        """average the data cube along the frequency dimension"""
         if nchan == 1 or (factor is None and nchan is None):
             return self.scrunch('F')
         if factor == 1:
@@ -336,9 +325,7 @@ class Archive:
         return self
 
     def bscrunch(self,nbins=None,factor=None):
-        """
-        average the data cube along the phase dimension
-        """
+        """average the data cube along the phase dimension"""
         if nbins == 1 or (factor is None and nbins is None):
             return self.scrunch('B')
         if factor == 1:
@@ -488,6 +475,7 @@ class Archive:
         return self
 
     def removeBaseline(self):
+        """Removes the baseline of the pulses given an offpulse window"""
         nsubint = self.getNsubint()
         npol = self.getNpol()
         nchan = self.getNchan()
@@ -500,15 +488,14 @@ class Archive:
                     self.data[i,j,k,:] -= baseline
         self.average_profile -= np.mean(self.average_profile[self.spavg.opw])
         return self
-    def remove_baseline(self): #for the psrchive naming convention
+    def remove_baseline(self):
+        """For PSRCHIVE naming convention"""
         return self.removeBaseline() 
 
 
 
     def getData(self,squeeze=True,setnan=None):
-        """
-        Returns the data array, fully squeezed
-        """
+        """Returns the data array, fully squeezed"""
         if squeeze:
             data = self.data.squeeze()
         else:
@@ -519,9 +506,7 @@ class Archive:
 
 
     def saveData(self,filename=None,ext='npy',ascii=False):
-        """
-        Save the data array to a different format
-        """
+        """Save the data array to a different format"""
         if filename is None:
             filename = self.filename
             filename = ".".join(filename.split(".")[:-1])+"."+ext
@@ -558,9 +543,7 @@ class Archive:
 
 
     def outputPulses(self,filename):
-        """
-        Write out a .npy file
-        """
+        """ Write out a .npy file"""
         np.save(filename,self.getData())
         return
     
@@ -599,9 +582,7 @@ class Archive:
 
     #Assumes the shape of data is (t,f,b) (i.e. polarization scrunched)
     def getPulse(self,t,f=None):
-        """
-        Get pulse(t,f). If f==None, get pulse(t)
-        """
+        """Get pulse(t,f). If f==None, get pulse(t)"""
         if f is None:
             if self.shape(squeeze=False)[2] == 1:
                 return self.getData()[t,:]
@@ -613,24 +594,17 @@ class Archive:
     # Assumes it is calibrated
     # Better to replace with SinglePulse's fitPulse
     def getPeakFlux(self,t,f=None):
-        """
-        Return the maximum value of the pulses, not typically used
-        """
+        """Return the maximum value of the pulses, not typically used"""
         pulse = self.getPulse(t,f)
         return np.max(pulse)
     def getIntegratedFlux(self,t,f=None):
-        """
-        Return the integrated value of the pulses, not typically used
-        """
+        """Return the integrated value of the pulses, not typically used"""
         pulse = self.getPulse(t,f)
         return np.trapz(pulse)
 
 
     def getSinglePulses(self,func=None,windowsize=None,**kwargs): 
-        """
-        Efficiently wraps self.data with SP.SinglePulse
-        """
-
+        """Efficiently wraps self.data with SP.SinglePulse"""
         if func is None:
             func = lambda x: x
         newshape = self.shape()[:-1]
@@ -644,15 +618,9 @@ class Archive:
             retval[ind]=SP.SinglePulse(pulse,period=period,**kwargs)
         return retval
 
-
-
-
-
     #Given a list of numbers corresponding to the arguments returned
     def fitPulses(self,template,nums,flatten=False,func=None,windowsize=None,**kwargs):
-        """
-        Fit all of the pulses with a given template
-        """
+        """Fit all of the pulses with a given template"""
         nums = np.array(nums)
         if windowsize is not None:
             sptemp = SP.SinglePulse(template,windowsize=windowsize)
@@ -758,9 +726,7 @@ class Archive:
 
 
     def plot(self,ax=None,show=True):
-        """
-        Basic plotter of data
-        """
+        """Basic plotter of data"""
         data = self.getData()
         if len(np.shape(data))==1:
             if ax is None:
@@ -772,9 +738,7 @@ class Archive:
         else:
             print("Invalid dimensions")
     def imshow(self,ax=None,cbar=False,mask=None,show=True):
-        """
-        Basic imshow of data
-        """
+        """Basic imshow of data"""
         data = self.getData(setnan=0.0)
         if len(np.shape(data))==2:
             if mask is not None:
@@ -791,9 +755,7 @@ class Archive:
 
 
     def pavplot(self,ax=None,mode="GTpd",show=True,wcfreq=True):#,ax=None,mask=None,show=True):
-        """
-        Produces a pav-like plot for comparison
-        """
+        """Produces a pav-like plot for comparison"""
         data = self.getData(setnan=0.0)
         if len(np.shape(data))==2:
             shape = self.shape(squeeze=False)
@@ -819,6 +781,7 @@ class Archive:
 
 
     def joyDivision(self,border=0.1,labels=False,album=True,**kwargs):
+        """Calls joy() in the style of the Joy Division album cover"""
         return self.joy(border=border,labels=labels,album=album,**kwargs)
     def joy(self,offset=None,border=0,labels=True,album=False):
         """
@@ -965,39 +928,44 @@ class Archive:
 
 
     def getNsubint(self):
+        """Returns number of subintegrations"""
         return self.shape(squeeze=False)[0]
     def getNpol(self):
+        """Returns number of polarizations"""
         return self.shape(squeeze=False)[1]
     def getNchan(self): 
+        """Returns number of channels"""
         return self.shape(squeeze=False)[2]
     def getNbin(self):
+        """Returns number of phase bins"""
         return self.shape(squeeze=False)[3]
     def getPeriod(self):
+        """Returns period of the pulsar"""
         return self.params.getPeriod()
-
     # Best replacement for without PSRCHIVE
     def getValue(self,value):
+        """Looks for a key in one of the headers and returns"""
         if value in self.header.keys():
             return self.header[value]
         if value in self.subintinfo.keys():
             return self.subintinfo[value]
         return self.params.get(value) #will return None if non-existent
-
-
     def getName(self):
+        """Returns pulsar name"""
         return self.header['SRC_NAME']
     def getMJD(self,full=False,numwrap=float):
+        """Returns MJD of observation"""
         if full:
             return numwrap(self.header['STT_IMJD'])+(numwrap(self.header['STT_SMJD'])+numwrap(self.header['STT_OFFS']))/numwrap(86400)
         return numwrap(self.header['STT_IMJD'])+numwrap(self.header['STT_OFFS'])
-    def getTbin(self,numwrap=float): #get the time per bin
+    def getTbin(self,numwrap=float):
+        """Returns the time per bin"""
         return numwrap(self.getPeriod()) / numwrap(self.getNbin())
     def getDM(self):
+        """Returns the header DM"""
         return self.params.getDM()
-    #def setDM(self,value):
-    #    return self.arch.set_dispersion_measure(value)
-    ### Get coords info in header
     def getCoords(self,parse=True): #use get/set coorinates? Use astropy?
+        """Returns the coordinate info in the header"""
         if parse:
             RA = tuple(map(float,self.header['RA'].split(":")))
             dec = tuple(map(float,self.header['DEC'].split(":")))
@@ -1006,53 +974,57 @@ class Archive:
             dec = self.header['DEC']
         return RA,dec
     def getPulsarCoords(self,parse=True):
+        """Returns the parsed coordiante info in the header"""
         return self.getCoords(parse=parse)
     def getTelescopeCoords(self):
+        """Returns the telescope coordinates"""
         return self.header['ANT_X'],self.header['ANT_Y'],self.header['ANT_Z']
-
-
     def getBandwidth(self,header=False):
+        """Returns the observation bandwidth"""
         if header:
             return self.header['OBSBW']
         else:
             return self.subintheader['CHAN_BW']*self.subintheader['NCHAN']
     def getDuration(self):
+        """Returns the observation duratrion"""
         return np.sum(self.subintinfo['TSUBINT']) #This is constant.
     def getDurations(self):
+        """Returns the subintegration durations"""
         return self.durations
     def getCenterFrequency(self,weighted=False):
+        """Returns the center frequency"""
         if weighted:
             DAT_FREQ = self.subintinfo['DAT_FREQ']
             DAT_WTS = self.subintinfo['DAT_WTS']
             return np.sum(DAT_FREQ*DAT_WTS)/np.sum(DAT_WTS) 
         return self.history.getLatest("CTR_FREQ")
-
     def getTelescope(self):
+        """Returns the telescope name"""
         return self.header['TELESCOP']
     def getFrontend(self):
+        """Returns the frontend name"""
         return self.header['FRONTEND']
     def getBackend(self):
+        """Returns the backend name"""
         return self.header['BACKEND']
-
     def getSN(self):
+        """Returns the average pulse S/N"""
         return self.spavg.getSN()
-
-
-
 
 
 # Takes hdulist['HISTORY']
 class History:
     def __init__(self,history):
+        """Intializer"""
         self.dictionary = dict()
         for col in history.columns:
             self.dictionary[col.name] = list(col.array) #make a np.array?
-
     def getValue(self,field,num=None):
+        """Returns a dictionary value for a given numeric entry"""
         if num is None:
             return self.dictionary[field]
         else:
             return self.dictionary[field][num]
-        
     def getLatest(self,field):
+        """Returns the latest key value"""
         return self.getValue(field,-1)
