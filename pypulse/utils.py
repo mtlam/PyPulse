@@ -118,7 +118,7 @@ def acf2d(array,speed='fast',mode='full',xlags=None,ylags=None):
             ylags = np.arange(-1*LENY+1,LENY)
         retval = np.zeros((len(ylags),len(xlags)))
         for i,xlag in enumerate(xlags):
-            print xlag
+            print(xlag)
             for j,ylag in enumerate(ylags):
                 if ylag > 0 and xlag > 0:
                     A = array[:-1*ylag,xlag:] #the "stationary" array
@@ -162,7 +162,7 @@ def lagaxis(arg,dtau=1):
         dtau = np.mean(np.diff(arg))
         return np.arange(-1*length+1,length)*dtau
     else: # Returns a generic lag axis
-        half = arg/2 #arg should be odd
+        half = arg//2 #arg should be odd
         return np.arange(-1*half,half+1)*dtau
 
 
@@ -203,7 +203,7 @@ def decimate(x,window_len):#,mean=True,remainder=False):
         return x
     length = len(x)
     retval = np.zeros(length/window_len)
-    counts = np.zeros_like(retval)
+    counts = np.zeros_like(re1tval)
     for i in range(window_len):
         retval+=x[i:length:window_len]
     return retval/window_len
@@ -318,7 +318,7 @@ Follows profiles.py
 def center_max(array):    
     maxind=np.argmax(array)
     length=len(array)
-    centerind=int(length/2)
+    centerind=int(length//2)
     diff=centerind-maxind
     return np.roll(array,diff)
 
@@ -333,7 +333,7 @@ def FWHM(series,norm=True,simple=False,notcentered=False):
     y=np.abs(series-0.5)
     
     N=len(series)
-    half=N/2
+    half=N//2
 
     wL = 0
     wR = N-1
@@ -405,9 +405,9 @@ def shiftit(y, shift):
     work.imag = c * yfft.imag + s * yfft.real
     # enforce hermiticity
 
-    work.real[size/2:] = work.real[size/2:0:-1]
-    work.imag[size/2:] = -work.imag[size/2:0:-1]
-    work[size/2] = 0.+0.j 
+    work.real[size//2:] = work.real[size//2:0:-1]
+    work.imag[size//2:] = -work.imag[size//2:0:-1]
+    work[size//2] = 0.+0.j 
     workifft = np.fft.ifft(work)
     return workifft.real
 
@@ -427,8 +427,8 @@ def find_fwhm(array):
     xvec = range(np.size(array))
     half1 = np.where(np.diff(np.sign(array[:amaxloc]-amax/2.)))[0][0]
     half2 = np.where(np.diff(np.sign(array[amaxloc:]-amax/2.)))[0][0]
-    start1 = half1-(ninterp-1)/2
-    start2 = amaxloc+half2-(ninterp-1)/2
+    start1 = half1-(ninterp-1)//2
+    start2 = amaxloc+half2-(ninterp-1)//2
     xinterp1 = xvec[start1:start1+ninterp]
     yinterp1 = array[start1:start1+ninterp]
     xinterp2 = xvec[start2:start2+ninterp]
@@ -453,7 +453,7 @@ def toa_errors_additive(tfft, b, sigma_t):
         sigma_tau
     """
     Nfft = np.size(tfft)
-    Nsum = Nfft / 2
+    Nsum = Nfft // 2
     kvec = np.arange(1,Nsum)
     sigma_b = sigma_t*np.sqrt(float(Nfft) / (2.*np.sum(np.abs(tfft[1:Nsum])**2)))
     sigma_tau = (sigma_t*Nfft/(2.*np.pi*np.abs(b))) * np.sqrt(float(Nfft) / (2.*np.sum(kvec**2*np.abs(tfft[1:Nsum])**2)))
@@ -466,7 +466,7 @@ def tfresids(params, tfft, pfft):
     b=params[0]
     tau=params[1]
     Nfft = np.size(pfft)
-    Nsum = Nfft/2
+    Nsum = Nfft//2
     arg=(2.*np.pi*tau/float(Nfft)) * np.arange(0., Nfft, 1.)
     phasevec = np.cos(arg) - 1j*np.sin(arg)
     #resids = abs(pfft[1:Nsum] - b*tfft[1:Nsum]*phasevec[1:Nsum])
@@ -507,8 +507,8 @@ def get_toa3(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, 
     ccf = np.correlate(template, profile, 'full')
     lags = np.arange(-np.size(profile)+1., np.size(profile), 1.)
     ccfmaxloc = ccf.argmax()
-    ccffit = ccf[ccfmaxloc-(nlagsfit-1)/2:ccfmaxloc+(nlagsfit-1)/2+1]
-    lagfit = lags[ccfmaxloc-(nlagsfit-1)/2:ccfmaxloc+(nlagsfit-1)/2+1]
+    ccffit = ccf[ccfmaxloc-(nlagsfit-1)//2:ccfmaxloc+(nlagsfit-1)//2+1]
+    lagfit = lags[ccfmaxloc-(nlagsfit-1)//2:ccfmaxloc+(nlagsfit-1)//2+1]
 
     p = np.polyfit(lagfit, ccffit, norder)
     ccfhat = p[0] + p[1]*lagfit + p[2]*lagfit**2
