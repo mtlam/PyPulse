@@ -56,10 +56,10 @@ class SinglePulse:
             # Find minimum in the area
             integral = np.zeros_like(self.data)
             for i in self.bins:
-                win = np.arange(i-windowsize/2,i+windowsize/2) % self.nbins
+                win = np.arange(i-windowsize//2,i+windowsize//2) % self.nbins
                 integral[i] = np.trapz(self.data[win])
             minind = np.argmin(integral)
-            self.opw = np.arange(minind-windowsize/2,minind+windowsize/2+1)
+            self.opw = np.arange(minind-windowsize//2,minind+windowsize//2+1)
             self.opw = self.opw % self.nbins
             self.mpw = self.bins[np.logical_not(np.in1d(self.bins,self.opw))]
 
@@ -101,7 +101,7 @@ class SinglePulse:
         """
         Align the pulse such that the main pulse is at phase=0.25 and the interpulse is at phase = 0.75
         """
-        self.data = np.roll(u.center_max(self.data),-len(self.data)/4)
+        self.data = np.roll(u.center_max(self.data),-len(self.data)//4)
 
     def center_align(self):
         """
@@ -159,7 +159,7 @@ class SinglePulse:
         Subtract the baseline of the pulse so that it will be set to zero mean
         """
         if self.opw is None:
-            print "No Offpulse" #do this?
+            print("No Offpulse") #do this?
             return
         opmean = np.mean(self.getOffpulse())
         if save:
@@ -243,7 +243,7 @@ class SinglePulse:
                 try:
                     return get_toa(template,self.data,rms_baseline)
                 except:
-                    print self.data
+                    print(self.data)
                     plt.plot(self.data)
                     plt.show()
                     raise SystemExit
