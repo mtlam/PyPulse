@@ -177,7 +177,7 @@ class Archive:
             
         # All time-tagging info
         self.durations = self.subintinfo['TSUBINT']
-        self.subint_starts = np.array(map(Decimal,self.subintinfo['OFFS_SUB']),dtype=np.dtype(Decimal))-self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)+self.getMJD(full=False,numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part
+        self.subint_starts = np.array(fmap(Decimal,self.subintinfo['OFFS_SUB']),dtype=np.dtype(Decimal))-self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)+self.getMJD(full=False,numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part
         self.channel_delays = np.zeros(nchan) #used to keep track of frequency-dependent channel delays, should be in Decimal?
             
         if prepare:
