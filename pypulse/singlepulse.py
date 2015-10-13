@@ -8,7 +8,7 @@ Figure out way to add/average SPs.
 
 import matplotlib.pyplot as plt
 import numpy as np
-import utils as u
+import pypulse.utils as u
 import scipy.optimize as optimize
 
 import sys

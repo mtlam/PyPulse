@@ -7,8 +7,8 @@ To do: grid: set clim such that 0 is white, not blue,mask data,add zorder
 
 import numpy as np
 import numpy.ma as ma
-import utils as u
-import functionfit as ffit
+import pypulse.utils as u
+import pypulse.functionfit as ffit
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from scipy.signal import fftconvolve

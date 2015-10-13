@@ -29,9 +29,9 @@ import numpy.ma as ma
 import gc as g
 import matplotlib.pyplot as plt
 import time
-import utils as u
-import singlepulse as SP
-import par
+import pypulse.utils as u
+import pypulse.singlepulse as SP
+import pypulse.par as par
 Par = par.Par
 import decimal as d
 Decimal = d.Decimal
