@@ -69,8 +69,9 @@ def lagfunction(func,t,x,e=None,dtau=1,tau_edges=None,mirror=False):
 
 
     # this could be sped up several ways
-    for i in xrange(length):
-        for j in xrange(length):
+    I = list(range(length))
+    for i in I:
+        for j in I:
             dt = np.abs(t[i]-t[j])
             index = np.where(dt < tau_edges)[0] #<=?
             if len(index)==0:
