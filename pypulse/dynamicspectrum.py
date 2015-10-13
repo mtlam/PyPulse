@@ -129,8 +129,8 @@ class DynamicSpectrum:
 
         # Replace the central noise spike with that of the next highest of its neighbors
         acfshape = np.shape(acf)
-        centerrind = acfshape[0]/2
-        centercind = acfshape[1]/2
+        centerrind = acfshape[0]//2
+        centercind = acfshape[1]//2
         acf[centerrind,centercind] = 0.0
         acf[centerrind,centercind] = np.max(acf[centerrind-1:centerrind+2,centercind-1:centercind+2])
 
@@ -156,8 +156,8 @@ class DynamicSpectrum:
 
 
         acfshape = np.shape(self.acf)
-        centerrind = acfshape[0]/2
-        centercind = acfshape[1]/2
+        centerrind = acfshape[0]//2
+        centercind = acfshape[1]//2
             
         # Look for the central peak in the ACF
 
@@ -187,32 +187,32 @@ class DynamicSpectrum:
             else:
                 paramerrors = np.zeros_like(params)
             for i,param in enumerate(params):
-                print "%s: %0.2e+/-%0.2e"%(paramnames[i],param,paramerrors[i])
+                print("%s: %0.2e+/-%0.2e"%(paramnames[i],param,paramerrors[i]))
                 
 
         #Solve for scintillation parameters numerically
         SHAPE = np.shape(plotacf)
         
         try:
-            delta_t_d = (optimize.brentq(lambda y: fit(SHAPE[0]/2,y)-baseline-amplitude/np.e,(SHAPE[1]-1)/2,SHAPE[1]*2)-(SHAPE[1]-1)/2)*dT #FWHM test
+            delta_t_d = (optimize.brentq(lambda y: fit(SHAPE[0]//2,y)-baseline-amplitude/np.e,(SHAPE[1]-1)//2,SHAPE[1]*2)-(SHAPE[1]-1)//2)*dT #FWHM test
             if self.verbose:
-                print "delta_t_d %0.3f minutes"%delta_t_d
+                print("delta_t_d %0.3f minutes"%delta_t_d)
         except ValueError:
             if self.verbose:
-                print "ERROR in delta_t_d"
+                print("ERROR in delta_t_d")
             delta_t_d = SHAPE[1]*dT
 
         try:
-            delta_nu_d = (optimize.brentq(lambda x: fit(x,SHAPE[1]/2)-baseline-amplitude/2.0,(SHAPE[0]-1)/2,SHAPE[0])-(SHAPE[0]-1)/2)*dF
+            delta_nu_d = (optimize.brentq(lambda x: fit(x,SHAPE[1]//2)-baseline-amplitude/2.0,(SHAPE[0]-1)//2,SHAPE[0])-(SHAPE[0]-1)//2)*dF
             if self.verbose:
-                print "delta_nu_d %0.3f MHz"%delta_nu_d
+                print("delta_nu_d %0.3f MHz"%delta_nu_d)
         except ValueError:
             if self.verbose:
-                print "ERROR in delta_nu_d"
+                print("ERROR in delta_nu_d")
             delta_nu_d = SHAPE[0]*dF
 
         if self.verbose:
-            print "dnu/dt %0.3f MHz/min" % ((dF/dT)*np.tan(rotation))#((dF/dT)*np.tan(rotation))
+            print("dnu/dt %0.3f MHz/min" % ((dF/dT)*np.tan(rotation)))#((dF/dT)*np.tan(rotation))
 
             fig = plt.figure()
             ax = fig.add_subplot(211)
@@ -223,7 +223,7 @@ class DynamicSpectrum:
             plt.colorbar()
             levels = (amplitude*np.array([1.0,0.5,1.0/np.e]))+baseline
             levels = (amplitude*np.array([0.5]))+baseline
-            print levels
+            print(levels)
 
             ax.contour(fit(*np.indices(plotacf.shape)),levels, colors='k')
             #ax.set_xlim(len(xs)-20,len(xs)+20)
@@ -291,7 +291,7 @@ class DynamicSpectrum:
         Load the dynamic spectrum from a .npz file
         """
         if self.verbose:
-            print "Dynamic Spectrum: Loading from file: %s" % filename
+            print("Dynamic Spectrum: Loading from file: %s" % filename)
         x = np.load(filename)
         for key in x.keys():
             exec("self.%s=x['%s']"%(key,key))
@@ -314,7 +314,7 @@ class DynamicSpectrum:
         Save the dynamic spectrum to a .npz file
         """
         if self.verbose:
-            print "Dynamic Spectrum: Saving to file: %s" % filename
+            print("Dynamic Spectrum: Saving to file: %s" % filename)
         np.savez(filename,data=self.data,offdata=self.offdata,errdata=self.errdata,mask=self.mask,F=self.F,T=self.T,Fcenter=self.Fcenter,Tcenter=self.Tcenter,extras=self.extras)
         return
 
