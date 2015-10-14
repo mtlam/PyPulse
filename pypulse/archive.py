@@ -501,7 +501,7 @@ class Archive:
         else:
             data = self.data
         if setnan is not None:
-            data[data==setnan]=np.nan
+            data = np.where(data==setnan,np.nan,data)
         return data
 
 
@@ -563,7 +563,8 @@ class Archive:
             else: #centered
                 return csum-np.diff(edgearr)/2.0
         elif flag == 'F':
-            return self.subintinfo['DAT_FREQ'][0] #temporary replacement
+            return self.subintinfo['DAT_FREQ'][0]  ### This block is a temporary replacement
+
             nchan = self.getNchan()
             fc = self.getCenterFrequency(weighted=wcfreq)
             bw = self.getBandwidth()
@@ -572,6 +573,7 @@ class Archive:
                 arr = np.array((np.arange(nchan+1) - (nchan+1)/2.0 + 0.5)*df + fc)
             else:
                 arr = np.array((np.arange(nchan) - nchan/2.0 + 0.5)*df + fc) #unweighted frequencies!
+
             if bw < 0.0:
                 return arr[::-1] #???
             return arr
