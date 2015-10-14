@@ -718,7 +718,7 @@ class Archive:
                 return wrapfunc(gs),wrapfunc(offs),wrapfunc(sig_gs)
                 
             #kind of hard wired
-            if window==None:
+            if window is None:
                 return wrapfunc(np.mean(data,axis=2))
             else:
                 return wrapfunc(np.mean(data[:,:,window],axis=2))
