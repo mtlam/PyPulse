@@ -109,10 +109,12 @@ class Par:
         if 'P0' in self.parameters:
             return self.parameters['P0']
         if 'F0' in self.parameters:
-            return self.numwrap(1)/self.parameters['F0']
-        if 'IF0' in self.parameters:
+            F0 = self.parameters['F0']
+        elif 'F' in self.parameters:
+            F0 = self.parameters['F']
+        elif 'IF0' in self.parameters:
             F0 = (self.parameters['IF0'] + self.parameters['FF0'])/self.numwrap(1000.0)
-            return self.numwrap(1)/F0
+        return self.numwrap(1)/F0
     def getPeriodDot(self,shklovskii=False):
         if 'P1' in self.parameters:
             Pdot = self.parameters['P1']
