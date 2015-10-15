@@ -95,14 +95,19 @@ class Archive:
             print("Filename not found")
             raise SystemExit
         self.header = hdulist[0].header
+        self.keys = fmap(lambda x: x.name,hdulist)
         
-        self.history = History(hdulist['HISTORY'])
-        nsubint = self.history.getLatest("NSUB")
-        npol = self.history.getLatest("NPOL")
-        nchan = self.history.getLatest("NCHAN")
-        nbin = self.history.getLatest("NBIN")
-
-        self.params = Par(fmap(lambda x: x[0],hdulist['PSRPARAM'].data),numwrap=float)
+        if 'HISTORY' in self.keys:
+            self.history = History(hdulist['HISTORY'])
+            nsubint = self.history.getLatest("NSUB")
+            npol = self.history.getLatest("NPOL")
+            nchan = self.history.getLatest("NCHAN")
+            nbin = self.history.getLatest("NBIN")
+        else:
+            nsubint = hdulist['DATA'].header['NAXIS2']
+            nbin,nchan,npol,nsblk = fmap(int,hdulist['SUBINT'].columns[-1].dim[1:-1].split(","))
+        
+        self.params = Par(fmap(lambda x: x[0],hdulist['PSRPARAM'].data),numwrap=float) #Could also be PSREPHEM
 
         self.subintinfo = dict()
         for i,column in enumerate(hdulist['SUBINT'].columns[:-3]):#[:-5]):
@@ -999,7 +1004,10 @@ class Archive:
             DAT_FREQ = self.subintinfo['DAT_FREQ']
             DAT_WTS = self.subintinfo['DAT_WTS']
             return np.sum(DAT_FREQ*DAT_WTS)/np.sum(DAT_WTS) 
-        return self.history.getLatest("CTR_FREQ")
+        if "HISTORY" in self.keys:
+            return self.history.getLatest('CTR_FREQ')
+        else:
+            return self.header['OBSFREQ'] #perhaps do an unweighted version from DAT_FREQ?
     def getTelescope(self):
         """Returns the telescope name"""
         return self.header['TELESCOP']
