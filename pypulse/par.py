@@ -42,7 +42,7 @@ class Par:
         self.errors = dict()
         for line in lines:
             splitline = line.strip().split()
-            if len(splitline) == 0:
+            if len(splitline) <= 1:
                 continue
             if splitline[0][0] == "#":
                 continue
@@ -116,7 +116,7 @@ class Par:
         else:
             return None
         keys = self.parameters.keys()
-        if shklovskii:#Correct for the shklovskii effect
+        if shklovskii: #Correct for the shklovskii effect
             PM = self.getPM()
             if PM is None or "PX" not in keys:
                 return Pdot
