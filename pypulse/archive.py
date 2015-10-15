@@ -42,7 +42,7 @@ import sys
 if sys.version_info.major == 2:
     fmap = map    
 elif sys.version_info.major == 3:
-    fmap = lambda x,y: list(map(x,y))
+    fmap = lambda x,*args: list(map(x,*args))
     xrange = range
 
 
