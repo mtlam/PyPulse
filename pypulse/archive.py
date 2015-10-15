@@ -95,7 +95,7 @@ class Archive:
             raise SystemExit
         self.header = hdulist[0].header
         self.keys = fmap(lambda x: x.name,hdulist)
-        print self.keys
+
         if 'HISTORY' in self.keys:
             self.history = History(hdulist['HISTORY'])
             nsubint = self.history.getLatest("NSUB")
@@ -105,8 +105,18 @@ class Archive:
         else:
             nsubint = hdulist['SUBINT'].header['NAXIS2']
             nbin,nchan,npol,nsblk = fmap(int,hdulist['SUBINT'].columns[-1].dim[1:-1].split(","))
+
+            
         
-        self.params = Par(fmap(lambda x: x[0],hdulist['PSRPARAM'].data),numwrap=float) #Could also be PSREPHEM
+        if 'PSRPARAM' in self.keys:
+            self.params = Par(fmap(lambda x: x[0],hdulist['PSRPARAM'].data),numwrap=float)
+        elif 'PSREPHEM' in self.keys:
+            paramkeys = fmap(lambda x: x.name,hdulist['PSREPHEM'].columns)
+            paramvals = hdulist['PSREPHEM'].data[0]
+            paramstrs = fmap(lambda x,y: "%s %s"%(x,y),paramkeys,paramvals)
+            self.params = Par(paramstrs,numwrap=float)
+        else:
+            self.params = None
 
         self.subintinfo = dict()
         for i,column in enumerate(hdulist['SUBINT'].columns[:-3]):#[:-5]):
@@ -115,9 +125,9 @@ class Archive:
         for i,key in enumerate(hdulist['SUBINT'].header):
             self.subintheader[key] = hdulist['SUBINT'].header[key]
 
-
-
         DATA = hdulist['SUBINT'].data['DATA']
+        if np.ndim(DATA)==5:
+            DATA = DATA[:,0,:,:,:] #remove the nsblk column
         #Definitions in Base/Formats/PSRFITS/ProfileColumn.C
         DAT_FREQ = hdulist['SUBINT'].data['DAT_FREQ']
         DAT_WTS = hdulist['SUBINT'].data['DAT_WTS']
@@ -947,6 +957,8 @@ class Archive:
         return self.shape(squeeze=False)[3]
     def getPeriod(self):
         """Returns period of the pulsar"""
+        if self.params is None:
+            return None
         return self.params.getPeriod()
     # Best replacement for without PSRCHIVE
     def getValue(self,value):
@@ -955,6 +967,8 @@ class Archive:
             return self.header[value]
         if value in self.subintinfo.keys():
             return self.subintinfo[value]
+        if self.params is None:
+            return None
         return self.params.get(value) #will return None if non-existent
     def getName(self):
         """Returns pulsar name"""
@@ -969,6 +983,8 @@ class Archive:
         return numwrap(self.getPeriod()) / numwrap(self.getNbin())
     def getDM(self):
         """Returns the header DM"""
+        if self.params is None:
+            return None
         return self.params.getDM()
     def getCoords(self,parse=True): #use get/set coorinates? Use astropy?
         """Returns the coordinate info in the header"""
