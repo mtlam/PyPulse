@@ -83,6 +83,8 @@ class Par:
     def __repr__(self):
         return "Par(%r)"%self.filename #numwrap?
     def __str__(self):
+        if type(self.filename) == list or type(self.filename) == np.ndarray:
+            return "\n".join(self.filename)
         return self.filename
 
 
