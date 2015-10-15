@@ -134,9 +134,9 @@ class Par:
             if PX <= 0 or (PXerr is not None and PXerr>=np.abs(PX)):
                 return Pdot
         
-            PM = PM * (MAS_TO_RAD/YR_TO_S) #mas/yr -> rad/s
-            D = (1/PX)*1000*PC_TO_M #kpc -> m
-            Pdot_pm = P*PM**2 *(D/c) #s/s
+            PM = PM * self.numwrap(MAS_TO_RAD/YR_TO_S) #mas/yr -> rad/s
+            D = self.numwrap(1000*PC_TO_M)/PX #kpc -> m
+            Pdot_pm = P*PM**2 *D/self.numwrap(c) #s/s
             return Pdot-Pdot_pm
         else:
             return Pdot
