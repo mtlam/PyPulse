@@ -15,7 +15,6 @@ Check POL_TYPE in the above to figure out how to pscrunch
 Add emulate_psrchive mode?
 
 Allow for chopping of subints, frequencies, etc?
-HISTORY may not exist for raw files
 
 Flip order of arguments in scrunching?
 
@@ -96,7 +95,7 @@ class Archive:
             raise SystemExit
         self.header = hdulist[0].header
         self.keys = fmap(lambda x: x.name,hdulist)
-        
+        print self.keys
         if 'HISTORY' in self.keys:
             self.history = History(hdulist['HISTORY'])
             nsubint = self.history.getLatest("NSUB")
@@ -104,7 +103,7 @@ class Archive:
             nchan = self.history.getLatest("NCHAN")
             nbin = self.history.getLatest("NBIN")
         else:
-            nsubint = hdulist['DATA'].header['NAXIS2']
+            nsubint = hdulist['SUBINT'].header['NAXIS2']
             nbin,nchan,npol,nsblk = fmap(int,hdulist['SUBINT'].columns[-1].dim[1:-1].split(","))
         
         self.params = Par(fmap(lambda x: x[0],hdulist['PSRPARAM'].data),numwrap=float) #Could also be PSREPHEM
