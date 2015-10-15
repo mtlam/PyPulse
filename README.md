@@ -6,7 +6,7 @@ A python package for handling and analyzing PSRFITS files.
 This is an alternate code base from [PSRCHIVE](http://psrchive.sourceforge.net/).
 
 Requires:
-
+python 2.7 or 3.X
 numpy
 scipy
 matplotlib
