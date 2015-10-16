@@ -30,7 +30,7 @@ class Par:
         self.filename = filename
         if type(filename) == list or type(filename) == np.ndarray:
             lines = filename
-        elif type(filename) == str:
+        elif type(filename) == str or type(filename) == np.str or isinstance(filename,np.str_):
             FILE = open(filename,'r')
             lines = FILE.readlines()
         else:
