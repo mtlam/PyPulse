@@ -57,6 +57,7 @@ class DynamicSpectrum:
         self.acf = None
                 
 
+
     def getValue(self,f,t,df=1,dt=1,err=False,index=False):
         '''
         Returns value of dynamic spectrum
