@@ -65,7 +65,7 @@ class Par:
                 else:
                     value = splitline[1]
 
-                if len(splitline) == 4:
+                if len(splitline) == 3 or len(splitline) == 4:
                     if numre.match(splitline[-1]):
                         error = numwrap(splitline[-1].replace('D','e'))
                     elif splitline[1].isdigit():
