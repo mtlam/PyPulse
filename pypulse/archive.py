@@ -807,7 +807,7 @@ class Archive:
         data = self.getData(squeeze=True)
         if len(np.shape(data))==2:
             if offset==None:
-                offset = np.max(np.average(data,axis=0)) * 2.10 #?
+                offset = np.max(np.average(data,axis=0))#*0.5# * 2.10 #?
 
             fig = plt.figure(figsize=(6,6))           
             if album:
@@ -837,14 +837,18 @@ class Archive:
             if album:
                 x = np.arange(len(data[0]))
                 lower_limit = np.ones(len(data[0]))*YLOW
+                z = 0
                 for i in range(len(data)-1,-1,-1):
+                    z += 1 
                     y = data[i][bins]+offset*i
+                    #y = np.roll(y,100*i) # for testing
 
-                    ax.plot(y,color)
+                    ax.plot(y,color,zorder=z)
 
                     ax.set_xlim(XLOW,XHIGH)
                     ax.set_ylim(YLOW,YHIGH)
-                    # ax.fill_between(x,y,where=y>=YLOW,color="red") #testing
+                    ax.fill_between(x,y,where=y>=YLOW,color=bgcolor,zorder=z) #testing
+
 
             else:
                 for i in range(len(data)):
