@@ -797,9 +797,9 @@ class Archive:
 
 
     def joyDivision(self,border=0.1,labels=False,album=True,**kwargs):
-        """Calls joy() in the style of the Joy Division album cover"""
-        return self.joy(border=border,labels=labels,album=album,**kwargs)
-    def joy(self,offset=None,border=0,labels=True,album=False,bins=None):
+        """Calls waterfall() in the style of the Joy Division album cover"""
+        return self.waterfall(border=border,labels=labels,album=album,**kwargs)
+    def waterfall(self,offset=None,border=0,labels=True,album=False,bins=None):
         """
         Joy Division plot of data, works like imshow
         Can be slow for many calls of plot!
@@ -809,7 +809,7 @@ class Archive:
             if offset==None:
                 offset = np.max(np.average(data,axis=0)) * 2.10 #?
 
-            fig = plt.figure()           
+            fig = plt.figure(figsize=(6,6))           
             if album:
                 bgcolor = 'black'
                 ax=fig.add_subplot(111,axisbg=bgcolor)
