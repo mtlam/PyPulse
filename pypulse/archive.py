@@ -799,12 +799,12 @@ class Archive:
     def joyDivision(self,border=0.1,labels=False,album=True,**kwargs):
         """Calls joy() in the style of the Joy Division album cover"""
         return self.joy(border=border,labels=labels,album=album,**kwargs)
-    def joy(self,offset=None,border=0,labels=True,album=False):
+    def joy(self,offset=None,border=0,labels=True,album=False,bins=None):
         """
         Joy Division plot of data, works like imshow
         Can be slow for many calls of plot!
         """
-        data = self.getData()
+        data = self.getData(squeeze=True)
         if len(np.shape(data))==2:
             if offset==None:
                 offset = np.max(np.average(data,axis=0)) * 2.10 #?
@@ -818,9 +818,14 @@ class Archive:
                 bgcolor = 'white'
                 ax=fig.add_subplot(111)
                 color='k'
+
+            if bins is None:
+                bins = np.arange(self.getNbin())
+
             
             XMIN = 0
-            XMAX = len(data[0])-1
+            #XMAX = len(data[0])-1
+            XMAX = len(bins)-1
             YMIN = 0-offset
             YMAX = (1+len(data))*offset
             XLOW = XMIN-(XMAX-XMIN)*border
@@ -828,20 +833,22 @@ class Archive:
             YLOW = YMIN-(YMAX-YMIN)*border
             YHIGH = (YMAX-YMIN)*border+YMAX
 
+
             if album:
                 x = np.arange(len(data[0]))
                 lower_limit = np.ones(len(data[0]))*YLOW
                 for i in range(len(data)-1,-1,-1):
-                    y = self.data[i]+offset*i
+                    y = data[i][bins]+offset*i
+
                     ax.plot(y,color)
 
                     ax.set_xlim(XLOW,XHIGH)
                     ax.set_ylim(YLOW,YHIGH)
-                    ax.fill_between(x,y,where=y>=YLOW,color="red")
+                    # ax.fill_between(x,y,where=y>=YLOW,color="red") #testing
 
             else:
                 for i in range(len(data)):
-                    ax.plot(data[i]+offset*i,color)
+                    ax.plot(data[i][bins]+offset*i,color)
 
             ax.set_xlim(XLOW,XHIGH)
             ax.set_ylim(YLOW,YHIGH)
