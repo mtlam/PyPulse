@@ -31,8 +31,8 @@ class TOA:
             for key,value in kwargs.items():
                 setattr(self,key,value)
         else: #parse all arguments
-            toastring = filename
-            splitstring = toastring.strip().split()
+            self.toastring = filename #stores toa string
+            splitstring = self.toastring.strip().split()
             self.filename = splitstring[0]
             self.freq = float(splitstring[1])
             self.MJD = numwrap(splitstring[2])
