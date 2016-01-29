@@ -88,7 +88,7 @@ class Tim:
             if count < 4: #is a command
                 self.commands.append(tuple(stripline.split())) #primitive handling
             else:
-                toa = TOA(line)
+                toa = TOA(line,numwrap=numwrap)
                 self.toas.append(toa)
 
 
