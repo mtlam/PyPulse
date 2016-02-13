@@ -22,6 +22,7 @@ kwargs are flags
 '''
 class TOA:
     def __init__(self,filename,freq=None,MJD=None,err=None,siteID=None,numwrap=d.Decimal,**kwargs):
+        self.flags = []
         if freq is not None and MJD is not None and err is not None and siteID is not None: #behave using all arguments regularly
             self.filename = filename
             self.freq = float(freq) #numwrap?
@@ -30,6 +31,7 @@ class TOA:
             self.siteID = siteID
             for key,value in kwargs.items():
                 setattr(self,key,value)
+                self.flags.append(key)
         else: #parse all arguments
             self.toastring = filename #stores toa string
             splitstring = self.toastring.strip().split()
@@ -39,7 +41,9 @@ class TOA:
             self.err = float(splitstring[3])
             self.siteID = splitstring[4]
             for i in range(5,len(splitstring),2):
-                setattr(self,splitstring[i][1:],splitstring[i+1])
+                key = splitstring[i][1:]
+                setattr(self,key,splitstring[i+1])
+                self.flags.append(key)
     #def __repr__(self):
     #    return 
     def __str__(self):
