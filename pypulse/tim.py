@@ -44,6 +44,7 @@ class TOA:
                 key = splitstring[i][1:]
                 setattr(self,key,splitstring[i+1])
                 self.flags.append(key)
+
     #def __repr__(self):
     #    return 
     def __str__(self):
@@ -72,6 +73,10 @@ class TOA:
 
 class Tim:
     def __init__(self,filename,numwrap=d.Decimal):
+        self.load(filename)
+        self.numwrap = numwrap
+
+    def load(self,filename):
         self.filename = filename
 
         if type(filename) == list or type(filename) == np.ndarray:
@@ -82,17 +87,22 @@ class Tim:
         else:
             return None
 
-        self.commands = [] #currently only stores these, but does not apply anything to any order
+        self.comment_dict = dict() #store these for saving later
+        self.commands_dict = dict() 
+
         self.toas = list()
-        for line in lines:
+        for i,line in enumerate(lines):
             if line[:2] == "C ":
+                self.comment_dict[i] = line
                 continue
             stripline = line.strip()
             count = stripline.count(" ")
             if count < 4: #is a command
-                self.commands.append(tuple(stripline.split())) #primitive handling
+                self.commands_dict[i] = tuple(stripline.split()) #primitive handling
             else:
-                toa = TOA(line,numwrap=numwrap)
+                toa = TOA(line,numwrap=self.numwrap)
                 self.toas.append(toa)
 
 
+    def save(self,filename):
+        pass
