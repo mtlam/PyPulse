@@ -48,7 +48,15 @@ class TOA:
     #def __repr__(self):
     #    return 
     def __str__(self):
-        return self.filename #?
+        if isinstance(self.MJD,d.Decimal):
+            retval = "%s %0.6f %s % 7.3f %+4s  "%(self.filename,self.freq,self.MJD,self.err,self.siteID)
+        else:
+            retval = "%s %0.6f %0.15f % 7.3f %+4s  "%(self.filename,self.freq,self.MJD,self.err,self.siteID)
+        for i,key in enumerate(self.flags):
+            retval += "-%s %s "%(key,getattr(self,key))
+        retval = retval[:-1]
+        return retval
+    
             
 
     def getFilename(self):
@@ -68,13 +76,12 @@ class TOA:
         except AttributeError:
             return None
         return value
-    
 
 
 class Tim:
     def __init__(self,filename,numwrap=d.Decimal):
-        self.load(filename)
         self.numwrap = numwrap
+        self.load(filename)
 
     def load(self,filename):
         self.filename = filename
@@ -88,7 +95,8 @@ class Tim:
             return None
 
         self.comment_dict = dict() #store these for saving later
-        self.commands_dict = dict() 
+        self.command_dict = dict() 
+        self.numlines = len(lines)
 
         self.toas = list()
         for i,line in enumerate(lines):
@@ -98,7 +106,7 @@ class Tim:
             stripline = line.strip()
             count = stripline.count(" ")
             if count < 4: #is a command
-                self.commands_dict[i] = tuple(stripline.split()) #primitive handling
+                self.command_dict[i] = tuple(stripline.split()) #primitive handling
             else:
                 toa = TOA(line,numwrap=self.numwrap)
                 self.toas.append(toa)
@@ -106,6 +114,16 @@ class Tim:
 
     def save(self,filename):
         output = ""
+
+        ntoa = 0
+        for i in range(self.numlines):
+            if i in self.comment_dict.keys():
+                output += self.comment_dict[i]
+            elif i in self.command_dict.keys():
+                output += (" ".join(self.command_dict[i])+"\n")
+            else:
+                output += (str(self.toas[ntoa])+"\n")
+                ntoa += 1
         with open(filename,'w') as FILE:
             FILE.write(output)
 
