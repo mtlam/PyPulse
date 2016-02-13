@@ -82,8 +82,8 @@ class Tim:
         if type(filename) == list or type(filename) == np.ndarray:
             lines = filename
         elif type(filename) == str or type(filename) == np.str or isinstance(filename,np.str_):
-            FILE = open(filename,'r') #this assumes the file exists
-            lines = FILE.readlines()
+            with open(filename,'r') as FILE:#this assumes the file exists
+                lines = FILE.readlines()
         else:
             return None
 
@@ -105,4 +105,7 @@ class Tim:
 
 
     def save(self,filename):
-        pass
+        output = ""
+        with open(filename,'w') as FILE:
+            FILE.write(output)
+
