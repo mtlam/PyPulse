@@ -29,9 +29,9 @@ class TOA:
             self.MJD = numwrap(MJD)
             self.err = float(err) #numwrap?
             self.siteID = siteID
-            for key,value in kwargs.items():
-                setattr(self,key,value)
-                self.flags.append(key)
+            for flag,value in kwargs.items():
+                setattr(self,flag,value)
+                self.flags.append(flag)
         else: #parse all arguments
             self.toastring = filename #stores toa string
             splitstring = self.toastring.strip().split()
@@ -41,9 +41,9 @@ class TOA:
             self.err = float(splitstring[3])
             self.siteID = splitstring[4]
             for i in range(5,len(splitstring),2):
-                key = splitstring[i][1:]
-                setattr(self,key,splitstring[i+1])
-                self.flags.append(key)
+                flag = splitstring[i][1:]
+                setattr(self,flag,splitstring[i+1])
+                self.flags.append(flag)
 
     #def __repr__(self):
     #    return 
@@ -52,8 +52,8 @@ class TOA:
             retval = "%s %0.6f %s % 7.3f %+4s  "%(self.filename,self.freq,self.MJD,self.err,self.siteID)
         else:
             retval = "%s %0.6f %0.15f % 7.3f %+4s  "%(self.filename,self.freq,self.MJD,self.err,self.siteID)
-        for i,key in enumerate(self.flags):
-            retval += "-%s %s "%(key,getattr(self,key))
+        for i,flag in enumerate(self.flags):
+            retval += "-%s %s "%(flag,getattr(self,flag))
         retval = retval[:-1]
         return retval
     
@@ -76,6 +76,25 @@ class TOA:
         except AttributeError:
             return None
         return value
+
+    # Use these with extreme caution!
+    def setFilename(self,filename):
+        self.filename = filename
+    def setFrequency(self,freq):
+        self.freq = freq
+    def setMJD(self,MJD):
+        self.MJD = MJD
+    def setError(self,err):
+        self.err = err
+    def setSiteID(self,siteID):
+        self.siteID = siteID
+    def set(self,flag,value):
+        if hasattr(self,flag):
+            setattr(self,flag,value)
+        else:
+            raise AttributeError("TOA does not contain flag: %s"%flag)
+
+
 
 
 class Tim:
