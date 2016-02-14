@@ -61,6 +61,8 @@ class TOA:
 
     def getFilename(self):
         return self.filename
+    def getFreq(self):
+        return self.getFrequency()
     def getFrequency(self):
         return self.freq
     def getMJD(self):
@@ -80,6 +82,8 @@ class TOA:
     # Use these with extreme caution!
     def setFilename(self,filename):
         self.filename = filename
+    def setFreq(self,freq):
+        self.setFrequency(freq)
     def setFrequency(self,freq):
         self.freq = freq
     def setMJD(self,MJD):
