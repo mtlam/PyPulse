@@ -93,7 +93,7 @@ class SinglePulse:
         self.period = period
 
         self.null = False
-        if np.all(self.data==0) or np.all(np.isnan(self.data)):
+        if np.all(self.data==self.data[0]) or np.all(np.isnan(self.data)):
             self.null = True
 
 
