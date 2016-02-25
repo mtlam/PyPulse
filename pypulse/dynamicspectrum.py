@@ -244,10 +244,16 @@ class DynamicSpectrum:
             spec = self.data
         T=self.T
         if self.T is None:
-            T=self.Tcenter
+            if self.Tcenter is None:
+                T = np.arange(len(spec))
+            else:
+                T = self.Tcenter
         F=self.F
         if self.F is None:
-            F=self.Fcenter
+            if self.Fcenter is None:
+                F = np.arange(len(spec[0]))
+            else:
+                F = self.Fcenter
         #cmap = cm.binary#jet
         if alpha:
             cmap.set_bad(alpha=0.0)
