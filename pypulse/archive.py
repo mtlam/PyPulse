@@ -693,9 +693,6 @@ class Archive:
                 I = range(fullshape[0])
                 J = range(fullshape[2])
 
-
-                raise SystemExit
-
                 if snr:
                     ind = -2
                 else:
