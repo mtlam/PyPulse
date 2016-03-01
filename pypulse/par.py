@@ -161,7 +161,7 @@ class Par:
 
     def getDM(self):
         return self.get('DM')
-    def getDMX(self):
+    def getDMX(self,full_output=False):
         keys = self.parameters.keys()
         Ncomponents = 0
         for key in keys:
@@ -173,10 +173,22 @@ class Par:
         ts = np.zeros(Ncomponents)
         dmxs = np.zeros(Ncomponents)
         errs = np.zeros(Ncomponents)
+        if full_output:
+            R1s = np.zeros(Ncomponents)
+            R2s = np.zeros(Ncomponents)
+            F1s = np.zeros(Ncomponents)
+            F2s = np.zeros(Ncomponents)
         for i in range(Ncomponents):
             ts[i] = self.get('DMXEP_%04i'%(i+1))
             dmxs[i] = self.get('DMX_%04i'%(i+1))
             errs[i] = self.get('DMX_%04i'%(i+1),error=True) #check to make sure this exists?
+            if full_output:
+                R1s[i] = self.get('DMXR1_%04i'%(i+1))
+                R2s[i] = self.get('DMXR2_%04i'%(i+1))
+                F1s[i] = self.get('DMXF1_%04i'%(i+1))
+                F2s[i] = self.get('DMXF2_%04i'%(i+1))
+        if full_output:
+            return ts,dmxs,errs,R1s,R2s,F1s,F2s
         return ts,dmxs,errs
     def getDMseries(self):
         ts,dmxs,errs = self.getDMX()
