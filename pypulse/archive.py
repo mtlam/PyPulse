@@ -1004,7 +1004,7 @@ class Archive:
             dec = self.header['DEC']
         return RA,dec
     def getPulsarCoords(self,parse=True):
-        """Returns the parsed coordiante info in the header"""
+        """Returns the parsed coordinate info in the header"""
         return self.getCoords(parse=parse)
     def getTelescopeCoords(self):
         """Returns the telescope coordinates"""
