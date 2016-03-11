@@ -98,6 +98,12 @@ class TOA:
         else:
             raise AttributeError("TOA does not contain flag: %s"%flag)
 
+    def add(self,flag,value):
+        if hasattr(self,flag):
+            raise AttributeError("Flag already exists: %s"%flag)
+        else:
+            self.flags.append(flag)
+            setattr(self,flag,value)
 
 
 
