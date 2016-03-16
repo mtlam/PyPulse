@@ -208,6 +208,8 @@ class Archive:
         if remove_baseline:
             self.removeBaseline()
 
+        hdulist.close()
+
         return
         
     #rename this?, not the same as psrchive's unload, which saves!
