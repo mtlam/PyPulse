@@ -514,11 +514,12 @@ class Archive:
     def getData(self,squeeze=True,setnan=None):
         """Returns the data array, fully squeezed"""
         if squeeze:
-            data = self.data.squeeze()
+            data = np.copy(self.data.squeeze())
         else:
-            data = self.data
+            data = np.copy(self.data) #removes pointer to data
         if setnan is not None:
             data = np.where(data==setnan,np.nan,data)
+
         return data
 
 
