@@ -235,7 +235,7 @@ class Archive:
     def reset(self,prepare=True):
         """Replace the arch with the original clone"""
         if self.lowmem:
-            self.data = self.load(self.filename,prepare=prepare)            
+            self.data = self.load(self.filename,prepare=prepare) 
         else:
             self.data = np.copy(self.data_orig)
         self.durations = self.subintinfo['TSUBINT']
@@ -514,13 +514,13 @@ class Archive:
     def getData(self,squeeze=True,setnan=None):
         """Returns the data array, fully squeezed"""
         if squeeze:
-            data = np.copy(self.data.squeeze())
+            data = self.data.squeeze()
         else:
-            data = np.copy(self.data) #removes pointer to data
+            data = self.data 
         if setnan is not None:
             data = np.where(data==setnan,np.nan,data)
 
-        return data
+        return np.copy(data) #removes pointer to data
 
 
     def saveData(self,filename=None,ext='npy',ascii=False):
