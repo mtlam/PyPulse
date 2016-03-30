@@ -164,11 +164,12 @@ class Archive:
             DAT_WTS /= np.max(DAT_WTS) #close???
 
         #print DAT_WTS,DAT_OFFS
+       # print np.shape(DAT_SCL),np.shape(DATA),np.shape(DAT_OFFS),np.shape(DAT_WTS),np.shape(DAT_WTS[0])
         if nsubint == 1 and npol == 1 and nchan == 1:
             self.data = (DAT_SCL*DATA+DAT_OFFS)*DAT_WTS
         elif nsubint == 1 and npol == 1:
             for k in K:
-                self.data[0,0,k,:] = (DAT_SCL[0,k]*DATA[0,0,k,:]+DAT_OFFS[0,k])*DAT_WTS[0] #dat WTS[0]?
+                self.data[0,0,k,:] = (DAT_SCL[0,k]*DATA[0,0,k,:]+DAT_OFFS[0,k])*DAT_WTS[0,k] #dat WTS[0]?
         elif nsubint == 1 and nchan == 1:               
             for j in J:
                 self.data[0,j,0,:] = (DAT_SCL[0,j]*DATA[0,j,0,:]+DAT_OFFS[0,j])*DAT_WTS[0]
@@ -752,14 +753,14 @@ class Archive:
                 plt.show()
         else:
             print("Invalid dimensions")
-    def imshow(self,ax=None,cbar=False,mask=None,show=True):
+    def imshow(self,ax=None,cbar=False,mask=None,show=True,**kwargs):
         """Basic imshow of data"""
         data = self.getData(setnan=0.0)
         if len(np.shape(data))==2:
             if mask is not None:
-                u.imshow(ma.masked_array(data),ax=ax,mask=mask)
+                u.imshow(ma.masked_array(data),ax=ax,mask=mask,**kwargs)
             else:
-                u.imshow(data,ax=ax) 
+                u.imshow(data,ax=ax,**kwargs) 
             if cbar:
                 plt.colorbar()
             if show:
