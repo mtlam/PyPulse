@@ -235,7 +235,7 @@ class Archive:
     def reset(self,prepare=True):
         """Replace the arch with the original clone"""
         if self.lowmem:
-            self.data = self.load(self.filename,prepare=prepare) 
+            self.load(self.filename,prepare=prepare) 
         else:
             self.data = np.copy(self.data_orig)
         self.durations = self.subintinfo['TSUBINT']
