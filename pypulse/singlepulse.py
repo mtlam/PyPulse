@@ -109,12 +109,15 @@ class SinglePulse:
         """
         self.data = u.center_max(self.data)
         
-    def normalize(self):
+    def normalize(self,area=False):
         """
         Normalize the pulse so that the peak has a value of 1.0
         """
-        minimum=np.mean(self.getOffpulse())
-        self.data=u.normalize(self.data,minimum=minimum)
+        if area:
+            self.data = u.normalize_area(self.data)
+        else:
+            minimum = np.mean(self.getOffpulse())
+            self.data = u.normalize(self.data,minimum=minimum)
         
 
     def getFWHM(self,simple=False,timeunits=True):
