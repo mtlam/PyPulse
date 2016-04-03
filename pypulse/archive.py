@@ -291,18 +291,23 @@ class Archive:
     def pscrunch(self):
         """
         average the data cube along the polarization dimension
-        Coherence data is:
+        Coherence data is (see More/General/Integration_get_Stokes.C):
         A = PP
         B = QQ
         C = Re[PQ]
         D = Im[PQ]
-        Therefore, Stokes are:
+        Therefore, if linear (FD_POLN == LIN), Stokes are:
         I = A+B
         Q = A-B
         U = 2C
         V = 2D
+        If circular, Stokes are:
+        I = A+B
+        Q = 2C
+        U = 2D
+        V = A-B
 
-        Note: What about circular versus linear, npol==2, etc.?
+        Note: What about npol==2, FD_HAND, other states, etc.?
         Should this modify npol? How to avoid double pscrunching?
         """
         if self.shape(squeeze=False)[1] == 1:
