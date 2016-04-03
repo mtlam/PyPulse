@@ -232,7 +232,7 @@ class SinglePulse:
         """
         Returns tauccf, tauhat, bhat, sigma_Tau, sigma_b, snr, rho
         """
-        if self.null:
+        if self.null or len(template) != self.nbins:
             return None
         if rms_baseline is None:
             self.remove_baseline()
