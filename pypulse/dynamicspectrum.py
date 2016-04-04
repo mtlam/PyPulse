@@ -55,7 +55,7 @@ class DynamicSpectrum:
         # Pre-define variables
         self.baseline_removed = False
         self.acf = None
-                
+        self.ss = None
 
 
     def getValue(self,f,t,df=1,dt=1,err=False,index=False):
@@ -142,6 +142,16 @@ class DynamicSpectrum:
 
         #return u.acf2d(self.data,speed=speed,mode=mode) #do more here
 
+    def secondary_spectrum(self,log=False):
+        data = self.getData(remove_baseline=remove_baseline)
+
+        ss = np.abs(np.fft.fftshift(np.fft.fft2(data)))**2
+
+        if log:
+            ss = np.log10(ss)
+
+        self.ss = ss
+        return ss
 
     def scintillation_parameters(self,plotbound=1.0):
         if self.acf is None:
