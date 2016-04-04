@@ -153,6 +153,7 @@ class DynamicSpectrum:
         self.ss = ss
         return ss
 
+    # allow for simple 1D fitting
     def scintillation_parameters(self,plotbound=1.0):
         if self.acf is None:
             self.acf2d()
@@ -320,8 +321,7 @@ class DynamicSpectrum:
             self.errdata = None
         if self.mask is not None and len(np.shape(self.mask))==0:
             self.mask = None
-            
-        
+
 
         x.close()
         return
@@ -332,7 +332,7 @@ class DynamicSpectrum:
         """
         if self.verbose:
             print("Dynamic Spectrum: Saving to file: %s" % filename)
-        np.savez(filename,data=self.data,offdata=self.offdata,errdata=self.errdata,mask=self.mask,F=self.F,T=self.T,Fcenter=self.Fcenter,Tcenter=self.Tcenter,extras=self.extras)
+        np.savez(filename,data=self.data,offdata=self.offdata,errdata=self.errdata,mask=self.mask,F=self.F,T=self.T,Fcenter=self.Fcenter,Tcenter=self.Tcenter,baseline_removed=self.baseline_removed,acf=self.acf,ss=self.ss,extras=self.extras)
         return
 
         
