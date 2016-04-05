@@ -80,6 +80,8 @@ class TOA:
         return value
 
     # Use these with extreme caution!
+    def comment(self):
+        self.filename = "C "+self.filename
     def setFilename(self,filename):
         self.filename = filename
     def setFreq(self,freq):
