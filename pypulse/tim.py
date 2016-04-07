@@ -6,6 +6,11 @@ Loads a tim file
 import decimal as d
 import numpy as np
 import re
+import sys
+if sys.version_info.major == 2:
+    fmap = map    
+elif sys.version_info.major == 3:
+    fmap = lambda x,*args: list(map(x,*args))
 
 numre = re.compile('(\d+[.]\d+D[+]\d+)|(-?\d+[.]\d+)')
 #flagre = re.compile('-[a-zA-Z]')
@@ -143,6 +148,8 @@ class Tim:
                 self.toas.append(toa)
 
 
+
+
     def save(self,filename):
         output = ""
 
@@ -158,3 +165,10 @@ class Tim:
         with open(filename,'w') as FILE:
             FILE.write(output)
 
+
+
+    def getTspan(self,years=False):
+        mjds = fmap(lambda x: x.getMJD(),self.toas)
+        if years:
+            return np.ptp(mjds)/365.25
+        return np.ptp(mjds)
