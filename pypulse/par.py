@@ -114,7 +114,7 @@ class Par:
             F0 = self.parameters['F']
         elif 'IF0' in self.parameters:
             F0 = (self.parameters['IF0'] + self.parameters['FF0'])/self.numwrap(1000.0)
-        return self.numwrap(1)/F0
+        return self.numwrap(1/0)/F0
     def getPeriodDot(self,shklovskii=False):
         if 'P1' in self.parameters:
             Pdot = self.parameters['P1']
@@ -140,6 +140,12 @@ class Par:
             return Pdot-Pdot_pm
         else:
             return Pdot
+
+    def getFrequency(self):
+        return self.numwrap(1.0)/self.getPeriod()
+    def getFrequencyDot(self,shklovskii=False):
+        return self.numwrap(-1.0) * self.getPeriodDot(shklovskii=shklovskii) / self.getPeriod()**2
+        
             
     def getPM(self):
         keys = self.parameters.keys()
