@@ -810,7 +810,7 @@ class Archive:
     def joyDivision(self,border=0.1,labels=False,album=True,**kwargs):
         """Calls waterfall() in the style of the Joy Division album cover"""
         return self.waterfall(border=border,labels=labels,album=album,**kwargs)
-    def waterfall(self,offset=None,border=0,labels=True,album=False,bins=None):
+    def waterfall(self,offset=None,border=0,labels=True,album=False,bins=None,show=True):
         """
         Joy Division plot of data, works like imshow
         Can be slow for many calls of plot!
@@ -871,7 +871,8 @@ class Archive:
             if not labels:
                 ax.set_xticklabels([])
                 ax.set_yticklabels([])
-            plt.show()
+            if show:
+                plt.show()
         else:
             print("Invalid dimensions")
 
