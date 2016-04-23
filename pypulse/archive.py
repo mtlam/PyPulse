@@ -85,7 +85,10 @@ class Archive:
 
 
     def load(self,filename,prepare=True,center_pulse=True,remove_baseline=True,weight=True):
-        """Loads a PSRFITS file and processes"""
+        """
+        Loads a PSRFITS file and processes
+        http://www.atnf.csiro.au/people/pulsar/index.html?n=PsrfitsDocumentation.Txt
+        """
         if filename is None: #Needed?
             filename = self.filename
         try:
@@ -148,7 +151,7 @@ class Archive:
         #    DAT_WTS = np.reshape(DAT_WTS,(nsubint,1,nchan,1),order='F')
         #    self.data = self.data * DAT_WTS
 
-
+        
         self.data = np.zeros((nsubint,npol,nchan,nbin))
         data = np.zeros((nsubint,npol,nchan,nbin))
         
@@ -752,9 +755,11 @@ class Archive:
         data = self.getData()
         if len(np.shape(data))==1:
             if ax is None:
-                plt.plot(data)
+                plt.plot(data,'k')
+                plt.xlim(0,len(data))
             else:
-                ax.plot(data)
+                ax.plot(data,'k')
+                ax.set_xlim(0,len(data))
             if show:
                 plt.show()
         else:
