@@ -200,6 +200,18 @@ class Par:
         ts,dmxs,errs = self.getDMX()
         DM = self.getDM()
         return ts,dmxs + float(DM), errs #float from possible decimal!
+
+    def getFDfunc(self):
+        """
+        Returns a function that provides the timing delays as a function of observing frequency
+        """
+        coeffs = []
+        for param in self.paramlist:
+            if "FD" in param:
+                coeffs.append(self.get(param))
+        f = lambda nu: -1e6*np.polyval(coeffs[::-1],np.log(nu)) #nu in GHz, returns values in microseconds
+        return f
+
     def getName(self):
         if "PSR" in self.parameters:
             return self.parameters["PSR"]
