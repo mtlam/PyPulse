@@ -206,12 +206,17 @@ class Par:
         for param in self.paramlist:
             if "FD" in param:
                 coeffs.append(self.get(param))
+        if len(coeffs) == 0:
+            return None
         return np.array(coeffs)
     def getFDfunc(self):
         """
         Returns a function that provides the timing delays as a function of observing frequency
         """
-        f = lambda nu: -1e6*np.polyval(self.getFD()[::-1],np.log(nu)) #nu in GHz, returns values in microseconds
+        FD = self.getFD()
+        if FD is None:
+            return None
+        f = lambda nu: -1e6*np.polyval(FD[::-1],np.log(nu)) #nu in GHz, returns values in microseconds
         return f
 
     def getName(self):
