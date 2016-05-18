@@ -216,7 +216,9 @@ class Par:
         FD = self.getFD()
         if FD is None:
             return None
-        f = lambda nu: -1e6*np.polyval(FD[::-1],np.log(nu)) #nu in GHz, returns values in microseconds
+        FD = FD[::-1]
+        FD = np.concatenate((FD,[0]))
+        f = lambda nu: 1e6*np.polyval(FD,np.log(nu)) #nu in GHz, returns values in microseconds
         return f
 
     def getName(self):
