@@ -311,18 +311,18 @@ def normalize_area(array,x=None,full=False):
     return array/area
 
 
-
 '''
 Center the maximum value of the array
 Follows profiles.py
 '''
-def center_max(array):    
+def center_max(array,full=False):    
     maxind=np.argmax(array)
     length=len(array)
-    centerind=int(length//2)
+    centerind=int(length/2)
     diff=centerind-maxind
+    if full:
+        return diff,np.roll(array,diff)
     return np.roll(array,diff)
-
 
 
 #Follow profiles.py
