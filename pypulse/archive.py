@@ -196,8 +196,8 @@ class Archive:
             
         # All time-tagging info
         self.durations = self.subintinfo['TSUBINT']
-        self.subint_starts = np.array(fmap(Decimal,self.subintinfo['OFFS_SUB']),dtype=np.dtype(Decimal))-self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)+self.getMJD(full=False,numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part
-        self.channel_delays = np.zeros(nchan) #used to keep track of frequency-dependent channel delays, should be in Decimal?
+        self.subint_starts = np.array(fmap(Decimal,self.subintinfo['OFFS_SUB']),dtype=np.dtype(Decimal))-self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)#+self.getMJD(full=False,numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part
+        self.channel_delays = np.zeros(nchan,dtype=np.dtype(Decimal)) #used to keep track of frequency-dependent channel delays, in bin units. Should be in Decimal?
             
         if prepare:
             self.pscrunch()
@@ -402,7 +402,7 @@ class Archive:
         K = range(npol)
            
         for i,delay in enumerate(bin_delays):
-            self.channel_delays[i] += delay
+            self.channel_delays[i] += Decimal(str(time_delays[i])) #FIX THIS
             for j in J:
                 for k in K:
                     self.data[j,k,i,:] = u.shiftit(self.data[j,k,i,:],sign*delay)
@@ -495,7 +495,7 @@ class Archive:
                 for k in xrange(nchan):
                     self.data[i,j,k,:] = np.roll(self.data[i,j,k,:],diff)
         self.average_profile = np.roll(self.average_profile,diff)
-        self.channel_delays += diff
+        self.channel_delays += Decimal(str(diff*self.getTbin())) #FIX THIS
         self.calculateOffpulseWindow()
         return self
 
@@ -900,9 +900,14 @@ class Archive:
         else:
             return
 
-        template = u.center_max(u.normalize(template,simple=True)) #just to enforce
-        
-        
+        rollval,template = u.center_max(u.normalize(template,simple=True),full=True) # enforces a good fit
+
+        #If given an offpulse, use that, else calculate a pre-defined one in the template Archive
+        if "opw" in kwargs.items():
+            opw = (kwargs['opw'] + rollval)%len(kwargs['opw']) # "roll" the array with the template
+        else:
+            sptemp = SP.SinglePulse(template,windowsize=len(template)/8)
+            kwargs['opw'] = sptemp.opw
 
         tauhat,bhat,sigma_tau,sigma_b,snrs = self.fitPulses(template,[1,2,3,4,5],**kwargs)
         Taxis = self.getAxis('T')
@@ -943,13 +948,13 @@ class Archive:
         for i,T in enumerate(Taxis):
             tobs = self.durations[i]
             if MJD:
-                t0 = start_time + self.subint_starts[i]
+                t0 = start_time + self.subint_starts[i]/Decimal(86400)
+                #t0 = self.subint_starts[i]
                 #t0 = Decimal(integration.get_start_time().in_days())
             for j,F in enumerate(Faxis):
                 if checknan(tauhat[i,j]):
                     continue
-
-                toa = '{0:0.15f}'.format(tauhat[i,j]+t0)
+                toa = '{0:0.15f}'.format(tauhat[i,j]+t0+self.channel_delays[j]/Decimal(86400))
                 output += "%s %f %s   %0.3f  %s   -fe %s -be %s -bw %f -tobs %f -tmplt %s -nbin %i -nch %i -snr %0.2f -flux %0.2f -fluxerr %0.2f\n"%(self.filename,F,toa,sigma_tau[i,j],telescope,frontend,backend,chanbw,tobs,tempname,nbin,nchan,snrs[i,j],bhat[i,j],sigma_b[i,j])
                 
 
