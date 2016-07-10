@@ -92,7 +92,10 @@ class Archive:
         if filename is None: #Needed?
             filename = self.filename
         try:
-            hdulist = pyfits.open(filename,ignore_missing_end=True)
+            if lowmem:
+                hdulist = pyfits.open(filename,ignore_missing_end=True,memmap=True)
+            else:
+                hdulist = pyfits.open(filename,ignore_missing_end=True)
         except IOError:
             print("Filename not found")
             raise SystemExit
