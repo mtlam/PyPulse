@@ -92,7 +92,7 @@ class Archive:
         if filename is None: #Needed?
             filename = self.filename
         try:
-            if lowmem:
+            if self.lowmem:
                 hdulist = pyfits.open(filename,ignore_missing_end=True,memmap=True)
             else:
                 hdulist = pyfits.open(filename,ignore_missing_end=True)
