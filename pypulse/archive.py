@@ -218,6 +218,30 @@ class Archive:
         hdulist.close()
 
         return
+
+
+    def save(self,filename):
+        """Save the file to a new FITS file"""
+
+        #pyfits.
+        '''
+        if 'HISTORY' in self.keys:
+            self.history = History(hdulist['HISTORY'])
+            nsubint = self.history.getLatest("NSUB")
+            npol = self.history.getLatest("NPOL")
+            nchan = self.history.getLatest("NCHAN")
+            nbin = self.history.getLatest("NBIN")
+        else:
+            nsubint = hdulist['SUBINT'].header['NAXIS2']
+            nbin,nchan,npol,nsblk = fmap(int,hdulist['SUBINT'].columns[-1].dim[1:-1].split(","))
+        '''
+
+
+
+        pass
+
+
+
         
     #rename this?, not the same as psrchive's unload, which saves!
     def unload(self):
