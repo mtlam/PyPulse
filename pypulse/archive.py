@@ -18,8 +18,6 @@ Allow for chopping of subints, frequencies, etc?
 
 Flip order of arguments in scrunching?
 
-pyfits.open() use memmap via lowmem flag
-
 Check if time() still works.
 '''
 
@@ -44,6 +42,10 @@ if sys.version_info.major == 2:
 elif sys.version_info.major == 3:
     fmap = lambda x,*args: list(map(x,*args))
     xrange = range
+
+PSR = "PSR"
+CAL = "CAL"
+SEARCH = "SEARCH"
 
 
 
@@ -169,25 +171,27 @@ class Archive:
         else:
             DAT_WTS /= np.max(DAT_WTS) #close???
 
+        self.weights = DAT_WTS
+
         #print DAT_WTS,DAT_OFFS
        # print np.shape(DAT_SCL),np.shape(DATA),np.shape(DAT_OFFS),np.shape(DAT_WTS),np.shape(DAT_WTS[0])
         if nsubint == 1 and npol == 1 and nchan == 1:
-            self.data = (DAT_SCL*DATA+DAT_OFFS)*DAT_WTS
+            self.data = (DAT_SCL*DATA+DAT_OFFS)#*DAT_WTS
         elif nsubint == 1 and npol == 1:
             for k in K:
-                self.data[0,0,k,:] = (DAT_SCL[0,k]*DATA[0,0,k,:]+DAT_OFFS[0,k])*DAT_WTS[0,k] #dat WTS[0]?
+                self.data[0,0,k,:] = (DAT_SCL[0,k]*DATA[0,0,k,:]+DAT_OFFS[0,k])#*DAT_WTS[0,k] #dat WTS[0]?
         elif nsubint == 1 and nchan == 1:               
             for j in J:
-                self.data[0,j,0,:] = (DAT_SCL[0,j]*DATA[0,j,0,:]+DAT_OFFS[0,j])*DAT_WTS[0]
+                self.data[0,j,0,:] = (DAT_SCL[0,j]*DATA[0,j,0,:]+DAT_OFFS[0,j])#*DAT_WTS[0]
         elif npol == 1 and nchan == 1:
             for i in I:
-                self.data[i,0,0,:] = (DAT_SCL[i,0]*DATA[i,0,0,:]+DAT_OFFS[i,0])*DAT_WTS[0]
+                self.data[i,0,0,:] = (DAT_SCL[i,0]*DATA[i,0,0,:]+DAT_OFFS[i,0])#*DAT_WTS[0]
         else: #if nsubint == 1 or npol == 1 or nchan == 1 this works, or all three are not 1, might want to split this up
             for i in I:
                 for j in J:
                     jnchan = j*nchan
                     for k in K:
-                        self.data[i,j,k,:] = (DAT_SCL[i,jnchan+k]*DATA[i,j,k,:]+DAT_OFFS[i,jnchan+k])*DAT_WTS[i,k]
+                        self.data[i,j,k,:] = (DAT_SCL[i,jnchan+k]*DATA[i,j,k,:]+DAT_OFFS[i,jnchan+k])#*DAT_WTS[i,k]
 
         bw = self.getBandwidth()
         #if bw < 0:
@@ -202,7 +206,7 @@ class Archive:
         self.subint_starts = np.array(fmap(Decimal,self.subintinfo['OFFS_SUB']),dtype=np.dtype(Decimal))-self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)#+self.getMJD(full=False,numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part
         self.channel_delays = np.zeros(nchan,dtype=np.dtype(Decimal)) #used to keep track of frequency-dependent channel delays, in bin units. Should be in Decimal?
             
-        if prepare:
+        if prepare and not self.isCalibrator():
             self.pscrunch()
             self.dedisperse()
 
@@ -278,12 +282,16 @@ class Archive:
         if 'T' in arg:
             self.data[0,:,:,:] = np.mean(self.data,axis=0) 
             self.data = self.data[0:1,:,:,:] #resize
+            self.weights[0,:] = np.mean(self.weights,axis=0) #is this correct?
+            self.weights = self.weights[0:1,:] #resize
             self.durations = np.array([self.getDuration()])
         if 'p' in arg:
             self.pscrunch() #throw this the other way
         if 'F' in arg:
             self.data[:,:,0,:] = np.mean(self.data,axis=2)
             self.data = self.data[:,:,0:1,:]
+            self.weights[:,0] = np.mean(self.weights,axis=1) #problem?
+            self.weigths = self.weights[:,0:1]
         if 'D' in arg:
             self.dedisperse()
         if 'B' in arg:
@@ -546,15 +554,29 @@ class Archive:
 
 
 
-    def getData(self,squeeze=True,setnan=None):
+    def getData(self,squeeze=True,setnan=None,weight=True):
         """Returns the data array, fully squeezed"""
-        if squeeze:
-            data = self.data.squeeze()
+        if weight:
+            data = np.zeros_like(self.data)
+            I,J,K,L = np.shape(self.data)
+            I = range(I)
+            J = range(J)
+            K = range(K)
+            for i in I:
+                for j in J:
+                    for k in K:                      
+                        data[i,j,k,:] = self.data[i,j,k,:]*self.weights[i,k]
         else:
-            data = self.data 
+            data = self.data
+
+
+
+        if squeeze:
+            data = data.squeeze()
+
         if setnan is not None:
             data = np.where(data==setnan,np.nan,data)
-
+        
         return np.copy(data) #removes pointer to data
 
 
@@ -1012,6 +1034,8 @@ class Archive:
         return self.shape(squeeze=False)[3]
     def getPeriod(self):
         """Returns period of the pulsar"""
+        if self.isCalibrator():
+            return 1.0/self.header['CAL_FREQ']
         if self.params is None:
             return None
         return self.params.getPeriod()
@@ -1072,8 +1096,7 @@ class Archive:
         """Returns the center frequency"""
         if weighted:
             DAT_FREQ = self.subintinfo['DAT_FREQ']
-            DAT_WTS = self.subintinfo['DAT_WTS']
-            return np.sum(DAT_FREQ*DAT_WTS)/np.sum(DAT_WTS) 
+            return np.sum(DAT_FREQ*self.weights)/np.sum(self.weights)
         if "HISTORY" in self.keys:
             return self.history.getLatest('CTR_FREQ')
         else:
@@ -1090,6 +1113,12 @@ class Archive:
     def getSN(self):
         """Returns the average pulse S/N"""
         return self.spavg.getSN()
+
+    def isCalibrator(self):
+        if self.header['OBS_MODE'] == CAL:
+            return True
+        return False
+
 
 
 # Takes hdulist['HISTORY']
