@@ -103,8 +103,10 @@ class Archive:
             raise SystemExit
         self.header = hdulist[0].header
         self.keys = fmap(lambda x: x.name,hdulist)
+        tablenames = self.keys[:] #temporary list for checking other tables
 
         if 'HISTORY' in self.keys:
+            tablenames.remove('HISTORY')
             self.history = History(hdulist['HISTORY'])
             nsubint = self.history.getLatest("NSUB")
             npol = self.history.getLatest("NPOL")
@@ -116,10 +118,11 @@ class Archive:
             nbin,nchan,npol,nsblk = fmap(int,hdulist['SUBINT'].columns[-1].dim[1:-1].split(","))
 
             
-        
         if 'PSRPARAM' in self.keys:
+            tablenames.remove('PSRPARAM')
             self.params = Par(fmap(lambda x: x[0],hdulist['PSRPARAM'].data),numwrap=float)
         elif 'PSREPHEM' in self.keys:
+            tablenames.remove('PSREPHEM')
             paramkeys = fmap(lambda x: x.name,hdulist['PSREPHEM'].columns)
             paramvals = hdulist['PSREPHEM'].data[0]
             paramstrs = fmap(lambda x,y: "%s %s"%(x,y),paramkeys,paramvals)
@@ -127,9 +130,19 @@ class Archive:
         else:
             self.params = None
 
+        tablenames.remove('PRIMARY')
+        tablenames.remove('SUBINT')
+        self.tables = list()
+        for tablename in tablenames: #remaining table names to store
+            self.tables.append(hdulist[tablename].copy())
+    
+
+
+
         self.subintinfo = dict()
-        for i,column in enumerate(hdulist['SUBINT'].columns[:-3]):#[:-5]):
-            self.subintinfo[column.name] = hdulist['SUBINT'].data[column.name]
+        self.subintinfolist = fmap(lambda x: x.name, hdulist['SUBINT'].columns[:-5])
+        for i,column in enumerate(hdulist['SUBINT'].columns[:-5]):
+            self.subintinfo[column.name] = (column.format,column.unit,hdulist['SUBINT'].data[column.name])
         self.subintheader = dict()
         for i,key in enumerate(hdulist['SUBINT'].header):
             self.subintheader[key] = hdulist['SUBINT'].header[key]
@@ -142,20 +155,9 @@ class Archive:
         DAT_WTS = hdulist['SUBINT'].data['DAT_WTS']
         if not weight:
             DAT_WTS = np.ones(np.shape(DAT_WTS))
-        DAT_SCL = hdulist['SUBINT'].data['DAT_SCL']#.flatten()
-        DAT_OFFS = hdulist['SUBINT'].data['DAT_OFFS']#.flatten()
+        DAT_SCL = hdulist['SUBINT'].data['DAT_SCL']
+        DAT_OFFS = hdulist['SUBINT'].data['DAT_OFFS']
 
-
-
-        # This guarantees reshape to (t,pol,freq,phase) dimensions but is extremely slow
-        #DATA = np.reshape(DATA,(nsubint,npol,nchan,nbin),order='C')
-        #DAT_SCL = np.reshape(DAT_SCL,(nsubint,npol,nchan,1),order='C')
-        #DAT_OFFS = np.reshape(DAT_OFFS,(nsubint,npol,nchan,1),order='C')
-        #self.data = DAT_SCL * np.array(DATA,dtype=np.float) + DAT_OFFS         
-        #if weight:
-        #    #DAT_WTS = u.normalize(DAT_WTS) #not needed?
-        #    DAT_WTS = np.reshape(DAT_WTS,(nsubint,1,nchan,1),order='F')
-        #    self.data = self.data * DAT_WTS
 
         
         self.data = np.zeros((nsubint,npol,nchan,nbin))
@@ -172,10 +174,9 @@ class Archive:
         else:
             DAT_WTS /= np.max(DAT_WTS) #close???
 
+        self.freq = DAT_FREQ
         self.weights = DAT_WTS
 
-        #print DAT_WTS,DAT_OFFS
-       # print np.shape(DAT_SCL),np.shape(DATA),np.shape(DAT_OFFS),np.shape(DAT_WTS),np.shape(DAT_WTS[0])
         if nsubint == 1 and npol == 1 and nchan == 1:
             self.data = (DAT_SCL*DATA+DAT_OFFS)#*DAT_WTS
         elif nsubint == 1 and npol == 1:
@@ -203,8 +204,8 @@ class Archive:
         #        self.data[:,:,k,:] = tempdata[:,:,MAX-k,:]
             
         # All time-tagging info
-        self.durations = self.subintinfo['TSUBINT']
-        self.subint_starts = np.array(fmap(Decimal,self.subintinfo['OFFS_SUB']),dtype=np.dtype(Decimal))-self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)#+self.getMJD(full=False,numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part
+        self.durations = self.getSubintinfo('TSUBINT')
+        self.subint_starts = np.array(fmap(Decimal,self.getSubintinfo('OFFS_SUB')),dtype=np.dtype(Decimal))-self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)#+self.getMJD(full=False,numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part
         self.channel_delays = np.zeros(nchan,dtype=np.dtype(Decimal)) #used to keep track of frequency-dependent channel delays, in bin units. Should be in Decimal?
             
         if prepare and not self.isCalibrator():
@@ -221,7 +222,6 @@ class Archive:
             self.removeBaseline()
 
         hdulist.close()
-
         return
 
 
@@ -229,28 +229,45 @@ class Archive:
         """Save the file to a new FITS file"""
 
         primaryhdu = pyfits.PrimaryHDU(header=self.header) #need to make alterations to header
+        hdulist = pyfits.HDUList(primaryhdu)
+
         if self.history is not None:
-            historyhdu = pyfits.BinTableHDU
-        else:
-            pass
+            cols = []
+            for name in self.history.namelist:
+                fmt,unit,array = self.history.dictionary[name]
+                col = pyfits.Column(name=name,format=fmt,unit=unit,array=array)
+                cols.append(col)
+            historyhdu = pyfits.BinTableHDU.from_columns(cols,name='HISTORY')
+            hdulist.append(historyhdu)
+            # Need to add in PyPulse changes into a HISTORY 
+        #else: #else start a HISTORY table
+            
+                    
+        if self.params is not None:
+            cols = [pyfits.Column(name='PSRPARAM',format='128A',array=self.params.filename)]
+            paramhdu = pyfits.BinTableHDU.from_columns(cols,name='PSRPARAM')
+            hdulist.append(paramhdu)
+            # Need to include mode for PSREPHEM
+
+        if len(self.tables) > 0:
+            for table in self.tables:
+                hdulist.append(table)
+
+        cols = []
+        for name in self.subintinfolist:
+            fmt,unit,array = self.subintinfo[name]
+            col = pyfits.Column(name=name,format=fmt,unit=unit,array=array)
+            cols.append(col)
+            # finish writing out SUBINT!
+        subinthdu = pyfits.BinTableHDU.from_columns(cols,name='SUBINT')
+        hdulist.append(subinthdu)
+        #self.subintheader = dict()
+        #for i,key in enumerate(hdulist['SUBINT'].header):
+        #    self.subintheader[key] = hdulist['SUBINT'].header[key]
 
 
-        #pyfits.
-        '''
-        if 'HISTORY' in self.keys:
-            self.history = History(hdulist['HISTORY'])
-            nsubint = self.history.getLatest("NSUB")
-            npol = self.history.getLatest("NPOL")
-            nchan = self.history.getLatest("NCHAN")
-            nbin = self.history.getLatest("NBIN")
-        else:
-            nsubint = hdulist['SUBINT'].header['NAXIS2']
-            nbin,nchan,npol,nsblk = fmap(int,hdulist['SUBINT'].columns[-1].dim[1:-1].split(","))
-        '''
+        hdulist.writeto(filename,clobber=True)#clobber=True?
 
-
-
-        pass
 
 
     def unload(self,filename):
@@ -277,7 +294,7 @@ class Archive:
             self.load(self.filename,prepare=prepare) 
         else:
             self.data = np.copy(self.data_orig)
-        self.durations = self.subintinfo['TSUBINT']
+        self.durations = self.getSubintinfo('TSUBINT')
         #if prepare:
         #    self.scrunch()
 
@@ -397,6 +414,7 @@ class Archive:
             counts[:,:,:length,:] += count
         retval = retval/counts
         self.data = retval
+        #self.freq = 
         return self
 
     def bscrunch(self,nbins=None,factor=None):
@@ -670,7 +688,7 @@ class Archive:
             else: #centered
                 return csum-np.diff(edgearr)/2.0
         elif flag == 'F':
-            return self.subintinfo['DAT_FREQ'][0]  ### This block is a temporary replacement
+            return self.freq[0]#self.getSubintinfo('DAT_FREQ')[0]  ### This block is a temporary replacement
 
             nchan = self.getNchan()
             fc = self.getCenterFrequency(weighted=wcfreq)
@@ -1077,10 +1095,15 @@ class Archive:
         if value in self.header.keys():
             return self.header[value]
         if value in self.subintinfo.keys():
-            return self.subintinfo[value]
+            return self.subintinfo[value][-1]
         if self.params is None:
             return None
         return self.params.get(value) #will return None if non-existent
+    def getSubintinfo(self,value):
+        """Returns value from subintinfo"""
+        if value in self.subintinfo.keys():
+            return self.subintinfo[value][-1]
+        return None
     def getName(self):
         """Returns pulsar name"""
         return self.header['SRC_NAME']
@@ -1120,15 +1143,15 @@ class Archive:
             return self.subintheader['CHAN_BW']*self.subintheader['NCHAN']
     def getDuration(self):
         """Returns the observation duratrion"""
-        return np.sum(self.subintinfo['TSUBINT']) #This is constant.
+        #return np.sum(self.subintinfo['TSUBINT']) #This is constant.
+        return np.sum(self.getSubintinfo('TSUBINT')) #This is constant.
     def getDurations(self):
         """Returns the subintegration durations"""
         return self.durations
     def getCenterFrequency(self,weighted=False):
         """Returns the center frequency"""
         if weighted:
-            DAT_FREQ = self.subintinfo['DAT_FREQ']
-            return np.sum(DAT_FREQ*self.weights)/np.sum(self.weights)
+            return np.sum(self.freq*self.weights)/np.sum(self.weights)
         if "HISTORY" in self.keys:
             return self.history.getLatest('CTR_FREQ')
         else:
