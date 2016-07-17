@@ -246,8 +246,7 @@ class Archive:
 
 
     def unload(self,filename):
-        """ write out to a PSRFITS file """
-        pass
+        return self.save(filename)
 
     def gc(self):
         """Manually clear the data cube for python garbage collection"""
