@@ -245,11 +245,9 @@ class Archive:
         pass
 
 
-
-        
-    #rename this?, not the same as psrchive's unload, which saves!
-    def unload(self):
-        self.gc()
+    def unload(self,filename):
+        """ write out to a PSRFITS file """
+        pass
 
     def gc(self):
         """Manually clear the data cube for python garbage collection"""
