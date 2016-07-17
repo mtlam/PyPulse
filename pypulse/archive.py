@@ -314,16 +314,26 @@ class Archive:
         retval = np.zeros((len(np.r_[0:nsub:factor]),self.getNpol(),self.getNchan(),self.getNbin()))
         counts = np.zeros_like(retval)
         newdurations = np.zeros(np.shape(retval)[0])
-        for i in range(factor):        
+        wretval = np.zeros((len(np.r_[0:nsub:factor]),self.getNchan()))
+        wcounts = np.zeros_like(retval)
+        for i in range(factor):
+            # Data array
             arr = self.data[i:nsub:factor,:,:,:] 
             count = np.ones_like(arr)
             length = np.shape(arr)[0]
             retval[:length,:,:,:] += arr
             counts[:length,:,:,:] += count
             newdurations[:length] += self.durations[i:nsub:factor]
+            # Weights array
+            arr = self.weights[i:nsub:factor,:]
+            count = np.ones_like(arr)
+            wretval[:length,:,:,:] += arr
+            wcounts[:length,:,:,:] += count
         retval = retval/counts
+        #wretval = wretval/wcounts #is this correct?
         self.data = retval
         self.durations = newdurations
+        self.weights = wretval
         return self
 
     def pscrunch(self):
@@ -375,7 +385,7 @@ class Archive:
         retval = np.zeros((self.getNsubint(),self.getNpol(),len(np.r_[0:nch:factor]),self.getNbin()))
         counts = np.zeros_like(retval)
         for i in range(factor):        
-            arr = self.data[:,:,i:nch:factor,:] 
+            arr = self.data[:,:,i:nch:factor,:]
             count = np.ones_like(arr)
             length = np.shape(arr)[2]
             retval[:,:,:length,:] += arr
