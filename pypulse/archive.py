@@ -602,7 +602,8 @@ class Archive:
         if squeeze:
             weights = weights.squeeze()
         return np.copy(weights)
-        
+    def setWeights(self,t,f,val):
+        self.weights[t,f] = val
 
 
 
