@@ -111,6 +111,7 @@ class Archive:
             nchan = self.history.getLatest("NCHAN")
             nbin = self.history.getLatest("NBIN")
         else:
+            self.history = None
             nsubint = hdulist['SUBINT'].header['NAXIS2']
             nbin,nchan,npol,nsblk = fmap(int,hdulist['SUBINT'].columns[-1].dim[1:-1].split(","))
 
@@ -226,6 +227,13 @@ class Archive:
 
     def save(self,filename):
         """Save the file to a new FITS file"""
+
+        primaryhdu = pyfits.PrimaryHDU(header=self.header) #need to make alterations to header
+        if self.history is not None:
+            historyhdu = pyfits.BinTableHDU
+        else:
+            pass
+
 
         #pyfits.
         '''
@@ -1150,14 +1158,16 @@ class History:
     def __init__(self,history):
         """Intializer"""
         self.dictionary = dict()
+        self.namelist = list()
         for col in history.columns:
-            self.dictionary[col.name] = list(col.array) #make a np.array?
+            self.namelist.append(col.name)
+            self.dictionary[col.name] = (col.format,col.unit,list(col.array)) #make a np.array?
     def getValue(self,field,num=None):
-        """Returns a dictionary value for a given numeric entry"""
+        """Returns a dictionary array value for a given numeric entry"""
         if num is None:
-            return self.dictionary[field]
+            return self.dictionary[field][-1]
         else:
-            return self.dictionary[field][num]
+            return self.dictionary[field][-1][num]
     def getLatest(self,field):
         """Returns the latest key value"""
         return self.getValue(field,-1)
