@@ -213,7 +213,7 @@ class Archive:
         self.calculateAverageProfile()
 
         
-        if center_pulse:
+        if center_pulse and not self.isCalibrator(): #calibrator is not a pulse
             self.center()
 
         if remove_baseline:
@@ -282,7 +282,7 @@ class Archive:
         if 'T' in arg:
             self.data[0,:,:,:] = np.mean(self.data,axis=0) 
             self.data = self.data[0:1,:,:,:] #resize
-            self.weights[0,:] = np.mean(self.weights,axis=0) #is this correct?
+            self.weights[0,:] = np.mean(self.weights,axis=0) #should be sum?
             self.weights = self.weights[0:1,:] #resize
             self.durations = np.array([self.getDuration()])
         if 'p' in arg:
@@ -552,6 +552,17 @@ class Archive:
         """For PSRCHIVE naming convention"""
         return self.removeBaseline() 
 
+    def calibrate(self,psrcal):
+        """Calibrates using another archive"""
+        if not psrcal.isCalibrator():
+            raise ValueError("Require calibration archive")
+        # Check if psrcal has the correct dimensions
+
+        # Find cal levels
+
+        # Apply calibrations
+        pass
+
 
 
     def getData(self,squeeze=True,setnan=None,weight=True):
@@ -569,8 +580,6 @@ class Archive:
         else:
             data = self.data
 
-
-
         if squeeze:
             data = data.squeeze()
 
@@ -578,6 +587,13 @@ class Archive:
             data = np.where(data==setnan,np.nan,data)
         
         return np.copy(data) #removes pointer to data
+    def getWeights(self,squeeze=True):
+        weights = self.weights
+        if squeeze:
+            weights = weights.squeeze()
+        return np.copy(weights)
+        
+
 
 
     def saveData(self,filename=None,ext='npy',ascii=False):
