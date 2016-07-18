@@ -259,11 +259,36 @@ class Archive:
             col = pyfits.Column(name=name,format=fmt,unit=unit,array=array)
             cols.append(col)
             # finish writing out SUBINT!
+
+        cols.append(pyfits.Column(name='DAT_FREQ',format='%iE'%np.size(self.freq),unit='MHz',array=self.freq)) #correct size? check units?
+        cols.append(pyfits.Column(name='DAT_WTS',format='%iE'%np.size(self.weights),array=self.weights)) #call getWeights()
+
+        DAT_OFFS = np.zeros((self.getNpol(),self.getNchan()))
+        DAT_SCL = np.zeros((self.getNpol(),self.getNchan()))
+        DATA = self.getData(squeeze=False)
+
+        for i in range(np.shape(DAT_OFFS)[0]):
+            for j in range(np.shape(DAT_OFFS)[1]):
+                DAT_OFFS[i,j] = np.mean(DATA[:,i,j,:],axis=(0,1))
+                DATA[:,i,j,:] -= DAT_OFFS[i,j]
+                DAT_SCL[i,j] = np.max(np.abs(DATA[:,i,j,:]))/32767.0 #????
+                DATA[:,i,j,:] = DATA[:,i,j,:]/DAT_SCL[i,j]
+
+                #32767*DATA[:,i,j,:]/np.max(np.abs(DATA[:,i,j,:])) #?????
+
+        cols.append(pyfits.Column(name='DAT_OFFS',format='%iE'%np.size(DAT_OFFS),array=DAT_OFFS))
+        cols.append(pyfits.Column(name='DAT_SCL',format='%iE'%np.size(DAT_SCL),array=DAT_SCL))
+        cols.append(pyfits.Column(name='DATA',format='%iI'%np.size(DATA),array=DATA))
+        
+
         subinthdu = pyfits.BinTableHDU.from_columns(cols,name='SUBINT')
         hdulist.append(subinthdu)
         #self.subintheader = dict()
         #for i,key in enumerate(hdulist['SUBINT'].header):
         #    self.subintheader[key] = hdulist['SUBINT'].header[key]
+
+        
+
 
 
         hdulist.writeto(filename,clobber=True)#clobber=True?
