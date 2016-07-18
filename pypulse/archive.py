@@ -51,19 +51,19 @@ SEARCH = "SEARCH"
 
 
 class Archive:
-    def __init__(self,filename,prepare=True,lowmem=False,verbose=True,weight=True,center_pulse=True,remove_baseline=True):
+    def __init__(self,filename,prepare=True,lowmem=False,verbose=True,weight=True,center_pulse=True,baseline_removal=True):
         ## Parse filename here?
         self.filename = str(filename) #fix unicode issue
         self.prepare = prepare
         self.lowmem = lowmem
         self.verbose = verbose
         self.center_pulse = center_pulse
-        self.remove_baseline = remove_baseline
+        self.baseline_removal = baseline_removal
         if verbose:
             print("Loading: %s" % self.filename)
             t0=time.time()
 
-        self.load(self.filename,prepare=prepare,center_pulse=center_pulse,remove_baseline=remove_baseline,weight=weight)
+        self.load(self.filename,prepare=prepare,center_pulse=center_pulse,baseline_removal=baseline_removal,weight=weight)
         if not self.lowmem:
             self.data_orig = np.copy(self.data)
         if verbose:
@@ -86,7 +86,7 @@ class Archive:
 
 
 
-    def load(self,filename,prepare=True,center_pulse=True,remove_baseline=True,weight=True):
+    def load(self,filename,prepare=True,center_pulse=True,baseline_removal=True,weight=True):
         """
         Loads a PSRFITS file and processes
         http://www.atnf.csiro.au/people/pulsar/index.html?n=PsrfitsDocumentation.Txt
@@ -218,7 +218,7 @@ class Archive:
         if center_pulse and not self.isCalibrator(): #calibrator is not a pulse
             self.center()
 
-        if remove_baseline:
+        if baseline_removal:
             self.removeBaseline()
 
         hdulist.close()
@@ -281,7 +281,7 @@ class Archive:
         cols.append(pyfits.Column(name='DATA',format='%iI'%np.size(DATA[0]),array=DATA))
         
 
-        subinthdu = pyfits.BinTableHDU.from_columns(cols,name='SUBINT')
+        subinthdu = pyfits.BinTableHDU.from_columns(cols,name='SUBINT') #need to include headers!
         hdulist.append(subinthdu)
         #self.subintheader = dict()
         #for i,key in enumerate(hdulist['SUBINT'].header):
@@ -606,9 +606,7 @@ class Archive:
                     self.data[i,j,k,:] -= baseline
         self.average_profile -= np.mean(self.average_profile[self.spavg.opw])
         return self
-    def remove_baseline(self):
-        """For PSRCHIVE naming convention"""
-        return self.removeBaseline() 
+    remove_baseline = self.removeBaseline
 
     def calibrate(self,psrcal):
         """Calibrates using another archive"""
