@@ -606,7 +606,7 @@ class Archive:
                     self.data[i,j,k,:] -= baseline
         self.average_profile -= np.mean(self.average_profile[self.spavg.opw])
         return self
-    remove_baseline = self.removeBaseline
+    remove_baseline = removeBaseline
 
     def calibrate(self,psrcal):
         """Calibrates using another archive"""
