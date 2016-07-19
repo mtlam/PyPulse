@@ -120,12 +120,20 @@ class Archive:
             
         if 'PSRPARAM' in self.keys:
             tablenames.remove('PSRPARAM')
+            self.paramheaderlist = hdulist['PSRPARAM'].header.keys()
+            self.paramheader = dict()
+            for key in self.paramheaderlist:
+                self.paramheader[key] = hdulist['PSRPARAM'].header[key]
             self.params = Par(fmap(lambda x: x[0],hdulist['PSRPARAM'].data),numwrap=float)
         elif 'PSREPHEM' in self.keys:
             tablenames.remove('PSREPHEM')
             paramkeys = fmap(lambda x: x.name,hdulist['PSREPHEM'].columns)
             paramvals = hdulist['PSREPHEM'].data[0]
             paramstrs = fmap(lambda x,y: "%s %s"%(x,y),paramkeys,paramvals)
+            #self.paramheaderlist = hdulist['PSREPHEM'].header.keys()
+            #self.paramheaderdict = dict()
+            #for key in self.paramheaderlist:
+            #    self.paramheaderdict[key] = hdulist['PSREPHEM'].header[key]
             self.params = Par(paramstrs,numwrap=float)
         else:
             self.params = None
@@ -144,6 +152,7 @@ class Archive:
         for i,column in enumerate(hdulist['SUBINT'].columns[:-5]):
             self.subintinfo[column.name] = (column.format,column.unit,hdulist['SUBINT'].data[column.name])
         self.subintheader = dict()
+        self.subintheaderlist = hdulist['SUBINT'].header.keys()#for ordering
         for i,key in enumerate(hdulist['SUBINT'].header):
             self.subintheader[key] = hdulist['SUBINT'].header[key]
 
@@ -156,8 +165,8 @@ class Archive:
         if not weight:
             DAT_WTS = np.ones(np.shape(DAT_WTS))
         DAT_SCL = hdulist['SUBINT'].data['DAT_SCL']
-        DAT_OFFS = hdulist['SUBINT'].data['DAT_OFFS']
-
+        DAT_OFFS = hdulist['SUBINT'].data['DAT_OFFS']# + 0.5 #testing
+        self.DAT_SCL = DAT_SCL #testing
 
         
         self.data = np.zeros((nsubint,npol,nchan,nbin))
@@ -237,7 +246,10 @@ class Archive:
                 fmt,unit,array = self.history.dictionary[name]
                 col = pyfits.Column(name=name,format=fmt,unit=unit,array=array)
                 cols.append(col)
-            historyhdu = pyfits.BinTableHDU.from_columns(cols,name='HISTORY')
+            historyhdr = pyfits.Header()
+            for key in self.history.headerlist:
+                historyhdr[key] = self.history.header[key]
+            historyhdu = pyfits.BinTableHDU.from_columns(cols,name='HISTORY',header=historyhdr)
             hdulist.append(historyhdu)
             # Need to add in PyPulse changes into a HISTORY 
         #else: #else start a HISTORY table
@@ -245,6 +257,9 @@ class Archive:
                     
         if self.params is not None:
             cols = [pyfits.Column(name='PSRPARAM',format='128A',array=self.params.filename)]
+            paramhdr = pyfits.Header()
+            for key in self.paramheaderlist:
+                paramhdr[key] = self.paramheader[key]
             paramhdu = pyfits.BinTableHDU.from_columns(cols,name='PSRPARAM')
             hdulist.append(paramhdu)
             # Need to include mode for PSREPHEM
@@ -263,31 +278,52 @@ class Archive:
         cols.append(pyfits.Column(name='DAT_FREQ',format='%iE'%np.shape(self.freq)[1],unit='MHz',array=self.freq)) #correct size? check units?
         cols.append(pyfits.Column(name='DAT_WTS',format='%iE'%np.shape(self.weights)[1],array=self.weights)) #call getWeights()
 
-        DAT_OFFS = np.zeros((self.getNpol(),self.getNchan()))
-        DAT_SCL = np.zeros((self.getNpol(),self.getNchan()))
+        nsubint = self.getNsubint()
+        npol = self.getNpol()
+        nchan = self.getNchan()
+        DAT_OFFS = np.zeros((nsubint,npol*nchan))
+        DAT_SCL = np.zeros((nsubint,npol*nchan))
         DATA = self.getData(squeeze=False)
+        # Following Base/Formats/PSRFITS/unload_DigitiserCounts.C
+        for i in range(nsubint):
+            for j in range(npol):
+                jnchan = j*nchan
+                for k in range(nchan):
+                    MIN = np.min(DATA[i,j,k,:])
+                    MAX = np.max(DATA[i,j,k,:])
+                    RANGE = MAX - MIN
+                    if MAX == 0 and MIN == 0:
+                        DAT_SCL[i,jnchan+k] += 1.0
+                    else:
+                        if RANGE == 0:
+                            DAT_SCL[i,jnchan+k] = MAX / 65535.0 #65534?
+                        else:
+                            DAT_SCL[i,jnchan+k] = RANGE / 65535.0
+                        DAT_OFFS[i,jnchan+k] = MIN - (-32768.0 * DAT_SCL[i,jnchan+k])
+                
+                    DATA[i,j,k,:] = np.floor((DATA[i,j,k,:] - DAT_OFFS[i,jnchan+k])/DAT_SCL[i,jnchan+k] + 0.5) #why +0.5?
+                    print np.min(DATA[i,j,k,:]),np.max(DATA[i,j,k,:])
+                # -32768 to 32766?
 
-        for i in range(np.shape(DAT_OFFS)[0]):
-            for j in range(np.shape(DAT_OFFS)[1]):
-                DAT_OFFS[i,j] = np.mean(DATA[:,i,j,:],axis=(0,1))
-                DATA[:,i,j,:] -= DAT_OFFS[i,j]
-                DAT_SCL[i,j] = np.max(np.abs(DATA[:,i,j,:]))/32767.0 #????
-                DATA[:,i,j,:] = DATA[:,i,j,:]/DAT_SCL[i,j]
+                    #jnchan = j*nchan
+                    #for k in K:
+                    #    self.data[i,j,k,:] = (DAT_SCL[i,jnchan+k]*DATA[i,j,k,:]+DAT_OFFS[i,jnchan+k])#*DAT_WTS[i,k]
 
-                #32767*DATA[:,i,j,:]/np.max(np.abs(DATA[:,i,j,:])) #?????
 
-        cols.append(pyfits.Column(name='DAT_OFFS',format='%iE'%np.size(DAT_OFFS),array=DAT_OFFS))
-        cols.append(pyfits.Column(name='DAT_SCL',format='%iE'%np.size(DAT_SCL),array=DAT_SCL))
+
+        #print self.DAT_SCL[0]
+        #print 
+        #print 1.0/DAT_SCL[0]
+        #DAT_SCL = 1.0/DAT_SCL#???
+        cols.append(pyfits.Column(name='DAT_OFFS',format='%iE'%np.size(DAT_OFFS[0]),array=DAT_OFFS))
+        cols.append(pyfits.Column(name='DAT_SCL',format='%iE'%np.size(DAT_SCL[0]),array=DAT_SCL))
         cols.append(pyfits.Column(name='DATA',format='%iI'%np.size(DATA[0]),array=DATA))
         
-
-        subinthdu = pyfits.BinTableHDU.from_columns(cols,name='SUBINT') #need to include headers!
+        subinthdr = pyfits.Header()
+        for key in self.subintheaderlist:
+            subinthdr[key] = self.subintheader[key]
+        subinthdu = pyfits.BinTableHDU.from_columns(cols,name='SUBINT',header=subinthdr)
         hdulist.append(subinthdu)
-        #self.subintheader = dict()
-        #for i,key in enumerate(hdulist['SUBINT'].header):
-        #    self.subintheader[key] = hdulist['SUBINT'].header[key]
-
-        
 
 
 
@@ -1203,6 +1239,10 @@ class Archive:
 class History:
     def __init__(self,history):
         """Intializer"""
+        self.header = dict()
+        self.headerlist = history.header.keys()
+        for key in self.headerlist:
+            self.header[key] = history.header[key]
         self.dictionary = dict()
         self.namelist = list()
         for col in history.columns:
