@@ -227,3 +227,10 @@ class Par:
         elif "PSRJ" in self.parameters:
             return self.parameters["PSRJ"]
         return None
+
+    def getTspan(self,years=False):
+        start = self.get("START")
+        finish = self.get("FINISH")
+        if years:
+            return (finish-start)/365.25
+        return finish-start
