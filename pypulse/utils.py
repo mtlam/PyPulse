@@ -426,6 +426,7 @@ def find_fwhm(array):
     shift = int(np.size(array)/2. - amaxloc)
     array = np.roll(array, shift)
     xvec = range(np.size(array))
+    amaxloc = np.argmax(array) # Fix by MTL
     half1 = np.where(np.diff(np.sign(array[:amaxloc]-amax/2.)))[0][0]
     half2 = np.where(np.diff(np.sign(array[amaxloc:]-amax/2.)))[0][0]
     start1 = half1-(ninterp-1)//2
