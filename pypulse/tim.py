@@ -170,5 +170,5 @@ class Tim:
     def getTspan(self,years=False):
         mjds = fmap(lambda x: x.getMJD(),self.toas)
         if years:
-            return np.ptp(mjds)/365.25
+            return np.ptp(mjds)/self.numwrap("365.25")
         return np.ptp(mjds)
