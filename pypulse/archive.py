@@ -726,12 +726,24 @@ class Archive:
         
         return np.copy(data) #removes pointer to data
     def getWeights(self,squeeze=True):
+        """ Return copy of weights array """
         weights = self.weights
         if squeeze:
             weights = weights.squeeze()
         return np.copy(weights)
-    def setWeights(self,t,f,val):
-        self.weights[t,f] = val
+    def setWeights(self,val,t=None,f=None):
+        """
+        Set weights to a certain value
+        Can be used for RFI routines
+        """
+        if t is None and f is None:
+            self.weights[:,:] = val
+        elif t is None:
+            self.weights[:,f] = val
+        elif f is None:
+            self.weights[t,f] = val
+        else:
+            self.weights[t,f] = val
 
 
 
