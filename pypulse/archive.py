@@ -1005,6 +1005,7 @@ class Archive:
             if ax is None:
                 fig = plt.figure()
                 ax = fig.add_subplot(111)
+            print shape
             if shape[0] == 1 and shape[1] == 1: #fix this to match mode
                 Fedges = self.getAxis('F',edges=True) #is this true?
                 cmap = plt.cm.afmhot
@@ -1013,6 +1014,19 @@ class Archive:
                 ax.set_xlabel("Pulse Phase")
                 ax.set_ylabel("Frequency (MHz)")
                 ax.set_title("%s %s\nFreq %0.3f MHz BW: %0.3f Length %0.3f S/N %0.3f"%(self.getName(),self.filename,self.getCenterFrequency(weighted=wcfreq),self.getBandwidth(),self.getDuration(),self.getSN()))#get the basename?
+                ax2 = ax.twinx()
+                ax2.set_ylim(0,self.getNchan())
+                ax2.set_ylabel("Index")
+                if show:
+                    plt.show()
+            if shape[2] == 1 and shape[1] == 1: #fix this to match mode
+                Tedges = self.getAxis('T',edges=True) #is this true?
+                cmap = plt.cm.afmhot
+                cmap.set_bad(color='k',alpha=1.0)
+                u.imshow(self.getData(),ax=ax,extent=[0,1,Tedges[0],Tedges[-1]],cmap=cmap)
+                ax.set_xlabel("Pulse Phase")
+                ax.set_ylabel("Time") #units
+                #ax.set_title("%s %s\nFreq %0.3f MHz BW: %0.3f Length %0.3f S/N %0.3f"%(self.getName(),self.filename,self.getCenterFrequency(weighted=wcfreq),self.getBandwidth(),self.getDuration(),self.getSN()))#get the basename?
                 ax2 = ax.twinx()
                 ax2.set_ylim(0,self.getNchan())
                 ax2.set_ylabel("Index")
