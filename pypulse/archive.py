@@ -139,11 +139,27 @@ class Archive:
             self.params = None
 
         tablenames.remove('PRIMARY')
-        tablenames.remove('SUBINT')
+        if 'SUBINT' in tablenames:
+            tablenames.remove('SUBINT')
+
+        isFluxcal = False
+        if 'FLUX_CAL' in tablenames: #need to account for is this appropriate?
+            tablenames.remove('FLUX_CAL')
+            isFluxcal = True
         self.tables = list()
         for tablename in tablenames: #remaining table names to store
             self.tables.append(hdulist[tablename].copy())
     
+
+
+        #if self.header['OBS_MODE'] == 'PCM':
+        if isFluxcal:
+
+
+            
+            raise SystemExit
+
+
 
 
 
@@ -644,14 +660,44 @@ class Archive:
         return self
     remove_baseline = removeBaseline
 
-    def calibrate(self,psrcal):
+    def calibrate(self,psrcal,fluxcal=None):
         """Calibrates using another archive"""
         if not psrcal.isCalibrator():
             raise ValueError("Require calibration archive")
-        # Check if psrcal has the correct dimensions
+        # Check if cals are appropriate?
 
-        # Find cal levels
+        # Check if cal has the correct dimensions, if not perform interpolation
+        
+        # Time-average calibrators
+        if fluxcal is not None:
+            fluxcal.tscrunch()
+            fdata = fluxcal.getData()
+        psrcal.tscrunch()
+        pdata = psrcal.getData()
 
+        # Find cal levels, or have them predetermined?
+        npol = self.getNpol()
+        nchan = self.getNchan()
+        nbin = self.getNbin()
+        
+        # Check header info CAL_DCYC, CAL_NPHS, etc, to determine on-diode
+        lowinds = np.arange(0,nbin/2)
+        highinds = np.arange(nbin/2,nbin)
+
+        # Calculate calibrations
+        psrcaldata = np.zeros((npol,nchan,2))
+        for i in range(npol):
+            for j in range(nchan):
+                psrcaldata[i,j,0] = np.mean(pdata[i,j,lowinds])
+                psrcaldata[i,j,1] = np.mean(pdata[i,j,highinds])
+        if fluxcal is not None:
+            fluxcaldata = np.zeros((npol,nchan,2))
+            for i in range(npol):
+                for j in range(nchan):
+                    fluxcaldata[i,j,0] = np.mean(fdata[i,j,lowinds])
+                    fluxcaldata[i,j,1] = np.mean(fdata[i,j,highinds])
+
+            
         # Apply calibrations
         pass
 
