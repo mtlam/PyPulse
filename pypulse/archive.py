@@ -195,12 +195,16 @@ class Archive:
 
 
         if np.size(DAT_WTS) == 1:
-            DAT_WTS[0] = 1.0
+            #DAT_WTS[0] = 1.0
+            #DAT_WTS[0,0] = 1.0
+            self.weights = np.ones((1,1))
         else:
             DAT_WTS /= np.max(DAT_WTS) #close???
+            self.weights = DAT_WTS
 
         self.freq = DAT_FREQ
-        self.weights = DAT_WTS
+
+        
 
         if nsubint == 1 and npol == 1 and nchan == 1:
             self.data = (DAT_SCL*DATA+DAT_OFFS)#*DAT_WTS
@@ -1005,7 +1009,6 @@ class Archive:
             if ax is None:
                 fig = plt.figure()
                 ax = fig.add_subplot(111)
-            print shape
             if shape[0] == 1 and shape[1] == 1: #fix this to match mode
                 Fedges = self.getAxis('F',edges=True) #is this true?
                 cmap = plt.cm.afmhot
