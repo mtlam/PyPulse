@@ -285,7 +285,7 @@ class DynamicSpectrum:
 #        print inds
 #        raise SystemExit
 #        spec[inds] = np.nan
-        im=u.imshow(spec,ax=ax,extent = [minT,maxT,minF,maxF],cmap=cmap,zorder=ZORDER)
+        cax=u.imshow(spec,ax=ax,extent = [minT,maxT,minF,maxF],cmap=cmap,zorder=ZORDER)
 
         #border here?
         if border:# and self.extras['name']!='EFF I':
@@ -296,7 +296,7 @@ class DynamicSpectrum:
 
 
         if cbar:
-            plt.colorbar()
+            plt.colorbar(cax)
         #im.set_clim(0.0001,None)
         if show:
             plt.show()
