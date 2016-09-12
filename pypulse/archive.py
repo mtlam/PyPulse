@@ -66,6 +66,7 @@ class Archive:
         self.load(self.filename,prepare=prepare,center_pulse=center_pulse,baseline_removal=baseline_removal,weight=weight)
         if not self.lowmem:
             self.data_orig = np.copy(self.data)
+            self.weights_orig = np.copy(self.weights)
         if verbose:
             t1=time.time()
             print("Load time: %0.2f s" % (t1-t0))
@@ -360,6 +361,8 @@ class Archive:
             t0=time.time()
         self.data = None
         self.data_orig = None
+        self.weights = None
+        self.weights_orig = None
         if self.verbose:
             t1=time.time()
             print("Unload time: %0.2f s" % (t1-t0))
@@ -375,6 +378,7 @@ class Archive:
             self.load(self.filename,prepare=prepare) 
         else:
             self.data = np.copy(self.data_orig)
+            self.weights = np.copy(self.weights_orig)
         self.durations = self.getSubintinfo('TSUBINT')
         #if prepare:
         #    self.scrunch()
@@ -716,8 +720,9 @@ class Archive:
             J = range(J)
             K = range(K)
             for i in I:
+                #print np.shape(self.weights),np.shape(data),np.shape(self.data),i#,j,k
                 for j in J:
-                    for k in K:                      
+                    for k in K:   
                         data[i,j,k,:] = self.data[i,j,k,:]*self.weights[i,k]
         else:
             data = self.data
