@@ -245,7 +245,7 @@ class DynamicSpectrum:
 
 
 
-    def imshow(self,err=False,cbar=False,ax=None,show=True,border=False,ZORDER=0,cmap=cm.binary,alpha=True):
+    def imshow(self,err=False,cbar=False,ax=None,show=True,border=False,ZORDER=0,cmap=cm.binary,alpha=True,cdf=True):
         """
         Basic plotting of the dynamic spectrum
         """
@@ -273,13 +273,24 @@ class DynamicSpectrum:
         if alpha: #do this?
             for i in range(len(spec)):
                 for j in range(len(spec[0])):
-                    if spec[i][j]<=0.0:# or self.errdata[i][j]>3*sigma:
-                        spec[i][j]=np.nan
+                    if spec[i,j] <= 0.0:# or self.errdata[i][j]>3*sigma:
+                        spec[i,j] = np.nan
         
         minT = T[0]
         maxT = T[-1]
         minF = F[0]
         maxF = F[-1]
+
+
+        if cdf:
+            xcdf,ycdf = u.ecdf(spec.flatten())
+            low,high = u.likelihood_evaluator(xcdf,ycdf,cdf=True,values=[0.01,0.99])
+            for i in range(len(spec)):
+                for j in range(len(spec[0])):
+                    if spec[i,j] <= low:
+                        spec[i,j] = low
+                    elif spec[i,j] >= high:
+                        spec[i,j] = high
 
 
 #        print inds
