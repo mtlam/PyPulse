@@ -289,7 +289,11 @@ def plothistogram(center,hist,interval=1.0,bins=None,steps=False,show=True,horiz
     return p
 
 
-
+#Creates empirical cdf
+def ecdf(values,sort=True):
+    if sort:
+        values = np.sort(values)
+    return values,np.linspace(0,1,len(values))
 
 '''
 Normalize an array to unit height
