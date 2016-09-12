@@ -9,6 +9,7 @@ import scipy.fftpack as fft
 import scipy.optimize as optimize
 import scipy.stats as stats
 import scipy.interpolate as interp
+import scipy.special as special
 from scipy.signal import fftconvolve,correlate
 import matplotlib.pyplot as plt
 
@@ -294,6 +295,62 @@ def ecdf(values,sort=True):
     if sort:
         values = np.sort(values)
     return values,np.linspace(0,1,len(values))
+
+EPS = special.erf(1.0/np.sqrt(2))/2.0
+def pdf_to_cdf(pdf,dt=1):
+    return np.cumsum(pdf)*dt
+def likelihood_evaluator(x,y,cdf=False,median=False,pm=True,values=None):
+    """
+    cdf: if True, x,y describe the cdf
+    median: if True, use the median value, otherwise the peak of the pdf (assuming cdf=False
+    pm: xminus and xplus are the plus/minus range, not the actual values
+
+    Future: give it values to grab off the CDF (e.g. 2 sigma, 99%, etc)
+    values: use this array
+    """
+    if not cdf:
+        y = y/np.trapz(y,x=x)
+        ycdf = pdf_to_cdf(y,dt=(x[1]-x[0]))
+    else: #else given a cdf
+        ycdf = y
+
+    if not values:
+        if median:
+            yb = 0.50   #Now take the median!
+        else:
+            indb = np.argmax(y)
+            yb = ycdf[indb]
+        ya = yb - EPS
+        yc = yb + EPS
+        yd = 0.95
+
+        inda = np.argmin(np.abs(ycdf - ya))
+        if median:
+            indb = np.argmin(np.abs(ycdf - yb)) 
+        indc = np.argmin(np.abs(ycdf - yc))
+        indd = np.argmin(np.abs(ycdf - yd))
+
+        inds = np.arange(inda,indc+1) #including indc    
+        #print indc-inda,np.trapz(L[inds],x=Vrs[inds])
+        xval = x[indb]
+        if pm:
+            xminus = x[indb] - x[inda]
+            xplus = x[indc] - x[indb]
+        else:
+            xminus = x[inda]
+            xplus = x[indc]
+        x95 = x[indd]
+
+        return xval,xminus,xplus,x95
+    else:
+        retval = np.zeros_like(values)
+        for i,v in enumerate(values):
+            indv = np.argmin(np.abs(ycdf - v))
+            retval[i] = x[indv]
+        return retval
+
+
+
 
 '''
 Normalize an array to unit height
