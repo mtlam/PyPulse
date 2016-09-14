@@ -51,7 +51,7 @@ SEARCH = "SEARCH"
 
 
 class Archive:
-    def __init__(self,filename,prepare=True,lowmem=False,verbose=True,weight=True,center_pulse=True,baseline_removal=True):
+    def __init__(self,filename,prepare=True,lowmem=False,verbose=True,weight=True,center_pulse=True,baseline_removal=True,wcfreq=True):
         ## Parse filename here?
         self.filename = str(filename) #fix unicode issue
         self.prepare = prepare
@@ -59,11 +59,12 @@ class Archive:
         self.verbose = verbose
         self.center_pulse = center_pulse
         self.baseline_removal = baseline_removal
+        self.wcfreq = wcfreq
         if verbose:
             print("Loading: %s" % self.filename)
             t0=time.time()
 
-        self.load(self.filename,prepare=prepare,center_pulse=center_pulse,baseline_removal=baseline_removal,weight=weight)
+        self.load(self.filename,prepare=prepare,center_pulse=center_pulse,baseline_removal=baseline_removal,weight=weight,wcfreq=wcfreq)
         if not self.lowmem:
             self.data_orig = np.copy(self.data)
             self.weights_orig = np.copy(self.weights)
@@ -87,7 +88,7 @@ class Archive:
 
 
 
-    def load(self,filename,prepare=True,center_pulse=True,baseline_removal=True,weight=True):
+    def load(self,filename,prepare=True,center_pulse=True,baseline_removal=True,weight=True,wcfreq=False):
         """
         Loads a PSRFITS file and processes
         http://www.atnf.csiro.au/people/pulsar/index.html?n=PsrfitsDocumentation.Txt
@@ -139,6 +140,15 @@ class Archive:
         else:
             self.params = None
 
+
+
+        if 'POLYCO' in self.keys:
+            tablenames.remove('POLYCO')
+            self.polyco = Polyco(hdulist['POLYCO'],MJD=self.getMJD(full=True))
+        else:
+            self.polyco = None
+
+
         tablenames.remove('PRIMARY')
         if 'SUBINT' in tablenames:
             tablenames.remove('SUBINT')
@@ -156,8 +166,6 @@ class Archive:
         #if self.header['OBS_MODE'] == 'PCM':
         if isFluxcal:
 
-
-            
             raise SystemExit
 
 
@@ -235,17 +243,17 @@ class Archive:
             
         # All time-tagging info
         self.durations = self.getSubintinfo('TSUBINT')
-        self.subint_starts = np.array(fmap(Decimal,self.getSubintinfo('OFFS_SUB')),dtype=np.dtype(Decimal))-self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)#+self.getMJD(full=False,numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part
-        self.channel_delays = np.zeros(nchan,dtype=np.dtype(Decimal)) #used to keep track of frequency-dependent channel delays, in bin units. Should be in Decimal?
+        self.subint_starts = np.array(fmap(Decimal,self.getSubintinfo('OFFS_SUB')),dtype=np.dtype(Decimal))#+self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)#+self.getMJD(full=False,numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part. This means that a template sitting in the center will have zero extra time
+        self.channel_delays = np.zeros(nchan,dtype=np.dtype(Decimal)) #used to keep track of frequency-dependent channel delays, in time units.
             
         if prepare and not self.isCalibrator():
             self.pscrunch()
-            self.dedisperse()
+            self.dedisperse(wcfreq=wcfreq)
 
         self.calculateAverageProfile()
 
         
-        if center_pulse and not self.isCalibrator(): #calibrator is not a pulse
+        if center_pulse and not self.isCalibrator() and prepare: #calibrator is not a pulse, prepare must be run so that dedisperse is run?
             self.center()
 
         if baseline_removal:
@@ -323,7 +331,7 @@ class Archive:
                         DAT_OFFS[i,jnchan+k] = MIN - (-32768.0 * DAT_SCL[i,jnchan+k])
                 
                     DATA[i,j,k,:] = np.floor((DATA[i,j,k,:] - DAT_OFFS[i,jnchan+k])/DAT_SCL[i,jnchan+k] + 0.5) #why +0.5?
-                    print np.min(DATA[i,j,k,:]),np.max(DATA[i,j,k,:])
+                    print(np.min(DATA[i,j,k,:]),np.max(DATA[i,j,k,:]))
                 # -32768 to 32766?
 
                     #jnchan = j*nchan
@@ -384,7 +392,7 @@ class Archive:
         #    self.scrunch()
 
 
-    def scrunch(self,arg='Dp'):
+    def scrunch(self,arg='Dp',**kwargs):
         """average the data cube along different axes"""
         if 'T' in arg:
             self.data[0,:,:,:] = np.mean(self.data,axis=0) 
@@ -400,7 +408,10 @@ class Archive:
             self.weights[:,0] = np.mean(self.weights,axis=1) #problem?
             self.weigths = self.weights[:,0:1]
         if 'D' in arg:
-            self.dedisperse()
+            if "wcfreq" in kwargs:
+                self.dedisperse(wcfreq=kwargs['wcfreq'])
+            else:
+                self.dedisperse(wcfreq=self.wcfreq)
         if 'B' in arg:
             self.data[:,:,:,0] = np.mean(self.data,axis=3)
             self.data = self.data[:,:,:,0:1]
@@ -534,31 +545,74 @@ class Archive:
         if DM is given, use this value to compute the time_delays
         """
         nchan = self.getNchan()
-        if nchan == 1: #do not dedisperse
+        if nchan == 1: #do not dedisperse?
             return self
-        Faxis = self.getAxis('F')
+
+        Faxis = self.getAxis('F',wcfreq=wcfreq)#,edges=True)[:-1]
+        #plt.plot(self.getAxis('F')-self.getAxis('F',wcfreq=True))
+        #plt.show()
+        #raise SystemExit
+        #print Faxis[::-1]
+        #raise SystemExit
+
+
         nsubint = self.getNsubint()
         npol = self.getNpol()
         nbin = self.getNbin()
         if DM is None:
             DM = self.getDM()
         cfreq = self.getCenterFrequency(weighted=wcfreq)
-        time_delays = 4.149e3*DM*(cfreq**(-2) - np.power(Faxis,-2)) #freq in MHz, delays in seconds
-        bin_delays = (time_delays / self.getPeriod())*nbin
-        bin_delays = bin_delays % nbin
+        #cfreq = 1416.4955357
+        #cfreq = 1468.594
+        #cfreq = 1416.496
+        #cfreq = 1400.0
+        #cfreq = 1380.78125
+        print DM,cfreq
+
+        K = 4.149e3
+        K = 1.0/2.41e-4 #constant used to be more consistent with PSRCHIVE
+        time_delays = K*DM*(cfreq**(-2) - np.power(Faxis,-2)) #freq in MHz, delays in seconds
+
+        #time_delays = Decimal(K)*Decimal(DM)*(Decimal(str(cfreq))**(-2) - np.array(fmap(lambda x: Decimal(str(x))**-2,Faxis)))
+
+        #print time_delays
+        dt = self.getTbin(numwrap=Decimal)  
+        bin_delays = np.array(fmap(lambda x: Decimal(str(x)),time_delays)) / dt
+        bin_delays = bin_delays % Decimal(nbin)
         if reverse:
             sign = 1
         else:
             sign = -1
+        #time_delays *= (-1*sign)
+
 
         J = range(nsubint)
         K = range(npol)
-           
+
+        #P0 = self.getPeriod()*1e6
+
+        #raise SystemExit
+
         for i,delay in enumerate(bin_delays):
-            self.channel_delays[i] += Decimal(str(time_delays[i])) #FIX THIS
+            #self.channel_delays[i] += Decimal(str(time_delays[i])) #FIX THIS
+            #print self.getTbin(),self.getTbin()*2048
+            #d = (-1*sign*delay * self.getTbin()) #why does this work?
+            #d = (sign*(time_delays[i]))# - delay*self.getTbin()))
+            #if np.abs(delay - nbin)<np.abs(delay):
+            #    delay -= nbin #this helps somewhat
+            #if delay >= P0/2.0:
+            #    delay -= Decimal(P0)
+
+            
+            
+
+            #delay -= nbin # WHY IS THIS TRUE???
+            d = Decimal(sign*(delay))*dt
+            print "d",i,delay,Faxis[i]
+            self.channel_delays[i] += Decimal(d) #how can this be right
             for j in J:
                 for k in K:
-                    self.data[j,k,i,:] = u.shiftit(self.data[j,k,i,:],sign*delay)
+                    self.data[j,k,i,:] = u.shiftit(self.data[j,k,i,:],sign*float(delay))
         self.calculateAverageProfile() #re-calculate the average profile
         return self
     def dededisperse(self,DM=None,barycentric=True): 
@@ -600,7 +654,7 @@ class Archive:
         maxind = np.argmax(self.average_profile)
         diff = center_bin - maxind
 
-        Faxis = self.getAxis('F')
+        Faxis = self.getAxis('F',wcfreq=wcfreq)
         nsubint = self.getNsubint()
         npol = self.getNpol()
         nbin = self.getNbin()
@@ -648,7 +702,8 @@ class Archive:
                 for k in xrange(nchan):
                     self.data[i,j,k,:] = np.roll(self.data[i,j,k,:],diff)
         self.average_profile = np.roll(self.average_profile,diff)
-        self.channel_delays += Decimal(str(diff*self.getTbin())) #FIX THIS
+        print "diff",diff,diff*self.getTbin()
+        self.channel_delays += Decimal(str(-1*diff*self.getTbin())) #this is unnecessary? FIX THIS
         self.calculateOffpulseWindow()
         return self
 
@@ -814,6 +869,8 @@ class Archive:
             else: #centered
                 return csum-np.diff(edgearr)/2.0
         elif flag == 'F':
+            if np.ndim(self.freq) == 1:
+                return self.freq
             return self.freq[0]#self.getSubintinfo('DAT_FREQ')[0]  ### This block is a temporary replacement
 
             nchan = self.getNchan()
@@ -824,6 +881,7 @@ class Archive:
                 arr = np.array((np.arange(nchan+1) - (nchan+1)/2.0 + 0.5)*df + fc)
             else:
                 arr = np.array((np.arange(nchan) - nchan/2.0 + 0.5)*df + fc) #unweighted frequencies!
+
 
             if bw < 0.0:
                 return arr[::-1] #???
@@ -1119,7 +1177,7 @@ class Archive:
             
     ### NOTE: THIS NEEDS TO BE CHECKED WITH THE NEW CHANGES ###
         
-    def time(self,template,filename,MJD=False,simple=False,**kwargs):
+    def time(self,template,filename,MJD=False,simple=False,wcfreq=False,**kwargs):
         """
         Times the pulses and outputs in the tempo2_IPTA format similar to pat.
         MJD: if True, return TOAs in MJD units, else in time units corresponding to a bin number
@@ -1138,7 +1196,11 @@ class Archive:
         else:
             return
 
+        #template = u.shiftit(template,-4.8)
         rollval,template = u.center_max(u.normalize(template,simple=True),full=True) # enforces a good fit
+        print artemp.channel_delays[0]
+        print "roll",rollval 
+
 
         #If given an offpulse, use that, else calculate a pre-defined one in the template Archive
         if "opw" in kwargs.items():
@@ -1147,9 +1209,9 @@ class Archive:
             sptemp = SP.SinglePulse(template,windowsize=len(template)/8)
             kwargs['opw'] = sptemp.opw
 
-        tauhat,bhat,sigma_tau,sigma_b,snrs = self.fitPulses(template,[1,2,3,4,5],**kwargs)
+        tauhat,bhat,sigma_tau,sigma_b,snrs = self.fitPulses(template,[1,2,3,4,5],**kwargs) #tauhat is a relative shift
         Taxis = self.getAxis('T')
-        Faxis = self.getAxis('F')
+        Faxis = self.getAxis('F',wcfreq=wcfreq)
         
         #Reshape if necessary
         tauhat = tauhat.reshape(len(Taxis),len(Faxis))
@@ -1169,10 +1231,26 @@ class Archive:
 
         dt = self.getTbin()
 
+        #plt.plot(template*np.max(self.getData()),'k')
+        #plt.plot(self.getData(),'r')
+        #plt.show()
+
         if MJD:
-            shape = np.shape(tauhat)
-            tauhatdec = np.reshape(np.array(fmap(Decimal,tauhat.flatten()),dtype=np.dtype(Decimal)),shape)
-            tauhat = tauhatdec * Decimal(dt/86400.0) #day units
+            tauhatdec = np.reshape(np.array(fmap(Decimal,tauhat.flatten()),dtype=np.dtype(Decimal)),np.shape(tauhat))
+            #print "tauhatdec",tauhatdec
+            #+self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)
+            #tauhat = tauhatdec * Decimal(dt)/Decimal(86400) #day units
+            
+
+            #tauhatdec += (-1*tauhatdec) #template tests implies tauhat is unnecessary?
+            #tauhatdec = np.array(fmap(lambda x: x-int(x)+rollval,tauhatdec)) #why the heck
+            tauhatdec = np.array(fmap(lambda x: x+Decimal(rollval),tauhatdec)) #why the heck            
+
+            #print tauhatdec
+            tauhat = tauhatdec * Decimal(dt)/Decimal(86400) #day units
+            #tauhat = (Decimal(nbin/2.0)-tauhatdec) * Decimal(dt)/Decimal(86400) #day units
+            tauhat -= (artemp.channel_delays[0]*self.getTbin(numwrap=Decimal)/artemp.getTbin(numwrap=Decimal))/Decimal(86400)
+            #print "tauhat",tauhat
             checknan = lambda x: x.is_nan()
         else:
             tauhat *= (dt*1e6)
@@ -1187,18 +1265,40 @@ class Archive:
             tobs = self.durations[i]
             if MJD:
                 t0 = start_time + self.subint_starts[i]/Decimal(86400)
+                #print "start_time",start_time
+                #print "subint_starts",self.subint_starts[i]
                 #t0 = self.subint_starts[i]
                 #t0 = Decimal(integration.get_start_time().in_days())
             for j,F in enumerate(Faxis):
                 if checknan(tauhat[i,j]):
                     continue
+                #Testing
+
+
+
+
+                
+                #if self.channel_delays[j] < 0:
+                #    plt.plot(template*np.max(self.getData()[j]),'k')
+                #    plt.plot(self.getData()[j],'r')
+                #    plt.show()
+                
+                if self.channel_delays[j] <= Decimal(0):
+                    self.channel_delays[j] += Decimal(self.getPeriod())
+                #if self.channel_delays[j] < Decimal(0.0001):
+                #    print(self.channel_delays[j],F)
+                
+                #print "foo",tauhat,self.channel_delays[j],self.subint_starts[i]/Decimal(86400)#self.getTbin(),self.getTbin()*2048
                 toa = '{0:0.15f}'.format(tauhat[i,j]+t0+self.channel_delays[j]/Decimal(86400))
                 output += "%s %f %s   %0.3f  %s   -fe %s -be %s -bw %f -tobs %f -tmplt %s -nbin %i -nch %i -snr %0.2f -flux %0.2f -fluxerr %0.2f\n"%(self.filename,F,toa,sigma_tau[i,j],telescope,frontend,backend,chanbw,tobs,tempname,nbin,nchan,snrs[i,j],bhat[i,j],sigma_b[i,j])
                 
 
-        FILE = open(filename,'w')
-        FILE.write(output)
-        FILE.close()
+        if filename is None:
+            print output
+        else:
+            FILE = open(filename,'w')
+            FILE.write(output)
+            FILE.close()
         return
 
 
@@ -1221,13 +1321,16 @@ class Archive:
     def getNbin(self):
         """Returns number of phase bins"""
         return self.shape(squeeze=False)[3]
-    def getPeriod(self):
+    def getPeriod(self,header=False):
         """Returns period of the pulsar"""
         if self.isCalibrator():
             return 1.0/self.header['CAL_FREQ']
         if self.params is None:
             return None
-        return self.params.getPeriod()
+        if header or self.polyco is None:
+            return self.params.getPeriod()
+        else:
+            return self.polyco.calculatePeriod()
     # Best replacement for without PSRCHIVE
     def getValue(self,value):
         """Looks for a key in one of the headers and returns"""
@@ -1337,3 +1440,60 @@ class History:
     def getLatest(self,field):
         """Returns the latest key value"""
         return self.getValue(field,-1)
+    def printEntry(self,i):
+        for name in self.namelist:
+            print name,self.getValue(name,i)
+
+# Takes hdulist['POLYCO']
+# Similar to History class
+class Polyco:
+    def __init__(self,polyco,MJD=None):
+        """Initializer"""
+        self.MJD = MJD
+        self.header = dict()
+        self.headerlist = polyco.header.keys()
+        for key in self.headerlist:
+            self.header[key] = polyco.header[key]
+        self.dictionary = dict()
+        self.namelist = list()
+        for col in polyco.columns:
+            self.namelist.append(col.name)
+            self.dictionary[col.name] = (col.format,col.unit,list(col.array)) #make a np.array?
+    def getValue(self,field,num=None):
+        """Returns a dictionary array value for a given numeric entry"""
+        if num is None:
+            return self.dictionary[field][-1]
+        else:
+            return self.dictionary[field][-1][num]
+    def getLatest(self,field):
+        """Returns the latest key value"""
+        return self.getValue(field,-1)
+    def calculate(self,MJD=None):
+        if self.MJD is None and MJD is None:
+            pass
+        elif MJD is None:
+            MJD = self.MJD
+            
+        #NSITE = self.getValue('NSITE',num=0)
+        REF_FREQ = self.getValue('REF_FREQ',num=0)
+        #PRED_PHS = self.getValue('PRED_PHS',num=0)
+        REF_MJD = self.getValue('REF_MJD',num=0)    
+        REF_PHS = self.getValue('REF_PHS',num=0)
+        REF_F0 = self.getValue('REF_F0',num=0)
+        COEFF = self.getValue('COEFF',num=0)
+
+        #http://tempo.sourceforge.net/ref_man_sections/tz-polyco.txt
+        DT = (MJD-REF_MJD)*1440.0
+        PHASE = REF_PHS + DT*60*REF_F0
+        FREQ = 0.0
+        for i,c in enumerate(COEFF):
+            PHASE += c*np.power(DT,i)
+            if i==0:
+                continue
+            FREQ += c*i*np.power(DT,i-1)
+        FREQ = REF_F0 + FREQ/60.0
+        
+        return PHASE,FREQ
+    def calculatePeriod(self,MJD=None):
+        PHASE,FREQ = self.calculate(MJD=MJD)
+        return 1.0/FREQ
