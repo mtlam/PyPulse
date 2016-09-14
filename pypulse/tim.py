@@ -136,13 +136,14 @@ class Tim:
 
         self.toas = list()
         for i,line in enumerate(lines):
-            if line[:2] == "C ":
+            if line[:2] == "C " or line[0] == "#":
                 self.comment_dict[i] = line
                 continue
             stripline = line.strip()
             count = stripline.count(" ")
-            if count < 4: #is a command
-                self.command_dict[i] = tuple(stripline.split()) #primitive handling
+            splitline = stripline.split()
+            if splitline[0] in COMMANDS or count < 4: #is a command
+                self.command_dict[i] = tuple(splitline) #primitive handling
             else:
                 toa = TOA(line,numwrap=self.numwrap)
                 self.toas.append(toa)
