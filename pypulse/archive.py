@@ -922,11 +922,11 @@ class Archive:
         data = self.getData() #properly weighted
         period = self.getPeriod()
         if newshape==():
-            return SP.SinglePulse(func(data),period=period,**kwargs)
+            return SP.SinglePulse(func(data),period=period,windowsize=windowsize,**kwargs)
         retval = np.empty(newshape,dtype=np.object)
         for ind in np.ndindex(newshape):
             pulse = func(data[ind])
-            retval[ind]=SP.SinglePulse(pulse,period=period,**kwargs)
+            retval[ind]=SP.SinglePulse(pulse,period=period,windowsize=windowsize,**kwargs)
         return retval
 
     #Given a list of numbers corresponding to the arguments returned
