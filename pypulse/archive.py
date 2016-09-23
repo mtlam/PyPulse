@@ -567,7 +567,7 @@ class Archive:
         #cfreq = 1416.496
         #cfreq = 1400.0
         #cfreq = 1380.78125
-        print DM,cfreq
+        #print DM,cfreq
 
         K = 4.149e3
         K = 1.0/2.41e-4 #constant used to be more consistent with PSRCHIVE
@@ -608,7 +608,7 @@ class Archive:
 
             #delay -= nbin # WHY IS THIS TRUE???
             d = Decimal(sign*(delay))*dt
-            print "d",i,delay,Faxis[i]
+            #print "d",i,delay,Faxis[i]
             self.channel_delays[i] += Decimal(d) #how can this be right
             for j in J:
                 for k in K:
@@ -702,7 +702,7 @@ class Archive:
                 for k in xrange(nchan):
                     self.data[i,j,k,:] = np.roll(self.data[i,j,k,:],diff)
         self.average_profile = np.roll(self.average_profile,diff)
-        print "diff",diff,diff*self.getTbin()
+        #print "diff",diff,diff*self.getTbin()
         self.channel_delays += Decimal(str(-1*diff*self.getTbin())) #this is unnecessary? FIX THIS
         self.calculateOffpulseWindow()
         return self
@@ -1198,8 +1198,8 @@ class Archive:
 
         #template = u.shiftit(template,-4.8)
         rollval,template = u.center_max(u.normalize(template,simple=True),full=True) # enforces a good fit
-        print artemp.channel_delays[0]
-        print "roll",rollval 
+        #print artemp.channel_delays[0]
+        #print "roll",rollval 
 
 
         #If given an offpulse, use that, else calculate a pre-defined one in the template Archive
@@ -1294,7 +1294,7 @@ class Archive:
                 
 
         if filename is None:
-            print output
+            print(output)
         else:
             FILE = open(filename,'w')
             FILE.write(output)
@@ -1442,7 +1442,7 @@ class History:
         return self.getValue(field,-1)
     def printEntry(self,i):
         for name in self.namelist:
-            print name,self.getValue(name,i)
+            print(name,self.getValue(name,i))
 
 # Takes hdulist['POLYCO']
 # Similar to History class
