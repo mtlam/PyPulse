@@ -33,7 +33,7 @@ A class for handling calculations on single pulses
 
 Usage:
 
-    sp = SinglePulse(data) #will auto-calculate an offpulse region
+    sp = SinglePulse(data,windowsize=256) #will auto-calculate an offpulse region of length 256 bins
     print sp.getFWHM() #prints the FWHM of the pulse
     print sp.getSN() #prints a crude S/N of the pulse
     print sp.fitPulse(template_array)[5] #prints a better S/N of the pulse using a template array
