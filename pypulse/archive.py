@@ -30,6 +30,8 @@ import pypulse.utils as u
 import pypulse.singlepulse as SP
 import pypulse.par as par
 Par = par.Par
+import pypulse.calibrator as calib
+Calibrator = calib.Calibrator
 import decimal as d
 Decimal = d.Decimal
 try:
@@ -46,7 +48,6 @@ elif sys.version_info.major == 3:
 PSR = "PSR"
 CAL = "CAL"
 SEARCH = "SEARCH"
-
 
 
 
@@ -314,10 +315,10 @@ class Archive:
         DAT_SCL = np.zeros((nsubint,npol*nchan))
         DATA = self.getData(squeeze=False)
         # Following Base/Formats/PSRFITS/unload_DigitiserCounts.C
-        for i in range(nsubint):
-            for j in range(npol):
+        for i in xrange(nsubint):
+            for j in xrange(npol):
                 jnchan = j*nchan
-                for k in range(nchan):
+                for k in xrange(nchan):
                     MIN = np.min(DATA[i,j,k,:])
                     MAX = np.max(DATA[i,j,k,:])
                     RANGE = MAX - MIN
@@ -434,7 +435,7 @@ class Archive:
         newdurations = np.zeros(np.shape(retval)[0])
         wretval = np.zeros((len(np.r_[0:nsub:factor]),self.getNchan()))
         wcounts = np.zeros_like(retval)
-        for i in range(factor):
+        for i in xrange(factor):
             # Data array
             arr = self.data[i:nsub:factor,:,:,:] 
             count = np.ones_like(arr)
@@ -502,7 +503,7 @@ class Archive:
         nch = self.getNchan()
         retval = np.zeros((self.getNsubint(),self.getNpol(),len(np.r_[0:nch:factor]),self.getNbin()))
         counts = np.zeros_like(retval)
-        for i in range(factor):        
+        for i in xrange(factor):        
             arr = self.data[:,:,i:nch:factor,:]
             count = np.ones_like(arr)
             length = np.shape(arr)[2]
@@ -527,7 +528,7 @@ class Archive:
             nch = self.getNchan()
             retval = np.zeros((self.getNsubint(),self.getNpol(),len(np.r_[0:nch:factor]),self.getNbin()))
             counts = np.zeros_like(retval)
-            for i in range(factor):        
+            for i in xrange(factor):        
                 arr = self.data[:,:,i:nch:factor,:] 
                 count = np.ones_like(arr)
                 length = np.shape(arr)[0]
@@ -739,30 +740,40 @@ class Archive:
         pdata = psrcal.getData()
 
         # Find cal levels, or have them predetermined?
-        npol = self.getNpol()
-        nchan = self.getNchan()
-        nbin = self.getNbin()
+        npol = psrcal.getNpol()
+        nchan = psrcal.getNchan()
+        nbin = psrcal.getNbin()
         
         # Check header info CAL_DCYC, CAL_NPHS, etc, to determine on-diode
         lowinds = np.arange(0,nbin/2)
         highinds = np.arange(nbin/2,nbin)
 
         # Calculate calibrations
-        psrcaldata = np.zeros((npol,nchan,2))
-        for i in range(npol):
-            for j in range(nchan):
-                psrcaldata[i,j,0] = np.mean(pdata[i,j,lowinds])
-                psrcaldata[i,j,1] = np.mean(pdata[i,j,highinds])
-        if fluxcal is not None:
-            fluxcaldata = np.zeros((npol,nchan,2))
-            for i in range(npol):
-                for j in range(nchan):
-                    fluxcaldata[i,j,0] = np.mean(fdata[i,j,lowinds])
-                    fluxcaldata[i,j,1] = np.mean(fdata[i,j,highinds])
+        freqs = psrcal.getAxis('F')
+        psrcaldata = np.zeros((npol,nchan))
+        psrcalerrs = np.zeros((npol,nchan))
+        for i in xrange(npol):
+            for j in xrange(nchan):
+                psrcaldata[i,j] = np.mean(pdata[i,j,highinds]) - np.mean(pdata[i,j,lowinds])
+                psrcalerrs[i,j] = np.sqrt(np.std(pdata[i,j,highinds])**2 / len(highinds) + np.std(pdata[i,j,lowinds])**2 / len(lowinds))
 
-            
+                #np.savez("testcal.npz",freqs=freqs,S=psrcaldata,Serr=psrcalerrs)
+        cal = Calibrator(freqs,psrcaldata,psrcalerrs)
+        if fluxcal is not None:
+            fluxcaldata = np.zeros((npol,nchan))
+            for i in xrange(npol):
+                for j in xrange(nchan):
+                    fluxcaldata[i,j] = np.mean(fdata[i,j,highinds]) - np.mean(fdata[i,j,lowinds])
+
+        cal.apply_calibration(self)
+        return cal            
         # Apply calibrations
-        pass
+
+        
+
+
+
+        
 
 
 
