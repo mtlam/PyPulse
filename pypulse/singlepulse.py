@@ -74,6 +74,8 @@ class SinglePulse:
                 self.opw = self.bins[np.logical_not(np.logical_or(np.in1d(self.bins,mpw),np.in1d(self.bins,ipw)))]
         else:
             self.opw = np.array(opw)
+            if self.mpw is None:
+                self.mpw = self.bins[np.logical_not(np.in1d(self.bins,opw))]
 
         if self.mpw is None and self.ipw is None and self.opw is None:
             self.mpw = np.arange(self.nbins)
