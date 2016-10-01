@@ -193,6 +193,8 @@ class Par:
                 R2s[i] = self.get('DMXR2_%04i'%(i+1))
                 F1s[i] = self.get('DMXF1_%04i'%(i+1))
                 F2s[i] = self.get('DMXF2_%04i'%(i+1))
+                if np.isnan(ts[i]):
+                    ts[i] = (R1s[i]+R2s[i])/2.0
         if full_output:
             return ts,dmxs,errs,R1s,R2s,F1s,F2s
         return ts,dmxs,errs
