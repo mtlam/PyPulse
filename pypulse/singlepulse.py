@@ -278,7 +278,20 @@ class SinglePulse:
         return len(self.data)
 
 
-
+    def plot(self,show=True):
+        """
+        Simple plot
+        """ 
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.plot(self.bins,self.data,'k')
+        ax.set_xlim(self.bins[0],self.bins[-1])
+        dy = np.ptp(self.data)
+        ax.set_ylim(np.min(self.data)-0.05*dy,np.max(self.data)+0.05*dy)
+        ax.set_xlabel("Phase Bins")
+        ax.set_ylabel("Intensity")
+        if show:
+            plt.show()
     def plot_windows(self,show=True):
         """
         Diagnostic plot of the main-, inter-, and off-pulse regions
@@ -286,7 +299,7 @@ class SinglePulse:
         fig = plt.figure()
         ax = fig.add_subplot(111)
         
-        ax.plot(self.bins,self.data)
+        ax.plot(self.bins,self.data,'k')
         MIN = np.min(self.data)
 
         diffs = np.abs(np.diff(self.mpw))
@@ -312,5 +325,7 @@ class SinglePulse:
         ax.set_xlim(self.bins[0],self.bins[-1])
         dy = np.ptp(self.data)
         ax.set_ylim(np.min(self.data)-0.05*dy,np.max(self.data)+0.05*dy)
+        ax.set_xlabel("Phase Bins")
+        ax.set_ylabel("Intensity")
         if show:
             plt.show()
