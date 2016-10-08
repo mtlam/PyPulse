@@ -260,6 +260,7 @@ class SinglePulse:
 
         
     #define this so a positive shift is forward
+    # Implement shifts of mpw,opw?
     def shiftit(self,shift,save=False):
         """
         Shift the pulse by some phase.
