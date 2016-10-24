@@ -13,7 +13,8 @@ import scipy.special as special
 from scipy.signal import fftconvolve,correlate
 import matplotlib.pyplot as plt
 
-
+from multiprocessing import Process, Pipe
+from itertools import izip
 
 
 
@@ -442,6 +443,29 @@ def weighted_moments(series,weights,unbiased=False,harmonic=False):
 
 
 
+### ==================================================
+### Parallelization
+### ==================================================
+
+
+#http://stackoverflow.com/questions/3288595/multiprocessing-how-to-use-pool-map-on-a-function-defined-in-a-class/10525471#10525471
+def spawn(f):
+    def fun(ppipe, cpipe,x):
+        ppipe.close()
+        cpipe.send(f(x))
+        cpipe.close()
+    return fun
+
+def parmap(f,X):
+    pipe=[Pipe() for x in X]
+    proc=[Process(target=spawn(f),args=(p,c,x)) for x,(p,c) in izip(X,pipe)]
+    [p.start() for p in proc]
+    ret = [p.recv() for (p,c) in pipe]
+    [p.join() for p in proc]
+    return ret
+
+
+
 
 
 ### ==================================================
@@ -580,6 +604,7 @@ def get_toa3(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, 
     # roughly center the pulse to line up with the template:
     ishift = int(-tauccf)
     profile = np.roll(profile, ishift)
+
     bccf = sum(template*profile)/sum(template**2) 
 
     # Search range for TOA using Fourier-domain method:
@@ -596,7 +621,7 @@ def get_toa3(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, 
     bhat0 = bccf
     tauhat0 = tauccf+ishift
     paramvec0 = np.array((bhat0, tauhat0))
-    
+
     paramvec = optimize.minpack.leastsq(tfresids, paramvec0, args=(tfft, pfft)) 
     bhat = paramvec[0][0]
     tauhat = paramvec[0][1]
