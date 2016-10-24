@@ -601,6 +601,7 @@ class Archive:
 
         #raise SystemExit
 
+
         for i,delay in enumerate(bin_delays):
             #self.channel_delays[i] += Decimal(str(time_delays[i])) #FIX THIS
             #print self.getTbin(),self.getTbin()*2048
@@ -610,9 +611,6 @@ class Archive:
             #    delay -= nbin #this helps somewhat
             #if delay >= P0/2.0:
             #    delay -= Decimal(P0)
-
-            
-            
 
             #delay -= nbin # WHY IS THIS TRUE???
             d = Decimal(sign*(delay))*dt
