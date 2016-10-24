@@ -34,6 +34,7 @@ import pypulse.calibrator as calib
 Calibrator = calib.Calibrator
 import decimal as d
 Decimal = d.Decimal
+import multiprocessing
 try:
     import astropy.io.fits as pyfits
 except:
@@ -52,7 +53,7 @@ SEARCH = "SEARCH"
 
 
 class Archive:
-    def __init__(self,filename,prepare=True,lowmem=False,verbose=True,weight=True,center_pulse=True,baseline_removal=True,wcfreq=True):
+    def __init__(self,filename,prepare=True,lowmem=False,verbose=True,weight=True,center_pulse=True,baseline_removal=True,wcfreq=True,thread=False):
         ## Parse filename here?
         self.filename = str(filename) #fix unicode issue
         self.prepare = prepare
@@ -61,11 +62,12 @@ class Archive:
         self.center_pulse = center_pulse
         self.baseline_removal = baseline_removal
         self.wcfreq = wcfreq
+        self.thread = thread
         if verbose:
             print("Loading: %s" % self.filename)
             t0=time.time()
 
-        self.load(self.filename,prepare=prepare,center_pulse=center_pulse,baseline_removal=baseline_removal,weight=weight,wcfreq=wcfreq)
+        self.load(self.filename,prepare=prepare,center_pulse=center_pulse,baseline_removal=baseline_removal,weight=weight,wcfreq=wcfreq,thread=thread)
         if not self.lowmem:
             self.data_orig = np.copy(self.data)
             self.weights_orig = np.copy(self.weights)
@@ -89,7 +91,7 @@ class Archive:
 
 
 
-    def load(self,filename,prepare=True,center_pulse=True,baseline_removal=True,weight=True,wcfreq=False):
+    def load(self,filename,prepare=True,center_pulse=True,baseline_removal=True,weight=True,wcfreq=False,thread=False):
         """
         Loads a PSRFITS file and processes
         http://www.atnf.csiro.au/people/pulsar/index.html?n=PsrfitsDocumentation.Txt
@@ -800,6 +802,10 @@ class Archive:
             data = np.where(data==setnan,np.nan,data)
         
         return np.copy(data) #removes pointer to data
+    def setData(self,newdata):
+        """Sets the data, very dangerous!"""
+        if np.shape(newdata) == np.shape(self.data):
+            self.data = np.copy(newdata)
     def getWeights(self,squeeze=True):
         """ Return copy of weights array """
         weights = self.weights
