@@ -34,7 +34,6 @@ import pypulse.calibrator as calib
 Calibrator = calib.Calibrator
 import decimal as d
 Decimal = d.Decimal
-import multiprocessing
 try:
     import astropy.io.fits as pyfits
 except:
@@ -49,6 +48,8 @@ elif sys.version_info.major == 3:
 PSR = "PSR"
 CAL = "CAL"
 SEARCH = "SEARCH"
+
+
 
 
 
@@ -67,7 +68,7 @@ class Archive:
             print("Loading: %s" % self.filename)
             t0=time.time()
 
-        self.load(self.filename,prepare=prepare,center_pulse=center_pulse,baseline_removal=baseline_removal,weight=weight,wcfreq=wcfreq,thread=thread)
+        self.load(self.filename,prepare=prepare,center_pulse=center_pulse,baseline_removal=baseline_removal,weight=weight,wcfreq=wcfreq)
         if not self.lowmem:
             self.data_orig = np.copy(self.data)
             self.weights_orig = np.copy(self.weights)
@@ -91,7 +92,7 @@ class Archive:
 
 
 
-    def load(self,filename,prepare=True,center_pulse=True,baseline_removal=True,weight=True,wcfreq=False,thread=False):
+    def load(self,filename,prepare=True,center_pulse=True,baseline_removal=True,weight=True,wcfreq=False):
         """
         Loads a PSRFITS file and processes
         http://www.atnf.csiro.au/people/pulsar/index.html?n=PsrfitsDocumentation.Txt
@@ -198,7 +199,7 @@ class Archive:
 
         
         self.data = np.zeros((nsubint,npol,nchan,nbin))
-        data = np.zeros((nsubint,npol,nchan,nbin))
+        #data = np.zeros((nsubint,npol,nchan,nbin))
         
         I = range(nsubint)
         J = range(npol)
@@ -230,19 +231,23 @@ class Archive:
             for i in I:
                 self.data[i,0,0,:] = (DAT_SCL[i,0]*DATA[i,0,0,:]+DAT_OFFS[i,0])#*DAT_WTS[0]
         else: #if nsubint == 1 or npol == 1 or nchan == 1 this works, or all three are not 1, might want to split this up
-            for i in I:
-                for j in J:
-                    jnchan = j*nchan
-                    for k in K:
-                        self.data[i,j,k,:] = (DAT_SCL[i,jnchan+k]*DATA[i,j,k,:]+DAT_OFFS[i,jnchan+k])#*DAT_WTS[i,k]
-
+            a = time.time()
+            if self.thread:
+                def loop_func(i):
+                    for j in J:
+                        jnchan = j*nchan
+                        for k in K:
+                            self.data[i,j,k,:] = (DAT_SCL[i,jnchan+k]*DATA[i,j,k,:]+DAT_OFFS[i,jnchan+k])#*DAT_WTS[i,k]
+                u.parmap(loop_func,I)
+            else:
+                for i in I:
+                    for j in J:
+                        jnchan = j*nchan
+                        for k in K:
+                            self.data[i,j,k,:] = (DAT_SCL[i,jnchan+k]*DATA[i,j,k,:]+DAT_OFFS[i,jnchan+k])#*DAT_WTS[i,k]
+            b = time.time()
         bw = self.getBandwidth()
-        #if bw < 0:
-        #    print "foo"
-        #    tempdata = np.copy(self.data)
-        #    MAX = K[-1]
-        #    for k in K:
-        #        self.data[:,:,k,:] = tempdata[:,:,MAX-k,:]
+
             
         # All time-tagging info
         self.durations = self.getSubintinfo('TSUBINT')
