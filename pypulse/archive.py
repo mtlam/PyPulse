@@ -34,6 +34,7 @@ import pypulse.calibrator as calib
 Calibrator = calib.Calibrator
 import decimal as d
 Decimal = d.Decimal
+from importlib import import_module
 try:
     import astropy.io.fits as pyfits
 except:
@@ -189,13 +190,14 @@ class Archive:
         DATA = hdulist['SUBINT'].data['DATA']
         if np.ndim(DATA)==5:
             DATA = DATA[:,0,:,:,:] #remove the nsblk column
+        DATA = np.ascontiguousarray(DATA)
         #Definitions in Base/Formats/PSRFITS/ProfileColumn.C
         DAT_FREQ = hdulist['SUBINT'].data['DAT_FREQ']
-        DAT_WTS = hdulist['SUBINT'].data['DAT_WTS']
+        DAT_WTS = np.ascontiguousarray(hdulist['SUBINT'].data['DAT_WTS'])
         if not weight:
             DAT_WTS = np.ones(np.shape(DAT_WTS))
-        DAT_SCL = hdulist['SUBINT'].data['DAT_SCL']
-        DAT_OFFS = hdulist['SUBINT'].data['DAT_OFFS']# + 0.5 #testing
+        DAT_SCL = np.ascontiguousarray(hdulist['SUBINT'].data['DAT_SCL'])
+        DAT_OFFS = np.ascontiguousarray(hdulist['SUBINT'].data['DAT_OFFS'])# + 0.5 #testing
         self.DAT_SCL = DAT_SCL #testing
 
         
@@ -232,21 +234,45 @@ class Archive:
             for i in I:
                 self.data[i,0,0,:] = (DAT_SCL[i,0]*DATA[i,0,0,:]+DAT_OFFS[i,0])#*DAT_WTS[0]
         else: #if nsubint == 1 or npol == 1 or nchan == 1 this works, or all three are not 1, might want to split this up
+            t0 = time.time()
+            cudasuccess = False
             if self.cuda:
-                pass
-            elif self.thread:
+                try:
+                    gpuarray = import_module('pycuda.gpuarray')
+                    compiler = import_module('pycuda.compiler')
+                    driver = import_module('pycuda.driver')
+                    import_module('pycuda.autoinit')
+                    cudasuccess = True
+                except ImportError:
+                    print("PyCUDA not imported")
+                mod = compiler.SourceModule("""
+                __global__ void combine(float *retval, float *DAT_SCL, float *DATA, float *DAT_OFFS, int nbin)
+                {
+                    int idx = threadIdx.x + threadIdx.y*4;
+                    int subidx = idx/nbin;
+                    retval[idx] = DAT_SCL[subidx]*DATA[idx]+DAT_OFFS[subidx];
+                }
+                """)
+                combine = mod.get_function("combine")
+                #combine(driver.Out(self.data),driver.In(np.ascontiguousarray(DAT_SCL)),driver.In(np.ascontiguousarray(DATA)),driver.In(np.ascontiguousarray(DAT_OFFS)),nbin,block=(4,4,1))
+                combine(driver.Out(self.data),driver.In(DAT_SCL),driver.In(DATA),driver.In(DAT_OFFS),nbin,block=(4,4,1))
+
+            if self.thread and cudasuccess == False:
                 def loop_func(i):
                     for j in J:
                         jnchan = j*nchan
                         for k in K:
                             self.data[i,j,k,:] = (DAT_SCL[i,jnchan+k]*DATA[i,j,k,:]+DAT_OFFS[i,jnchan+k])#*DAT_WTS[i,k]
                 u.parmap(loop_func,I)
-            else:
+            elif cudasuccess == False:
                 for i in I:
                     for j in J:
                         jnchan = j*nchan
                         for k in K:
                             self.data[i,j,k,:] = (DAT_SCL[i,jnchan+k]*DATA[i,j,k,:]+DAT_OFFS[i,jnchan+k])#*DAT_WTS[i,k]
+            t1 = time.time()
+            print t1-t0
+
         bw = self.getBandwidth()
 
             
