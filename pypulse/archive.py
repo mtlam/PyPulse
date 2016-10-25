@@ -54,7 +54,7 @@ SEARCH = "SEARCH"
 
 
 class Archive:
-    def __init__(self,filename,prepare=True,lowmem=False,verbose=True,weight=True,center_pulse=True,baseline_removal=True,wcfreq=True,thread=False):
+    def __init__(self,filename,prepare=True,lowmem=False,verbose=True,weight=True,center_pulse=True,baseline_removal=True,wcfreq=True,thread=False,cuda=False):
         ## Parse filename here?
         self.filename = str(filename) #fix unicode issue
         self.prepare = prepare
@@ -64,6 +64,7 @@ class Archive:
         self.baseline_removal = baseline_removal
         self.wcfreq = wcfreq
         self.thread = thread
+        self.cuda = cuda
         if verbose:
             print("Loading: %s" % self.filename)
             t0=time.time()
@@ -231,8 +232,9 @@ class Archive:
             for i in I:
                 self.data[i,0,0,:] = (DAT_SCL[i,0]*DATA[i,0,0,:]+DAT_OFFS[i,0])#*DAT_WTS[0]
         else: #if nsubint == 1 or npol == 1 or nchan == 1 this works, or all three are not 1, might want to split this up
-            a = time.time()
-            if self.thread:
+            if self.cuda:
+                pass
+            elif self.thread:
                 def loop_func(i):
                     for j in J:
                         jnchan = j*nchan
@@ -245,7 +247,6 @@ class Archive:
                         jnchan = j*nchan
                         for k in K:
                             self.data[i,j,k,:] = (DAT_SCL[i,jnchan+k]*DATA[i,j,k,:]+DAT_OFFS[i,jnchan+k])#*DAT_WTS[i,k]
-            b = time.time()
         bw = self.getBandwidth()
 
             
