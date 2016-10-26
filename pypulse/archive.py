@@ -241,21 +241,78 @@ class Archive:
                     gpuarray = import_module('pycuda.gpuarray')
                     compiler = import_module('pycuda.compiler')
                     driver = import_module('pycuda.driver')
-                    import_module('pycuda.autoinit')
+                    autoinit = import_module('pycuda.autoinit')
                     cudasuccess = True
                 except ImportError:
                     print("PyCUDA not imported")
+                    #                __global__ void combine(float *retval, float *DAT_SCL, float *DATA, float *DAT_OFFS, int nbin)
                 mod = compiler.SourceModule("""
-                __global__ void combine(float *retval, float *DAT_SCL, float *DATA, float *DAT_OFFS, int nbin)
+                __global__ void combine(int16_t *retval, float *DAT_SCL, int16_t *DATA, float *DAT_OFFS, int nbin, int size)
                 {
-                    int idx = threadIdx.x + threadIdx.y*4;
-                    int subidx = idx/nbin;
-                    retval[idx] = DAT_SCL[subidx]*DATA[idx]+DAT_OFFS[subidx];
+                    //uint idx = threadIdx.x + threadIdx.y*4;
+                    uint xidx = blockDim.x * blockIdx.x + threadIdx.x;
+                    uint yidx = blockDim.y * blockIdx.y + threadIdx.y;
+                    uint zidx = blockDim.z * blockIdx.z + threadIdx.z;
+                    uint idx = xidx + 5*yidx;
+                    if (idx < size)
+                        retval[idx] = 1;//DATA[idx];
+
+                    //int subidx = idx/nbin;
+                    //retval[idx] = ((DATA[idx] & 0x00FF) <<8) | ((DATA[idx]>>8) & 0x00ff); //swap-endian
+                    //retval[idx] = (double)(DAT_SCL[subidx]*DATA[idx]+DAT_OFFS[subidx]);
                 }
                 """)
                 combine = mod.get_function("combine")
+
+                maxX = autoinit.device.get_attributes()[driver.device_attribute.MAX_BLOCK_DIM_X]
+                maxY = autoinit.device.get_attributes()[driver.device_attribute.MAX_BLOCK_DIM_Y]
+                maxZ = autoinit.device.get_attributes()[driver.device_attribute.MAX_BLOCK_DIM_Z]
+
+                
+
+
+
+
                 #combine(driver.Out(self.data),driver.In(np.ascontiguousarray(DAT_SCL)),driver.In(np.ascontiguousarray(DATA)),driver.In(np.ascontiguousarray(DAT_OFFS)),nbin,block=(4,4,1))
-                combine(driver.Out(self.data),driver.In(DAT_SCL),driver.In(DATA),driver.In(DAT_OFFS),nbin,block=(4,4,1))
+                data = np.zeros(np.shape(self.data),dtype='>i2')
+
+                if nsubint <= maxX:
+                    X = int(nsubint)
+                    gridX = 1
+                else:
+                    pass
+                # Assume maxZ >= 4 for now
+                Z = int(npol)
+                gridZ = 1
+                if nchan <= maxY:
+                    Y = int(nchan)
+                    gridY = 1
+                else:
+                    pass
+
+                print np.shape(data),np.size(data)
+                retval = np.zeros(np.shape(self.data),dtype='>i2')
+                print (X,Y,Z)
+                combine(driver.Out(retval),driver.In(DAT_SCL),driver.In(data),driver.In(DAT_OFFS),np.int32(nbin),np.int32(np.size(data)),block=(X,1,1),grid=(1,Z,Y))
+
+                raise SystemExit
+
+                #combine(driver.Out(DATA),driver.In(DAT_SCL),driver.In(DATA),driver.In(DAT_OFFS),nbin,block=(4,4,1))
+
+                combine(driver.Out(retval),driver.In(DAT_SCL),driver.In(data),driver.In(DAT_OFFS),nbin,block=(4,4,4))
+                #combine(data_gpu,driver.In(DAT_SCL),data_gpu,driver.In(DAT_OFF),nbin,block=(4,4,1))
+
+                #driver.memcpy_dtoh(retval, data_gpu)
+                #combine(driver.Out(data),driver.In(DAT_SCL),driver.In(DATA),driver.In(DAT_OFFS),nbin,block=(4,4,1))
+                #print "Break1"
+                print retval,np.all(retval==256)
+                print np.shape(retval)
+                print len(np.where(retval==256)[0])
+                #for i in retval:
+                #    print i,
+                #print "break"
+                #print data.#dtype,DATA.dtype
+                raise SystemExit
 
             if self.thread and cudasuccess == False:
                 def loop_func(i):
