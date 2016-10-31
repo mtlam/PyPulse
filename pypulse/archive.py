@@ -670,7 +670,7 @@ class Archive:
         #print time_delays
         dt = self.getTbin(numwrap=Decimal)  
         bin_delays = np.array(fmap(lambda x: Decimal(str(x)),time_delays)) / dt
-        print "foo",bin_delays,nbin,dt,self.getPeriod(),self.getNbin()
+        #print "foo",bin_delays,nbin,dt,self.getPeriod(),self.getNbin()
         bin_delays = bin_delays % Decimal(nbin)
         if reverse:
             sign = 1
@@ -1468,10 +1468,14 @@ class Archive:
         """Returns the time per bin"""
         return numwrap(self.getPeriod()) / numwrap(self.getNbin())
     def getDM(self):
-        """Returns the header DM"""
-        if self.params is None:
-            return None
-        return self.params.getDM()
+        """Returns the data header DM"""
+        return self.subintheader['DM']
+        #if self.params is None:
+        #    return
+        #return self.params.getDM()
+    def getRM(self):
+        """Returns the data header RM"""
+        return self.subintheader['RM']
     def getCoords(self,parse=True): #use get/set coorinates? Use astropy?
         """Returns the coordinate info in the header"""
         if parse:
