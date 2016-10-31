@@ -670,6 +670,7 @@ class Archive:
         #print time_delays
         dt = self.getTbin(numwrap=Decimal)  
         bin_delays = np.array(fmap(lambda x: Decimal(str(x)),time_delays)) / dt
+        print "foo",bin_delays,nbin,dt,self.getPeriod(),self.getNbin()
         bin_delays = bin_delays % Decimal(nbin)
         if reverse:
             sign = 1
@@ -1434,6 +1435,11 @@ class Archive:
         if header or self.polyco is None:
             return self.params.getPeriod()
         else:
+            P0 = self.polyco.calculatePeriod()
+            #print P0,self.params.getPeriod()
+            if np.abs(P0)<1e-5: #Problem with large DT POLYCO values?
+                return self.params.getPeriod()
+            return P0
             return self.polyco.calculatePeriod()
     # Best replacement for without PSRCHIVE
     def getValue(self,value):
@@ -1585,10 +1591,12 @@ class Polyco:
         REF_PHS = self.getValue('REF_PHS',num=0)
         REF_F0 = self.getValue('REF_F0',num=0)
         COEFF = self.getValue('COEFF',num=0)
-
+        #print "POLYCO",REF_FREQ,REF_MJD,REF_PHS,REF_F0,COEFF
         #http://tempo.sourceforge.net/ref_man_sections/tz-polyco.txt
         DT = (MJD-REF_MJD)*1440.0
+        #print "DT",DT,MJD,REF_MJD
         PHASE = REF_PHS + DT*60*REF_F0
+        #print "PHASE",PHASE
         FREQ = 0.0
         for i,c in enumerate(COEFF):
             PHASE += c*np.power(DT,i)
@@ -1596,7 +1604,6 @@ class Polyco:
                 continue
             FREQ += c*i*np.power(DT,i-1)
         FREQ = REF_F0 + FREQ/60.0
-        
         return PHASE,FREQ
     def calculatePeriod(self,MJD=None):
         PHASE,FREQ = self.calculate(MJD=MJD)
