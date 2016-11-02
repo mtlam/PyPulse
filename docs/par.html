@@ -48,78 +48,222 @@
 </div>
 <div class="section" id="par-class">
 <h1>Par Class<a class="headerlink" href="#par-class" title="Permalink to this headline">¶</a></h1>
-<p>The <em>Par</em> class handles pulsar parameter files</p>
+<p>The <em>Par</em> class handles pulsar parameter files.</p>
 <dl class="class">
 <dt id="Par">
 <em class="property">class </em><code class="descname">Par</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>numwrap=Decimal</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Par" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Path to a .par file</li>
+<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#type" title="(in Python v2.7)"><em>type</em></a>) &#8211; Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <div class="section" id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>tag</em><span class="optional">[</span>, <em>flag=None</em>, <em>error=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#get" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the value of a given parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Return the value of a parameter with a flag provided. For example, noise parameters can be given a backend as a flag, e.g., for parameter &#8220;JUMP -fe L-wide 0.0 1 0.0&#8221;, the flag would be &#8220;L-wide&#8221;.</li>
+<li><strong>error</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Return the value of the error associated with a parameter.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">value</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getPeriod">
 <code class="descname">getPeriod</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeriod" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the pulsar spin period.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getPeriodDot">
 <code class="descname">getPeriodDot</code><span class="sig-paren">(</span><span class="optional">[</span><em>shklovskii=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeriodDot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the pulsar spin period derivative.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shklovskii</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Attempt to correct for the Shklovskii effect if proper motion and parallax information is provided.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getFrequency">
 <code class="descname">getFrequency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrequency" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the pulsar spin frequency.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getFrequencyDot">
 <code class="descname">getFrequencyDot</code><span class="sig-paren">(</span><span class="optional">[</span><em>shklovskii=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrequencyDot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the pulsar spin frequency derivative.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shklovskii</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Attempt to correct for the Shklovskii effect if proper motion and parallax information is provided.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getPM">
 <code class="descname">getPM</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getPM" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Calculate the proper motion in mas/yr. If only one of the two basis parameters is provided, return that value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getDM">
 <code class="descname">getDM</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getDM" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the DM parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getDMX">
 <code class="descname">getDMX</code><span class="sig-paren">(</span><span class="optional">[</span><em>full_output=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getDMX" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a tuple of the DMX time series (times, DMXs, DMX errors).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>full_output</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Return a tuple of the times, DMXs, DMX errors, DMXR1s, DMXR2s, DMXF1s, DMXF2s</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">times (<em>numpy.ndarray</em>), DM (<em>numpy.ndarray</em>), DM errors (<em>numpy.ndarray</em>), unless full_output=True.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getDMseries">
 <code class="descname">getDMseries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getDMseries" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a tuple of the DM time series (times, DMs, DM errors). DMs are calculated as the DMX model plus the DM parameter (the fiducial value).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">times (<em>numpy.ndarray</em>), DM (<em>numpy.ndarray</em>), DM errors (<em>numpy.ndarray</em>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getFD">
 <code class="descname">getFD</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFD" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the coefficients associated with the FD parameters, in order (i.e., FD1, FD2, ...).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getFDfunc">
 <code class="descname">getFDfunc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFDfunc" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a Python function (lambda) that provides the timing delays as a function of observing frequency. The function takes one parameter, the observing frequency (in GHz), and returns timing delays in microseconds.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">function</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getName">
 <code class="descname">getName</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getName" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the pulsar name given by either PSR or PSRJ.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getTspan">
 <code class="descname">getTspan</code><span class="sig-paren">(</span><span class="optional">[</span><em>years=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getTspan" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the timespan given by the START and FINISH flags in days.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>years</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Divide the timespan by 365.25.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 </div>
