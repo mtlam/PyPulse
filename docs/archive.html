@@ -42,14 +42,18 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="archive-class">
+  <div class="toctree-wrapper compound">
+</div>
+<div class="section" id="archive-class">
 <h1>Archive Class<a class="headerlink" href="#archive-class" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
-<div class="toctree-wrapper compound">
-</div>
-</div>
+<p>The <em>Archive</em> class is the primary mechanism for opening PSRFITS files</p>
+<dl class="class">
+<dt id="Archive">
+<em class="property">class </em><code class="descname">Archive</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>prepare=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Archive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <div class="section" id="methods">
-<h1>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h1>
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="tscrunch">
 <code class="descname">tscrunch</code><span class="sig-paren">(</span><span class="optional">[</span><em>nsubint=None</em>, <em>factor=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tscrunch" title="Permalink to this definition">¶</a></dt>
@@ -71,6 +75,28 @@
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="fscrunch">
+<code class="descname">fscrunch</code><span class="sig-paren">(</span><span class="optional">[</span><em>nchan=None</em>, <em>factor=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#fscrunch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a weighted average the data cube along the frequency dimension</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>nsubint</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Frequency average to this may subintegrations</li>
+<li><strong>factor</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Frequency average by this factor</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">self</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -81,8 +107,10 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Archive Class</a></li>
+<li><a class="reference internal" href="#">Archive Class</a><ul>
 <li><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
