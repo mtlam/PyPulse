@@ -47,91 +47,229 @@
 </div>
 <div class="section" id="toa-class">
 <h1>TOA Class<a class="headerlink" href="#toa-class" title="Permalink to this headline">¶</a></h1>
-<p>The <em>TOA</em> class handles pulsar times-of-arrival (TOAs)</p>
+<p>The <em>TOA</em> class handles individual pulsar times-of-arrival (TOAs).</p>
 <dl class="class">
 <dt id="TOA">
 <em class="property">class </em><code class="descname">TOA</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>freq=None</em>, <em>MJD=None</em>, <em>err=None</em>, <em>siteID=None</em>, <em>numwrap=d.Decimal</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#TOA" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; If only the filename parameter is specified, then the parameter is the entire TOA string.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getFilename">
 <code class="descname">getFilename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFilename" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="getFreq">
-<code class="descname">getFreq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFreq" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the filename the TOA was generated from.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getFrequency">
 <code class="descname">getFrequency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrequency" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the frequency of the pulse profile the TOA was generated from.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFreq">
+<code class="descname">getFreq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFreq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#getFrequency" title="getFrequency"><code class="xref py py-func docutils literal"><span class="pre">getFrequency()</span></code></a>.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="getMJD">
 <code class="descname">getMJD</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getMJD" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the MJD of the TOA.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getError">
 <code class="descname">getError</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getError" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the TOA error in microseconds.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">floar</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getSiteID">
 <code class="descname">getSiteID</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getSiteID" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the observatory site ID of the pulse profiles.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>flag</em><span class="sig-paren">)</span><a class="headerlink" href="#get" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>For any flags stored with the TOA, return the value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Name of the flag.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="comment">
 <code class="descname">comment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#comment" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Comment out the TOA (the TOA string is appended to &#8220;C &#8221;). Useful when saving out a .tim file.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="setFilename">
 <code class="descname">setFilename</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#setFilename" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="setFreq">
-<code class="descname">setFreq</code><span class="sig-paren">(</span><em>freq</em><span class="sig-paren">)</span><a class="headerlink" href="#setFreq" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set the filename of the TOA to a value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Filename to set in the TOA.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="setFrequency">
 <code class="descname">setFrequency</code><span class="sig-paren">(</span><em>freq</em><span class="sig-paren">)</span><a class="headerlink" href="#setFrequency" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set the frequency of the TOA to a value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>freq</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Frequency to set in the TOA.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="setFreq">
+<code class="descname">setFreq</code><span class="sig-paren">(</span><em>freq</em><span class="sig-paren">)</span><a class="headerlink" href="#setFreq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#setFrequency" title="setFrequency"><code class="xref py py-func docutils literal"><span class="pre">setFrequency()</span></code></a>.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="setMJD">
 <code class="descname">setMJD</code><span class="sig-paren">(</span><em>MJD</em><span class="sig-paren">)</span><a class="headerlink" href="#setMJD" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set the MJD of the TOA to a value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>MJD</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; MJD to set in the TOA.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="setError">
 <code class="descname">setError</code><span class="sig-paren">(</span><em>err</em><span class="sig-paren">)</span><a class="headerlink" href="#setError" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set the error of the TOA to a value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>err</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Error to set in the TOA.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="setSiteID">
 <code class="descname">setSiteID</code><span class="sig-paren">(</span><em>siteID</em><span class="sig-paren">)</span><a class="headerlink" href="#setSiteID" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set the observatory site ID of the TOA to a value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>siteID</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Site ID to set in the TOA.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="set">
 <code class="descname">set</code><span class="sig-paren">(</span><em>flag</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>If the flag exists, set the value of an associated flag.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Name of the flag.</li>
+<li><strong>value</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Value to set.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="add">
 <code class="descname">add</code><span class="sig-paren">(</span><em>flag</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#add" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>If the flag does not exist, add the flag with associated value to the TOA.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Name of the flag.</li>
+<li><strong>value</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Value to set.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <div class="section" id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
@@ -143,7 +281,19 @@
 <dl class="class">
 <dt id="Tim">
 <em class="property">class </em><code class="descname">Tim</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>numwrap=Decimal</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Tim" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Path to a .tim file</li>
+<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#type" title="(in Python v2.7)"><em>type</em></a>) &#8211; Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <div class="section" id="id1">
 <h2>Methods<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
@@ -167,12 +317,32 @@
 <dl class="function">
 <dt id="save">
 <code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#save" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Save a .tim file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Path to .tim file</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getTspan">
 <code class="descname">getTspan</code><span class="sig-paren">(</span><span class="optional">[</span><em>years=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getTspan" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the total time span covered by the TOAs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>years</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Divide the total time span in days by 365.25.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 </div>
