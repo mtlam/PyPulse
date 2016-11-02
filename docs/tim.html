@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Tim Class &#8212; PyPulse 0.0.1 documentation</title>
+    <title>TOA Class &#8212; PyPulse 0.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -27,6 +27,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="PyPulse 0.0.1 documentation" href="index.html" />
+    <link rel="prev" title="Par Class" href="par.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -44,16 +45,135 @@
             
   <div class="toctree-wrapper compound">
 </div>
-<div class="section" id="tim-class">
-<h1>Tim Class<a class="headerlink" href="#tim-class" title="Permalink to this headline">¶</a></h1>
-<p>The <em>Tim</em> class handles pulsar times-of-arrival (TOA) files</p>
+<div class="section" id="toa-class">
+<h1>TOA Class<a class="headerlink" href="#toa-class" title="Permalink to this headline">¶</a></h1>
+<p>The <em>TOA</em> class handles pulsar times-of-arrival (TOAs)</p>
 <dl class="class">
-<dt id="Tim">
-<em class="property">class </em><code class="descname">Tim</code><a class="headerlink" href="#Tim" title="Permalink to this definition">¶</a></dt>
+<dt id="TOA">
+<em class="property">class </em><code class="descname">TOA</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>freq=None</em>, <em>MJD=None</em>, <em>err=None</em>, <em>siteID=None</em>, <em>numwrap=d.Decimal</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#TOA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getFilename">
+<code class="descname">getFilename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFilename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getFreq">
+<code class="descname">getFreq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFreq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getFrequency">
+<code class="descname">getFrequency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrequency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getMJD">
+<code class="descname">getMJD</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getMJD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getError">
+<code class="descname">getError</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getSiteID">
+<code class="descname">getSiteID</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getSiteID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>flag</em><span class="sig-paren">)</span><a class="headerlink" href="#get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="comment">
+<code class="descname">comment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#comment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="setFilename">
+<code class="descname">setFilename</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#setFilename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="setFreq">
+<code class="descname">setFreq</code><span class="sig-paren">(</span><em>freq</em><span class="sig-paren">)</span><a class="headerlink" href="#setFreq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="setFrequency">
+<code class="descname">setFrequency</code><span class="sig-paren">(</span><em>freq</em><span class="sig-paren">)</span><a class="headerlink" href="#setFrequency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="setMJD">
+<code class="descname">setMJD</code><span class="sig-paren">(</span><em>MJD</em><span class="sig-paren">)</span><a class="headerlink" href="#setMJD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="setError">
+<code class="descname">setError</code><span class="sig-paren">(</span><em>err</em><span class="sig-paren">)</span><a class="headerlink" href="#setError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="setSiteID">
+<code class="descname">setSiteID</code><span class="sig-paren">(</span><em>siteID</em><span class="sig-paren">)</span><a class="headerlink" href="#setSiteID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="set">
+<code class="descname">set</code><span class="sig-paren">(</span><em>flag</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>flag</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#add" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="section" id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="tim-class">
+<h1>Tim Class<a class="headerlink" href="#tim-class" title="Permalink to this headline">¶</a></h1>
+<p>The <em>Tim</em> class handles pulsar times-of-arrival (TOAs) files</p>
+<dl class="class">
+<dt id="Tim">
+<em class="property">class </em><code class="descname">Tim</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>numwrap=Decimal</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Tim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="section" id="id1">
+<h2>Methods<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a .tim file.</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">param str filename:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Path to .tim file</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getTspan">
+<code class="descname">getTspan</code><span class="sig-paren">(</span><span class="optional">[</span><em>years=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getTspan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 </div>
 
@@ -65,8 +185,12 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Tim Class</a><ul>
+<li><a class="reference internal" href="#">TOA Class</a><ul>
 <li><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tim-class">Tim Class</a><ul>
+<li><a class="reference internal" href="#id1">Methods</a></li>
 </ul>
 </li>
 </ul>
@@ -74,6 +198,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="par.html" title="previous chapter">Par Class</a></li>
   </ul></li>
 </ul>
 </div>
