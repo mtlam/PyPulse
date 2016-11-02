@@ -54,9 +54,9 @@ class TOA:
     #    return 
     def __str__(self):
         if isinstance(self.MJD,d.Decimal):
-            retval = "%s %0.6f %s % 7.3f %+4s  "%(self.filename,self.freq,self.MJD,self.err,self.siteID)
+            retval = "%s %0.6f %s % 7.3f %+4s  "%(self.filename,self.freq,self.MJD,self.err,str(self.siteID))
         else:
-            retval = "%s %0.6f %0.15f % 7.3f %+4s  "%(self.filename,self.freq,self.MJD,self.err,self.siteID)
+            retval = "%s %0.6f %0.15f % 7.3f %+4s  "%(self.filename,self.freq,self.MJD,self.err,str(self.siteID))
         for i,flag in enumerate(self.flags):
             retval += "-%s %s "%(flag,getattr(self,flag))
         retval = retval[:-1]
