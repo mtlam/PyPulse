@@ -27,6 +27,8 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="PyPulse 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="SinglePulse Class" href="singlepulse.html" />
+    <link rel="prev" title="PyPulse v0.0.1" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -162,12 +164,12 @@
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
 <div class="admonition-todo admonition" id="index-0">
 <p class="first admonition-title">Todo</p>
 <p class="last">Perform a weighted average of the data cube</p>
 </div>
-</dd></dl>
-
 <dl class="function">
 <dt id="fscrunch">
 <code class="descname">fscrunch</code><span class="sig-paren">(</span><span class="optional">[</span><em>nchan=None</em>, <em>factor=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#fscrunch" title="Permalink to this definition">¶</a></dt>
@@ -208,12 +210,12 @@
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
 <div class="admonition-todo admonition" id="index-1">
 <p class="first admonition-title">Todo</p>
 <p class="last">Perform a weighted average of the data cube</p>
 </div>
-</dd></dl>
-
 <dl class="function">
 <dt id="dedisperse">
 <code class="descname">dedisperse</code><span class="sig-paren">(</span><span class="optional">[</span><em>DM=None</em>, <em>reverse=False</em>, <em>wcfreq=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#dedisperse" title="Permalink to this definition">¶</a></dt>
@@ -275,7 +277,7 @@
 <dl class="function">
 <dt id="getData">
 <code class="descname">getData</code><span class="sig-paren">(</span><span class="optional">[</span><em>squeeze=True</em>, <em>setnan=None</em>, <em>weight=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rrturn the data array.</p>
+<dd><p>Return the data array.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -382,47 +384,129 @@
 <dl class="function">
 <dt id="time">
 <code class="descname">time</code><span class="sig-paren">(</span><em>template</em>, <em>filename</em><span class="optional">[</span>, <em>MJD=False</em>, <em>simple=False</em>, <em>wcfreq=False</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#time" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">MJD=True is currently under testing and comparisons with PSRCHIVE.</p>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="getNsubint">
 <code class="descname">getNsubint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getNsubint" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the current number of subintegrations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getNpol">
 <code class="descname">getNpol</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getNpol" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the current number of polarization states.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getNchan">
 <code class="descname">getNchan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getNchan" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the current number of frequency channels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getNbin">
 <code class="descname">getNbin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getNbin" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the current number of phase bins.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getPeriod">
 <code class="descname">getPeriod</code><span class="sig-paren">(</span><span class="optional">[</span><em>header=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeriod" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the period of the pulsar. By default returns the Polyco-calculated period. Otherwise, returns the period as calculated by the pulsar parameter table. If a calibrator file, returns 1 divided by the header CAL_FREQ value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>header</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Enforce a return of the pulsar parameter table value.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getValue">
 <code class="descname">getValue</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#getValue" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Looks for a key in one of the headers and returns the value. First looks in the primary header, then the subintegration header, then the pulsar parameter table if it exists.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Value to look for.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getSubintinfo">
 <code class="descname">getSubintinfo</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#getSubintinfo" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Looks for a key in the subintegration header, a subset of the functionality of <a class="reference internal" href="#getValue" title="getValue"><code class="xref py py-func docutils literal"><span class="pre">getValue()</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Value to look for.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getName">
 <code class="descname">getName</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getName" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the header SRC_NAME value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getMJD">
@@ -432,129 +516,348 @@
 <dl class="function">
 <dt id="getTbin">
 <code class="descname">getTbin</code><span class="sig-paren">(</span><span class="optional">[</span><em>numwrap=float</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getTbin" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the time per phase bin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#type" title="(in Python v2.7)"><em>type</em></a>) &#8211; Cast the return value into a type.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Value given by numwrap</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getDM">
 <code class="descname">getDM</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getDM" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the subintegration header DM value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getRM">
 <code class="descname">getRM</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getRM" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt>
-<code class="descname">getNpol</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd></dd></dl>
+<dd><p>Returns the subintegration header RM value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getCoords">
 <code class="descname">getCoords</code><span class="sig-paren">(</span><span class="optional">[</span><em>parse=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getCoords" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the header coordinate (RA, DEC) values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parse</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Return each value as a tuple of floats</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">RA,dec, either each as strings or tuples .</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getPulsarCoords">
 <code class="descname">getPulsarCoords</code><span class="sig-paren">(</span><span class="optional">[</span><em>parse=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPulsarCoords" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>See <a class="reference internal" href="#getCoords" title="getCoords"><code class="xref py py-func docutils literal"><span class="pre">getCoords()</span></code></a>.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="getTelescopeCoords">
 <code class="descname">getTelescopeCoords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getTelescopeCoords" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the header ANT_X, ANT_Y, ANTZ values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#tuple" title="(in Python v2.7)">tuple</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getBandwidth">
 <code class="descname">getBandwidth</code><span class="sig-paren">(</span><span class="optional">[</span><em>header=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getBandwidth" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the observation bandwidth as the product of the channel bandwidth (subintegration header CHAN_BW) and the number of channels (subintegration header NCHAN) values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>header</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Returns the header OBSBW value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getDuration">
 <code class="descname">getDuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getDuration" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the sum of the subintegration header TSUBINT values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
+<dl class="function">
+<dt id="getDurations">
+<code class="descname">getDurations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getDurations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the subintegration durations array.
+:rtype: numpy.ndarray</p>
+</dd></dl>
+
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">Todo</p>
+<p class="last">Check for completeness of inputs into the durations array</p>
+</div>
 <dl class="function">
 <dt id="getCenterFrequency">
 <code class="descname">getCenterFrequency</code><span class="sig-paren">(</span><span class="optional">[</span><em>weighted=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getCenterFrequency" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the center frequency. If a HISTORY table is provided in the PSRFITS file, return the latest CTR_FREQ value. Otherwise, return the header OBSFREQ value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>weighted</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Return the center frequency weighted by the weights array <span class="math">\((\sum_i w_i \nu_i / \sum w_i\)</span> for frequency <span class="math">\(i)\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getTelescope">
 <code class="descname">getTelescope</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getTelescope" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the header TELESCOP value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getFrontend">
 <code class="descname">getFrontend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrontend" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the header FRONTEND value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getBackend">
 <code class="descname">getBackend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getBackend" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the header BACKEND value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getSN">
 <code class="descname">getSN</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getSN" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the average pulse signal-to-noise ratio.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="isCalibrator">
 <code class="descname">isCalibrator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#isCalibrator" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns if the file is a calibration observation or not, given by the OBS_MODE flag in the header.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)">bool</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 </div>
 <div class="section" id="history-class">
 <h1>History class<a class="headerlink" href="#history-class" title="Permalink to this headline">¶</a></h1>
+<p>The <em>History</em> class stores the History table in the PSRFITS file. Typical users should not need to worry about using this class directly. It can be accessed in an Archive ar using ar.history (no function call).</p>
 <dl class="class">
 <dt id="History">
 <em class="property">class </em><code class="descname">History</code><span class="sig-paren">(</span><em>history</em><span class="sig-paren">)</span><a class="headerlink" href="#History" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>history</strong> (<em>pyfits.hdu.table.BinTableHDU</em>) &#8211; The binary table header data unit (HDU).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt>
 <code class="descname">getValue</code><span class="sig-paren">(</span><em>field</em><span class="optional">[</span>, <em>num=None</em><span class="optional">]</span><span class="sig-paren">)</span></dt>
-<dd></dd></dl>
+<dd><p>Returns a dictionary array value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>field</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; A column name (i.e. as provided by hdulist[&#8216;HISTORY&#8217;].columns)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example:</th><td class="field-body">getValue(&#8216;NCHAN&#8217;) will return a list of the frequency channelization history of the file.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getLatest">
 <code class="descname">getLatest</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="headerlink" href="#getLatest" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the latest key value for a given field.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>field</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; A column name, see <a class="reference internal" href="#getValue" title="getValue"><code class="xref py py-func docutils literal"><span class="pre">getValue()</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="printEntry">
 <code class="descname">printEntry</code><span class="sig-paren">(</span><em>i</em><span class="sig-paren">)</span><a class="headerlink" href="#printEntry" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Prints the <em>i</em>-th history entry.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>i</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Index of entry to print.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="polyco-class">
 <h1>Polyco Class<a class="headerlink" href="#polyco-class" title="Permalink to this headline">¶</a></h1>
+<p>The <em>Polyco</em> class stores the Polyco table in the PSRFITS file. Typical users should not need to worry about using this class directly. It can be accessed in an Archive ar using ar.polyco (no function call).</p>
 <dl class="class">
 <dt id="Polyco">
 <em class="property">class </em><code class="descname">Polyco</code><span class="sig-paren">(</span><em>polyco</em><span class="optional">[</span>, <em>MJD=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Polyco" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>MJD</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; A default MJD to calculate the Polyco on.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt>
 <code class="descname">getValue</code><span class="sig-paren">(</span><em>field</em><span class="optional">[</span>, <em>num=None</em><span class="optional">]</span><span class="sig-paren">)</span></dt>
-<dd></dd></dl>
+<dd><p>Returns a dictionary array value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>field</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; A column name (i.e. as provided by hdulist[&#8216;POLYCO&#8217;].columns)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt>
 <code class="descname">getLatest</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span></dt>
-<dd></dd></dl>
+<dd><p>Returns the latest key value for a given field.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>field</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; A column name, see <a class="reference internal" href="#getValue" title="getValue"><code class="xref py py-func docutils literal"><span class="pre">getValue()</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="calculate">
 <code class="descname">calculate</code><span class="sig-paren">(</span><span class="optional">[</span><em>MJD=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#calculate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Calculates the phase and frequency at a given MJD.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>MJD</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; MJD to calculate the Polyco on. If not provided, then the default MJD must be set in the constructor.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">phase (<em>float</em>), frequency (<em>float</em>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="calculatePeriod">
 <code class="descname">calculatePeriod</code><span class="sig-paren">(</span><span class="optional">[</span><em>MJD=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#calculatePeriod" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Calculates the pulse period at a given MJD.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>MJD</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; MJD to calculate the Polyco on. If not provided, then the default MJD must be set in the constructor.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">period (<em>float</em>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 
@@ -577,6 +880,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">PyPulse v0.0.1</a></li>
+      <li>Next: <a href="singlepulse.html" title="next chapter">SinglePulse Class</a></li>
   </ul></li>
 </ul>
 </div>
