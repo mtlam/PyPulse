@@ -1485,9 +1485,8 @@ class Archive:
             RA = self.header['RA']
             dec = self.header['DEC']
         return RA,dec
-    def getPulsarCoords(self,parse=True):
-        """Returns the parsed coordinate info in the header"""
-        return self.getCoords(parse=parse)
+    getPulsarCoords = getCoords
+
     def getTelescopeCoords(self):
         """Returns the telescope coordinates"""
         return self.header['ANT_X'],self.header['ANT_Y'],self.header['ANT_Z']
