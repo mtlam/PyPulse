@@ -27,7 +27,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="PyPulse 0.0.1 documentation" href="index.html" />
-    <link rel="next" title="TOA Class" href="tim.html" />
+    <link rel="next" title="Tim Class" href="tim.html" />
     <link rel="prev" title="DynamicSpectrum Class" href="dynamicspectrum.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -66,6 +66,14 @@
 </table>
 </dd></dl>
 
+<p>Usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">Par</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">p</span><span class="o">.</span><span class="n">getPeriod</span><span class="p">()</span> <span class="c1">#prints the period in the par file (does not calculate for a specific MJD for now)</span>
+<span class="n">t</span><span class="p">,</span><span class="n">dmx</span><span class="p">,</span><span class="n">dmxerr</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getDMseries</span><span class="p">()</span> <span class="c1">#returns the DM parameters in a nice time-series. Note that errors are those given in the par file, which may not be the &quot;correct&quot; ones (more info to be provided later)</span>
+<span class="k">print</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PX&quot;</span><span class="p">)</span> <span class="c1">#prints the parallax</span>
+<span class="k">print</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PX&quot;</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="c1">#prints the error on the parallax</span>
+</pre></div>
+</div>
 <div class="section" id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -286,7 +294,7 @@
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="dynamicspectrum.html" title="previous chapter">DynamicSpectrum Class</a></li>
-      <li>Next: <a href="tim.html" title="next chapter">TOA Class</a></li>
+      <li>Next: <a href="tim.html" title="next chapter">Tim Class</a></li>
   </ul></li>
 </ul>
 </div>

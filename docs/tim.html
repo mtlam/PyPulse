@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>TOA Class &#8212; PyPulse 0.0.1 documentation</title>
+    <title>Tim Class &#8212; PyPulse 0.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -45,6 +45,83 @@
             
   <div class="toctree-wrapper compound">
 </div>
+<div class="section" id="tim-class">
+<h1>Tim Class<a class="headerlink" href="#tim-class" title="Permalink to this headline">¶</a></h1>
+<p>The <em>Tim</em> class handles pulsar times-of-arrival (TOAs) files</p>
+<dl class="class">
+<dt id="Tim">
+<em class="property">class </em><code class="descname">Tim</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>numwrap=Decimal</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Tim" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Path to a .tim file</li>
+<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#type" title="(in Python v2.7)"><em>type</em></a>) &#8211; Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">Tim</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">)</span> <span class="c1">#automatically parses each TOA with the TOA() class</span>
+<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">toas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getMJD</span><span class="p">()</span> <span class="c1">#prints the MJD of the first TOA as a python Decimal</span>
+<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">toas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;snr&#39;</span><span class="p">)</span> <span class="c1">#prints the value of the -snr flag of the TOA if it is available</span>
+</pre></div>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a .tim file.</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">param str filename:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Path to .tim file</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a .tim file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Path to .tim file</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getTspan">
+<code class="descname">getTspan</code><span class="sig-paren">(</span><span class="optional">[</span><em>years=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getTspan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total time span covered by the TOAs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>years</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Divide the total time span in days by 365.25.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
 <div class="section" id="toa-class">
 <h1>TOA Class<a class="headerlink" href="#toa-class" title="Permalink to this headline">¶</a></h1>
 <p>The <em>TOA</em> class handles individual pulsar times-of-arrival (TOAs).</p>
@@ -72,6 +149,8 @@
 </table>
 </dd></dl>
 
+<div class="section" id="id3">
+<h2>Methods<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="getFilename">
 <code class="descname">getFilename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFilename" title="Permalink to this definition">¶</a></dt>
@@ -282,79 +361,6 @@
 </table>
 </dd></dl>
 
-<div class="section" id="methods">
-<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
-</div>
-</div>
-<div class="section" id="tim-class">
-<h1>Tim Class<a class="headerlink" href="#tim-class" title="Permalink to this headline">¶</a></h1>
-<p>The <em>Tim</em> class handles pulsar times-of-arrival (TOAs) files</p>
-<dl class="class">
-<dt id="Tim">
-<em class="property">class </em><code class="descname">Tim</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>numwrap=Decimal</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Tim" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Path to a .tim file</li>
-<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#type" title="(in Python v2.7)"><em>type</em></a>) &#8211; Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<div class="section" id="id3">
-<h2>Methods<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="load">
-<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads a .tim file.</p>
-<blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">param str filename:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Path to .tim file</td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
-</dd></dl>
-
-<dl class="function">
-<dt id="save">
-<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save a .tim file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Path to .tim file</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getTspan">
-<code class="descname">getTspan</code><span class="sig-paren">(</span><span class="optional">[</span><em>years=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getTspan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the total time span covered by the TOAs.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>years</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Divide the total time span in days by 365.25.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 </div>
 
@@ -366,11 +372,11 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">TOA Class</a><ul>
+<li><a class="reference internal" href="#">Tim Class</a><ul>
 <li><a class="reference internal" href="#methods">Methods</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#tim-class">Tim Class</a><ul>
+<li><a class="reference internal" href="#toa-class">TOA Class</a><ul>
 <li><a class="reference internal" href="#id3">Methods</a></li>
 </ul>
 </li>

@@ -27,6 +27,8 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="PyPulse 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Calibrator Class" href="calibrator.html" />
+    <link rel="prev" title="Archive Class" href="archive.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -70,6 +72,13 @@
 </table>
 </dd></dl>
 
+<p>Usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sp</span> <span class="o">=</span> <span class="n">SinglePulse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">windowsize</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span> <span class="c1">#will auto-calculate an offpulse region of length 256 bins</span>
+<span class="k">print</span> <span class="n">sp</span><span class="o">.</span><span class="n">getFWHM</span><span class="p">()</span> <span class="c1">#prints the FWHM of the pulse</span>
+<span class="k">print</span> <span class="n">sp</span><span class="o">.</span><span class="n">getSN</span><span class="p">()</span> <span class="c1">#prints a crude S/N of the pulse</span>
+<span class="k">print</span> <span class="n">sp</span><span class="o">.</span><span class="n">fitPulse</span><span class="p">(</span><span class="n">template_array</span><span class="p">)[</span><span class="mi">5</span><span class="p">]</span> <span class="c1">#prints a better S/N of the pulse using a template array</span>
+</pre></div>
+</div>
 <div class="section" id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -445,6 +454,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="archive.html" title="previous chapter">Archive Class</a></li>
+      <li>Next: <a href="calibrator.html" title="next chapter">Calibrator Class</a></li>
   </ul></li>
 </ul>
 </div>

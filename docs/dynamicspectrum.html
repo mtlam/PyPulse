@@ -54,6 +54,13 @@
 <em class="property">class </em><code class="descname">DynamicSpectra</code><span class="sig-paren">(</span><em>data</em><span class="optional">[</span>, <em>offdata=None</em>, <em>errdata=None</em>, <em>mask=None</em>, <em>F=None</em>, <em>T=None</em>, <em>extras=None</em>, <em>verbose=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#DynamicSpectra" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<p>Usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">DynamicSpectrum</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">)</span> <span class="c1">#takes a 2D data array or a string to a .npz file for now</span>
+<span class="n">acf2d</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">acf2d</span><span class="p">()</span> <span class="c1">#calculates the 2D ACF of the dynamic spectrum</span>
+<span class="n">ds</span><span class="o">.</span><span class="n">imshow</span><span class="p">()</span> <span class="c1">#plots the dynamic spectrum</span>
+<span class="n">ds</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">NEWFILENAME</span><span class="p">)</span> <span class="c1">#saves to a .npz file, which can then be loaded again with the first line</span>
+</pre></div>
+</div>
 <div class="section" id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
 <dl class="function">

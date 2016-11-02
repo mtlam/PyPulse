@@ -66,6 +66,13 @@
 </table>
 </dd></dl>
 
+<p>Usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ar</span> <span class="o">=</span> <span class="n">Archive</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">)</span> <span class="c1">#loads archive, dedispersed and polarization averaged by default</span>
+<span class="n">ar</span><span class="o">.</span><span class="n">tscrunch</span><span class="p">()</span> <span class="c1">#averages the pulse in time</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">getData</span><span class="p">()</span> <span class="c1">#returns the numpy data array for use by you</span>
+<span class="n">ar</span><span class="o">.</span><span class="n">imshow</span><span class="p">()</span> <span class="c1">#plots frequency vs phase for the pulses</span>
+</pre></div>
+</div>
 <div class="section" id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
