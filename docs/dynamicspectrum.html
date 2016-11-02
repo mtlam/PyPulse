@@ -27,6 +27,8 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="PyPulse 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Par Class" href="par.html" />
+    <link rel="prev" title="Calibrator Class" href="calibrator.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -49,11 +51,92 @@
 <p>The <em>DynamicSpectrum</em> class handles dynamic spectra.</p>
 <dl class="class">
 <dt id="DynamicSpectra">
-<em class="property">class </em><code class="descname">DynamicSpectra</code><a class="headerlink" href="#DynamicSpectra" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">DynamicSpectra</code><span class="sig-paren">(</span><em>data</em><span class="optional">[</span>, <em>offdata=None</em>, <em>errdata=None</em>, <em>mask=None</em>, <em>F=None</em>, <em>T=None</em>, <em>extras=None</em>, <em>verbose=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#DynamicSpectra" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="section" id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="getValue">
+<code class="descname">getValue</code><span class="sig-paren">(</span><em>f</em>, <em>t</em><span class="optional">[</span>, <em>df=1</em>, <em>dt=1</em>, <em>err=False</em>, <em>index=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getValue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="remove_baseline">
+<code class="descname">remove_baseline</code><span class="sig-paren">(</span><span class="optional">[</span><em>function=&quot;gaussian&quot;</em>, <em>redo=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#remove_baseline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to remove the baseline amplitude from the dynamic spectrum</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acf2d">
+<code class="descname">acf2d</code><span class="sig-paren">(</span><em>remove_baseline=True,speed='fast',mode='full']</em><span class="sig-paren">)</span><a class="headerlink" href="#acf2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the two-dimensional auto-correlation function of the dynamic spectrum</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="secondary_spectrum">
+<code class="descname">secondary_spectrum</code><span class="sig-paren">(</span><span class="optional">[</span><em>log=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#secondary_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="scintillation_parameters">
+<code class="descname">scintillation_parameters</code><span class="sig-paren">(</span><span class="optional">[</span><em>plotbound=1.0</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#scintillation_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="imshow">
+<code class="descname">imshow</code><span class="sig-paren">(</span><span class="optional">[</span><em>err=False</em>, <em>cbar=False</em>, <em>ax=None</em>, <em>show=True</em>, <em>border=False</em>, <em>ZORDER=0</em>, <em>cmap=cm.binary</em>, <em>alpha=True</em>, <em>cdf=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#imshow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic plotting of the dynamic spectrum</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the dynamic spectrum from a .npz file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Filename to load from</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the dynamic spectrum to a .npz file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Filename to sae to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>ds</em><span class="optional">[</span>, <em>axis='T'</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenates another dynamic spectrum with this one</p>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">basic functionality only</p>
+</div>
+<dl class="function">
+<dt id="getData">
+<code class="descname">getData</code><span class="sig-paren">(</span><span class="optional">[</span><em>remove_baseline=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getACF">
+<code class="descname">getACF</code><span class="sig-paren">(</span><span class="optional">[</span><em>remove_baseline=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getACF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 </div>
 
@@ -74,6 +157,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="calibrator.html" title="previous chapter">Calibrator Class</a></li>
+      <li>Next: <a href="par.html" title="next chapter">Par Class</a></li>
   </ul></li>
 </ul>
 </div>
