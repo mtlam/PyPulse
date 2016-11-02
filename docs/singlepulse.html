@@ -60,8 +60,9 @@
 <li><strong>ipw</strong> (<em>list/numpy.array</em>) &#8211; Indices of the inter-pulse window</li>
 <li><strong>opw</strong> (<em>list/numpy.array</em>) &#8211; Indices of the off-pulse window</li>
 <li><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Run <a class="reference internal" href="#interpulse_align" title="interpulse_align"><code class="xref py py-func docutils literal"><span class="pre">interpulse_align()</span></code></a></li>
-<li><strong>float</strong> (<em>period</em>) &#8211; Provide pulse period</li>
-<li><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Calculate the off pulse window of a given size.</li>
+<li><strong>align</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Rotate the pulse by this amount in phase bin units.</li>
+<li><strong>float</strong> (<em>period</em>) &#8211; Provide pulse period.</li>
+<li><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Overrides mpw, ipw, opw. Defines an off-pulse window of a given size about the minimum-integral region.</li>
 </ul>
 </td>
 </tr>
@@ -86,6 +87,64 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="center_align">
+<code class="descname">center_align</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#center_align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotate the pulse such that the peak is in the center.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><span class="optional">[</span><em>area=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the pulse so that the peak has a value of 1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>area</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Normalize the pulse so that the area has a value of 1.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFWHM">
+<code class="descname">getFWHM</code><span class="sig-paren">(</span><span class="optional">[</span><em>simple=False</em>, <em>timeunits=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getFWHM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the full width at half maximum of the main component of the pulse.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">FWHM, <em>float</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getWeff">
+<code class="descname">getWeff</code><span class="sig-paren">(</span><span class="optional">[</span><em>sumonly=False</em>, <em>timeunits=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getWeff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the effective width of the pulse.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">W_eff, <em>float</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="getSN">
 <code class="descname">getSN</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getSN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate a crude signal-to-noise ratio as the maximum of the data array divided by the off-pulse RMS noise.</p>
@@ -93,7 +152,274 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">S/N</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">S/N, <em>float</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="remove_baseline">
+<code class="descname">remove_baseline</code><span class="sig-paren">(</span><span class="optional">[</span><em>save=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#remove_baseline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtract the baseline of the pulse so that it will be set to zero mean.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>save</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Replace the data array with the rotated versions.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">subtracted_array, <em>numpy.array</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getMainpulse">
+<code class="descname">getMainpulse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getMainpulse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the main-pulse intensities.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.array</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getInterpulse">
+<code class="descname">getInterpulse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getInterpulse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the inter-pulse intensities.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.array</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getOffpulse">
+<code class="descname">getOffpulse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getOffpulse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the off-pulse intensities.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.array</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getAllpulse">
+<code class="descname">getAllpulse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getAllpulse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the main-pulse, inter-pulse, and off-pulse intensities.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.array</em>, ipw, <em>numpy.array</em>, opw, <em>numpy.array</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getMainpulseACF">
+<code class="descname">getMainpulseACF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getMainpulseACF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the autocorrelation function of the main-pulse.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpacf, <em>nump.array</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getInterpulseACF">
+<code class="descname">getInterpulseACF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getInterpulseACF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the autocorrelation function of the inter-pulse.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ipacf, <em>nump.array</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getOffpulseACF">
+<code class="descname">getOffpulseACF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getOffpulseACF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the autocorrelation function of the off-pulse.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">opacf, <em>nump.array</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getAllpulseACF">
+<code class="descname">getAllpulseACF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getAllpulseACF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the main-pulse, inter-pulse, and off-pulse autocorrelation functions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpacf, <em>numpy.array</em>, ipacf, <em>numpy.array</em>, opacf, <em>numpy.array</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getOffpulseNoise">
+<code class="descname">getOffpulseNoise</code><span class="sig-paren">(</span><span class="optional">[</span><em>mean=False</em>, <em>full=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getOffpulseNoise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the root-mean-square (RMS) of the off-pulse intensities.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mean</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Calculate the mean value of the off-pulse intensities instead of the roo-mean-square.</li>
+<li><strong>full</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Return both the off-pulse mean and RMS.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">noise, <em>float</em> (if <code class="docutils literal"><span class="pre">full</span></code> is True then return two floats, the mean and the RMS)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getOffpulseZCT">
+<code class="descname">getOffpulseZCT</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getOffpulseZCT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a zero-crossing test of the offpulse noise.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">success, test_statistic, count</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fitPulse">
+<code class="descname">fitPulse</code><span class="sig-paren">(</span><em>template</em><span class="optional">[</span>, <em>fixedphase=False</em>, <em>rms_baseline=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#fitPulse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the template-matching procedure of Taylor 1992.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>template</strong> (<em>list/numpy.array/SinglePulse</em>) &#8211; Template shape to fit to the data array.</li>
+<li><strong>fixedphase</strong> (<em>book</em>) &#8211; Return only the signal-to-noise with the template shape fixed in its phase.</li>
+<li><strong>rms_baseline</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Provide a different value of the off-pulse root-mean-square noise.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">tauccf, tauhat, bhat, sigma_Tau, sigma_b, snr, rho</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">include a goodness-of-fit flag as a measure of the residuals</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="shiftit">
+<code class="descname">shiftit</code><span class="sig-paren">(</span><em>shift</em><span class="optional">[</span>, <em>save=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#shiftit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shift the pulse by some number of phase bins</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>shift</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Rotate the pulse in bin units.</li>
+<li><strong>save</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Replace the data array with the rotated versions.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getPeriod">
+<code class="descname">getPeriod</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeriod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the pulse period.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">period, <em>float</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getNBins">
+<code class="descname">getNBins</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getNBins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of phase bins.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">nbins, <em>int</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><span class="optional">[</span><em>show=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple plot of the pulse.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Show the plot.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plot_windows">
+<code class="descname">plot_windows</code><span class="sig-paren">(</span><span class="optional">[</span><em>show=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#plot_windows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Diagnostic plot of the main-, inter-, and off-pulse regions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Show the plot.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
 </tbody>
 </table>
