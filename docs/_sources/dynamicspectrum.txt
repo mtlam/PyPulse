@@ -1,0 +1,72 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. toctree::
+   :maxdepth: 2
+
+
+DynamicSpectrum Class
+=====================
+
+The *DynamicSpectrum* class handles dynamic spectra.
+
+.. py:class:: DynamicSpectra(data[,offdata=None,errdata=None,mask=None,F=None,T=None,extras=None,verbose=True])
+
+Usage:
+
+.. code-block:: python
+
+   ds = DynamicSpectrum(FILENAME) #takes a 2D data array or a string to a .npz file for now
+   acf2d = ds.acf2d() #calculates the 2D ACF of the dynamic spectrum
+   ds.imshow() #plots the dynamic spectrum
+   ds.save(NEWFILENAME) #saves to a .npz file, which can then be loaded again with the first line
+
+
+
+Methods
+-------
+
+
+.. py:function:: getValue(f,t[,df=1,dt=1,err=False,index=False])
+
+.. py:function:: remove_baseline([function="gaussian",redo=False])
+
+   Attempts to remove the baseline amplitude from the dynamic spectrum
+
+.. py:function:: acf2d(remove_baseline=True,speed='fast',mode='full'])
+
+   Calculate the two-dimensional auto-correlation function of the dynamic spectrum
+
+
+.. py:function:: secondary_spectrum([log=False])
+
+.. py:function:: scintillation_parameters([plotbound=1.0])
+
+
+.. py:function:: imshow([err=False,cbar=False,ax=None,show=True,border=False,ZORDER=0,cmap=cm.binary,alpha=True,cdf=True])
+
+   Basic plotting of the dynamic spectrum
+
+.. py:function:: load(filename)
+
+   Load the dynamic spectrum from a .npz file
+
+   :param str filename: Filename to load from
+
+.. py:function:: save(filename)
+
+   Save the dynamic spectrum to a .npz file
+
+   :param str filename: Filename to sae to
+
+.. py:function:: add(ds[,axis='T'])
+
+   Concatenates another dynamic spectrum with this one
+
+.. warning:: basic functionality only
+
+.. py:function:: getData([remove_baseline=True])
+
+.. py:function:: getACF([remove_baseline=True])

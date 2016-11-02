@@ -1,0 +1,45 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. toctree::
+   :maxdepth: 2
+
+
+
+
+Calibrator Class
+================
+
+The *Calibrator* class handles flux and polarization calibration of profile data.
+
+.. warning:: This class is under heavy construction. 
+
+.. py:class:: Calibrator(freqs,S[,Serr=None,pol_type='Coherence',fd_poln='LIN',verbose=True])
+
+Methods
+-------
+
+.. py:function:: pacv()
+
+   Emulates PSRCHIVE's pacv <filename>.
+
+.. py:function:: pacv_csu()
+
+   Emulates PSRCHIVE's pacv -n csu <filename>.
+
+.. py:function:: apply_calibration()
+
+.. py:function:: build_mueller_matrix_PA()
+
+.. py:function:: build_mueller_matrix_differential()
+
+.. py:function:: convert_polarization()
+
+.. py:function:: build_mueller_matrix()
+
+.. py:function:: calculate_PA()
+
+
+

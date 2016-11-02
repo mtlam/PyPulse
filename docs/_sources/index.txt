@@ -3,20 +3,50 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to PyPulse's documentation!
-===================================
+PyPulse v0.0.1
+==============
+
+PyPulse is a package used to handle PSRFITS files and perform subsequent analyses on pulse profiles.
+
+Download:
+
+`Github <https://github.com/mtlam/PyPulse>`_
+
+Requirements:
+
+* `python <https://www.python.org/>`_ 2.7 or 3.X 
+* `numpy <http://www.numpy.org/>`_
+* `scipy <http://www.scipy.org/>`_
+* `matplotlib <http://matplotlib.org/>`_
+* `astropy <http://www.astropy.org/>`_ or `pyfits <https://pythonhosted.org/pyfits/>`_
+
 
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :hidden:
+
+   archive 
+   singlepulse
+   calibrator
+   dynamicspectrum
+   par
+   tim	    
+
+.. Classes
+.. =======
+
+* :doc:`archive`
+* :doc:`singlepulse`
+* :doc:`calibrator`
+* :doc:`dynamicspectrum`
+* :doc:`par`
+* :doc:`tim`
 
 
 
-Indices and tables
-==================
+Misc
+====
 
-* :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
 

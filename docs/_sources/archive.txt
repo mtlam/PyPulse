@@ -1,0 +1,406 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. toctree::
+   :maxdepth: 2
+
+
+Archive Class
+=============
+
+The *Archive* class is the primary mechanism for opening PSRFITS files.
+
+.. py:class:: Archive(filename[,prepare=True,baseline_removal=True])
+
+   :param bool prepare: Argument passed to :func:`load`
+   :param bool baseline_removal: Argument passed to :func:`load`
+
+Usage:
+
+.. code-block:: python
+
+   ar = Archive(FILENAME) #loads archive, dedispersed and polarization averaged by default
+   ar.tscrunch() #averages the pulse in time
+   data = ar.getData() #returns the numpy data array for use by you
+   ar.imshow() #plots frequency vs phase for the pulses
+
+Description of Data
+-------------------
+
+From Appendix A.1 of the thesis Lam 2016:
+
+The primary data array of profiles in a PSRFITS file is given by :math:`\mathcal{I}(t,\mathrm{pol},\nu,\phi)`, the pulse intensity as a function of time :math:`t`, polarization :math:`\mathrm{pol}`, frequency :math:`\nu`, phase :math:`\phi`, where the arguments are in the order of the array dimensions. To save memory, intensity data are stored in multiple arrays. The raw data array (DATA) :math:`d` is the largest in dimensionality but for folded pulse data is typically stored as an array of 16-bit integers. To retrieve the raw data value for each pulse profile, the data array is then multiplied by a scale array (DAT_SCL) :math:`s` and an offset array (DAT_OFFS) :math:`o` is added. An array of weights (DAT_WTS) :math:`w` is also stored internally and typically modifies the raw data, e.g., when excising radio frequency interference. The three modifier arrays are of much smaller size than the data array and are typically stored as in 32-bit single-precision float format. Mathematically, the resultant array of pulse intensities can be written as
+
+.. math:: 
+   \mathcal{I}(t,\mathrm{pol},\nu,\phi) = \left[s(t,\mathrm{pol},\nu)\times d(t,\mathrm{pol},\nu,\phi)+o(t,\mathrm{pol},\nu)\right] w(t,\nu).
+
+PSRFITS files also contain a wide range of additional information stored internally, including a history of all PSRCHIVE modifications to the file, a folding ephemeris, and a large global header of useful metadata. Besides the data array, PyPulse will unpack and store all extra information for retrieval via **get()** methods as desired.
+
+
+
+Methods
+-------
+
+
+.. py:function:: load(filename[,prepare=True,baseline_removal=True])
+
+   Load a PSRFITS file, process the metadata, and form the data arrays.
+
+   :param bool prepare: Rotate the pulse so that the peak is in the center of phase. Stores relevant time delays associated with the rotation.
+   :param bool baseline_removal: Subtract the baseline intensity of the average profile off-pulse region from all individual data profiles.
+   :return: None
+
+.. py:function:: save(filename)
+
+
+.. py:function:: unload(filename)
+
+   Same as :func:`save`. Follows PSRCHIVE convention.
+
+.. py:function:: gc()
+
+.. py:function:: shape([squeeze=True])
+
+   Return the shape of the data array.
+
+   :param bool squeeze: Return the shape of the data array when dimension of length 1 are removed.
+   :return: shape, tuple of integers
+
+.. py:function:: reset([prepare=True])
+
+.. py:function:: scrunch([arg='Dp',**kwargs])
+
+.. py:function:: tscrunch([nsubint=None,factor=None])
+
+   Perform a weighted average the data cube along the time dimension.
+
+   :param int nsubint: Time average to this may subintegrations
+   :param int factor: Time average by this factor
+   :return: self
+
+.. py:function:: pscrunch()
+
+   Perform an average the data cube along the polarization dimension. Can handle data in Coherence (AABBCRCI) or Stokes (IQUV) format.
+
+   :return: self
+   
+.. todo:: Perform a weighted average of the data cube
+
+.. py:function:: fscrunch([nchan=None,factor=None])
+
+   Perform a weighted average the data cube along the frequency dimension
+
+   :param int nsubint: Frequency average to this may channels
+   :param int factor: Frequency average by this factor
+   :return: self
+
+.. py:function:: bscrunch([nbins=None,factor=None])
+
+   Perform an average the data cube along the phase (bin) dimension.
+
+   :param int nsubint: Phase average to this may bins
+   :param int factor: Phase average by this factor
+   :return: self
+   
+.. todo:: Perform a weighted average of the data cube
+
+
+.. py:function:: dedisperse([DM=None,reverse=False,wcfreq=False])
+
+   Dedisperse the pulses by introducing the appropriate time delays and rotating in phase.
+
+   :param float DM: Phase average to this may bins.
+   :param bool reverse: Perform dispersion of the pulse profiles.
+   :param bool wcfreq: Use the weighted center frequency.
+   :return: self
+
+.. py:function:: dededisperse([DM=None,wcfreq=False])
+
+   Runs :func:`dedisperse` with reverse=False flag. See that function for parameter notation.
+
+
+.. py:function:: calculateAverageProfile()
+
+.. py:function:: calculateOffpulseWindow()
+
+.. py:function:: center([phase_offset=0.5])
+
+
+.. py:function:: removeBaseline()
+
+.. py:function:: remove_baseline()
+
+.. py:function:: calibrate(psrcal[, fluxcal=None])
+
+.. py:function:: getData([squeeze=True,setnan=None,weight=True])
+
+   Return the data array.
+
+   :param bool squeeze: All dimensions of length 1 are removed.
+   :param float setnan: Replace all np.nan with value.
+   :param bool weight: Return the data array with weights applied.
+   :return: self
+
+.. py:function:: setData(newdata)
+
+.. py:function:: getWeights([squeeze=True])
+
+.. py:function:: setWeights(val[,t=None,f=None])
+
+
+.. py:function:: saveData([filename=None,ext='npy',ascii=False])
+
+.. py:function:: outputPulses(filename)
+
+
+
+.. py:function:: getAxis([flag=None,edges=False,wcfreq=False])
+
+.. py:function:: getPulse(t[,f=None])
+
+
+.. py:function:: getPeakFlux(t[,f=None])
+
+.. py:function:: getIntegratedFlux(t[,f=None])
+
+.. py:function:: getSinglePulses([func=None,windowsize=None,**kwargs])
+
+.. py:function:: fitPulses(template,nums[,flatten=False,func=None,windowsize=None,**kwargs])
+
+.. py:function:: getDynamicSpectrum([window=None,template=None,mpw=None,align=None,windowsize=None,weight=True,verbose=False,snr=False])
+
+.. py:function:: plot([ax=None,show=True])
+
+.. py:function:: imshow([ax=None,cbar=False,mask=None,show=True,**kwargs])
+
+.. py:function:: pavplot([ax=None,mode='GTpd',show=True,wcfreq=True])
+
+.. py:function:: joyDivision([border=0.1,labels=False,album=True,**kwargs])
+.. py:function:: waterfall([offset=None,border=0,labels=True,album=False,bins=None,show=True])
+
+
+.. py:function:: time(template,filename[,MJD=False,simple=False,wcfreq=False,**kwargs])
+
+   .. warning:: MJD=True is currently under testing and comparisons with PSRCHIVE.
+
+.. py:function:: getNsubint()
+
+   Returns the current number of subintegrations.
+
+   :rtype: int
+
+.. py:function:: getNpol()
+
+   Returns the current number of polarization states.
+
+   :rtype: int
+
+.. py:function:: getNchan()
+
+   Returns the current number of frequency channels.
+
+   :rtype: int
+
+.. py:function:: getNbin()
+
+   Returns the current number of phase bins.
+
+   :rtype: int
+
+.. py:function:: getPeriod([header=False])
+
+   Returns the period of the pulsar. By default returns the Polyco-calculated period. Otherwise, returns the period as calculated by the pulsar parameter table. If a calibrator file, returns 1 divided by the header CAL_FREQ value.
+   
+   :param bool header: Enforce a return of the pulsar parameter table value.
+   :rtype: float
+
+.. py:function:: getValue(value)
+ 
+   Looks for a key in one of the headers and returns the value. First looks in the primary header, then the subintegration header, then the pulsar parameter table if it exists.
+
+   :param str value: Value to look for.
+   :rtype: str
+
+.. py:function:: getSubintinfo(value)
+
+   Looks for a key in the subintegration header, a subset of the functionality of :func:`getValue`
+
+   :param str value: Value to look for.
+   :rtype: str
+
+
+.. py:function:: getName()
+
+   Returns the header SRC_NAME value.
+
+   :rtype: str
+
+.. py:function:: getMJD([full=False,numwrap=float])
+
+..   Return the MJD of an observation. 
+
+.. py:function:: getTbin([numwrap=float])
+
+   Returns the time per phase bin.
+
+   :param type numwrap: Cast the return value into a type.
+   :rtype: Value given by numwrap
+
+
+.. py:function:: getDM()
+
+   Returns the subintegration header DM value.
+
+   :rtype: float
+
+.. py:function:: getRM()
+
+   Returns the subintegration header RM value.
+
+   :rtype: float
+
+.. py:function:: getCoords([parse=True])
+
+   Returns the header coordinate (RA, DEC) values.
+ 
+   :param bool parse: Return each value as a tuple of floats
+   :return: RA,dec, either each as strings or tuples .
+
+.. py:function:: getPulsarCoords([parse=True])
+
+   See :func:`getCoords`.
+
+.. py:function:: getTelescopeCoords()
+
+   Returns the header ANT_X, ANT_Y, ANTZ values.
+
+   :rtype: tuple
+
+
+.. py:function:: getBandwidth([header=False])
+
+   Returns the observation bandwidth as the product of the channel bandwidth (subintegration header CHAN_BW) and the number of channels (subintegration header NCHAN) values.
+
+   :param bool header: Returns the header OBSBW value
+   :rtype: float 
+
+.. py:function:: getDuration()
+
+   Returns the sum of the subintegration header TSUBINT values.
+
+   :rtype: float
+
+.. py:function:: getDurations()
+   
+   Return the subintegration durations array.
+   :rtype: numpy.ndarray
+
+.. todo:: Check for completeness of inputs into the durations array
+
+
+.. py:function:: getCenterFrequency([weighted=False])
+
+   Returns the center frequency. If a HISTORY table is provided in the PSRFITS file, return the latest CTR_FREQ value. Otherwise, return the header OBSFREQ value.
+
+   :param bool weighted: Return the center frequency weighted by the weights array :math:`(\sum_i w_i \nu_i / \sum w_i` for frequency :math:`i)`.
+   :rtype: float
+
+.. py:function:: getTelescope()
+
+   Returns the header TELESCOP value.
+
+   :rtype: str
+
+.. py:function:: getFrontend()
+
+   Returns the header FRONTEND value.
+
+   :rtype: str
+
+.. py:function:: getBackend()
+
+   Returns the header BACKEND value.
+
+   :rtype: str
+
+.. py:function:: getSN()
+
+   Returns the average pulse signal-to-noise ratio.
+
+   :rtype: float
+
+.. py:function:: isCalibrator()
+
+   Returns if the file is a calibration observation or not, given by the OBS_MODE flag in the header.
+
+   :rtype: bool
+
+
+History class
+=============
+
+The *History* class stores the History table in the PSRFITS file. Typical users should not need to worry about using this class directly. It can be accessed in an Archive ar using ar.history (no function call).
+
+.. py:class:: History(history)
+
+   :param pyfits.hdu.table.BinTableHDU history: The binary table header data unit (HDU).
+
+.. py:function:: getValue(field[,num=None])
+ 
+   Returns a dictionary array value.
+
+   :param str field: A column name (i.e. as provided by hdulist['HISTORY'].columns)
+
+   :Example: getValue('NCHAN') will return a list of the frequency channelization history of the file.
+   
+.. py:function:: getLatest(field)
+
+   Returns the latest key value for a given field.
+   
+   :param str field: A column name, see :func:`getValue`
+
+.. py:function:: printEntry(i)
+
+   Prints the *i*-th history entry.
+
+   :param int i: Index of entry to print.
+
+
+Polyco Class
+============
+
+The *Polyco* class stores the Polyco table in the PSRFITS file. Typical users should not need to worry about using this class directly. It can be accessed in an Archive ar using ar.polyco (no function call).
+
+.. py:class:: Polyco(polyco[,MJD=None])
+
+   :param float MJD: A default MJD to calculate the Polyco on.
+
+.. py:function:: getValue(field[,num=None])
+
+   Returns a dictionary array value.
+
+   :param str field: A column name (i.e. as provided by hdulist['POLYCO'].columns)
+
+.. py:function:: getLatest(field)
+
+   Returns the latest key value for a given field.
+   
+   :param str field: A column name, see :func:`getValue`
+
+.. py:function:: calculate([MJD=None])
+
+   Calculates the phase and frequency at a given MJD.
+
+   :param float MJD: MJD to calculate the Polyco on. If not provided, then the default MJD must be set in the constructor.
+   :return: phase (*float*), frequency (*float*)
+
+.. py:function:: calculatePeriod([MJD=None])
+
+   
+   Calculates the pulse period at a given MJD.
+
+   :param float MJD: MJD to calculate the Polyco on. If not provided, then the default MJD must be set in the constructor.
+   :return: period (*float*)
+
