@@ -50,12 +50,23 @@
 <p>The <em>TOA</em> class handles individual pulsar times-of-arrival (TOAs).</p>
 <dl class="class">
 <dt id="TOA">
-<em class="property">class </em><code class="descname">TOA</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>freq=None</em>, <em>MJD=None</em>, <em>err=None</em>, <em>siteID=None</em>, <em>numwrap=d.Decimal</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#TOA" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<em class="property">class </em><code class="descname">TOA</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>freq=None</em>, <em>MJD=None</em>, <em>err=None</em>, <em>siteID=None</em>, <em>numwrap=Decimal</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#TOA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores the five basic values of a TOA and any additional flags.</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; If only the filename parameter is specified, then the parameter is the entire TOA string.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; If only the filename parameter is specified, then the parameter is the entire TOA string and will be parsed.</li>
+<li><strong>freq</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; TOA frequency. Can be supplied a numeric value that will be wrapped as a float.</li>
+<li><strong>MJD</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; TOA MJD. Can be supplied a numeric value that will be wrapped with the type numwrap.</li>
+<li><strong>err</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; TOA error in microseconds. Can be supplied a numeric value that will be wrapped as a float.</li>
+<li><strong>siteID</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; TOA observatory site ID.</li>
+<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#type" title="(in Python v2.7)"><em>type</em></a>) &#8211; Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</li>
+<li><strong>**kwargs</strong> &#8211; <p>Additional flags. If the five base parameters are provided, each argument is a tuple of the form (flag, value). Otherwise, this is a string of all of the flags and values that must be parsed.</p>
+</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -295,8 +306,8 @@
 </table>
 </dd></dl>
 
-<div class="section" id="id1">
-<h2>Methods<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>Methods<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="load">
 <code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#load" title="Permalink to this definition">¶</a></dt>
@@ -360,7 +371,7 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#tim-class">Tim Class</a><ul>
-<li><a class="reference internal" href="#id1">Methods</a></li>
+<li><a class="reference internal" href="#id3">Methods</a></li>
 </ul>
 </li>
 </ul>
