@@ -230,7 +230,6 @@ class SinglePulse:
 
 
     # todo: include a goodness-of-fit flag (gof) as a measure of the residuals.
-    # todo: check if template is a SinglePulse or a data array
     def fitPulse(self,template,fixedphase=False,rms_baseline=None):
         """
         Returns tauccf, tauhat, bhat, sigma_Tau, sigma_b, snr, rho
