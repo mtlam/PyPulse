@@ -129,7 +129,7 @@ class SinglePulse:
         #remove baseline? what if no offpulse window?
         dbin = u.FWHM(self.data,notcentered=True)#,window=800)
         factor=1
-        if timeunits and self.period!=None:
+        if timeunits and self.period is not None:
             factor = self.period/self.nbins
         return factor*dbin
         
