@@ -3,6 +3,8 @@ PyPulse
 
 A python package for handling and analyzing PSRFITS files.
 
+Read the documentation [here](https://mtlam.github.io/PyPulse/)
+
 This is an alternate code base from [PSRCHIVE](http://psrchive.sourceforge.net/).
 
 Requires:
