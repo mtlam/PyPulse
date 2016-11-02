@@ -706,12 +706,12 @@ class Archive:
                     self.data[j,k,i,:] = u.shiftit(self.data[j,k,i,:],sign*float(delay))
         self.calculateAverageProfile() #re-calculate the average profile
         return self
-    def dededisperse(self,DM=None,barycentric=True): 
+    def dededisperse(self,DM=None,barycentric=True,wcfreq=False): 
         """
         Remove the dedispersion of the pulses
         Note: Errors might propagate?
         """
-        self.dedisperse(DM=DM,barycentric=barycentric,reverse=True)
+        self.dedisperse(DM=DM,barycentric=barycentric,reverse=True,wcfreq=wcfreq)
         return self
 
 
