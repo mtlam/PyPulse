@@ -88,6 +88,22 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="unload">
+<code class="descname">unload</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#unload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#save" title="save"><code class="xref py py-func docutils literal"><span class="pre">save()</span></code></a>. Follows PSRCHIVE convention.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gc">
+<code class="descname">gc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="shape">
 <code class="descname">shape</code><span class="sig-paren">(</span><span class="optional">[</span><em>squeeze=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the shape of the data array.</p>
@@ -102,6 +118,16 @@
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="function">
+<dt id="reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="optional">[</span><em>prepare=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="scrunch">
+<code class="descname">scrunch</code><span class="sig-paren">(</span><span class="optional">[</span><em>arg='Dp'</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#scrunch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="tscrunch">
@@ -211,6 +237,42 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="dededisperse">
+<code class="descname">dededisperse</code><span class="sig-paren">(</span><span class="optional">[</span><em>DM=None</em>, <em>wcfreq=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#dededisperse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs <a class="reference internal" href="#dedisperse" title="dedisperse"><code class="xref py py-func docutils literal"><span class="pre">dedisperse()</span></code></a> with reverse=False flag. See that function for parameter notation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="calculateAverageProfile">
+<code class="descname">calculateAverageProfile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#calculateAverageProfile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="calculateOffpulseWindow">
+<code class="descname">calculateOffpulseWindow</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#calculateOffpulseWindow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="center">
+<code class="descname">center</code><span class="sig-paren">(</span><span class="optional">[</span><em>phase_offset=0.5</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#center" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="removeBaseline">
+<code class="descname">removeBaseline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#removeBaseline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="remove_baseline">
+<code class="descname">remove_baseline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#remove_baseline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="calibrate">
+<code class="descname">calibrate</code><span class="sig-paren">(</span><em>psrcal</em><span class="optional">[</span>, <em>fluxcal=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#calibrate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="getData">
 <code class="descname">getData</code><span class="sig-paren">(</span><span class="optional">[</span><em>squeeze=True</em>, <em>setnan=None</em>, <em>weight=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rrturn the data array.</p>
@@ -232,7 +294,268 @@
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="setData">
+<code class="descname">setData</code><span class="sig-paren">(</span><em>newdata</em><span class="sig-paren">)</span><a class="headerlink" href="#setData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getWeights">
+<code class="descname">getWeights</code><span class="sig-paren">(</span><span class="optional">[</span><em>squeeze=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getWeights" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="setWeights">
+<code class="descname">setWeights</code><span class="sig-paren">(</span><em>val</em><span class="optional">[</span>, <em>t=None</em>, <em>f=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#setWeights" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="saveData">
+<code class="descname">saveData</code><span class="sig-paren">(</span><span class="optional">[</span><em>filename=None</em>, <em>ext='npy'</em>, <em>ascii=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#saveData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="outputPulses">
+<code class="descname">outputPulses</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#outputPulses" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getAxis">
+<code class="descname">getAxis</code><span class="sig-paren">(</span><span class="optional">[</span><em>flag=None</em>, <em>edges=False</em>, <em>wcfreq=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getAxis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getPulse">
+<code class="descname">getPulse</code><span class="sig-paren">(</span><em>t</em><span class="optional">[</span>, <em>f=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPulse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getPeakFlux">
+<code class="descname">getPeakFlux</code><span class="sig-paren">(</span><em>t</em><span class="optional">[</span>, <em>f=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeakFlux" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getIntegratedFlux">
+<code class="descname">getIntegratedFlux</code><span class="sig-paren">(</span><em>t</em><span class="optional">[</span>, <em>f=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getIntegratedFlux" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getSinglePulses">
+<code class="descname">getSinglePulses</code><span class="sig-paren">(</span><span class="optional">[</span><em>func=None</em>, <em>windowsize=None</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getSinglePulses" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fitPulses">
+<code class="descname">fitPulses</code><span class="sig-paren">(</span><em>template</em>, <em>nums</em><span class="optional">[</span>, <em>flatten=False</em>, <em>func=None</em>, <em>windowsize=None</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#fitPulses" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getDynamicSpectrum">
+<code class="descname">getDynamicSpectrum</code><span class="sig-paren">(</span><span class="optional">[</span><em>window=None</em>, <em>template=None</em>, <em>mpw=None</em>, <em>align=None</em>, <em>windowsize=None</em>, <em>weight=True</em>, <em>verbose=False</em>, <em>snr=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getDynamicSpectrum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><span class="optional">[</span><em>ax=None</em>, <em>show=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#plot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="imshow">
+<code class="descname">imshow</code><span class="sig-paren">(</span><span class="optional">[</span><em>ax=None</em>, <em>cbar=False</em>, <em>mask=None</em>, <em>show=True</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#imshow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pavplot">
+<code class="descname">pavplot</code><span class="sig-paren">(</span><span class="optional">[</span><em>ax=None</em>, <em>mode='GTpd'</em>, <em>show=True</em>, <em>wcfreq=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pavplot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="joyDivision">
+<code class="descname">joyDivision</code><span class="sig-paren">(</span><span class="optional">[</span><em>border=0.1</em>, <em>labels=False</em>, <em>album=True</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#joyDivision" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="waterfall">
+<code class="descname">waterfall</code><span class="sig-paren">(</span><span class="optional">[</span><em>offset=None</em>, <em>border=0</em>, <em>labels=True</em>, <em>album=False</em>, <em>bins=None</em>, <em>show=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#waterfall" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="time">
+<code class="descname">time</code><span class="sig-paren">(</span><em>template</em>, <em>filename</em><span class="optional">[</span>, <em>MJD=False</em>, <em>simple=False</em>, <em>wcfreq=False</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getNsubint">
+<code class="descname">getNsubint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getNsubint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getNpol">
+<code class="descname">getNpol</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getNpol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getNchan">
+<code class="descname">getNchan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getNchan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getNbin">
+<code class="descname">getNbin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getNbin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getPeriod">
+<code class="descname">getPeriod</code><span class="sig-paren">(</span><span class="optional">[</span><em>header=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeriod" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getValue">
+<code class="descname">getValue</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#getValue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getSubintinfo">
+<code class="descname">getSubintinfo</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#getSubintinfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getName">
+<code class="descname">getName</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getMJD">
+<code class="descname">getMJD</code><span class="sig-paren">(</span><span class="optional">[</span><em>full=False</em>, <em>numwrap=float</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getMJD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getTbin">
+<code class="descname">getTbin</code><span class="sig-paren">(</span><span class="optional">[</span><em>numwrap=float</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getTbin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getDM">
+<code class="descname">getDM</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getDM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getRM">
+<code class="descname">getRM</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getRM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descname">getNpol</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getCoords">
+<code class="descname">getCoords</code><span class="sig-paren">(</span><span class="optional">[</span><em>parse=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getCoords" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getPulsarCoords">
+<code class="descname">getPulsarCoords</code><span class="sig-paren">(</span><span class="optional">[</span><em>parse=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPulsarCoords" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getTelescopeCoords">
+<code class="descname">getTelescopeCoords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getTelescopeCoords" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getBandwidth">
+<code class="descname">getBandwidth</code><span class="sig-paren">(</span><span class="optional">[</span><em>header=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getBandwidth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getDuration">
+<code class="descname">getDuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getDuration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getCenterFrequency">
+<code class="descname">getCenterFrequency</code><span class="sig-paren">(</span><span class="optional">[</span><em>weighted=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getCenterFrequency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getTelescope">
+<code class="descname">getTelescope</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getTelescope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getFrontend">
+<code class="descname">getFrontend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrontend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getBackend">
+<code class="descname">getBackend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getBackend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getSN">
+<code class="descname">getSN</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getSN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="isCalibrator">
+<code class="descname">isCalibrator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#isCalibrator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
+</div>
+<div class="section" id="history-class">
+<h1>History class<a class="headerlink" href="#history-class" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="History">
+<em class="property">class </em><code class="descname">History</code><span class="sig-paren">(</span><em>history</em><span class="sig-paren">)</span><a class="headerlink" href="#History" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descname">getValue</code><span class="sig-paren">(</span><em>field</em><span class="optional">[</span>, <em>num=None</em><span class="optional">]</span><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="getLatest">
+<code class="descname">getLatest</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="headerlink" href="#getLatest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="printEntry">
+<code class="descname">printEntry</code><span class="sig-paren">(</span><em>i</em><span class="sig-paren">)</span><a class="headerlink" href="#printEntry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="polyco-class">
+<h1>Polyco Class<a class="headerlink" href="#polyco-class" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Polyco">
+<em class="property">class </em><code class="descname">Polyco</code><span class="sig-paren">(</span><em>polyco</em><span class="optional">[</span>, <em>MJD=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Polyco" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descname">getValue</code><span class="sig-paren">(</span><em>field</em><span class="optional">[</span>, <em>num=None</em><span class="optional">]</span><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descname">getLatest</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="calculate">
+<code class="descname">calculate</code><span class="sig-paren">(</span><span class="optional">[</span><em>MJD=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#calculate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="calculatePeriod">
+<code class="descname">calculatePeriod</code><span class="sig-paren">(</span><span class="optional">[</span><em>MJD=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#calculatePeriod" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 
 
@@ -247,6 +570,8 @@
 <li><a class="reference internal" href="#methods">Methods</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#history-class">History class</a></li>
+<li><a class="reference internal" href="#polyco-class">Polyco Class</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
