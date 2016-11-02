@@ -1550,12 +1550,20 @@ class History:
         if num is None:
             return self.dictionary[field][-1]
         else:
-            return self.dictionary[field][-1][num]
+            try:
+                return self.dictionary[field][-1][num]
+            except IndexError:
+                print("Entry out of range")
+                return None
     def getLatest(self,field):
         """Returns the latest key value"""
         return self.getValue(field,-1)
     def printEntry(self,i):
+        """Prints the i-th history entry"""
         for name in self.namelist:
+            value = self.getValue(name,i)
+            if value is None:
+                return
             print(name,self.getValue(name,i))
 
 # Takes hdulist['POLYCO']
