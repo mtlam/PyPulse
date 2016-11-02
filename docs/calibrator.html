@@ -27,6 +27,8 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="PyPulse 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="DynamicSpectrum Class" href="dynamicspectrum.html" />
+    <link rel="prev" title="SinglePulse Class" href="singlepulse.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -47,13 +49,59 @@
 <div class="section" id="calibrator-class">
 <h1>Calibrator Class<a class="headerlink" href="#calibrator-class" title="Permalink to this headline">¶</a></h1>
 <p>The <em>Calibrator</em> class handles flux and polarization calibration of profile data.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This class is under heavy construction.</p>
+</div>
 <dl class="class">
 <dt id="Calibrator">
-<em class="property">class </em><code class="descname">Calibrator</code><a class="headerlink" href="#Calibrator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">Calibrator</code><span class="sig-paren">(</span><em>freqs</em>, <em>S</em><span class="optional">[</span>, <em>Serr=None</em>, <em>pol_type='Coherence'</em>, <em>fd_poln='LIN'</em>, <em>verbose=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Calibrator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="section" id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pacv">
+<code class="descname">pacv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pacv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Emulates PSRCHIVE&#8217;s pacv &lt;filename&gt;.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pacv_csu">
+<code class="descname">pacv_csu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pacv_csu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Emulates PSRCHIVE&#8217;s pacv -n csu &lt;filename&gt;.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apply_calibration">
+<code class="descname">apply_calibration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#apply_calibration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="build_mueller_matrix_PA">
+<code class="descname">build_mueller_matrix_PA</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#build_mueller_matrix_PA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="build_mueller_matrix_differential">
+<code class="descname">build_mueller_matrix_differential</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#build_mueller_matrix_differential" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="convert_polarization">
+<code class="descname">convert_polarization</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#convert_polarization" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="build_mueller_matrix">
+<code class="descname">build_mueller_matrix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#build_mueller_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="calculate_PA">
+<code class="descname">calculate_PA</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#calculate_PA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 </div>
 
@@ -74,6 +122,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="singlepulse.html" title="previous chapter">SinglePulse Class</a></li>
+      <li>Next: <a href="dynamicspectrum.html" title="next chapter">DynamicSpectrum Class</a></li>
   </ul></li>
 </ul>
 </div>
