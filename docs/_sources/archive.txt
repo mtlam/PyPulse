@@ -48,18 +48,26 @@ Methods
 
    Load a PSRFITS file, process the metadata, and form the data arrays.
 
+   :param str filename: Path to load file from.
    :param bool prepare: Rotate the pulse so that the peak is in the center of phase. Stores relevant time delays associated with the rotation.
    :param bool baseline_removal: Subtract the baseline intensity of the average profile off-pulse region from all individual data profiles.
    :return: None
 
 .. py:function:: save(filename)
 
+   Save the data to a new PSRFITS file.
+
+   :param str filename: Path to save file to.
+
+.. warning:: :func:`save` will output a PSRFITS file but the output data arrays vary slightly from the input data arrays. More 
 
 .. py:function:: unload(filename)
 
    Same as :func:`save`. Follows PSRCHIVE convention.
 
 .. py:function:: gc()
+
+   Manually clear the data cube and weights for Python garbage collection
 
 .. py:function:: shape([squeeze=True])
 
@@ -70,7 +78,17 @@ Methods
 
 .. py:function:: reset([prepare=True])
 
+   Replace the data with the original clone, preventing full reloading. Useful for larger files but only if the lowmem flag is set to True.
+
+   :param bool prepare: Argument passed to :func:`load`.
+
 .. py:function:: scrunch([arg='Dp',**kwargs])
+
+   Average the data cube along different axes.
+  
+   :param str arg: Can be T for :func:`tscrunch`, p for :func:`pscrunch`, F for :func:`fscrunch`, B for :func:`bscrunch`, and D for :func:`dedisperse`, following the PSRCHIVE conventions.
+
+   :return: self
 
 .. py:function:: tscrunch([nsubint=None,factor=None])
 
@@ -123,16 +141,39 @@ Methods
 
 .. py:function:: calculateAverageProfile()
 
+   Calculate the average profile by performing an unweighted average along each dimension  Automatically calls :func:`calculateOffpulseWindow`.
+
+.. todo:: Perform a weigthed average.
+
 .. py:function:: calculateOffpulseWindow()
 
+   Calculate an off-pulse window using the :class:`SinglePulse`, with the windowsize parameter equal to one-eighth the number of phase bins.
+
 .. py:function:: center([phase_offset=0.5])
+
+   Center the peak of the pulse in the middle of the data arrays.
+
+   :param float phase_offset: Determine the phase offset (in [0,1]) of the peak, i.e., impose an arbitrary rotation to where the center of the peak should fall.
+   :return: self
 
 
 .. py:function:: removeBaseline()
 
+   Removes the baseline of the pulses given the off-pulse window of the average pulse profile pre=-calculated by :func:`calculateAverageProfile`
+   :return: self
+
 .. py:function:: remove_baseline()
 
+   See :func:`removeBaseline`.
+
 .. py:function:: calibrate(psrcal[, fluxcal=None])
+  
+   Polarization calibrates the data using another archive file. Flux calibration optional. 
+   
+   :param Archive psrcal: Pulsar calibrator Archive.
+   :param Archive fluxcal: Flux calibrator Archive.
+
+.. warning:: This function is under construction.
 
 .. py:function:: getData([squeeze=True,setnan=None,weight=True])
 
@@ -145,45 +186,166 @@ Methods
 
 .. py:function:: setData(newdata)
 
+   Replaces the data array with new data. Must be the same shape.
+
+   :param numpy.ndarray newdata: New data array.
+
 .. py:function:: getWeights([squeeze=True])
 
+   Return a copy of the weights array.
+
+   :param bool squeeze: All dimensions of length 1 are removed.
+
 .. py:function:: setWeights(val[,t=None,f=None])
+
+   Set weights to a certain value. Can be used for RFI-excision routines.
+
+   :param float val: Value to set the weights to.
+   :param int t: Time index
+   :param int f: Frequency index
 
 
 .. py:function:: saveData([filename=None,ext='npy',ascii=False])
 
+   Save the data array to a different format. Default is to save to a numpy binary file (.npy).
+
+   :param str filename: Filename to save the data to. If none, save to the archive's original filename after replacing the extension with :param:`ext`.
+   :param str ext: Filename extension
+   :param bool ascii: Save the data to to a text file. If all four dimensions have length greater than 1, the data are saved in time, polarization, frequency, and phase order, with intensity as the fifth column. Otherwise, use numpy's :func:`savetxt` to output the array.
+
+
 .. py:function:: outputPulses(filename)
 
+   Write out a standard .npy file by calling :func:`saveData`.
 
+   :param str filename: Filename to save the data to. 
 
 .. py:function:: getAxis([flag=None,edges=False,wcfreq=False])
 
+   Get the time or frequency axes for plotting.
+
+   :param str flag: "T" for the time axis, "F" for the frequency axis.
+   :param bool edges: Do not return the centers for each subintegration/channel but rather return the edges. Better for imshow plotting because of the extents parameter.
+   :param bool wcfreq: Use the weighted center frequency.
+
+   :rtype: numpy.ndarray
+
+.. todo:: Let flag be both "T" and "F".
+
 .. py:function:: getPulse(t[,f=None])
 
+   Get the pulse shape as a function of time and potentially frequency if provided. Assumes the shape of the data is polarization averaged.
+
+   :param int t: Time index
+   :param int f: Frequency index
+   :rtype: numpy.ndarray
+
+.. todo:: Do not assume polarization averaging.
 
 .. py:function:: getPeakFlux(t[,f=None])
 
+   Return the maximum value of the pulses, with parameters passed to :func:`getPulse`
+
+   :param int t: Time index
+   :param int f: Frequency index
+   :rtype: float
+
 .. py:function:: getIntegratedFlux(t[,f=None])
+
+   Return the integrated value of the pulses, with parameters passed to :func:`getPulse`
+
+   :param int t: Time index
+   :param int f: Frequency index
+   :rtype: float
 
 .. py:function:: getSinglePulses([func=None,windowsize=None,**kwargs])
 
+   Efficiently wrap the data array with :class:`SinglePulse`.
+
+   :param function func: Arbitrary function to map onto the data array.
+   :param int windowsize: Parameter passed to :class:`SinglePulse` that describes the off-pulse window length
+   :param **kwargs: Additional parameters passed to :class:`SinglePulse`
+
+   :rtype: numpy.ndarray of type np.object
+   
 .. py:function:: fitPulses(template,nums[,flatten=False,func=None,windowsize=None,**kwargs])
 
-.. py:function:: getDynamicSpectrum([window=None,template=None,mpw=None,align=None,windowsize=None,weight=True,verbose=False,snr=False])
+   Fit all of the pulses with a given template shape.
+
+   :param list/numpy.ndarray template: Template shape
+   :param list/numpy.ndarray nums: Numbers that denote which return values from :func:`fitPulse` from :class:`SinglePulse`. Example: to return only TOA values, use nums=[1]. For TOA values and scale factors, use nums=[1,3].
+   :param bool flatten: Flatten the data array.
+   :param function func: Arbitrary function to map onto the data array.
+   :param int windowsize: Parameter passed to :class:`SinglePulse` that describes the off-pulse window length
+   :param **kwargs: Additional parameters passed to :class:`SinglePulse`
+   
+
+.. py:function:: getDynamicSpectrum([window=None,template=None,mpw=None,align=None,windowsize=None,verbose=False,snr=False])
+
+   Return the dynamic spectrum.
+
+   :param numpy.ndarray window: Return the dynamic spectrum using only certain phase bins.
+   :param list/numpy.ndarray template: Generate the dynamic spectrum using the scale factor from template matching. Otherwise simply sum along the phase axis.
+   :param list/numpy.ndarray mpw: Main-pulse window if calculating the dynamic spectrum using a template. Required if a template is provided.
+   :param float align: Parameter passed to :class:`SinglePulse` that describe a rotation of the pulse.
+   :param int windowsize: Parameter passed to :class:`SinglePulse` that describes the off-pulse window length
+   :param bool verbose: Print the time index as each template is fit.
+   :param bool snr: Instead of the scale factors, return the signal-to-noise ratios.
+
+.. warning:: return values are not well-defined. Can either return the dynamic spectra, or will return a tuple of the scale factors, offsets, and errors of the template fit.
+
 
 .. py:function:: plot([ax=None,show=True])
 
+   Basic plotter of the data, if the data array can be reduced to one dimension.
+
+   :param matplotlib.axes._subplots.AxesSubplot ax: Provide a matplotlib axis to plot to.
+   :param bool show: Generate a matplotlib plot display.
+
 .. py:function:: imshow([ax=None,cbar=False,mask=None,show=True,**kwargs])
+
+   Basic plotter of the data, if the data array can be reduced to two dimensions. The origin is set to the lower left.
+
+   :param matplotlib.axes._subplots.AxesSubplot ax: Provide a matplotlib axis to plot to.
+   :param bool cbar: Include a matplotlib colorbar.
+   :param numpy.ndarray mask: Apply a mask array using the conventions of a numpy masked array (numpy.ma.core.MaskedArray)
+   :param bool show: Generate a matplotlib plot display.
+   :param **kwargs: Additional arguments to pass to imshow.
 
 .. py:function:: pavplot([ax=None,mode='GTpd',show=True,wcfreq=True])
 
-.. py:function:: joyDivision([border=0.1,labels=False,album=True,**kwargs])
+   Produces a PSRCHIVE pav-like plot for comparison
+
+   :param matplotlib.axes._subplots.AxesSubplot ax: Provide a matplotlib axis to plot to.
+..   :param str mode: Can be "GTpd
+   :param bool show: Generate a matplotlib plot display.
+   :param bool wcfreq: Use the weighted center frequency.
+
 .. py:function:: waterfall([offset=None,border=0,labels=True,album=False,bins=None,show=True])
+  
+   Produce a waterfall plot if the data array can be reduced to two dimensions.
 
+   :param float offset: Y offset of the data
+   :param float border: Fractional border around pulses.
+   :param bool labels: Plot tick labels.
+   :param bool album: Plot white on black background instead of black on white background.
+   :param numpy.ndarray bins: Selection of phase bins to plot
 
-.. py:function:: time(template,filename[,MJD=False,simple=False,wcfreq=False,**kwargs])
+.. py:function:: joyDivision([border=0.1,labels=False,album=True,**kwargs])
 
-   .. warning:: MJD=True is currently under testing and comparisons with PSRCHIVE.
+   Calls :func:`waterfall` in the style of the Joy Division album cover. All parameters are passed to the function.
+
+.. py:function:: time(template,filename[,MJD=False,wcfreq=False,**kwargs])
+  
+   Calculate times-of-arrival (TOAs).
+
+   :param list/numpy.ndarray/Archive template: Template shape to fit to the pulses.
+   :param str filename: Path to save text to. If filename=None, print the text.
+   :param bool MJD: Calculate absolute TOAs in MJD units instead of relative TOAs in bin (time) units.
+   :param bool simple: 
+   :param bool wcfreq: Use the weighted center frequency.
+
+.. warning:: MJD=True is currently under testing and comparisons with PSRCHIVE.
 
 .. py:function:: getNsubint()
 

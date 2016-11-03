@@ -153,8 +153,9 @@ Methods
    :param list/numpy.array/SinglePulse template: Template shape to fit to the data array.
    :param book fixedphase: Return only the signal-to-noise with the template shape fixed in its phase.
    :param float rms_baseline: Provide a different value of the off-pulse root-mean-square noise.
-   :return: tauccf, tauhat, bhat, sigma_Tau, sigma_b, snr, rho
-   .. todo:: include a goodness-of-fit flag as a measure of the residuals
+   :return: TOA from cross-correlation function (tauccf), TOA from template matching procedure (tauhat), scale factor (bhat), error on TOA (sigma_Tau), error on scale factor (sigma_b), signal-to-noise ratio (snr), cross-correlation coefficient (rho)
+
+.. todo:: include a goodness-of-fit flag as a measure of the residuals
 
 .. py:function:: shiftit(shift[,save=False])
 
