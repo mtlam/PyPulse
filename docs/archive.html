@@ -8,7 +8,7 @@
     
     <title>Archive Class &#8212; PyPulse 0.0.1 documentation</title>
     
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -45,7 +45,45 @@
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &#187;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Archive Class</a><ul>
+<li><a class="reference internal" href="#description-of-data">Description of Data</a></li>
+<li><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#history-class">History class</a></li>
+<li><a class="reference internal" href="#polyco-class">Polyco Class</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">PyPulse v0.0.1</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="singlepulse.html"
+                        title="next chapter">SinglePulse Class</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/archive.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -100,6 +138,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Path to load file from.</li>
 <li><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Rotate the pulse so that the peak is in the center of phase. Stores relevant time delays associated with the rotation.</li>
 <li><strong>baseline_removal</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Subtract the baseline intensity of the average profile off-pulse region from all individual data profiles.</li>
 </ul>
@@ -115,8 +154,21 @@
 <dl class="function">
 <dt id="save">
 <code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#save" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Save the data to a new PSRFITS file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Path to save file to.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last"><a class="reference internal" href="#save" title="save"><code class="xref py py-func docutils literal"><span class="pre">save()</span></code></a> will output a PSRFITS file but the output data arrays vary slightly from the input data arrays. More</p>
+</div>
 <dl class="function">
 <dt id="unload">
 <code class="descname">unload</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#unload" title="Permalink to this definition">¶</a></dt>
@@ -126,7 +178,8 @@
 <dl class="function">
 <dt id="gc">
 <code class="descname">gc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gc" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Manually clear the data cube and weights for Python garbage collection</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="shape">
@@ -147,12 +200,32 @@
 <dl class="function">
 <dt id="reset">
 <code class="descname">reset</code><span class="sig-paren">(</span><span class="optional">[</span><em>prepare=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Replace the data with the original clone, preventing full reloading. Useful for larger files but only if the lowmem flag is set to True.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal"><span class="pre">load()</span></code></a>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="scrunch">
 <code class="descname">scrunch</code><span class="sig-paren">(</span><span class="optional">[</span><em>arg='Dp'</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#scrunch" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Average the data cube along different axes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>arg</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Can be T for <a class="reference internal" href="#tscrunch" title="tscrunch"><code class="xref py py-func docutils literal"><span class="pre">tscrunch()</span></code></a>, p for <a class="reference internal" href="#pscrunch" title="pscrunch"><code class="xref py py-func docutils literal"><span class="pre">pscrunch()</span></code></a>, F for <a class="reference internal" href="#fscrunch" title="fscrunch"><code class="xref py py-func docutils literal"><span class="pre">fscrunch()</span></code></a>, B for <a class="reference internal" href="#bscrunch" title="bscrunch"><code class="xref py py-func docutils literal"><span class="pre">bscrunch()</span></code></a>, and D for <a class="reference internal" href="#dedisperse" title="dedisperse"><code class="xref py py-func docutils literal"><span class="pre">dedisperse()</span></code></a>, following the PSRCHIVE conventions.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">self</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="tscrunch">
@@ -270,33 +343,70 @@
 <dl class="function">
 <dt id="calculateAverageProfile">
 <code class="descname">calculateAverageProfile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#calculateAverageProfile" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Calculate the average profile by performing an unweighted average along each dimension  Automatically calls <a class="reference internal" href="#calculateOffpulseWindow" title="calculateOffpulseWindow"><code class="xref py py-func docutils literal"><span class="pre">calculateOffpulseWindow()</span></code></a>.</p>
+</dd></dl>
 
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">Todo</p>
+<p class="last">Perform a weigthed average.</p>
+</div>
 <dl class="function">
 <dt id="calculateOffpulseWindow">
 <code class="descname">calculateOffpulseWindow</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#calculateOffpulseWindow" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Calculate an off-pulse window using the <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal"><span class="pre">SinglePulse</span></code></a>, with the windowsize parameter equal to one-eighth the number of phase bins.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="center">
 <code class="descname">center</code><span class="sig-paren">(</span><span class="optional">[</span><em>phase_offset=0.5</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#center" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Center the peak of the pulse in the middle of the data arrays.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>phase_offset</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Determine the phase offset (in [0,1]) of the peak, i.e., impose an arbitrary rotation to where the center of the peak should fall.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">self</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="removeBaseline">
 <code class="descname">removeBaseline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#removeBaseline" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Removes the baseline of the pulses given the off-pulse window of the average pulse profile pre=-calculated by <a class="reference internal" href="#calculateAverageProfile" title="calculateAverageProfile"><code class="xref py py-func docutils literal"><span class="pre">calculateAverageProfile()</span></code></a>
+:return: self</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="remove_baseline">
 <code class="descname">remove_baseline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#remove_baseline" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>See <a class="reference internal" href="#removeBaseline" title="removeBaseline"><code class="xref py py-func docutils literal"><span class="pre">removeBaseline()</span></code></a>.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="calibrate">
 <code class="descname">calibrate</code><span class="sig-paren">(</span><em>psrcal</em><span class="optional">[</span>, <em>fluxcal=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#calibrate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Polarization calibrates the data using another archive file. Flux calibration optional.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>psrcal</strong> (<a class="reference internal" href="#Archive" title="Archive"><em>Archive</em></a>) &#8211; Pulsar calibrator Archive.</li>
+<li><strong>fluxcal</strong> (<a class="reference internal" href="#Archive" title="Archive"><em>Archive</em></a>) &#8211; Flux calibrator Archive.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This function is under construction.</p>
+</div>
 <dl class="function">
 <dt id="getData">
 <code class="descname">getData</code><span class="sig-paren">(</span><span class="optional">[</span><em>squeeze=True</em>, <em>setnan=None</em>, <em>weight=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getData" title="Permalink to this definition">¶</a></dt>
@@ -322,97 +432,355 @@
 <dl class="function">
 <dt id="setData">
 <code class="descname">setData</code><span class="sig-paren">(</span><em>newdata</em><span class="sig-paren">)</span><a class="headerlink" href="#setData" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Replaces the data array with new data. Must be the same shape.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>newdata</strong> (<em>numpy.ndarray</em>) &#8211; New data array.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getWeights">
 <code class="descname">getWeights</code><span class="sig-paren">(</span><span class="optional">[</span><em>squeeze=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getWeights" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a copy of the weights array.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>squeeze</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; All dimensions of length 1 are removed.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="setWeights">
 <code class="descname">setWeights</code><span class="sig-paren">(</span><em>val</em><span class="optional">[</span>, <em>t=None</em>, <em>f=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#setWeights" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set weights to a certain value. Can be used for RFI-excision routines.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>val</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Value to set the weights to.</li>
+<li><strong>t</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Time index</li>
+<li><strong>f</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Frequency index</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="saveData">
 <code class="descname">saveData</code><span class="sig-paren">(</span><span class="optional">[</span><em>filename=None</em>, <em>ext='npy'</em>, <em>ascii=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#saveData" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Save the data array to a different format. Default is to save to a numpy binary file (.npy).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Filename to save the data to. If none, save to the archive&#8217;s original filename after replacing the extension with <a href="#id1"><span class="problematic" id="id2">:param:`ext`</span></a>.</li>
+<li><strong>ext</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Filename extension</li>
+<li><strong>ascii</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Save the data to to a text file. If all four dimensions have length greater than 1, the data are saved in time, polarization, frequency, and phase order, with intensity as the fifth column. Otherwise, use numpy&#8217;s <code class="xref py py-func docutils literal"><span class="pre">savetxt()</span></code> to output the array.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="outputPulses">
 <code class="descname">outputPulses</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#outputPulses" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Write out a standard .npy file by calling <a class="reference internal" href="#saveData" title="saveData"><code class="xref py py-func docutils literal"><span class="pre">saveData()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Filename to save the data to.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getAxis">
 <code class="descname">getAxis</code><span class="sig-paren">(</span><span class="optional">[</span><em>flag=None</em>, <em>edges=False</em>, <em>wcfreq=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getAxis" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get the time or frequency axes for plotting.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; &#8220;T&#8221; for the time axis, &#8220;F&#8221; for the frequency axis.</li>
+<li><strong>edges</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Do not return the centers for each subintegration/channel but rather return the edges. Better for imshow plotting because of the extents parameter.</li>
+<li><strong>wcfreq</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Use the weighted center frequency.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
+<div class="admonition-todo admonition" id="index-3">
+<p class="first admonition-title">Todo</p>
+<p class="last">Let flag be both &#8220;T&#8221; and &#8220;F&#8221;.</p>
+</div>
 <dl class="function">
 <dt id="getPulse">
 <code class="descname">getPulse</code><span class="sig-paren">(</span><em>t</em><span class="optional">[</span>, <em>f=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPulse" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get the pulse shape as a function of time and potentially frequency if provided. Assumes the shape of the data is polarization averaged.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Time index</li>
+<li><strong>f</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Frequency index</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
+<div class="admonition-todo admonition" id="index-4">
+<p class="first admonition-title">Todo</p>
+<p class="last">Do not assume polarization averaging.</p>
+</div>
 <dl class="function">
 <dt id="getPeakFlux">
 <code class="descname">getPeakFlux</code><span class="sig-paren">(</span><em>t</em><span class="optional">[</span>, <em>f=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeakFlux" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the maximum value of the pulses, with parameters passed to <a class="reference internal" href="#getPulse" title="getPulse"><code class="xref py py-func docutils literal"><span class="pre">getPulse()</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Time index</li>
+<li><strong>f</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Frequency index</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getIntegratedFlux">
 <code class="descname">getIntegratedFlux</code><span class="sig-paren">(</span><em>t</em><span class="optional">[</span>, <em>f=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getIntegratedFlux" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the integrated value of the pulses, with parameters passed to <a class="reference internal" href="#getPulse" title="getPulse"><code class="xref py py-func docutils literal"><span class="pre">getPulse()</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>t</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Time index</li>
+<li><strong>f</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Frequency index</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getSinglePulses">
 <code class="descname">getSinglePulses</code><span class="sig-paren">(</span><span class="optional">[</span><em>func=None</em>, <em>windowsize=None</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getSinglePulses" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Efficiently wrap the data array with <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal"><span class="pre">SinglePulse</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>func</strong> (<em>function</em>) &#8211; Arbitrary function to map onto the data array.</li>
+<li><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Parameter passed to <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal"><span class="pre">SinglePulse</span></code></a> that describes the off-pulse window length</li>
+<li><strong>**kwargs</strong> &#8211; <p>Additional parameters passed to <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal"><span class="pre">SinglePulse</span></code></a></p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray of type np.object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="fitPulses">
 <code class="descname">fitPulses</code><span class="sig-paren">(</span><em>template</em>, <em>nums</em><span class="optional">[</span>, <em>flatten=False</em>, <em>func=None</em>, <em>windowsize=None</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#fitPulses" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fit all of the pulses with a given template shape.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>template</strong> (<em>list/numpy.ndarray</em>) &#8211; Template shape</li>
+<li><strong>nums</strong> (<em>list/numpy.ndarray</em>) &#8211; Numbers that denote which return values from <a class="reference internal" href="singlepulse.html#fitPulse" title="fitPulse"><code class="xref py py-func docutils literal"><span class="pre">fitPulse()</span></code></a> from <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal"><span class="pre">SinglePulse</span></code></a>. Example: to return only TOA values, use nums=[1]. For TOA values and scale factors, use nums=[1,3].</li>
+<li><strong>flatten</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Flatten the data array.</li>
+<li><strong>func</strong> (<em>function</em>) &#8211; Arbitrary function to map onto the data array.</li>
+<li><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Parameter passed to <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal"><span class="pre">SinglePulse</span></code></a> that describes the off-pulse window length</li>
+<li><strong>**kwargs</strong> &#8211; <p>Additional parameters passed to <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal"><span class="pre">SinglePulse</span></code></a></p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="getDynamicSpectrum">
-<code class="descname">getDynamicSpectrum</code><span class="sig-paren">(</span><span class="optional">[</span><em>window=None</em>, <em>template=None</em>, <em>mpw=None</em>, <em>align=None</em>, <em>windowsize=None</em>, <em>weight=True</em>, <em>verbose=False</em>, <em>snr=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getDynamicSpectrum" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">getDynamicSpectrum</code><span class="sig-paren">(</span><span class="optional">[</span><em>window=None</em>, <em>template=None</em>, <em>mpw=None</em>, <em>align=None</em>, <em>windowsize=None</em>, <em>verbose=False</em>, <em>snr=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getDynamicSpectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dynamic spectrum.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>window</strong> (<em>numpy.ndarray</em>) &#8211; Return the dynamic spectrum using only certain phase bins.</li>
+<li><strong>template</strong> (<em>list/numpy.ndarray</em>) &#8211; Generate the dynamic spectrum using the scale factor from template matching. Otherwise simply sum along the phase axis.</li>
+<li><strong>mpw</strong> (<em>list/numpy.ndarray</em>) &#8211; Main-pulse window if calculating the dynamic spectrum using a template. Required if a template is provided.</li>
+<li><strong>align</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Parameter passed to <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal"><span class="pre">SinglePulse</span></code></a> that describe a rotation of the pulse.</li>
+<li><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Parameter passed to <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal"><span class="pre">SinglePulse</span></code></a> that describes the off-pulse window length</li>
+<li><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Print the time index as each template is fit.</li>
+<li><strong>snr</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Instead of the scale factors, return the signal-to-noise ratios.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">return values are not well-defined. Can either return the dynamic spectra, or will return a tuple of the scale factors, offsets, and errors of the template fit.</p>
+</div>
 <dl class="function">
 <dt id="plot">
 <code class="descname">plot</code><span class="sig-paren">(</span><span class="optional">[</span><em>ax=None</em>, <em>show=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#plot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Basic plotter of the data, if the data array can be reduced to one dimension.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ax</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) &#8211; Provide a matplotlib axis to plot to.</li>
+<li><strong>show</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Generate a matplotlib plot display.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="imshow">
 <code class="descname">imshow</code><span class="sig-paren">(</span><span class="optional">[</span><em>ax=None</em>, <em>cbar=False</em>, <em>mask=None</em>, <em>show=True</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#imshow" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Basic plotter of the data, if the data array can be reduced to two dimensions. The origin is set to the lower left.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ax</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) &#8211; Provide a matplotlib axis to plot to.</li>
+<li><strong>cbar</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Include a matplotlib colorbar.</li>
+<li><strong>mask</strong> (<em>numpy.ndarray</em>) &#8211; Apply a mask array using the conventions of a numpy masked array (numpy.ma.core.MaskedArray)</li>
+<li><strong>show</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Generate a matplotlib plot display.</li>
+<li><strong>**kwargs</strong> &#8211; <p>Additional arguments to pass to imshow.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="pavplot">
 <code class="descname">pavplot</code><span class="sig-paren">(</span><span class="optional">[</span><em>ax=None</em>, <em>mode='GTpd'</em>, <em>show=True</em>, <em>wcfreq=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pavplot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="joyDivision">
-<code class="descname">joyDivision</code><span class="sig-paren">(</span><span class="optional">[</span><em>border=0.1</em>, <em>labels=False</em>, <em>album=True</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#joyDivision" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Produces a PSRCHIVE pav-like plot for comparison</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ax</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) &#8211; Provide a matplotlib axis to plot to.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="waterfall">
 <code class="descname">waterfall</code><span class="sig-paren">(</span><span class="optional">[</span><em>offset=None</em>, <em>border=0</em>, <em>labels=True</em>, <em>album=False</em>, <em>bins=None</em>, <em>show=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#waterfall" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Produce a waterfall plot if the data array can be reduced to two dimensions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Y offset of the data</li>
+<li><strong>border</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Fractional border around pulses.</li>
+<li><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Plot tick labels.</li>
+<li><strong>album</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Plot white on black background instead of black on white background.</li>
+<li><strong>bins</strong> (<em>numpy.ndarray</em>) &#8211; Selection of phase bins to plot</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="joyDivision">
+<code class="descname">joyDivision</code><span class="sig-paren">(</span><span class="optional">[</span><em>border=0.1</em>, <em>labels=False</em>, <em>album=True</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#joyDivision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls <a class="reference internal" href="#waterfall" title="waterfall"><code class="xref py py-func docutils literal"><span class="pre">waterfall()</span></code></a> in the style of the Joy Division album cover. All parameters are passed to the function.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="time">
-<code class="descname">time</code><span class="sig-paren">(</span><em>template</em>, <em>filename</em><span class="optional">[</span>, <em>MJD=False</em>, <em>simple=False</em>, <em>wcfreq=False</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#time" title="Permalink to this definition">¶</a></dt>
-<dd><div class="admonition warning">
+<code class="descname">time</code><span class="sig-paren">(</span><em>template</em>, <em>filename</em><span class="optional">[</span>, <em>MJD=False</em>, <em>wcfreq=False</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate times-of-arrival (TOAs).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>template</strong> (<em>list/numpy.ndarray/Archive</em>) &#8211; Template shape to fit to the pulses.</li>
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Path to save text to. If filename=None, print the text.</li>
+<li><strong>MJD</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Calculate absolute TOAs in MJD units instead of relative TOAs in bin (time) units.</li>
+<li><strong>simple</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; </li>
+<li><strong>wcfreq</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Use the weighted center frequency.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">MJD=True is currently under testing and comparisons with PSRCHIVE.</p>
 </div>
-</dd></dl>
-
 <dl class="function">
 <dt id="getNsubint">
 <code class="descname">getNsubint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getNsubint" title="Permalink to this definition">¶</a></dt>
@@ -653,7 +1021,7 @@
 :rtype: numpy.ndarray</p>
 </dd></dl>
 
-<div class="admonition-todo admonition" id="index-2">
+<div class="admonition-todo admonition" id="index-5">
 <p class="first admonition-title">Todo</p>
 <p class="last">Check for completeness of inputs into the durations array</p>
 </div>
@@ -886,44 +1254,6 @@
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Archive Class</a><ul>
-<li><a class="reference internal" href="#description-of-data">Description of Data</a></li>
-<li><a class="reference internal" href="#methods">Methods</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#history-class">History class</a></li>
-<li><a class="reference internal" href="#polyco-class">Polyco Class</a></li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">PyPulse v0.0.1</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="singlepulse.html"
-                        title="next chapter">SinglePulse Class</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/archive.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
