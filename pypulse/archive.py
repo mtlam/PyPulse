@@ -1222,7 +1222,7 @@ class Archive:
         """
         data = self.getData(squeeze=True)
         if len(np.shape(data))==2:
-            if offset==None:
+            if offset is None:
                 offset = np.max(np.average(data,axis=0))#*0.5# * 2.10 #?
 
             fig = plt.figure(figsize=(6,6))           
