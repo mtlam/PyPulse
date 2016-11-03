@@ -783,7 +783,9 @@ class Archive:
         npol = self.getNpol()
         nchan = self.getNchan()
         nbin = self.getNbin()
-
+        
+        if phase_offset >= 1 or phase_offset <= 0:
+            phase_offset = 0.5
         center_bin = int(nbin*phase_offset)
         maxind = np.argmax(self.average_profile)
         diff = center_bin - maxind
