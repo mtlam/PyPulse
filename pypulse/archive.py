@@ -1039,6 +1039,10 @@ class Archive:
     #Given a list of numbers corresponding to the arguments returned
     def fitPulses(self,template,nums,flatten=False,func=None,windowsize=None,**kwargs):
         """Fit all of the pulses with a given template"""
+        if len(template) != self.getNbin():
+            raise IndexError("Improper template size")
+
+
         nums = np.array(nums)
         if windowsize is not None:
             sptemp = SP.SinglePulse(template,windowsize=windowsize)
