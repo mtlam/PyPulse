@@ -8,7 +8,7 @@
     
     <title>SinglePulse Class &#8212; PyPulse 0.0.1 documentation</title>
     
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -45,7 +45,42 @@
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &#187;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">SinglePulse Class</a><ul>
+<li><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="archive.html"
+                        title="previous chapter">Archive Class</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="calibrator.html"
+                        title="next chapter">Calibrator Class</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/singlepulse.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -353,17 +388,17 @@
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">tauccf, tauhat, bhat, sigma_Tau, sigma_b, snr, rho</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">TOA from cross-correlation function (tauccf), TOA from template matching procedure (tauhat), scale factor (bhat), error on TOA (sigma_Tau), error on scale factor (sigma_b), signal-to-noise ratio (snr), cross-correlation coefficient (rho)</p>
 </td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
 <div class="admonition-todo admonition" id="index-0">
 <p class="first admonition-title">Todo</p>
 <p class="last">include a goodness-of-fit flag as a measure of the residuals</p>
 </div>
-</dd></dl>
-
 <dl class="function">
 <dt id="shiftit">
 <code class="descname">shiftit</code><span class="sig-paren">(</span><em>shift</em><span class="optional">[</span>, <em>save=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#shiftit" title="Permalink to this definition">¶</a></dt>
@@ -447,41 +482,6 @@
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">SinglePulse Class</a><ul>
-<li><a class="reference internal" href="#methods">Methods</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="archive.html"
-                        title="previous chapter">Archive Class</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="calibrator.html"
-                        title="next chapter">Calibrator Class</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/singlepulse.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
