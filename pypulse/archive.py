@@ -1041,8 +1041,6 @@ class Archive:
         """Fit all of the pulses with a given template"""
         if len(template) != self.getNbin():
             raise IndexError("Improper template size")
-
-
         nums = np.array(nums)
         if windowsize is not None:
             sptemp = SP.SinglePulse(template,windowsize=windowsize)
@@ -1163,7 +1161,7 @@ class Archive:
         data = self.getData(setnan=0.0)
         if len(np.shape(data))==2:
             if mask is not None:
-                u.imshow(ma.masked_array(data),ax=ax,mask=mask,**kwargs)
+                u.imshow(ma.masked_array(data,mask=mask),ax=ax,**kwargs)
             else:
                 u.imshow(data,ax=ax,**kwargs) 
             if cbar:
