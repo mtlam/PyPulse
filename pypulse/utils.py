@@ -427,6 +427,13 @@ def FWHM(series,norm=True,simple=False,notcentered=False):
     return iR-iL
 
 
+'''
+Return RMS
+'''
+def RMS(series,subtract_mean=False):
+    if subtract_mean:
+        series = series - np.mean(series)
+    return np.sqrt(np.mean(np.power(series,2)))
 
 
 '''
