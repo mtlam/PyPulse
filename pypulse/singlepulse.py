@@ -257,7 +257,6 @@ class SinglePulse:
             return get_toa(template,self.data,1)
         return get_toa(template,self.data,self.getOffpulseNoise())
 
-        
     #define this so a positive shift is forward
     # Implement shifts of mpw,opw?
     def shiftit(self,shift,save=False):
@@ -271,12 +270,147 @@ class SinglePulse:
 
 
 
+    def spline_smoothing(self,sigma=None,lam=None):
+        """ Cubic Spline Interplation
+        sigma: phase bin error bars
+        lam: (0,1], 1 = maximize fitting through control points (knots), 0 = minimize curvature of spline
+        """
+
+        tdata = self.bins
+        ydata = u.normalize(self.data,simple=True)
+
+        if lam is None or (lam > 1 or lam <= 0):
+            noise = self.getOffpulseNoise()
+            lam = 1-noise
+            print noise,lam
+        N = len(ydata)
+        mu = 2*float(1-lam)/(3*lam)    
+
+        ### Define knot locations
+
+        # Rotate the pulse so the peak is at the edges of the spline
+        shift = -np.argmax(ydata)
+        yshift = np.roll(ydata,shift)
+
+        # Add periodic point
+        tdata = np.concatenate((tdata,[tdata[-1] + np.diff(tdata)[0]]))
+        yshift = np.concatenate((yshift,[yshift[0]]))
+
+        knots = u.subdivide(tdata,yshift,noise)
+        knots = np.array(np.sort(knots),dtype=np.int)
+        knots = np.concatenate(([0],knots,[N])) #Add endpoints
+
+
+        Nknots = len(knots)
+        Narcs = Nknots-1
+        t = np.array(tdata[knots],dtype=np.float)
+
+        # Determine the knot y-values.
+        y = np.zeros_like(t)
+        y[0] = yshift[0]
+        y[-1] = yshift[-1]
+        for i in range(1,len(knots)-1):
+            knotL = knots[i-1]
+            knotR = knots[i+1]
+            dt = tdata[knotL:knotR]
+            dy = yshift[knotL:knotR]
+            p = np.polyfit(dt,dy,3) #Fit a preliminary cubic over the data to place the point.
+            f = np.poly1d(p)
+            y[i] = f(tdata[knots[i]])
+
+
+        if sigma is None:
+            sigma = np.ones(len(y),dtype=np.float)
+        Sigma = np.diag(sigma[:-1]) #matrix
+
+        # Smoothing with Cubic Splines by D.S.G. Pollock 1999
+        h = t[1:]-t[:-1]
+        r = 3.0/h
+
+        f = np.zeros_like(h)
+        p = np.zeros_like(h)
+        #q = np.zeros_like(h)
+
+        p[0] = 2*(h[0] + h[-1])
+        #q[0] = 3*(y[1] - y[0])/h[0] - 3*(y[-1] - y[-2])/h[-1] #note the indices
+        f[0] = -(r[-1]+r[0])
+        for i in range(1,Narcs):
+            p[i] = 2*(h[i] + h[i-1])
+            #q[i] = 3*(y[i+1] - y[i])/h[i] - 3*(y[i] - y[i-1])/h[i-1]
+            f[i] = -(r[i-1]+r[i])
+
+        # Build projection matrices
+        R = np.zeros((Narcs,Narcs))
+        Qp = np.zeros((Narcs,Narcs))
+
+        for i in range(Narcs):
+            #for j in range(Narcs):
+            #    if i == j:
+            R[i,i] = p[i]
+            Qp[i,i] = f[i]
+            if i != Narcs -1:
+                R[i+1,i] = h[i]
+                R[i,i+1] = h[i]
+                Qp[i+1,i] = r[i]
+                Qp[i,i+1] = r[i]
+        R[0,-1] = h[-1]
+        R[-1,0] = h[-1]
+        Qp[0,-1] = r[-1]
+        Qp[-1,0] = r[-1]
+        Q = np.transpose(Qp)
+
+
+        A = mu*np.dot(np.dot(Qp,Sigma),Q) + R
+
+        b = np.linalg.solve(A,np.dot(Qp,y[:-1]))
+        d = y[:-1] - mu*np.dot(np.dot(Sigma,Q),b)
+        a = np.zeros(Narcs)
+        c = np.zeros(Narcs)
+
+        i = Narcs-1
+        a[i] = (b[0] - b[i])/(3*h[i])
+        for i in range(Narcs-1):
+            a[i] = (b[i+1] - b[i])/(3*h[i])
+
+        i = Narcs-1
+        c[i] = (d[0] - d[i])/h[i] - a[i]*h[i]**2 - b[i]*h[i]
+        for i in range(Narcs-1):
+            c[i] = (d[i+1] - d[i])/h[i] - a[i]*h[i]**2 - b[i]*h[i]
+
+        # Build polynomials
+        S = []
+        for i in range(Narcs):
+            S.append(np.poly1d([a[i],b[i],c[i],d[i]]))
+
+
+        ytemp = np.zeros_like(yshift)
+        for i in range(Narcs):
+            ts = np.arange(t[i],t[i+1])
+            hs = ts-t[i]
+            yS = S[i](hs)
+            ytemp[int(t[i]):int(t[i+1])] = yS
+
+
+        ytemp[-1] = ytemp[0]
+
+        tdata = tdata[:-1]
+        #yshift = yshift[:-1]
+        ytemp = ytemp[:-1]
+
+        #yshift = np.roll(yshift,-shift)
+        ytemp = np.roll(ytemp,-shift)
+        ytemp /= np.max(ytemp)
+
+        return ytemp
+
+
+
+
     def getPeriod(self):
         return self.period
 
     def getNBins(self):
         return len(self.data)
-
 
     def plot(self,show=True):
         """
