@@ -280,11 +280,11 @@ class SinglePulse:
         ydata = u.normalize(self.data,simple=True)
         N = len(ydata)
 
-        print np.max(np.diff(ydata))
+
 
         noise = self.getOffpulseNoise()
         if lam is None or (lam > 1 or lam <= 0):
-            lam = 1-noise
+            lam = 1-noise**2
         mu = 2*float(1-lam)/(3*lam)    
 
         ### Define knot locations
@@ -301,98 +301,156 @@ class SinglePulse:
         knots = np.array(np.sort(knots),dtype=np.int)
         knots = np.concatenate(([0],knots,[N])) #Add endpoints
 
-
-        Nknots = len(knots)
-        Narcs = Nknots-1
-        t = np.array(tdata[knots],dtype=np.float)
-
-        # Determine the knot y-values.
-        y = np.zeros_like(t)
-        y[0] = yshift[0]
-        y[-1] = yshift[-1]
-        for i in range(1,len(knots)-1):
-            knotL = knots[i-1]
-            knotR = knots[i+1]
-            dt = tdata[knotL:knotR]
-            dy = yshift[knotL:knotR]
-            p = np.polyfit(dt,dy,3) #Fit a preliminary cubic over the data to place the point.
-            f = np.poly1d(p)
-            y[i] = f(tdata[knots[i]])
-
-
         if sigma is None:
-            sigma = np.ones(len(y),dtype=np.float)
-        Sigma = np.diag(sigma[:-1]) #matrix
+            setsigma = True
 
-        # Smoothing with Cubic Splines by D.S.G. Pollock 1999
-        h = t[1:]-t[:-1]
-        r = 3.0/h
+        #for passnum in range(2):
+        while True:
+            Nknots = len(knots)
+            Narcs = Nknots-1
+            t = np.array(tdata[knots],dtype=np.float)
 
-        f = np.zeros_like(h)
-        p = np.zeros_like(h)
-        #q = np.zeros_like(h)
-
-        p[0] = 2*(h[0] + h[-1])
-        #q[0] = 3*(y[1] - y[0])/h[0] - 3*(y[-1] - y[-2])/h[-1] #note the indices
-        f[0] = -(r[-1]+r[0])
-        for i in range(1,Narcs):
-            p[i] = 2*(h[i] + h[i-1])
-            #q[i] = 3*(y[i+1] - y[i])/h[i] - 3*(y[i] - y[i-1])/h[i-1]
-            f[i] = -(r[i-1]+r[i])
-
-        # Build projection matrices
-        R = np.zeros((Narcs,Narcs))
-        Qp = np.zeros((Narcs,Narcs))
-
-        for i in range(Narcs):
-            #for j in range(Narcs):
-            #    if i == j:
-            R[i,i] = p[i]
-            Qp[i,i] = f[i]
-            if i != Narcs -1:
-                R[i+1,i] = h[i]
-                R[i,i+1] = h[i]
-                Qp[i+1,i] = r[i]
-                Qp[i,i+1] = r[i]
-        R[0,-1] = h[-1]
-        R[-1,0] = h[-1]
-        Qp[0,-1] = r[-1]
-        Qp[-1,0] = r[-1]
-        Q = np.transpose(Qp)
+            # Determine the knot y-values.
+            y = np.zeros_like(t)
+            y[0] = yshift[0]
+            y[-1] = yshift[-1]
+            for i in range(1,len(knots)-1):
+                knotL = knots[i-1]
+                knotR = knots[i+1]
+                dt = tdata[knotL:knotR]
+                dy = yshift[knotL:knotR]
+                p = np.polyfit(dt,dy,3) #Fit a preliminary cubic over the data to place the point.
+                f = np.poly1d(p)
+                y[i] = f(tdata[knots[i]])
+                
 
 
-        A = mu*np.dot(np.dot(Qp,Sigma),Q) + R
 
-        b = np.linalg.solve(A,np.dot(Qp,y[:-1]))
-        d = y[:-1] - mu*np.dot(np.dot(Sigma,Q),b)
-        a = np.zeros(Narcs)
-        c = np.zeros(Narcs)
+            if setsigma:
+                sigma = np.ones(len(y),dtype=np.float)
+            Sigma = np.diag(sigma[:-1]) #matrix
 
-        i = Narcs-1
-        a[i] = (b[0] - b[i])/(3*h[i])
-        for i in range(Narcs-1):
-            a[i] = (b[i+1] - b[i])/(3*h[i])
+            # Smoothing with Cubic Splines by D.S.G. Pollock 1999
+            h = t[1:]-t[:-1]
+            r = 3.0/h
 
-        i = Narcs-1
-        c[i] = (d[0] - d[i])/h[i] - a[i]*h[i]**2 - b[i]*h[i]
-        for i in range(Narcs-1):
-            c[i] = (d[i+1] - d[i])/h[i] - a[i]*h[i]**2 - b[i]*h[i]
+            f = np.zeros_like(h)
+            p = np.zeros_like(h)
+            #q = np.zeros_like(h)
 
-        # Build polynomials
-        S = []
-        for i in range(Narcs):
-            S.append(np.poly1d([a[i],b[i],c[i],d[i]]))
+            p[0] = 2*(h[0] + h[-1])
+            #q[0] = 3*(y[1] - y[0])/h[0] - 3*(y[-1] - y[-2])/h[-1] #note the indices
+            f[0] = -(r[-1]+r[0])
+            for i in range(1,Narcs):
+                p[i] = 2*(h[i] + h[i-1])
+                #q[i] = 3*(y[i+1] - y[i])/h[i] - 3*(y[i] - y[i-1])/h[i-1]
+                f[i] = -(r[i-1]+r[i])
+
+            # Build projection matrices
+            R = np.zeros((Narcs,Narcs))
+            Qp = np.zeros((Narcs,Narcs))
+
+            for i in range(Narcs):
+                #for j in range(Narcs):
+                #    if i == j:
+                R[i,i] = p[i]
+                Qp[i,i] = f[i]
+                if i != Narcs -1:
+                    R[i+1,i] = h[i]
+                    R[i,i+1] = h[i]
+                    Qp[i+1,i] = r[i]
+                    Qp[i,i+1] = r[i]
+            R[0,-1] = h[-1]
+            R[-1,0] = h[-1]
+            Qp[0,-1] = r[-1]
+            Qp[-1,0] = r[-1]
+            Q = np.transpose(Qp)
 
 
-        ytemp = np.zeros_like(yshift)
-        for i in range(Narcs):
-            ts = np.arange(t[i],t[i+1])
-            hs = ts-t[i]
-            yS = S[i](hs)
-            ytemp[int(t[i]):int(t[i+1])] = yS
+            A = mu*np.dot(np.dot(Qp,Sigma),Q) + R
+
+            b = np.linalg.solve(A,np.dot(Qp,y[:-1]))
+            d = y[:-1] - mu*np.dot(np.dot(Sigma,Q),b)
+            a = np.zeros(Narcs)
+            c = np.zeros(Narcs)
+
+            i = Narcs-1
+            a[i] = (b[0] - b[i])/(3*h[i])
+            for i in range(Narcs-1):
+                a[i] = (b[i+1] - b[i])/(3*h[i])
+
+            i = Narcs-1
+            c[i] = (d[0] - d[i])/h[i] - a[i]*h[i]**2 - b[i]*h[i]
+            for i in range(Narcs-1):
+                c[i] = (d[i+1] - d[i])/h[i] - a[i]*h[i]**2 - b[i]*h[i]
+
+            # Build polynomials
+            S = []
+            for i in range(Narcs):
+                S.append(np.poly1d([a[i],b[i],c[i],d[i]]))
 
 
-        ytemp[-1] = ytemp[0]
+            ytemp = np.zeros_like(yshift)
+            for i in range(Narcs):
+                ts = np.arange(t[i],t[i+1])
+                hs = ts-t[i]
+                yS = S[i](hs)
+                ytemp[int(t[i]):int(t[i+1])] = yS
+
+
+            ytemp[-1] = ytemp[0]
+            resids = yshift-ytemp
+            #print resids,noise
+            rms_resids = u.RMS(resids)
+            #inds = np.where(np.abs(resids)>4*rms_resids)[0]
+            inds = np.where(np.logical_and(yshift>3*noise,np.abs(resids)>4*rms_resids))[0] #require the intensity to be "significant", and the residuals
+            if len(inds) == 0:
+                break
+
+            #newinds = np.sort(np.abs(resids))
+            newinds = np.argsort(np.abs(resids))
+            #print np.argmax(np.abs(resids))
+            #print newinds
+            #raise SystemExit
+            #newind = np.argmax(np.abs(resids))
+
+
+            newind = newinds[-1]
+            i = 1
+            addknot = True
+            while newind in knots and np.any(np.abs(knots-newind)<=4):
+                if i == N:
+                    addknot = False
+                    break
+                i+=1
+                newind = newinds[-i]
+
+            '''
+            for newind in newinds:
+                if newind in knots:
+                    continue
+                elif np.all(np.abs(newind-knots)<=1):
+                    continue
+                print newind
+                break
+            '''
+            if addknot:
+                #print newind
+                knots = np.sort(np.concatenate((knots,[newind])))
+            else:
+                break
+            #print knots
+            #print inds
+
+            #plt.plot(yshift-ytemp)
+            #plt.show()
+            #break
+            #raise SystemExit
+
+        resids = yshift-ytemp
+        rms_resids = u.RMS(resids)
+        print rms_resids*4
+
 
         tdata = tdata[:-1]
         #yshift = yshift[:-1]

@@ -431,9 +431,10 @@ def FWHM(series,norm=True,simple=False,notcentered=False):
 def subdivide(tdata,ydata,noise,rms=True,minsep=16,maxsep=64,fac=1.25):
     """ Subdivide an array and determine where knots should be placed in spline smoothing """
     N = len(ydata)
-    if N <= minsep:
+    if N <= minsep or N <= 4: # minimum is 4
         return []
-
+        
+    '''
     if rms:
         localrms = RMS(ydata)
         if localrms<fac*noise and N <= maxsep:
@@ -443,6 +444,25 @@ def subdivide(tdata,ydata,noise,rms=True,minsep=16,maxsep=64,fac=1.25):
         f = np.poly1d(p)
         if RMS(ydata-f(tdata))<fac*noise and N <= maxsep:
             return []
+    '''
+    #'''
+    ks = np.arange(1,5)
+    chisqs = np.zeros(len(ks))
+    for i,k in enumerate(ks):
+        p = np.polyfit(tdata,ydata,k)
+        f = np.poly1d(p)
+        resids = ydata-f(tdata)
+        chisqs[i] = np.sum(resids**2)/(N-k-1)
+
+    #print chisqs
+    if np.argmin(chisqs)<2 and N <= maxsep:
+        #p = np.polyfit(tdata,ydata,np.argmin(chisqs))
+        #f = np.poly1d(p)
+        #resids = ydata-f(tdata)
+        return []
+    #'''
+
+
 
     # Test new knot at the midpoint
     half = N/2
@@ -452,6 +472,17 @@ def subdivide(tdata,ydata,noise,rms=True,minsep=16,maxsep=64,fac=1.25):
     ydataR = ydata[half:]
     knotsL = subdivide(tdataL,ydataL,noise,rms=rms,minsep=minsep,maxsep=maxsep,fac=fac)
     knotsR = subdivide(tdataR,ydataR,noise,rms=rms,minsep=minsep,maxsep=maxsep,fac=fac)
+    '''
+    # if the left and right sides are disproportionate, re-run with lower minsep
+    lenL = len(knotsL)
+    lenR = len(knotsR)
+    if (lenL == 0 and lenR >= 2) or (lenL != 0 and lenR/float(lenL) < 4):
+        knotsL = subdivide(tdataL,ydataL,noise,rms=rms,minsep=4,maxsep=maxsep,fac=fac) 
+        print len(knotsL),len(knotsR)
+    if (lenR == 0 and lenL >= 2) or (lenR != 0 and lenL/float(lenR) < 4):
+        knotsR = subdivide(tdataR,ydataR,noise,rms=rms,minsep=4,maxsep=maxsep,fac=fac)
+        print len(knotsL),len(knotsR)
+    '''
     return np.concatenate((knotsL,knotsR,[half+tdata[0]]))
 
 
