@@ -282,7 +282,6 @@ class SinglePulse:
         if lam is None or (lam > 1 or lam <= 0):
             noise = self.getOffpulseNoise()
             lam = 1-noise
-            print noise,lam
         N = len(ydata)
         mu = 2*float(1-lam)/(3*lam)    
 
