@@ -427,6 +427,34 @@ def FWHM(series,norm=True,simple=False,notcentered=False):
     return iR-iL
 
 
+
+def subdivide(tdata,ydata,noise,rms=True,minsep=16,maxsep=64,fac=1.25):
+    """ Subdivide an array and determine where knots should be placed in spline smoothing """
+    N = len(ydata)
+    if N <= minsep:
+        return []
+
+    if rms:
+        localrms = RMS(ydata)
+        if localrms<fac*noise and N <= maxsep:
+            return []
+    else:
+        p = np.polyfit(tdata,ydata,1)
+        f = np.poly1d(p)
+        if RMS(ydata-f(tdata))<fac*noise and N <= maxsep:
+            return []
+
+    # Test new knot at the midpoint
+    half = N/2
+    tdataL = tdata[:half]
+    tdataR = tdata[half:]
+    ydataL = ydata[:half]
+    ydataR = ydata[half:]
+    knotsL = subdivide(tdataL,ydataL,noise,rms=rms,minsep=minsep,maxsep=maxsep,fac=fac)
+    knotsR = subdivide(tdataR,ydataR,noise,rms=rms,minsep=minsep,maxsep=maxsep,fac=fac)
+    return np.concatenate((knotsL,knotsR,[half+tdata[0]]))
+
+
 '''
 Return RMS
 '''
