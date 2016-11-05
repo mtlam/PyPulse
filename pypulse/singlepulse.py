@@ -278,11 +278,13 @@ class SinglePulse:
 
         tdata = self.bins
         ydata = u.normalize(self.data,simple=True)
-
-        if lam is None or (lam > 1 or lam <= 0):
-            noise = self.getOffpulseNoise()
-            lam = 1-noise
         N = len(ydata)
+
+        print np.max(np.diff(ydata))
+
+        noise = self.getOffpulseNoise()
+        if lam is None or (lam > 1 or lam <= 0):
+            lam = 1-noise
         mu = 2*float(1-lam)/(3*lam)    
 
         ### Define knot locations
