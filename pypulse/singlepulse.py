@@ -270,7 +270,7 @@ class SinglePulse:
 
 
 
-    def spline_smoothing(self,sigma=None,lam=None):
+    def spline_smoothing(self,sigma=None,lam=None,**kwargs):
         """ Cubic Spline Interplation
         sigma: phase bin error bars
         lam: (0,1], 1 = maximize fitting through control points (knots), 0 = minimize curvature of spline
@@ -295,7 +295,7 @@ class SinglePulse:
         tdata = np.concatenate((tdata,[tdata[-1] + np.diff(tdata)[0]]))
         yshift = np.concatenate((yshift,[yshift[0]]))
 
-        knots = u.subdivide(tdata,yshift,noise)
+        knots = u.subdivide(tdata,yshift,noise,**kwargs)
         knots = np.array(np.sort(knots),dtype=np.int)
         knots = np.concatenate(([0],knots,[N])) #Add endpoints
 
