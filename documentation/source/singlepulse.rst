@@ -1,0 +1,204 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. toctree::
+   :maxdepth: 2
+
+
+SinglePulse Class
+=================
+
+The *SinglePulse* class handles an individual pulse data array.
+
+.. py:class:: SinglePulse(data[,mpw=None,ipw=None,opw=None,prepare=False,align=None,period=None,windowsize=None])
+
+   :param list/numpy.array data: Data array.
+   :param list/numpy.array mpw: Indices of the main-pulse window
+   :param list/numpy.array ipw: Indices of the inter-pulse window
+   :param list/numpy.array opw: Indices of the off-pulse window
+   :param bool prepare: Run :func:`interpulse_align`
+   :param float align: Rotate the pulse by this amount in phase bin units.
+   :param period float: Provide pulse period.
+   :param int windowsize: Overrides mpw, ipw, opw. Defines an off-pulse window of a given size about the minimum-integral region.
+
+Usage:
+
+.. code-block:: python
+
+   sp = SinglePulse(data,windowsize=256) #will auto-calculate an offpulse region of length 256 bins
+   print sp.getFWHM() #prints the FWHM of the pulse
+   print sp.getSN() #prints a crude S/N of the pulse
+   print sp.fitPulse(template_array)[5] #prints a better S/N of the pulse using a template array
+
+
+Methods
+-------
+
+.. py:function:: interpulse_align()
+
+   Rotate the pulse such that the main pulse is at phase=0.25 and the interpulse is at phase = 0.75.
+
+   :return: None
+
+.. py:function:: center_align()
+
+   Rotate the pulse such that the peak is in the center.
+
+   :return: None
+
+.. py:function:: normalize([area=False])
+
+   Normalize the pulse so that the peak has a value of 1.
+
+   :param bool area: Normalize the pulse so that the area has a value of 1.
+   :return: None
+
+.. py:function:: getFWHM([simple=False,timeunits=True])
+
+   Get the full width at half maximum of the main component of the pulse.
+
+   :return: FWHM, *float*
+
+.. py:function:: getWeff([sumonly=False,timeunits=True])
+
+   Calculate the effective width of the pulse.
+
+   :return: W_eff, *float*
+
+.. py:function:: getSN()
+
+   Calculate a crude signal-to-noise ratio as the maximum of the data array divided by the off-pulse RMS noise.
+
+   :return: S/N, *float*
+
+.. py:function:: remove_baseline([save=True])
+
+   Subtract the baseline of the pulse so that it will be set to zero mean.
+
+   :param bool save: Replace the data array with the rotated versions.
+   :return: subtracted_array, *numpy.array*
+
+.. py:function:: getMainpulse()
+   
+   Return the main-pulse intensities.
+
+   :return: mpw, *numpy.array*
+
+.. py:function:: getInterpulse()
+
+   Return the inter-pulse intensities.
+
+   :return: mpw, *numpy.array*
+
+.. py:function:: getOffpulse()
+
+   Return the off-pulse intensities.
+
+   :return: mpw, *numpy.array*
+
+.. py:function:: getAllpulse()
+
+   Return the main-pulse, inter-pulse, and off-pulse intensities.
+
+   :return: mpw, *numpy.array*, ipw, *numpy.array*, opw, *numpy.array*
+
+.. py:function:: getMainpulseACF()
+
+   Return the autocorrelation function of the main-pulse.
+   
+   :return: mpacf, *nump.array*
+
+.. py:function:: getInterpulseACF()
+
+   Return the autocorrelation function of the inter-pulse.
+   
+   :return: ipacf, *nump.array*
+
+.. py:function:: getOffpulseACF()
+
+   Return the autocorrelation function of the off-pulse.
+   
+   :return: opacf, *nump.array*
+
+.. py:function:: getAllpulseACF()
+
+   Return the main-pulse, inter-pulse, and off-pulse autocorrelation functions.
+
+   :return: mpacf, *numpy.array*, ipacf, *numpy.array*, opacf, *numpy.array*
+
+
+.. py:function:: getOffpulseNoise([mean=False,full=False])
+
+   Calculate the root-mean-square (RMS) of the off-pulse intensities.
+
+   :param bool mean: Calculate the mean value of the off-pulse intensities instead of the roo-mean-square.
+   :param bool full: Return both the off-pulse mean and RMS.
+   :return: noise, *float* (if ``full`` is True then return two floats, the mean and the RMS)
+
+
+.. py:function:: getOffpulseZCT()
+
+   Perform a zero-crossing test of the offpulse noise.
+
+   :return: success, test_statistic, count
+
+.. abs(count-average_zw)/sigma_zw,count
+
+.. py:function:: fitPulse(template[,fixedphase=False,rms_baseline=None])
+ 
+   Perform the template-matching procedure of Taylor 1992.
+
+   :param list/numpy.array/SinglePulse template: Template shape to fit to the data array.
+   :param book fixedphase: Return only the signal-to-noise with the template shape fixed in its phase.
+   :param float rms_baseline: Provide a different value of the off-pulse root-mean-square noise.
+   :return: TOA from cross-correlation function (tauccf), TOA from template matching procedure (tauhat), scale factor (bhat), error on TOA (sigma_Tau), error on scale factor (sigma_b), signal-to-noise ratio (snr), cross-correlation coefficient (rho)
+
+.. todo:: include a goodness-of-fit flag as a measure of the residuals
+
+.. py:function:: shiftit(shift[,save=False])
+
+   Shift the pulse by some number of phase bins
+
+   :param float shift: Rotate the pulse in bin units.
+   :param bool save: Replace the data array with the rotated versions.
+
+.. py:function:: spline_smoothing([lam=None,**kwargs])
+   
+   Iterative cubic spline interpolation for smooth template generation. The spline-generation algorithm is defined by D.S.G. Pollock 1999 (Smoothing with Cubic Splines), in which the cubic spline preserves slope and curvature through each of the control points, i.e., it minimizes the function:
+
+   .. math:: L = \lambda \chi^2 + (1-\lambda) \int \left[S^{''}(\phi)\right]^2 d\phi
+
+   where :math:`\chi^2` is the sum of the residuals ("chi-squared"), the integral is the curvature over all of pulse phase, and :math:`\lambda` represents the paramter ("lam") that weights the importance of the two components.
+
+   Control points (knots) are generated iteratively. Polynomials up to quartic order are fit over the data array. If a quadratic well fits the data, then return without adding a knot, else subdivide the data in half and return the midpoint as a knot. The data array is continuously divided into two halves up to some minimum separation (default=16). After the initial knots are chosen, run the cubic spline interpolation as described before. If there is a location where a new knot will help the fit (the residuals must be greater than 4 times the RMS and the location in phase must be 3 times the off-pulse RMS, i.e., the current spline model fails there and it must be a location where actual pulse intensity is present), include that knot and re-run the cubic spline interpolation until the residuals RMS is low.
+
+   :param float lam: The lambda parameter that determines the relative weight of fitting through the knots and minimizing the curvature of the spline. Can take values from (0,1], where 1 = fit exactly through the knots and 0 = minimized curvature of the spline. If not provided, it is calculated as 1-(off-pulse rms)^2.
+   :param **kwargs: Additional arguments to pass to :func:`utils.subdivide`.
+   :return: template, *numpy.ndarray*
+
+
+.. py:function:: getPeriod()
+
+   Return the pulse period.
+
+   :return: period, *float*
+
+.. py:function:: getNBins()
+
+   Return the number of phase bins.
+
+   :return: nbins, *int*
+
+.. py:function:: plot([show=True])
+
+   Simple plot of the pulse.
+
+   :param bool show: Show the plot.   
+
+.. py:function:: plot_windows([show=True])
+
+   Diagnostic plot of the main-, inter-, and off-pulse regions.
+
+   :param bool show: Show the plot.
