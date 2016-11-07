@@ -418,6 +418,32 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="spline_smoothing">
+<code class="descname">spline_smoothing</code><span class="sig-paren">(</span><span class="optional">[</span><em>lam=None</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#spline_smoothing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterative cubic spline interpolation for smooth template generation. The spline-generation algorithm is defined by D.S.G. Pollock 1999 (Smoothing with Cubic Splines), in which the cubic spline preserves slope and curvature through each of the control points, i.e., it minimizes the function:</p>
+<div class="math">
+\[L = \lambda \chi^2 + (1-\lambda) \int \left[S^{''}(\phi)\right]^2 d\phi\]</div>
+<p>where <span class="math">\(\chi^2\)</span> is the sum of the residuals (&#8220;chi-squared&#8221;), the integral is the curvature of the spline over all of pulse phase, and <span class="math">\(\lambda\)</span> represents the paramter (&#8220;lam&#8221;) that weights the importance of the two components.</p>
+<p>Control points (knots) are generated iteratively. Polynomials up to quartic order are fit over the data array. If a quadratic well fits the data, then return without adding a knot, else subdivide the data in half and return the midpoint as a knot. The data array is continuously divided into two halves up to some minimum separation (default=16). After the initial knots are chosen, run the cubic spline interpolation as described before. If there is a location where a new knot will help the fit (the residuals must be greater than 4 times the RMS and the location in phase must be 3 times the off-pulse RMS, i.e., the current spline model fails there and it must be a location where actual pulse intensity is present), include that knot and re-run the cubic spline interpolation until the residuals RMS is low.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>lam</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The lambda parameter that determines the relative weight of fitting through the knots and minimizing the curvature of the spline. Can take values from (0,1], where 1 = fit exactly through the knots and 0 = minimized curvature of the spline. If not provided, it is calculated as 1-(off-pulse rms)^2.</li>
+<li><strong>**kwargs</strong> &#8211; <p>Additional arguments to pass to <code class="xref py py-func docutils literal"><span class="pre">utils.subdivide()</span></code>.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">template, <em>numpy.ndarray</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="getPeriod">
 <code class="descname">getPeriod</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeriod" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the pulse period.</p>
