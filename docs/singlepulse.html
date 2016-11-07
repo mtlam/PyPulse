@@ -362,7 +362,7 @@
 <dl class="function">
 <dt id="getOffpulseZCT">
 <code class="descname">getOffpulseZCT</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getOffpulseZCT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform a zero-crossing test of the offpulse noise.</p>
+<dd><p>Perform a zero-crossing test of the offpulse noise. The expected number of zero crossings for <span class="math">\(N\)</span> samples of white noise is <span class="math">\((N-1)/2 \pm \sqrt{(N-1)/2}\)</span>. If the number is within <span class="math">\(3\sigma\)</span> of the expectation, return True, otherwise, return False.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
