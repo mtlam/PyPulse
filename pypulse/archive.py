@@ -331,7 +331,7 @@ class Archive:
                         for k in K:
                             self.data[i,j,k,:] = (DAT_SCL[i,jnchan+k]*DATA[i,j,k,:]+DAT_OFFS[i,jnchan+k])#*DAT_WTS[i,k]
             t1 = time.time()
-            print t1-t0
+            #print t1-t0
 
         bw = self.getBandwidth()
 
@@ -1567,7 +1567,9 @@ class Archive:
             string = string[:-1] + ")"
         self.pypulse_history.append(string)
 
-
+    def print_pypulse_history(self):
+        for elem in self.pypulse_history:
+            print(elem)
 
 
 
