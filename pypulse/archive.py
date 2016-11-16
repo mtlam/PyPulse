@@ -35,6 +35,7 @@ Calibrator = calib.Calibrator
 import decimal as d
 Decimal = d.Decimal
 from importlib import import_module
+import inspect
 try:
     import astropy.io.fits as pyfits
 except:
@@ -486,6 +487,7 @@ class Archive:
 
     def scrunch(self,arg='Dp',**kwargs):
         """average the data cube along different axes"""
+        self.record(inspect.currentframe())
         if 'T' in arg:
             self.data[0,:,:,:] = np.mean(self.data,axis=0) 
             self.data = self.data[0:1,:,:,:] #resize
@@ -519,7 +521,8 @@ class Archive:
             factor = self.getNsubint()//nsubint
             if self.getNsubint()%nsubint != 0:
                 factor += 1
-    
+        self.record(inspect.currentframe())
+
         nsub = self.getNsubint()
         retval = np.zeros((len(np.r_[0:nsub:factor]),self.getNpol(),self.getNchan(),self.getNbin()))
         counts = np.zeros_like(retval)
@@ -590,6 +593,7 @@ class Archive:
             factor = self.getNchan()//nchan
             if self.getNchan()%nchan != 0:
                 factor += 1
+        self.record(inspect.currentframe())
 
         nch = self.getNchan()
         retval = np.zeros((self.getNsubint(),self.getNpol(),len(np.r_[0:nch:factor]),self.getNbin()))
@@ -1532,6 +1536,31 @@ class Archive:
         if self.header['OBS_MODE'] == CAL:
             return True
         return False
+
+    
+    #def test(self,*args):
+    #    self.record(inspect.currentframe())
+    def record(self,frame):
+        args, varargs, keywords, values = inspect.getargvalues(frame)
+        funcname = frame.f_code.co_name
+        string = "%s("%funcname
+        for arg in args[1:]:
+            string += "%s=%s,"%(arg,values[arg])
+        if varargs is not None:  # Var args typically not implemented in PyPulse
+            argdict = values[varargs]
+            string += "%s,"%(str(argdict)[1:-1].replace(", ",","))
+        if keywords is not None:
+            kwargdict = values[keywords]
+            for kwarg in kwargdict:
+                string += "%s=%s,"%(kwarg,kwargdict[kwarg])
+        string = string[:-1] + ")"
+        print string
+        return string
+
+
+
+
+
 
 
 
