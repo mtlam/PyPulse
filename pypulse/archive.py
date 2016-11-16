@@ -125,7 +125,7 @@ class Archive:
             self.history = None
             nsubint = hdulist['SUBINT'].header['NAXIS2']
             nbin,nchan,npol,nsblk = fmap(int,hdulist['SUBINT'].columns[-1].dim[1:-1].split(","))
-
+        self.pypulse_history = []
             
         if 'PSRPARAM' in self.keys:
             tablenames.remove('PSRPARAM')
@@ -573,6 +573,7 @@ class Archive:
         """
         if self.shape(squeeze=False)[1] == 1:
             return self
+        self.record(inspect.currentframe())
         if self.subintheader['POL_TYPE'] == "AABBCRCI": #Coherence:
             A = self.data[:,0,:,:]
             B = self.data[:,1,:,:]
@@ -1538,8 +1539,8 @@ class Archive:
         return False
 
     
-    #def test(self,*args):
-    #    self.record(inspect.currentframe())
+    def test(self,*args):
+        self.record(inspect.currentframe())
     def record(self,frame):
         args, varargs, keywords, values = inspect.getargvalues(frame)
         funcname = frame.f_code.co_name
@@ -1554,8 +1555,7 @@ class Archive:
             for kwarg in kwargdict:
                 string += "%s=%s,"%(kwarg,kwargdict[kwarg])
         string = string[:-1] + ")"
-        print string
-        return string
+        self.pypulse_history.append(string)
 
 
 
