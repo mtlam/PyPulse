@@ -475,6 +475,7 @@ class Archive:
         return np.shape(self.getData(squeeze=squeeze))
     def reset(self,prepare=True):
         """Replace the arch with the original clone"""
+        self.record(inspect.currentframe()) #temporary, actually change the history!
         if self.lowmem:
             self.load(self.filename,prepare=prepare) 
         else:
@@ -621,6 +622,7 @@ class Archive:
             if self.getNchan()%nchan != 0:
                 factor += 1
         else:
+            self.record(inspect.currentframe())
             nch = self.getNchan()
             retval = np.zeros((self.getNsubint(),self.getNpol(),len(np.r_[0:nch:factor]),self.getNbin()))
             counts = np.zeros_like(retval)
@@ -644,7 +646,7 @@ class Archive:
         nchan = self.getNchan()
         if nchan == 1: #do not dedisperse?
             return self
-
+        self.record(inspect.currentframe())
         Faxis = self.getAxis('F',wcfreq=wcfreq)#,edges=True)[:-1]
         #plt.plot(self.getAxis('F')-self.getAxis('F',wcfreq=True))
         #plt.show()
@@ -1539,8 +1541,8 @@ class Archive:
         return False
 
     
-    def test(self,*args):
-        self.record(inspect.currentframe())
+    #def varargtest(self,*args):
+    #    self.record(inspect.currentframe())
     def record(self,frame):
         args, varargs, keywords, values = inspect.getargvalues(frame)
         funcname = frame.f_code.co_name
@@ -1554,7 +1556,10 @@ class Archive:
             kwargdict = values[keywords]
             for kwarg in kwargdict:
                 string += "%s=%s,"%(kwarg,kwargdict[kwarg])
-        string = string[:-1] + ")"
+        if string[-1] == "(":
+            string += ")"
+        else:
+            string = string[:-1] + ")"
         self.pypulse_history.append(string)
 
 
