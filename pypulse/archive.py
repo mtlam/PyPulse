@@ -57,7 +57,9 @@ SEARCH = "SEARCH"
 
 class Archive:
     def __init__(self,filename,prepare=True,lowmem=False,verbose=True,weight=True,center_pulse=True,baseline_removal=True,wcfreq=True,thread=False,cuda=False):
-        ## Parse filename here?
+        ## Parse filename here
+        self.pypulse_history = []
+        self.record(inspect.currentframe())
         self.filename = str(filename) #fix unicode issue
         self.prepare = prepare
         self.lowmem = lowmem
@@ -67,6 +69,7 @@ class Archive:
         self.wcfreq = wcfreq
         self.thread = thread
         self.cuda = cuda
+
         if verbose:
             print("Loading: %s" % self.filename)
             t0=time.time()
@@ -125,7 +128,6 @@ class Archive:
             self.history = None
             nsubint = hdulist['SUBINT'].header['NAXIS2']
             nbin,nchan,npol,nsblk = fmap(int,hdulist['SUBINT'].columns[-1].dim[1:-1].split(","))
-        self.pypulse_history = []
             
         if 'PSRPARAM' in self.keys:
             tablenames.remove('PSRPARAM')
@@ -1548,7 +1550,10 @@ class Archive:
         funcname = frame.f_code.co_name
         string = "%s("%funcname
         for arg in args[1:]:
-            string += "%s=%s,"%(arg,values[arg])
+            if type(values[arg]) == str:
+                string += "%s=\"%s\","%(arg,values[arg])
+            else:
+                string += "%s=%s,"%(arg,values[arg])
         if varargs is not None:  # Var args typically not implemented in PyPulse
             argdict = values[varargs]
             string += "%s,"%(str(argdict)[1:-1].replace(", ",","))
