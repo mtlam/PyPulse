@@ -788,6 +788,7 @@ class Archive:
         """
         Center the peak of the pulse in the middle of the data arrays. 
         """
+        self.record(inspect.currentframe())
         nsubint = self.getNsubint()
         npol = self.getNpol()
         nchan = self.getNchan()
@@ -811,6 +812,7 @@ class Archive:
 
     def removeBaseline(self):
         """Removes the baseline of the pulses given an offpulse window"""
+        self.record(inspect.currentframe())
         nsubint = self.getNsubint()
         npol = self.getNpol()
         nchan = self.getNchan()
@@ -827,6 +829,7 @@ class Archive:
 
     def calibrate(self,psrcal,fluxcal=None):
         """Calibrates using another archive"""
+        self.record(inspect.currentframe())
         if not psrcal.isCalibrator():
             raise ValueError("Require calibration archive")
         # Check if cals are appropriate?
@@ -903,6 +906,7 @@ class Archive:
         return np.copy(data) #removes pointer to data
     def setData(self,newdata):
         """Sets the data, very dangerous!"""
+        self.record(inspect.currentframe())
         if np.shape(newdata) == np.shape(self.data):
             self.data = np.copy(newdata)
     def getWeights(self,squeeze=True):
@@ -916,6 +920,7 @@ class Archive:
         Set weights to a certain value
         Can be used for RFI routines
         """
+        self.record(inspect.currentframe())
         if t is None and f is None:
             self.weights[:,:] = val
         elif t is None:
