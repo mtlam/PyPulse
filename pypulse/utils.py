@@ -486,6 +486,98 @@ def subdivide(tdata,ydata,noise,rms=True,minsep=16,maxsep=64,fac=1.25):
     return np.concatenate((knotsL,knotsR,[half+tdata[0]]))
 
 
+
+
+def gaussian(x,a,b,c): #move this?
+    return a*np.exp(-0.5*((x-b)/c)**2)
+def pbf_clean(t,y,g=None,taud=1.0,opw=None,gamma=0.05,m=1.0,x=1.5):
+    '''
+    gamma - loop gain
+    m = factor that determines relative strength of Gamma versus f_r
+    x = 
+    '''
+
+    N = len(t)
+    if g is None:
+        def g(t,tmax=0,taud=1.0):
+            retval = np.exp(-t/taud)/taud 
+            retval = shiftit(retval,-tmax)
+            return retval
+    if opw is None:
+        sigma_opw = RMS(y)
+    else:
+        sigma_opw = RMS(y[opw])
+    
+    N_components = 0
+
+    Dy = np.copy(y)
+
+    i_components = []
+    y_components = []
+
+
+    oldrms = 0.0
+    n = 0
+    while True:
+        imax = np.argmax(Dy)
+        tmax = t[imax]
+        ymax = Dy[imax]
+        i_components.append(imax)
+        y_components.append(ymax*gamma)
+        N_components += 1
+        Dy -= y_components[-1]*g(t,tmax,taud=taud)
+        rms = RMS(Dy)
+        #if np.all(np.abs(Dy)<3.0*sigma_opw) or oldrms == rms:
+        if rms <= 1.50*sigma_opw or oldrms == rms:
+            break
+        oldrms = rms
+        n += 1
+
+
+    
+
+    i_components = np.array(i_components)
+    y_components = np.array(y_components)
+    t_components = np.zeros_like(y_components)
+
+    C = np.zeros(len(t))
+
+    for n in range(N_components):
+        #c[i_components[n]] += y_components[n]
+        C += gaussian(t,y_components[n],t[i_components[n]],1.0) #what width to use?
+        t_components[n] = t[i_components[n]]
+
+    C /= np.max(C)
+
+
+
+    # N_f metric
+    inds = np.where(np.abs(C)<3*sigma_opw)[0] #C?
+    N_f = float(len(inds))/len(C)
+    #inds = np.where(np.abs(Dy-np.mean(Dy))<3*sigma_opw)[0] #C?
+    #N_f = float(len(inds))/len(Dy)
+
+    # sigma_offc metric
+    sigma_offc = RMS(Dy[opw])/sigma_opw
+
+    # Gamma metric
+    sumy = np.sum(y_components)
+    tbar = np.sum(t_components*y_components)/sumy
+    avgt = lambda n: np.sum(np.power((t_components-tbar),n)*y_components)/sumy
+    Gamma = avgt(3)/np.power(avgt(2),1.5)
+    #print Gamma
+
+
+    # f_r metric
+    inds = np.where(Dy < -x*sigma_opw)[0] #the step function
+    #print len(inds)
+    f_r = (m/(N*sigma_opw**2)) * np.sum(Dy[inds]**2)
+
+
+    return Dy,C,N_f,sigma_offc,Gamma,f_r
+    
+
+
 '''
 Return RMS
 '''

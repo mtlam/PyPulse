@@ -439,13 +439,6 @@ class SinglePulse:
                 knots = np.sort(np.concatenate((knots,[newind])))
             else:
                 break
-            #print knots
-            #print inds
-
-            #plt.plot(yshift-ytemp)
-            #plt.show()
-            #break
-            #raise SystemExit
 
         resids = yshift-ytemp
         rms_resids = u.RMS(resids)
@@ -464,12 +457,75 @@ class SinglePulse:
 
 
 
+    def estimateScatteringTimescale(self,searchtauds=None):
+        if searchtauds is None:
+            fwhm = self.getFWHM()
+            tauds = np.linspace(fwhm/4,fwhm,20)
+        else:
+            tauds = np.copy(searchtauds)
+        N_fs = np.zeros_like(tauds)
+        sigma_offcs = np.zeros_like(tauds)
+        Gammas = np.zeros_like(tauds)
+        f_rs = np.zeros_like(tauds)
+        for i,taud in enumerate(tauds):
+            print i,taud
+            Dy,C,N_f,sigma_offc,Gamma,f_r = u.pbf_clean(self.bins,self.data,taud=taud,opw=self.opw,gamma=0.1)
+            N_fs[i] = N_f
+            sigma_offcs[i] = sigma_offc
+            Gammas[i] = Gamma
+            f_rs[i] = f_r
+            
+        f_cs = (Gammas+f_rs)/2.0
+
+        fig = plt.figure(figsize=(8,12))
+        ax=fig.add_subplot(511)
+        ax.plot(tauds,N_fs)
+        ax.set_ylabel(r'$N_f/N_{\rm tot}$')
+        ax=fig.add_subplot(512)
+        ax.plot(tauds,sigma_offcs)
+        ax.set_ylabel(r'$\sigma_{\rm offc}/\sigma_{\rm off}$')
+        ax=fig.add_subplot(513)
+        ax.plot(tauds,Gammas)
+        ax.set_ylabel(r'$\Gamma$')
+        ax=fig.add_subplot(514)
+        ax.plot(tauds,f_rs)
+        ax.set_ylabel(r'$f_r$')
+        ax=fig.add_subplot(515)
+        ax.plot(tauds,f_cs)
+        ax.set_xlabel(r'$\tau_{\rm d}$')
+        ax.set_ylabel(r'$f_c$')
+        plt.show()
+
+
+
+        ind = np.argmin(f_cs)
+        #ind = np.argmin(Gammas)
+        print tauds[ind],tauds[ind]*self.getTbin()
+        Dy,C,N_f,sigma_offc,Gamma,f_r=u.pbf_clean(self.bins,self.data,taud=tauds[ind],opw=self.opw)
+        #Dy,C,N_f,sigma_offc,Gamma,f_r=clean(t,y,taud=10)
+        print "gamma",Gamma
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        #ax.plot(self.bins,self.data/np.max(self.data),'b')
+        ax.plot(self.bins,Dy/np.max(self.data),'0.50')
+        ax.plot(self.bins,C,'r')
+        ax.plot(self.bins,self.data/np.max(self.data),'k')
+        plt.show()
+
+
+
+
 
     def getPeriod(self):
         return self.period
 
-    def getNBins(self):
+    def getNbin(self):
         return len(self.data)
+
+    def getTbin(self):
+        if self.period is not None:
+            return self.getPeriod()/self.getNbin()
 
     def plot(self,show=True):
         """
