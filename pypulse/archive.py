@@ -631,9 +631,9 @@ class Archive:
             for i in xrange(factor):        
                 arr = self.data[:,:,i:nch:factor,:] 
                 count = np.ones_like(arr)
-                length = np.shape(arr)[0]
-                retval[:,:,:length,:] += arr
-                counts[:,:,:length,:] += count
+                length = np.shape(arr)[3]
+                retval[:,:,:,:length] += arr
+                counts[:,:,:,:length] += count
             retval = retval/counts
             self.data = retval
         return self
