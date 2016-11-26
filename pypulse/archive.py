@@ -619,17 +619,17 @@ class Archive:
             return self.scrunch('B')
         if factor == 1:
             return self
-        if factor is None and nchan is not None:
-            factor = self.getNchan()//nchan
-            if self.getNchan()%nchan != 0:
+        if factor is None and nbins is not None:
+            factor = self.getNbin()//nbins
+            if self.getNbin()%nbins != 0:
                 factor += 1
         else:
             self.record(inspect.currentframe())
-            nch = self.getNchan()
-            retval = np.zeros((self.getNsubint(),self.getNpol(),len(np.r_[0:nch:factor]),self.getNbin()))
+            nbin = self.getNbin()
+            retval = np.zeros((self.getNsubint(),self.getNpol(),self.getNchan(),len(np.r_[0:nbin:factor])))
             counts = np.zeros_like(retval)
             for i in xrange(factor):        
-                arr = self.data[:,:,i:nch:factor,:] 
+                arr = self.data[:,:,:,i:nbin:factor] 
                 count = np.ones_like(arr)
                 length = np.shape(arr)[3]
                 retval[:,:,:,:length] += arr
