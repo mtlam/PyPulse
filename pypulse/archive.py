@@ -293,9 +293,9 @@ class Archive:
                 else:
                     pass
 
-                print np.shape(data),np.size(data)
+                print(np.shape(data),np.size(data))
                 retval = np.zeros(np.shape(self.data),dtype='>i2')
-                print (X,Y,Z)
+                print(X,Y,Z)
                 combine(driver.Out(retval),driver.In(DAT_SCL),driver.In(data),driver.In(DAT_OFFS),np.int32(nbin),np.int32(np.size(data)),block=(X,1,1),grid=(1,Z,Y))
 
                 raise SystemExit
@@ -308,9 +308,9 @@ class Archive:
                 #driver.memcpy_dtoh(retval, data_gpu)
                 #combine(driver.Out(data),driver.In(DAT_SCL),driver.In(DATA),driver.In(DAT_OFFS),nbin,block=(4,4,1))
                 #print "Break1"
-                print retval,np.all(retval==256)
-                print np.shape(retval)
-                print len(np.where(retval==256)[0])
+                #print retval,np.all(retval==256)
+                #print np.shape(retval)
+                #print len(np.where(retval==256)[0])
                 #for i in retval:
                 #    print i,
                 #print "break"
@@ -1457,6 +1457,10 @@ class Archive:
             #print P0,self.params.getPeriod()
             if np.abs(P0)<1e-5: #Problem with large DT POLYCO values?
                 return self.params.getPeriod()
+            else:
+                ratio = (P0-self.params.getPeriod())/self.params.getPeriod()
+                if ratio < 0.5 or ratio > 2:
+                    return self.params.getPeriod()
             return P0
             return self.polyco.calculatePeriod()
     # Best replacement for without PSRCHIVE
@@ -1644,7 +1648,7 @@ class Polyco:
             pass
         elif MJD is None:
             MJD = self.MJD
-            
+
         #NSITE = self.getValue('NSITE',num=0)
         REF_FREQ = self.getValue('REF_FREQ',num=0)
         #PRED_PHS = self.getValue('PRED_PHS',num=0)
