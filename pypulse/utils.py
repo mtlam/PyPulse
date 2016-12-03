@@ -490,18 +490,19 @@ def subdivide(tdata,ydata,noise,rms=True,minsep=16,maxsep=64,fac=1.25):
 
 def gaussian(x,a,b,c): #move this?
     return a*np.exp(-0.5*((x-b)/c)**2)
-def pbf_clean(t,y,g=None,taud=1.0,opw=None,gamma=0.05,m=1.0,x=1.5):
+def pbf_clean(t,y,g=None,taud=1.0,opw=None,gamma=0.05,m=1.0,x=1.5,stop=1.5):
     '''
     gamma - loop gain
     m = factor that determines relative strength of Gamma versus f_r
     x = 
+    stop = stopping criterion sigma. Should be the same as x?
     '''
 
     N = len(t)
     if g is None:
         def g(t,tmax=0,taud=1.0):
             retval = np.exp(-t/taud)/taud 
-            retval = shiftit(retval,-tmax)
+            retval = shiftit(retval,-tmax) #shiftit of zero introducing baseline oscillation?
             return retval
     if opw is None:
         sigma_opw = RMS(y)
@@ -528,13 +529,19 @@ def pbf_clean(t,y,g=None,taud=1.0,opw=None,gamma=0.05,m=1.0,x=1.5):
         Dy -= y_components[-1]*g(t,tmax,taud=taud)
         rms = RMS(Dy)
         #if np.all(np.abs(Dy)<3.0*sigma_opw) or oldrms == rms:
-        if rms <= 1.50*sigma_opw or oldrms == rms:
-            break
+        if rms <= stop*sigma_opw or oldrms == rms:
+            if N_components == 1:
+                stop -= 0.5
+                if stop == 0.0:
+                    break
+                else:
+                    continue
+            else:
+                break
         oldrms = rms
         n += 1
 
 
-    
 
     i_components = np.array(i_components)
     y_components = np.array(y_components)
@@ -575,8 +582,87 @@ def pbf_clean(t,y,g=None,taud=1.0,opw=None,gamma=0.05,m=1.0,x=1.5):
 
 
     return Dy,C,N_f,sigma_offc,Gamma,f_r
+def pbf_fourier(t,y,g=None,taud=1.0,opw=None,m=1.0,x=1.5,**kwargs):
+    N = len(t)
     
+    if g is None:
+        def g(t,taud=1.0):
+            retval = np.exp(-t/taud)/taud 
+            return retval
+    if opw is None:
+        sigma_opw = RMS(y)
+    else:
+        sigma_opw = RMS(y[opw])
+        
+    t = np.array(t,dtype=np.float)
+        
+    Yf = np.fft.fft(y) 
+    dt = np.diff(t)[0]
+    #f = np.fft.fftshift(np.fft.fftfreq(N,dt)) #shift?
+    f = np.fft.fftfreq(N,dt)
+    gt = g(t,taud=taud)
+    Gf = np.fft.fft(gt)
+    #rt = gaussian(t,1.0,0,1.0)+gaussian(t,1.0,N,1.0)
+    #Rf = np.fft.fft(rt).real
+    #Rf = gaussian(f,np.sqrt(2*np.pi),0,1/(2*np.pi)) #FT of Gaussian of unit amplitude and width
+    #print "gt area",np.trapz(gt,x=t)
+    #print "Gf area",np.trapz(Gf,x=f),np.trapz(np.sqrt(np.abs(Gf)**2),x=f)
+    #print "Rf area",np.trapz(Rf,x=f)
+    #plt.plot(t,rt)
+    #plt.plot(f,Rf,'k.')
+    Rf = gaussian(f,np.sqrt(2*np.pi),0,1/(2*np.pi)) #FT of Gaussian of unit amplitude and width
+    Rf = np.fft.fftshift(Rf)
+    #plt.plot(f,Rf,'b.')
+    #plt.show()
+    #raise SystemExit
+    Xf = Yf/(Gf*Rf) 
+    xt = np.fft.ifft(Xf).real
 
+    # Rescale the deconvolved profile
+    #Yprime = np.correlate(xt,gt[::-1],'full')[:N]
+    #Yprime = np.correlate(np.correlate(xt,gt[::-1],'full')[:N],rt[::-1],'full')[:N]
+    #xt = xt *np.trapz(y,x=t)/ np.trapz(Yprime,x=t)
+    #xt = xt *np.trapz(y,x=t)/ np.trapz(np.abs(xt),x=t)#?
+    # scale by offpulse noise
+    #xt = xt * sigma_opw / RMS(xt[opw])
+    # scale by the peak?
+    xt = xt * np.max(y)/np.max(xt)
+    #plt.plot(t,y)
+    #plt.plot(t,xt)
+    #plt.show()
+
+
+    # N_f metric
+    #inds = np.where(np.abs(xt)<3*sigma_opw)[0] #C?
+    #N_f = float(len(inds))/len(xt)
+    N_f = 0 #no residuals
+
+    # sigma_offc metric
+    sigma_offc = RMS(xt[opw])/sigma_opw
+
+    # Gamma metric
+    inds = np.where(xt>x*sigma_opw)[0]
+    #inds = np.where(xt>-100000)[0]
+    
+    sumx = np.sum(xt[inds])
+    tbar = np.sum(t[inds]*xt[inds])/sumx
+    avgt = lambda n: np.sum(np.power((t[inds]-tbar),n)*xt[inds])/sumx
+    print "tbar",tbar,avgt(3),avgt(2)**1.5
+    Gamma = avgt(3)/np.power(avgt(2),1.5)
+    #Gamma = np.abs(Gamma)
+    Gamma = -Gamma #meh
+    #print Gamma
+
+
+    # f_r metric
+    # is this the correct modification?
+    #sigma_opw = RMS(xt[opw])
+    inds = np.where(xt < -x*sigma_opw)[0] #the step function
+    #print len(inds)
+    f_r = (m/(N*sigma_opw**2)) * np.sum(xt[inds]**2)
+    print Gamma,f_r
+
+    return np.zeros(N),xt,N_f,sigma_offc,Gamma,f_r
 
 '''
 Return RMS

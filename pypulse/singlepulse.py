@@ -442,8 +442,6 @@ class SinglePulse:
 
         resids = yshift-ytemp
         rms_resids = u.RMS(resids)
-        print rms_resids*4
-
 
         tdata = tdata[:-1]
         #yshift = yshift[:-1]
@@ -457,23 +455,34 @@ class SinglePulse:
 
 
 
-    def estimateScatteringTimescale(self,searchtauds=None):
+    def estimateScatteringTimescale(self,searchtauds=None,ntauds=25,name=None,fourier=False,**kwargs):
         if searchtauds is None:
-            fwhm = self.getFWHM()
-            tauds = np.linspace(fwhm/4,fwhm,20)
+            fwhm = self.getFWHM(timeunits=False) #in bin units
+            tauds = np.linspace(fwhm/4,fwhm,ntauds)
+
+            tauds = np.linspace(2,self.nbins/4,ntauds)
+            tauds = np.linspace(2,fwhm,ntauds)
         else:
             tauds = np.copy(searchtauds)
+
+        bins = np.array(self.bins,dtype=np.float)
+
         N_fs = np.zeros_like(tauds)
         sigma_offcs = np.zeros_like(tauds)
         Gammas = np.zeros_like(tauds)
         f_rs = np.zeros_like(tauds)
         for i,taud in enumerate(tauds):
             print i,taud
-            Dy,C,N_f,sigma_offc,Gamma,f_r = u.pbf_clean(self.bins,self.data,taud=taud,opw=self.opw,gamma=0.1)
+            if fourier:
+                Dy,C,N_f,sigma_offc,Gamma,f_r = u.pbf_fourier(bins,self.data,taud=taud,opw=self.opw,**kwargs)
+            else:
+                Dy,C,N_f,sigma_offc,Gamma,f_r = u.pbf_clean(bins,self.data,taud=taud,opw=self.opw,**kwargs)
             N_fs[i] = N_f
             sigma_offcs[i] = sigma_offc
             Gammas[i] = Gamma
             f_rs[i] = f_r
+
+
             
         f_cs = (Gammas+f_rs)/2.0
 
@@ -494,24 +503,43 @@ class SinglePulse:
         ax.plot(tauds,f_cs)
         ax.set_xlabel(r'$\tau_{\rm d}$')
         ax.set_ylabel(r'$f_c$')
-        plt.show()
+        if name is None:
+            plt.show()
+        else:
+            np.savez("cleandata/%s_clean_data.npz"%name,tauds=(tauds*self.getTbin()*1000),N_fs=N_fs,sigma_offcs=sigma_offcs,Gammas=Gammas,f_rs=f_rs,f_cs=f_cs)
+            plt.savefig("cleanimages/%s_clean_stats.png"%name)
+            plt.close()
+            
 
 
 
         ind = np.argmin(f_cs)
         #ind = np.argmin(Gammas)
         print tauds[ind],tauds[ind]*self.getTbin()
-        Dy,C,N_f,sigma_offc,Gamma,f_r=u.pbf_clean(self.bins,self.data,taud=tauds[ind],opw=self.opw)
+        if fourier:
+            Dy,C,N_f,sigma_offc,Gamma,f_r=u.pbf_fourier(bins,self.data,taud=tauds[ind],opw=self.opw,**kwargs)
+        else:
+            Dy,C,N_f,sigma_offc,Gamma,f_r=u.pbf_clean(bins,self.data,taud=tauds[ind],opw=self.opw,**kwargs)
         #Dy,C,N_f,sigma_offc,Gamma,f_r=clean(t,y,taud=10)
         print "gamma",Gamma
 
         fig = plt.figure()
         ax = fig.add_subplot(111)
         #ax.plot(self.bins,self.data/np.max(self.data),'b')
-        ax.plot(self.bins,Dy/np.max(self.data),'0.50')
-        ax.plot(self.bins,C,'r')
-        ax.plot(self.bins,self.data/np.max(self.data),'k')
-        plt.show()
+        ax.plot(bins,Dy/np.max(self.data),'0.50')
+        if fourier:
+            ax.plot(bins,C/np.max(self.data),'r')
+        else:
+            ax.plot(bins,C,'r')
+        ax.plot(bins,self.data/np.max(self.data),'k')
+        ax.set_xlim(0,bins[-1])
+        ax.text(0.7,0.8,r'$\tau_d$ = %0.2f ms'%(tauds[ind]*self.getTbin()*1000),transform=ax.transAxes,fontsize=14)
+        if name is None:
+            plt.show()
+        else:
+            plt.savefig("cleanimages/%s_clean.png"%name)
+            plt.close()
+
 
 
 
@@ -568,7 +596,7 @@ class SinglePulse:
                 ax.fill_between(self.ipw[:M],np.zeros_like(self.ipw[:M])+MIN,self.data[self.ipw[:M]],facecolor='g',alpha=0.5)
                 ax.fill_between(self.ipw[M:],np.zeros_like(self.ipw[M:])+MIN,self.data[self.ipw[M:]],facecolor='g',alpha=0.5)
             else:
-                ax.fill_between(self.ipw,np.zeros_like(self.ipw)+MIN,self.data[self.ipw],facecolor='g',alpha=0.5)
+                ax.fill_between(self.ipw,np.zeros_like(self.ipw)+MIN,self.data[svelf.ipw],facecolor='g',alpha=0.5)
 
 
         ax.set_xlim(self.bins[0],self.bins[-1])
