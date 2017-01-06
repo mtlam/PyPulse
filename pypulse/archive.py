@@ -987,12 +987,12 @@ class Archive:
             edgearr = np.concatenate(([0],csum))
             if edges:
                 return edgearr
-            else: #centered
+            else: #centeredg
                 return csum-np.diff(edgearr)/2.0
         elif flag == 'F':
             if np.ndim(self.freq) == 1:
                 return self.freq
-            return self.freq[0]#self.getSubintinfo('DAT_FREQ')[0]  ### This block is a temporary replacement
+            #return self.freq[0]#self.getSubintinfo('DAT_FREQ')[0]  ### This block is a temporary replacement
 
             nchan = self.getNchan()
             fc = self.getCenterFrequency(weighted=wcfreq)
@@ -1412,7 +1412,7 @@ class Archive:
                 #    print(self.channel_delays[j],F)
                 
                 #print "foo",tauhat,self.channel_delays[j],self.subint_starts[i]/Decimal(86400)#self.getTbin(),self.getTbin()*2048
-                toa = '{0:0.15f}'.format(tauhat[i,j]+t0+self.channel_delays[j]/Decimal(86400))
+                toa = '{0:0.15f}'.format(Decimal(tauhat[i,j])+Decimal(t0)+self.channel_delays[j]/Decimal(86400))
                 output += "%s %f %s   %0.3f  %s   -fe %s -be %s -bw %f -tobs %f -tmplt %s -nbin %i -nch %i -snr %0.2f -flux %0.2f -fluxerr %0.2f\n"%(self.filename,F,toa,sigma_tau[i,j],telescope,frontend,backend,chanbw,tobs,tempname,nbin,nchan,snrs[i,j],bhat[i,j],sigma_b[i,j])
                 
 
