@@ -100,10 +100,10 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>data</strong> (<em>list/numpy.array</em>) &#8211; Data array.</li>
-<li><strong>mpw</strong> (<em>list/numpy.array</em>) &#8211; Indices of the main-pulse window</li>
-<li><strong>ipw</strong> (<em>list/numpy.array</em>) &#8211; Indices of the inter-pulse window</li>
-<li><strong>opw</strong> (<em>list/numpy.array</em>) &#8211; Indices of the off-pulse window</li>
+<li><strong>data</strong> (<em>list/numpy.ndarray</em>) &#8211; Data array.</li>
+<li><strong>mpw</strong> (<em>list/numpy.ndarray</em>) &#8211; Indices of the main-pulse window</li>
+<li><strong>ipw</strong> (<em>list/numpy.ndarray</em>) &#8211; Indices of the inter-pulse window</li>
+<li><strong>opw</strong> (<em>list/numpy.ndarray</em>) &#8211; Indices of the off-pulse window</li>
 <li><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Run <a class="reference internal" href="#interpulse_align" title="interpulse_align"><code class="xref py py-func docutils literal"><span class="pre">interpulse_align()</span></code></a></li>
 <li><strong>align</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Rotate the pulse by this amount in phase bin units.</li>
 <li><strong>float</strong> (<em>period</em>) &#8211; Provide pulse period.</li>
@@ -220,7 +220,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>save</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Replace the data array with the rotated versions.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">subtracted_array, <em>numpy.array</em></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">subtracted_array, <em>numpy.ndarray</em></td>
 </tr>
 </tbody>
 </table>
@@ -234,7 +234,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.array</em></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.ndarray</em></td>
 </tr>
 </tbody>
 </table>
@@ -248,7 +248,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.array</em></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.ndarray</em></td>
 </tr>
 </tbody>
 </table>
@@ -262,7 +262,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.array</em></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.ndarray</em></td>
 </tr>
 </tbody>
 </table>
@@ -276,7 +276,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.array</em>, ipw, <em>numpy.array</em>, opw, <em>numpy.array</em></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.ndarray</em>, ipw, <em>numpy.ndarray</em>, opw, <em>numpy.ndarray</em></td>
 </tr>
 </tbody>
 </table>
@@ -332,7 +332,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpacf, <em>numpy.array</em>, ipacf, <em>numpy.array</em>, opacf, <em>numpy.array</em></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpacf, <em>numpy.ndarray</em>, ipacf, <em>numpy.ndarray</em>, opacf, <em>numpy.ndarray</em></td>
 </tr>
 </tbody>
 </table>
@@ -382,7 +382,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>template</strong> (<em>list/numpy.array/SinglePulse</em>) &#8211; Template shape to fit to the data array.</li>
+<li><strong>template</strong> (<em>list/numpy.ndarray/SinglePulse</em>) &#8211; Template shape to fit to the data array.</li>
 <li><strong>fixedphase</strong> (<em>book</em>) &#8211; Return only the signal-to-noise with the template shape fixed in its phase.</li>
 <li><strong>rms_baseline</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Provide a different value of the off-pulse root-mean-square noise.</li>
 </ul>
