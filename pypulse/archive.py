@@ -219,6 +219,9 @@ class Archive:
 
 
         if self.lowmem: #Replace the data arrays with memmaps to reduce memory load
+
+
+
             SHAPE = np.shape(DATA)
             tfDATA = tempfile.NamedTemporaryFile()
             fp = np.memmap(tfDATA.name,dtype=np.int16,mode='w+',shape=SHAPE)
@@ -249,10 +252,13 @@ class Archive:
             DAT_OFFS = np.memmap(tfDAT_OFFS.name,dtype=np.float32,mode='r',shape=SHAPE)
             '''
 
+            tf = tempfile.NamedTemporaryFile()
+            self.data = np.memmap(tf.name,dtype=np.float32,mode='w+',shape=(nsubint,npol,nchan,nbin))
 
-
+        else:
+            self.data = np.zeros((nsubint,npol,nchan,nbin))
         
-        self.data = np.zeros((nsubint,npol,nchan,nbin))
+        #self.data = np.zeros((nsubint,npol,nchan,nbin))
         #data = np.zeros((nsubint,npol,nchan,nbin))
         
         I = range(nsubint)
