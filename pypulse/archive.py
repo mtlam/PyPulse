@@ -36,6 +36,8 @@ import decimal as d
 Decimal = d.Decimal
 from importlib import import_module
 import inspect
+import tempfile
+import os
 try:
     import astropy.io.fits as pyfits
 except:
@@ -194,6 +196,7 @@ class Archive:
         if np.ndim(DATA)==5:
             DATA = DATA[:,0,:,:,:] #remove the nsblk column
         DATA = np.ascontiguousarray(DATA)
+
         #Definitions in Base/Formats/PSRFITS/ProfileColumn.C
         DAT_FREQ = hdulist['SUBINT'].data['DAT_FREQ']
         DAT_WTS = np.ascontiguousarray(hdulist['SUBINT'].data['DAT_WTS'])
@@ -203,14 +206,7 @@ class Archive:
         DAT_OFFS = np.ascontiguousarray(hdulist['SUBINT'].data['DAT_OFFS'])# + 0.5 #testing
         self.DAT_SCL = DAT_SCL #testing
 
-        
-        self.data = np.zeros((nsubint,npol,nchan,nbin))
-        #data = np.zeros((nsubint,npol,nchan,nbin))
-        
-        I = range(nsubint)
-        J = range(npol)
-        K = range(nchan)
-        
+
 
 
         if np.size(DAT_WTS) == 1:
@@ -221,9 +217,53 @@ class Archive:
             DAT_WTS /= np.max(DAT_WTS) #close???
             self.weights = DAT_WTS
 
+
+        if self.lowmem: #Replace the data arrays with memmaps to reduce memory load
+            SHAPE = np.shape(DATA)
+            tfDATA = tempfile.NamedTemporaryFile()
+            fp = np.memmap(tfDATA.name,dtype=np.int16,mode='w+',shape=SHAPE)
+            fp[:] = DATA[:]
+            del fp
+            DATA = np.memmap(tfDATA.name,dtype=np.int16,mode='r',shape=SHAPE)
+
+            '''
+            SHAPE = np.shape(DAT_WTS)
+            tfDAT_WTS = tempfile.NamedTemporaryFile()
+            fp = np.memmap(tfDAT_WTS.name,dtype=np.float32,mode='w+',shape=SHAPE)
+            fp[:] = DAT_WTS[:]
+            del fp
+            DAT_WTS = np.memmap(tfDAT_WTS.name,dtype=np.float32,mode='r',shape=SHAPE)
+
+            SHAPE = np.shape(DAT_SCL)
+            tfDAT_SCL = tempfile.NamedTemporaryFile()
+            fp = np.memmap(tfDAT_SCL.name,dtype=np.float32,mode='w+',shape=SHAPE)
+            fp[:] = DAT_SCL[:]
+            del fp
+            DAT_SCL = np.memmap(tfDAT_SCL.name,dtype=np.float32,mode='r',shape=SHAPE)
+
+            SHAPE = np.shape(DAT_OFFS)
+            tfDAT_OFFS = tempfile.NamedTemporaryFile()
+            fp = np.memmap(tfDAT_OFFS.name,dtype=np.float32,mode='w+',shape=SHAPE)
+            fp[:] = DAT_OFFS[:]
+            del fp
+            DAT_OFFS = np.memmap(tfDAT_OFFS.name,dtype=np.float32,mode='r',shape=SHAPE)
+            '''
+
+
+
+        
+        self.data = np.zeros((nsubint,npol,nchan,nbin))
+        #data = np.zeros((nsubint,npol,nchan,nbin))
+        
+        I = range(nsubint)
+        J = range(npol)
+        K = range(nchan)
+        
+
         self.freq = DAT_FREQ
 
         
+
 
         if nsubint == 1 and npol == 1 and nchan == 1:
             self.data = (DAT_SCL*DATA+DAT_OFFS)#*DAT_WTS
@@ -332,6 +372,8 @@ class Archive:
                             self.data[i,j,k,:] = (DAT_SCL[i,jnchan+k]*DATA[i,j,k,:]+DAT_OFFS[i,jnchan+k])#*DAT_WTS[i,k]
             t1 = time.time()
             #print t1-t0
+
+
 
         bw = self.getBandwidth()
 
@@ -543,8 +585,9 @@ class Archive:
             # Weights array
             arr = self.weights[i:nsub:factor,:]
             count = np.ones_like(arr)
-            wretval[:length,:,:,:] += arr
-            wcounts[:length,:,:,:] += count
+            #print np.shape(retval),np.shape(wretval),length
+            wretval[:length,:] += arr
+            wcounts[:length,:] += count
         retval = retval/counts
         #wretval = wretval/wcounts #is this correct?
         self.data = retval
