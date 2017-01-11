@@ -51,6 +51,9 @@ elif sys.version_info.major == 3:
 
 PSR = "PSR"
 CAL = "CAL"
+FON = "FON"
+FOF = "FOF"
+PCM = "PCM"
 SEARCH = "SEARCH"
 
 
@@ -1596,7 +1599,7 @@ class Archive:
         return self.spavg.getSN()
 
     def isCalibrator(self):
-        if self.header['OBS_MODE'] == CAL:
+        if self.header['OBS_MODE'] == CAL or self.header['OBS_MODE'] == FON or self.header['OBS_MODE'] == FOF:
             return True
         return False
 
