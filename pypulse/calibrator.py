@@ -8,6 +8,7 @@
 import numpy as np
 
 from matplotlib.pyplot import *
+import os
 import sys
 if sys.version_info.major == 2:
     fmap = map    
@@ -23,7 +24,7 @@ class Calibrator:
         self.freqs = freqs
         self.S = S
         if Serr is None:
-            Serr = np.zeros(4) #zeros_like?
+            Serr = np.zeros(4,dtype=np.float32) 
         self.Serr = Serr
         self.verbose = verbose
 
@@ -108,6 +109,10 @@ class Calibrator:
 
         print(ar.shape())
         data = ar.getData() #perform checks here
+
+        # Remove baselines?
+
+
         POL_TYPE = ar.subintheader['POL_TYPE']
 
 
@@ -125,8 +130,25 @@ class Calibrator:
                 for k in K:
                     S = self.convert_polarization(data[i,:,j,k],POL_TYPE,"IQUV")
                     calibrated_data[i,:,j,k] = self.convert_polarization(np.dot(Minv,S),"IQUV",POL_TYPE)
-                    
+                # reset baseline
+                #if i == 5 and j == 50:
+                #    plot(calibrated_data[i,0,j,:])
+                #    show()
+                    #imshow(calibrated_data[i,1,:,:])
+                    #show()
+                    #imshow(calibrated_data[i,2,:,:])
+                    #show()
+                    #imshow(calibrated_data[i,3,:,:])
+                    #show()
+                #    raise SystemExit
+                #calibrated_data[i,:,j,:] -= np.mean(calibrated_data[i,:,j,ar.opw])
+            #if i == 10:
+            #    imshow(calibrated_data[i,0,:,:])
+            #    show()
+            #    raise SystemExit
 
+                
+        print np.mean(calibrated_data[5,:,25,:])
         ar.setData(calibrated_data)
 
 
@@ -248,3 +270,54 @@ class Calibrator:
         HA = hour angle
         """
         return np.arctan2(np.sin(HA)*np.cos(lat),np.sin(lat)*np.cos(dec) - np.cos(lat)*np.sin(phi)*np.cos(HA))
+
+
+
+
+
+
+
+    def calculate_calibrator_flux(source,freqs,filename=None):
+        """
+        Process the fluxcal.cfg file. 
+        All frequencies must be in MHz!    
+        """
+        if filename is None:
+            filename = os.path.join(os.path.dirname(__file__),"config","fluxcal.cfg")
+        with open(filename,'r') as FILE:
+            lines = FILE.readlines()
+
+        currentvals = []
+        found = False
+        for i,line in enumerate(lines):
+            if line[0] == "\n" or line[0] == "#" or line[0] == " ":
+                continue
+
+            splitline = line.strip().split()
+            if len(currentvals) == 0:
+                currentvals = splitline
+            if splitline[0] == "aka" and source in splitline[1]:
+                found = True
+                break
+            elif source in splitline[0]:
+                found = True
+                currentvals = splitline
+                break
+            elif splitline[0] != "aka":
+                currentvals = splitline
+        if not found:
+            raise ValueError("Flux calibration source not found")
+
+        fluxes = np.zeros(len(freqs))
+        if currentvals[0][0] == "&": #Format 2, Flux in Jy for a frequency in GHz is: log10(S) = a_0 + a_1*log10(f) + a_2*(log10(f))^2 + ...
+            logfreqs = np.log10(freqs/1000.0)
+            coeffs = map(lambda x: float(x),currentvals[3:])
+            for i,coeff in enumerate(coeffs):
+                fluxes += coeff*np.power(logfreqs,i)
+        else:
+            freq = float(currentvals[3]) #MHz
+            flux = float(currentvals[4]) #Jy
+            index = float(currentvals[5])
+
+            fluxes = flux*np.power((np.array(freqs)/freq),-1*index)
+        return fluxes
