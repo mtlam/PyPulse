@@ -42,6 +42,8 @@ try:
     import astropy.io.fits as pyfits
 except:
     import pyfits
+import astropy.coordinates as coordinates
+import astropy.units as units
 import sys
 if sys.version_info.major == 2:
     fmap = map    
@@ -879,43 +881,82 @@ class Archive:
         return self
     remove_baseline = removeBaseline
 
-    def calibrate(self,psrcal,fluxcal=None):
+
+
+    def getLevels(self):
+        """ Returns calibration levels if this is a calibrator"""
+        if not self.isCalibrator():
+            print("Not a calibration file")
+            return
+        # Ensure data are scrunched in time, or ignore this and simply calculate the weighted time average?
+        self.tscrunch()
+
+        #Pre-define
+        data = self.getData()
+        npol = self.getNpol()
+        nchan = self.getNchan()
+        nbin = self.getNbin()
+        
+        # Check header info CAL_DCYC, CAL_NPHS, etc, to determine on-diode
+        # or take an absolute value?
+        lowinds = np.arange(0,nbin/2)
+        highinds = np.arange(nbin/2,nbin)
+
+        # Calculate calibrations
+        freqs = self.getAxis('F')
+        caldata = np.zeros((npol,nchan))
+        calerrs = np.zeros((npol,nchan))
+        for i in xrange(npol):
+            for j in xrange(nchan):
+                caldata[i,j] = np.mean(data[i,j,highinds]) - np.mean(data[i,j,lowinds])
+                calerrs[i,j] = np.sqrt(np.std(data[i,j,highinds])**2 / len(highinds) + np.std(data[i,j,lowinds])**2 / len(lowinds))
+
+                
+        if len(np.where(caldata<0)[0]) > 3*len(caldata)/4:
+            caldata = -1*caldata #high and low inds are flipped
+
+        return freqs,caldata,calerrs
+
+
+    def calibrate(self,psrcal,fluxcalon=None,fluxcaloff=None):
         """Calibrates using another archive"""
         self.record(inspect.currentframe())
         if not psrcal.isCalibrator():
             raise ValueError("Require calibration archive")
         # Check if cals are appropriate?
+       
+
+
+
+        # Calculate calibration levels
+        psrcalfreqs,psrcaldata,psrcalerrs = psrcal.getLevels()
+
+        if fluxcalon is not None and fluxcaloff is None: # The fluxcalon file contains both ON and OFF observations
+            pass
+        elif fluxcalon is not None and fluxcaloff is not None: #ON and OFF fluxcal observations are provided
+            fluxcalonfreqs,fluxcalondata,fluxcalonerrs = fluxcalon.getLevels()
+            fluxcalofffreqs,fluxcaloffdata,fluxcalofferrs = fluxcaloff.getLevels()
+
 
         # Check if cal has the correct dimensions, if not perform interpolation
-        
-        # Time-average calibrators
-        if fluxcal is not None:
-            fluxcal.tscrunch()
-            fdata = fluxcal.getData()
-        psrcal.tscrunch()
-        pdata = psrcal.getData()
+        freqs = self.getFreqs()
+        if len(freqs) != len(psrcalfreqs):
+            pass
 
-        # Find cal levels, or have them predetermined?
-        npol = psrcal.getNpol()
-        nchan = psrcal.getNchan()
-        nbin = psrcal.getNbin()
-        
-        # Check header info CAL_DCYC, CAL_NPHS, etc, to determine on-diode
-        lowinds = np.arange(0,nbin/2)
-        highinds = np.arange(nbin/2,nbin)
 
-        # Calculate calibrations
-        freqs = psrcal.getAxis('F')
-        psrcaldata = np.zeros((npol,nchan))
-        psrcalerrs = np.zeros((npol,nchan))
-        for i in xrange(npol):
-            for j in xrange(nchan):
-                psrcaldata[i,j] = np.mean(pdata[i,j,highinds]) - np.mean(pdata[i,j,lowinds])
-                psrcalerrs[i,j] = np.sqrt(np.std(pdata[i,j,highinds])**2 / len(highinds) + np.std(pdata[i,j,lowinds])**2 / len(lowinds))
 
-                #np.savez("testcal.npz",freqs=freqs,S=psrcaldata,Serr=psrcalerrs)
-        cal = Calibrator(freqs,psrcaldata,psrcalerrs)
-        if fluxcal is not None:
+
+
+
+
+        psrcalcal = Calibrator(psrcalfreqs,psrcaldata,psrcalerrs)
+        if fluxcalon is not None:
+            fluxcaloncal = Calibrator(fluxcalonfreqs,fluxcalondata,fluxcalonerrs)
+            fluxcaloffcal = Calibrator(fluxcalofffreqs,fluxcaloffdata,fluxcalofferrs)
+            
+
+
+        if fluxcalon is not None and fluxcaloff is not None:
             fluxcaldata = np.zeros((npol,nchan))
             for i in xrange(npol):
                 for j in xrange(nchan):
@@ -1550,15 +1591,17 @@ class Archive:
     def getRM(self):
         """Returns the data header RM"""
         return self.subintheader['RM']
-    def getCoords(self,parse=True): #use get/set coorinates? Use astropy?
+    def getCoords(self,string=False,parse=False):
         """Returns the coordinate info in the header"""
-        if parse:
+        if string:
+            RA = self.header['RA']
+            dec = self.header['DEC']            
+            return RA,dec
+        elif parse:
             RA = tuple(map(float,self.header['RA'].split(":")))
             dec = tuple(map(float,self.header['DEC'].split(":")))
-        else:
-            RA = self.header['RA']
-            dec = self.header['DEC']
-        return RA,dec
+            return RA,dec
+        return coordinates.SkyCoord("%s %s"%(self.header['RA'],self.header['DEC']),unit=(units.hourangle,units.degree))
     getPulsarCoords = getCoords
 
     def getTelescopeCoords(self):
