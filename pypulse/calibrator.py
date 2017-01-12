@@ -8,6 +8,8 @@
 import numpy as np
 
 from matplotlib.pyplot import *
+import astropy.coordinates as coordinates
+import astropy.units as units
 import os
 import sys
 if sys.version_info.major == 2:
@@ -15,6 +17,9 @@ if sys.version_info.major == 2:
 elif sys.version_info.major == 3:
     fmap = lambda x,*args: list(map(x,*args))
     xrange = range
+
+ON = "ON"
+OFF = "OFF"
 
 
 
@@ -88,7 +93,7 @@ class Calibrator:
         show()
         
 
-    def apply_calibration(self,ar):
+    def applyCalibration(self,ar):
         M_PAs = []
         PAR_ANG = ar.getSubintinfo('PAR_ANG')
         if PAR_ANG is None:
@@ -122,14 +127,14 @@ class Calibrator:
         calibrated_data = np.zeros_like(data)
         for i in I:
             print i
-            M_PA = self.build_mueller_matrix_PA(PAR_ANG[i])
+            M_PA = self.buildMuellerMatrixPA(PAR_ANG[i])
             for j in J:
-                M_differential = self.build_mueller_matrix_differential((dG[j],dpsi[j])) # must match exactly
+                M_differential = self.buildMuellerMatrixDifferential((dG[j],dpsi[j])) # must match exactly
                 M = np.dot(M_differential,M_PA)
                 Minv = np.linalg.inv(M)
                 for k in K:
-                    S = self.convert_polarization(data[i,:,j,k],POL_TYPE,"IQUV")
-                    calibrated_data[i,:,j,k] = self.convert_polarization(np.dot(Minv,S),"IQUV",POL_TYPE)
+                    S = self.convertPolarization(data[i,:,j,k],POL_TYPE,"IQUV")
+                    calibrated_data[i,:,j,k] = self.convertPolarization(np.dot(Minv,S),"IQUV",POL_TYPE)
                 # reset baseline
                 #if i == 5 and j == 50:
                 #    plot(calibrated_data[i,0,j,:])
@@ -153,7 +158,7 @@ class Calibrator:
 
 
 
-    def build_mueller_matrix_PA(self,PA):
+    def buildMuellerMatrixPA(self,PA):
         if PA is None:
             M_PA = np.identity(4)
         else:
@@ -165,7 +170,7 @@ class Calibrator:
                     [0,0,0,1]]
         return M_PA
 
-    def build_mueller_matrix_differential(self,differential):
+    def buildMuellerMatrixDifferential(self,differential):
         if differential is None:
             M_differential = np.identity(4)
         else:
@@ -181,7 +186,7 @@ class Calibrator:
 
 
 
-    def convert_polarization(self,S,intype,outtype,linear=True):
+    def convertPolarization(self,S,intype,outtype,linear=True):
         if intype == outtype:
             return S
         elif intype == "AABBCRCI" and outtype == "IQUV": # Coherence -> Stokes
@@ -218,7 +223,7 @@ class Calibrator:
             
 
 
-    def build_mueller_matrix(self,PA=None,feed=None,CC=None,differential=None):
+    def buildMuellerMatrix(self,PA=None,feed=None,CC=None,differential=None):
         """
         Following Lorimer & Kramer methodology
         PA = parallactic angle (scalar)
@@ -262,7 +267,7 @@ class Calibrator:
         
 
 
-    def calculate_PA(self,lat,dec,HA):
+    def calculatePA(self,lat,dec,HA):
         """
         Helper function
         lat = latitude
@@ -276,24 +281,37 @@ class Calibrator:
 
 
 
+### ==================================================
+### Helper functions
+### ==================================================
 
-    def calculate_calibrator_flux(source,freqs,filename=None):
-        """
-        Process the fluxcal.cfg file. 
-        All frequencies must be in MHz!    
-        """
+class CalibratorConfig:
+    def __init__(self,filename=None):
         if filename is None:
             filename = os.path.join(os.path.dirname(__file__),"config","fluxcal.cfg")
-        with open(filename,'r') as FILE:
-            lines = FILE.readlines()
+        self.filename = filename
+        self.configlines = self.readConfigFile()
 
-        currentvals = []
-        found = False
+
+
+    def readConfigFile(self):
+        """
+        Process the fluxcal.cfg file. 
+        """
+        with open(self.filename,'r') as FILE:
+            lines = FILE.readlines()
+        retval = []
         for i,line in enumerate(lines):
             if line[0] == "\n" or line[0] == "#" or line[0] == " ":
                 continue
+            retval.append(line.strip())
+        return retval
 
-            splitline = line.strip().split()
+    def getConfigLine(self,source):
+        currentvals = []
+        found = False
+        for i,line in enumerate(self.configlines):
+            splitline = line.split()
             if len(currentvals) == 0:
                 currentvals = splitline
             if splitline[0] == "aka" and source in splitline[1]:
@@ -307,17 +325,50 @@ class Calibrator:
                 currentvals = splitline
         if not found:
             raise ValueError("Flux calibration source not found")
+        return currentvals
 
+    def getCalibratorCoords(self,source):
+        configline = self.getConfigLine(source)
+        return coordinates.SkyCoord("%s %s"%(configline[1],configline[2]),unit=(units.hourangle,units.degree))
+
+
+    def checkOnOff(self,source,coords,tolerance=1):
+        """
+        Check if the flux cal is on or off source
+        Tolerance in arcminutes
+        """
+        configline = self.getConfigLine(source)
+        sourcecoords = self.getCalibratorCoords(source)
+        #print coords,sourcecoords,sourcecoords.separation(coords)
+        if sourcecoords.separation(coords)<=tolerance*units.arcmin:
+            return ON
+        return OFF
+
+    
+
+    def calculateCalibratorFlux(self,source,freqs):
+        """
+        All frequencies must be in MHz!    
+        """
+        configline = self.getConfigLine(source)
+
+        freqs = np.array(freqs)
         fluxes = np.zeros(len(freqs))
-        if currentvals[0][0] == "&": #Format 2, Flux in Jy for a frequency in GHz is: log10(S) = a_0 + a_1*log10(f) + a_2*(log10(f))^2 + ...
+        if configline[0][0] == "&": #Format 2, Flux in Jy for a frequency in GHz is: log10(S) = a_0 + a_1*log10(f) + a_2*(log10(f))^2 + ...
             logfreqs = np.log10(freqs/1000.0)
-            coeffs = map(lambda x: float(x),currentvals[3:])
+            coeffs = map(lambda x: float(x),configline[3:])
             for i,coeff in enumerate(coeffs):
                 fluxes += coeff*np.power(logfreqs,i)
         else:
-            freq = float(currentvals[3]) #MHz
-            flux = float(currentvals[4]) #Jy
-            index = float(currentvals[5])
+            freq = float(configline[3]) #MHz
+            flux = float(configline[4]) #Jy
+            index = float(configline[5])
 
-            fluxes = flux*np.power((np.array(freqs)/freq),-1*index)
+            fluxes = flux*np.power((freqs/freq),-1*index)
         return fluxes
+
+
+
+
+
+
