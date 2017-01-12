@@ -404,7 +404,7 @@ class Archive:
         if center_pulse and not self.isCalibrator() and prepare: #calibrator is not a pulse, prepare must be run so that dedisperse is run?
             self.center()
 
-        if baseline_removal:
+        if baseline_removal and not self.isCalibrator():
             self.removeBaseline()
 
         hdulist.close()
@@ -883,7 +883,7 @@ class Archive:
 
 
 
-    def getLevels(self):
+    def getLevels(self,differences=False):
         """ Returns calibration levels if this is a calibrator"""
         if not self.isCalibrator():
             print("Not a calibration file")
@@ -899,24 +899,41 @@ class Archive:
         
         # Check header info CAL_DCYC, CAL_NPHS, etc, to determine on-diode
         # or take an absolute value?
-        lowinds = np.arange(0,nbin/2)
-        highinds = np.arange(nbin/2,nbin)
+        first = np.mean(data[0,:,:nbin/2])
+        second = np.mean(data[0,:,nbin/2:])
+        if first > second:
+            highinds = np.arange(0,nbin/2)
+            lowinds = np.arange(nbin/2,nbin)
+        else:
+            lowinds = np.arange(0,nbin/2)
+            highinds = np.arange(nbin/2,nbin)
 
         # Calculate calibrations
         freqs = self.getAxis('F')
-        caldata = np.zeros((npol,nchan))
-        calerrs = np.zeros((npol,nchan))
-        for i in xrange(npol):
-            for j in xrange(nchan):
-                caldata[i,j] = np.mean(data[i,j,highinds]) - np.mean(data[i,j,lowinds])
-                calerrs[i,j] = np.sqrt(np.std(data[i,j,highinds])**2 / len(highinds) + np.std(data[i,j,lowinds])**2 / len(lowinds))
+        if differences:
+            caldata = np.zeros((npol,nchan))
+            calerrs = np.zeros((npol,nchan))
+            for i in xrange(npol):
+                for j in xrange(nchan):
+                    caldata[i,j] = np.mean(data[i,j,highinds]) - np.mean(data[i,j,lowinds])
+                    calerrs[i,j] = np.sqrt(np.std(data[i,j,highinds])**2 / len(highinds) + np.std(data[i,j,lowinds])**2 / len(lowinds))
+        else:
+            caldatalow = np.zeros((npol,nchan))
+            caldatahigh = np.zeros((npol,nchan))
+            calerrslow = np.zeros((npol,nchan))
+            calerrshigh = np.zeros((npol,nchan))
+            for i in xrange(npol):
+                for j in xrange(nchan):
+                    caldatalow[i,j] = np.mean(data[i,j,lowinds])
+                    caldatahigh[i,j] = np.mean(data[i,j,highinds])
+                    calerrslow[i,j] = np.std(data[i,j,lowinds]) / np.sqrt(len(lowinds))
+                    calerrshigh[i,j] = np.std(data[i,j,highinds]) / np.sqrt(len(highinds))
+
 
                 
-        if len(np.where(caldata<0)[0]) > 3*len(caldata)/4:
-            caldata = -1*caldata #high and low inds are flipped
-
-        return freqs,caldata,calerrs
-
+        if differences:
+            return freqs,caldata,calerrs
+        return freqs,caldatalow,caldatahigh,calerrslow,calerrshigh
 
     def calibrate(self,psrcal,fluxcalon=None,fluxcaloff=None):
         """Calibrates using another archive"""
@@ -929,13 +946,13 @@ class Archive:
 
 
         # Calculate calibration levels
-        psrcalfreqs,psrcaldata,psrcalerrs = psrcal.getLevels()
+        psrcalfreqs,psrcaldata,psrcalerrs = psrcal.getLevels(differences=True)
 
         if fluxcalon is not None and fluxcaloff is None: # The fluxcalon file contains both ON and OFF observations
             pass
         elif fluxcalon is not None and fluxcaloff is not None: #ON and OFF fluxcal observations are provided
-            fluxcalonfreqs,fluxcalondata,fluxcalonerrs = fluxcalon.getLevels()
-            fluxcalofffreqs,fluxcaloffdata,fluxcalofferrs = fluxcaloff.getLevels()
+            fluxcalonfreqs,fluxcalondatalow,fluxcaldatahigh,fluxcalonerrslow,fluxcalerrshigh = fluxcalon.getLevels()
+            fluxcalofffreqs,fluxcaloffdatalow,fluxcaldatahigh,fluxcalofferrslow,fluxcalerrshigh = fluxcaloff.getLevels()
 
 
         # Check if cal has the correct dimensions, if not perform interpolation
@@ -946,13 +963,10 @@ class Archive:
 
 
 
-
-
-
         psrcalcal = Calibrator(psrcalfreqs,psrcaldata,psrcalerrs)
-        if fluxcalon is not None:
-            fluxcaloncal = Calibrator(fluxcalonfreqs,fluxcalondata,fluxcalonerrs)
-            fluxcaloffcal = Calibrator(fluxcalofffreqs,fluxcaloffdata,fluxcalofferrs)
+        #if fluxcalon is not None:
+        #    fluxcaloncal = Calibrator(fluxcalonfreqs,fluxcalondata,fluxcalonerrs)
+        #    fluxcaloffcal = Calibrator(fluxcalofffreqs,fluxcaloffdata,fluxcalofferrs)
             
 
 
