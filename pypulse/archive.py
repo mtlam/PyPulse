@@ -213,13 +213,14 @@ class Archive:
 
 
 
-
+        #print DAT_WTS,np.max(DAT_WTS),np.min(DAT_WTS)
         if np.size(DAT_WTS) == 1:
             #DAT_WTS[0] = 1.0
             #DAT_WTS[0,0] = 1.0
             self.weights = np.ones((1,1))
         else:
-            DAT_WTS /= np.max(DAT_WTS) #close???
+            #DAT_WTS /= np.max(DAT_WTS) #close???
+            #DAT_WTS *= 50
             self.weights = DAT_WTS
 
 
@@ -421,6 +422,7 @@ class Archive:
             cols = []
             for name in self.history.namelist:
                 fmt,unit,array = self.history.dictionary[name]
+                #print name,fmt,unit,array
                 col = pyfits.Column(name=name,format=fmt,unit=unit,array=array)
                 cols.append(col)
             historyhdr = pyfits.Header()
@@ -433,13 +435,32 @@ class Archive:
             
                     
         if self.params is not None:
-            cols = [pyfits.Column(name='PSRPARAM',format='128A',array=self.params.filename)]
+            cols = [pyfits.Column(name='PSRPARAM',format='128A',array=self.params.filename)] #PARAM and not PSRPARAM?
             paramhdr = pyfits.Header()
             for key in self.paramheaderlist:
                 paramhdr[key] = self.paramheader[key]
             paramhdu = pyfits.BinTableHDU.from_columns(cols,name='PSRPARAM')
             hdulist.append(paramhdu)
             # Need to include mode for PSREPHEM
+
+
+
+
+        if self.polyco is not None:
+            cols = []
+            for name in self.polyco.namelist:
+                fmt,unit,array = self.polyco.dictionary[name]
+                #print name,fmt,unit,array
+                col = pyfits.Column(name=name,format=fmt,unit=unit,array=array)
+                cols.append(col)
+            polycohdr = pyfits.Header()
+            for key in self.polyco.headerlist:
+                polycohdr[key] = self.polyco.header[key]
+            polycohdu = pyfits.BinTableHDU.from_columns(cols,name='POLYCO',header=polycohdr)
+            hdulist.append(polycohdu)
+
+
+
 
         if len(self.tables) > 0:
             for table in self.tables:
@@ -458,9 +479,11 @@ class Archive:
         nsubint = self.getNsubint()
         npol = self.getNpol()
         nchan = self.getNchan()
-        DAT_OFFS = np.zeros((nsubint,npol*nchan))
-        DAT_SCL = np.zeros((nsubint,npol*nchan))
-        DATA = self.getData(squeeze=False)
+        nbin = self.getNbin()
+        DAT_OFFS = np.zeros((nsubint,npol*nchan),dtype=np.float32)
+        DAT_SCL = np.zeros((nsubint,npol*nchan),dtype=np.float32)
+        DATA = self.getData(squeeze=False,weight=False)
+        saveDATA = np.zeros(self.shape(squeeze=False),dtype=np.int16)
         # Following Base/Formats/PSRFITS/unload_DigitiserCounts.C
         for i in xrange(nsubint):
             for j in xrange(npol):
@@ -470,31 +493,16 @@ class Archive:
                     MAX = np.max(DATA[i,j,k,:])
                     RANGE = MAX - MIN
                     if MAX == 0 and MIN == 0:
-                        DAT_SCL[i,jnchan+k] += 1.0
+                        DAT_SCL[i,jnchan+k] = 1.0
                     else:
-                        if RANGE == 0:
-                            DAT_SCL[i,jnchan+k] = MAX / 65535.0 #65534?
-                        else:
-                            DAT_SCL[i,jnchan+k] = RANGE / 65535.0
-                        DAT_OFFS[i,jnchan+k] = MIN - (-32768.0 * DAT_SCL[i,jnchan+k])
+                        DAT_OFFS[i,jnchan+k] = 0.5*(MIN+MAX)
+                        DAT_SCL[i,jnchan+k] = (MAX-MIN)/32766.0 #this is slightly off the original value? Results in slight change of data
                 
-                    DATA[i,j,k,:] = np.floor((DATA[i,j,k,:] - DAT_OFFS[i,jnchan+k])/DAT_SCL[i,jnchan+k] + 0.5) #why +0.5?
-                    print(np.min(DATA[i,j,k,:]),np.max(DATA[i,j,k,:]))
-                # -32768 to 32766?
+                    saveDATA[i,j,k,:] = np.floor((DATA[i,j,k,:] - DAT_OFFS[i,jnchan+k])/DAT_SCL[i,jnchan+k] + 0.5) #why +0.5?
 
-                    #jnchan = j*nchan
-                    #for k in K:
-                    #    self.data[i,j,k,:] = (DAT_SCL[i,jnchan+k]*DATA[i,j,k,:]+DAT_OFFS[i,jnchan+k])#*DAT_WTS[i,k]
-
-
-
-        #print self.DAT_SCL[0]
-        #print 
-        #print 1.0/DAT_SCL[0]
-        #DAT_SCL = 1.0/DAT_SCL#???
         cols.append(pyfits.Column(name='DAT_OFFS',format='%iE'%np.size(DAT_OFFS[0]),array=DAT_OFFS))
         cols.append(pyfits.Column(name='DAT_SCL',format='%iE'%np.size(DAT_SCL[0]),array=DAT_SCL))
-        cols.append(pyfits.Column(name='DATA',format='%iI'%np.size(DATA[0]),array=DATA))
+        cols.append(pyfits.Column(name='DATA',format='%iI'%np.size(saveDATA[0]),array=saveDATA,unit='Jy',dim='(%s,%s,%s)'%(nbin,nchan,npol))) #replace the unit here
         
         subinthdr = pyfits.Header()
         for key in self.subintheaderlist:
@@ -704,50 +712,59 @@ class Archive:
             return self
         self.record(inspect.currentframe())
         Faxis = self.getAxis('F',wcfreq=wcfreq)#,edges=True)[:-1]
-        #plt.plot(self.getAxis('F')-self.getAxis('F',wcfreq=True))
-        #plt.show()
-        #raise SystemExit
-        #print Faxis[::-1]
-        #raise SystemExit
 
+        Faxis = self.freq #potentially two-dimensional thing?
 
         nsubint = self.getNsubint()
         npol = self.getNpol()
+        nchan = self.getNchan()
         nbin = self.getNbin()
         if DM is None:
             DM = self.getDM()
         cfreq = self.getCenterFrequency(weighted=wcfreq)
-        #cfreq = 1416.4955357
-        #cfreq = 1468.594
-        #cfreq = 1416.496
-        #cfreq = 1400.0
-        #cfreq = 1380.78125
-        #print DM,cfreq
 
         K = 4.149e3
         K = 1.0/2.41e-4 #constant used to be more consistent with PSRCHIVE
+        Kconst = 1.0/2.41e-4 #constant used to be more consistent with PSRCHIVE
         time_delays = K*DM*(cfreq**(-2) - np.power(Faxis,-2)) #freq in MHz, delays in seconds
 
         #time_delays = Decimal(K)*Decimal(DM)*(Decimal(str(cfreq))**(-2) - np.array(fmap(lambda x: Decimal(str(x))**-2,Faxis)))
 
         #print time_delays
+        
         dt = self.getTbin(numwrap=Decimal)  
+        '''
         bin_delays = np.array(fmap(lambda x: Decimal(str(x)),time_delays)) / dt
         #print "foo",bin_delays,nbin,dt,self.getPeriod(),self.getNbin()
         bin_delays = bin_delays % Decimal(nbin)
+        '''
         if reverse:
             sign = 1
         else:
             sign = -1
         #time_delays *= (-1*sign)
 
-
+        I = range(nchan)
         J = range(nsubint)
         K = range(npol)
 
         #P0 = self.getPeriod()*1e6
 
         #raise SystemExit
+
+        
+        for j in J:
+            for k in K:
+                for i in I:
+                    time_delay = Kconst*DM*(cfreq**(-2) - Faxis[j,i]**(-2)) #freq in MHz, delays in seconds
+                    bin_delay = Decimal(str(time_delay)) / dt
+                    bin_delay = bin_delay % Decimal(nbin)
+                    #print cfreq,Faxis[j,i],time_delay,bin_delay,nbin
+                    self.data[j,k,i,:] = u.shiftit(self.data[j,k,i,:],sign*float(bin_delay))
+        self.calculateAverageProfile() #re-calculate the average profile
+        return self
+
+
 
 
         for i,delay in enumerate(bin_delays):
@@ -935,10 +952,10 @@ class Archive:
             return freqs,caldata,calerrs
         return freqs,caldatalow,caldatahigh,calerrslow,calerrshigh
 
-    def calibrate(self,psrcal,fluxcalon=None,fluxcaloff=None):
+    def calibrate(self,psrcalar,fluxcalonar=None,fluxcaloffar=None):
         """Calibrates using another archive"""
         self.record(inspect.currentframe())
-        if not psrcal.isCalibrator():
+        if not psrcalar.isCalibrator():
             raise ValueError("Require calibration archive")
         # Check if cals are appropriate?
        
@@ -946,38 +963,28 @@ class Archive:
 
 
         # Calculate calibration levels
-        psrcalfreqs,psrcaldata,psrcalerrs = psrcal.getLevels(differences=True)
-
-        if fluxcalon is not None and fluxcaloff is None: # The fluxcalon file contains both ON and OFF observations
-            pass
-        elif fluxcalon is not None and fluxcaloff is not None: #ON and OFF fluxcal observations are provided
-            fluxcalonfreqs,fluxcalondatalow,fluxcaldatahigh,fluxcalonerrslow,fluxcalerrshigh = fluxcalon.getLevels()
-            fluxcalofffreqs,fluxcaloffdatalow,fluxcaldatahigh,fluxcalofferrslow,fluxcalerrshigh = fluxcaloff.getLevels()
-
+        psrcalfreqs,psrcaldata,psrcalerrs = psrcalar.getLevels(differences=True)
 
         # Check if cal has the correct dimensions, if not perform interpolation
         freqs = self.getFreqs()
         if len(freqs) != len(psrcalfreqs):
             pass
 
-
-
-
-        psrcalcal = Calibrator(psrcalfreqs,psrcaldata,psrcalerrs)
+        cal = Calibrator(psrcalfreqs,psrcaldata,psrcalerrs)
         #if fluxcalon is not None:
         #    fluxcaloncal = Calibrator(fluxcalonfreqs,fluxcalondata,fluxcalonerrs)
         #    fluxcaloffcal = Calibrator(fluxcalofffreqs,fluxcaloffdata,fluxcalofferrs)
             
 
 
-        if fluxcalon is not None and fluxcaloff is not None:
+        if fluxcalonar is not None and fluxcaloffar is not None:
             fluxcaldata = np.zeros((npol,nchan))
             for i in xrange(npol):
                 for j in xrange(nchan):
                     fluxcaldata[i,j] = np.mean(fdata[i,j,highinds]) - np.mean(fdata[i,j,lowinds])
 
         cal.apply_calibration(self)
-        return cal            
+        return psrcal            
         # Apply calibrations
 
         
@@ -1099,12 +1106,13 @@ class Archive:
         elif flag == 'F':
             if np.ndim(self.freq) == 1:
                 return self.freq
-            #return self.freq[0]#self.getSubintinfo('DAT_FREQ')[0]  ### This block is a temporary replacement
+            return self.freq[0] #return self.getSubintinfo('DAT_FREQ')[0]  ### This block is a temporary replacement
 
             nchan = self.getNchan()
             fc = self.getCenterFrequency(weighted=wcfreq)
             bw = self.getBandwidth()
             df = np.abs(bw)/nchan
+
             if edges:
                 arr = np.array((np.arange(nchan+1) - (nchan+1)/2.0 + 0.5)*df + fc)
             else:

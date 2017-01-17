@@ -26,11 +26,11 @@ OFF = "OFF"
 class Calibrator:
     def __init__(self,freqs,S,Serr=None,pol_type='Coherence',fd_poln='LIN',verbose=True):
         self.pol_type = pol_type
-        self.freqs = freqs
-        self.S = S
+        self.freqs = np.array(freqs)
+        self.S = np.array(S)
         if Serr is None:
             Serr = np.zeros(4,dtype=np.float32) 
-        self.Serr = Serr
+        self.Serr = np.array(Serr)
         self.verbose = verbose
 
         if self.pol_type == 'Coherence' or self.pol_type == 'AABBCRCI':
@@ -93,6 +93,32 @@ class Calibrator:
         show()
         
 
+
+    def applyFluxcal(self,fluxcalonar,fluxcaloffar=None):
+        if fluxcaloffar is None: #The fluxcalon file contains both ON and OFF observations
+            pass
+        else:
+            fluxcalonfreqs,fluxcalondatalow,fluxcalondatahigh,fluxcalonerrslow,fluxcalonerrshigh = fluxcalonar.getLevels()
+            fluxcalofffreqs,fluxcaloffdatalow,fluxcaloffdatahigh,fluxcalofferrslow,fluxcalofferrshigh = fluxcaloffar.getLevels()
+
+
+        source = fluxcalonar.getName()
+        if source != fluxcaloffar.getName():
+            raise ValueError("Mismatch in fluxcal names")
+
+        config = CalibratorConfig()
+        calflux = config.calculateCalibratorFlux(source,self.freqs)
+            
+
+        S_cal = fluxcalondatalow - fluxcaloffdatalow # Flux calibrator amplitudes, the difference between on and off source without the noise diode operational.
+        #print np.shape(calflux),np.shape(S_cal)
+            
+        #self.I = self.I
+
+
+            
+
+
     def applyCalibration(self,ar):
         M_PAs = []
         PAR_ANG = ar.getSubintinfo('PAR_ANG')
@@ -126,7 +152,7 @@ class Calibrator:
         K = xrange(ar.getNbin())
         calibrated_data = np.zeros_like(data)
         for i in I:
-            print i
+            print(i)
             M_PA = self.buildMuellerMatrixPA(PAR_ANG[i])
             for j in J:
                 M_differential = self.buildMuellerMatrixDifferential((dG[j],dpsi[j])) # must match exactly
@@ -153,7 +179,7 @@ class Calibrator:
             #    raise SystemExit
 
                 
-        print np.mean(calibrated_data[5,:,25,:])
+        #print np.mean(calibrated_data[5,:,25,:])
         ar.setData(calibrated_data)
 
 

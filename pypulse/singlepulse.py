@@ -454,6 +454,28 @@ class SinglePulse:
         return ytemp
 
 
+    def gaussian_smoothing(self,nmax=10):
+        n=1
+        chisq = 10000
+        while True:
+            fitfunc,errfunc,pfit,perr,s_sq = u.fit_gaussians(self.bins,self.data,n)
+            #print s_sq
+            if s_sq < chisq:
+                chisq = s_sq
+            else:
+                break
+            n+=1
+            if n == nmax:
+                break
+
+        n -= 1
+        fitfunc,errfunc,pfit,perr,s_sq = u.fit_gaussians(self.bins,self.data,n)
+        return fitfunc(pfit,self.bins)
+        #return fitfunc,errfunc,pfit,perr,s_sq,n
+
+
+
+
 
     def estimateScatteringTimescale(self,searchtauds=None,ntauds=25,name=None,fourier=False,**kwargs):
         if searchtauds is None:
@@ -472,7 +494,7 @@ class SinglePulse:
         Gammas = np.zeros_like(tauds)
         f_rs = np.zeros_like(tauds)
         for i,taud in enumerate(tauds):
-            print i,taud
+            #print i,taud
             if fourier:
                 Dy,C,N_f,sigma_offc,Gamma,f_r = u.pbf_fourier(bins,self.data,taud=taud,opw=self.opw,**kwargs)
             else:
@@ -515,13 +537,13 @@ class SinglePulse:
 
         ind = np.argmin(f_cs)
         #ind = np.argmin(Gammas)
-        print tauds[ind],tauds[ind]*self.getTbin()
+        #print tauds[ind],tauds[ind]*self.getTbin()
         if fourier:
             Dy,C,N_f,sigma_offc,Gamma,f_r=u.pbf_fourier(bins,self.data,taud=tauds[ind],opw=self.opw,**kwargs)
         else:
             Dy,C,N_f,sigma_offc,Gamma,f_r=u.pbf_clean(bins,self.data,taud=tauds[ind],opw=self.opw,**kwargs)
         #Dy,C,N_f,sigma_offc,Gamma,f_r=clean(t,y,taud=10)
-        print "gamma",Gamma
+        #print "gamma",Gamma
 
         fig = plt.figure()
         ax = fig.add_subplot(111)
