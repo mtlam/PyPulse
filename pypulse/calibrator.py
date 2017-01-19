@@ -139,8 +139,8 @@ class Calibrator:
 
 
         print(ar.shape())
-        data = ar.getData() #perform checks here
-
+        data = ar.getData(squeeze=False) #perform checks here
+        print np.shape(data)
         # Remove baselines?
 
 

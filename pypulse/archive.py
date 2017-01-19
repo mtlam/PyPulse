@@ -966,7 +966,7 @@ class Archive:
         psrcalfreqs,psrcaldata,psrcalerrs = psrcalar.getLevels(differences=True)
 
         # Check if cal has the correct dimensions, if not perform interpolation
-        freqs = self.getFreqs()
+        freqs = self.getAxis('F')
         if len(freqs) != len(psrcalfreqs):
             pass
 
@@ -983,8 +983,8 @@ class Archive:
                 for j in xrange(nchan):
                     fluxcaldata[i,j] = np.mean(fdata[i,j,highinds]) - np.mean(fdata[i,j,lowinds])
 
-        cal.apply_calibration(self)
-        return psrcal            
+        cal.applyCalibration(self)
+        return cal            
         # Apply calibrations
 
         
