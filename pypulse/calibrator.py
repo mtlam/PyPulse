@@ -138,9 +138,8 @@ class Calibrator:
         dpsi = np.arctan2(self.V,self.U)
 
 
-        print(ar.shape())
+
         data = ar.getData(squeeze=False) #perform checks here
-        print np.shape(data)
         # Remove baselines?
 
 
