@@ -592,7 +592,7 @@ class Archive:
         counts = np.zeros_like(retval)
         newdurations = np.zeros(np.shape(retval)[0])
         wretval = np.zeros((len(np.r_[0:nsub:factor]),self.getNchan()))
-        wcounts = np.zeros_like(retval)
+        wcounts = np.zeros_like(wretval)
         for i in xrange(factor):
             # Data array
             arr = self.data[i:nsub:factor,:,:,:] 
@@ -1106,7 +1106,8 @@ class Archive:
         elif flag == 'F':
             if np.ndim(self.freq) == 1:
                 return self.freq
-            return self.freq[0] #return self.getSubintinfo('DAT_FREQ')[0]  ### This block is a temporary replacement
+            if self.getNchan() == len(self.freq[0]):
+                return self.freq[0] #return self.getSubintinfo('DAT_FREQ')[0]  ### This block is a temporary replacement
 
             nchan = self.getNchan()
             fc = self.getCenterFrequency(weighted=wcfreq)
