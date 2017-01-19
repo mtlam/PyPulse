@@ -469,6 +469,8 @@ class SinglePulse:
                 break
 
         n -= 1
+        if n <= 0:
+            n = 1
         fitfunc,errfunc,pfit,perr,s_sq = u.fit_gaussians(self.bins,self.data,n)
         return fitfunc(pfit,self.bins)
         #return fitfunc,errfunc,pfit,perr,s_sq,n
