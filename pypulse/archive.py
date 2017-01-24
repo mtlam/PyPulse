@@ -1221,12 +1221,16 @@ class Archive:
                 wrapfunc = lambda x: np.transpose(x) #do not flipud?
             else:
                 wrapfunc = lambda x: np.transpose(x)
-            if template is not None and mpw is not None:
+            if template is not None and (mpw is not None or windowsize is not None):
+
                 gs = np.zeros((fullshape[0],fullshape[2]))
                 offs = np.zeros((fullshape[0],fullshape[2]))
                 sig_gs = np.zeros((fullshape[0],fullshape[2]))
                 I = range(fullshape[0])
                 J = range(fullshape[2])
+
+
+                sptemp = SP.SinglePulse(template,mpw=mpw,windowsize=windowsize) #windowsize will overwrite mpw
 
                 if snr:
                     ind = -2
@@ -1239,7 +1243,7 @@ class Archive:
                     else: #only one frequency channel
                         K = I
                     for i in K:
-                        sp = SP.SinglePulse(data[i],mpw=mpw,align=align)
+                        sp = SP.SinglePulse(data[i],opw=sptemp.opw,align=align)
                         baseline = sp.getOffpulseNoise(mean=True) #get mean value of offpulse
                         spfit = sp.fitPulse(template)
                         if spfit is not None:
@@ -1251,7 +1255,7 @@ class Archive:
                     if verbose:
                         print("i,%i"%(i,I[-1]))
                     for j in J:
-                        sp = SP.SinglePulse(data[i,j],mpw=mpw,align=align)
+                        sp = SP.SinglePulse(data[i,j],opw=sptemp.opw,align=align)
                         baseline = sp.getOffpulseNoise(mean=True) #get mean value of offpulse
                         spfit = sp.fitPulse(template)
 #                        if spfit==None:
