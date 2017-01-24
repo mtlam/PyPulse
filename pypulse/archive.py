@@ -955,22 +955,23 @@ class Archive:
     def calibrate(self,psrcalar,fluxcalonar=None,fluxcaloffar=None):
         """Calibrates using another archive"""
         self.record(inspect.currentframe())
-        if not psrcalar.isCalibrator():
+        if not (isinstance(psrcalar,Calibrator) or (isinstance(psrcalar,Archive) and psrcalar.isCalibrator())):
             raise ValueError("Require calibration archive")
         # Check if cals are appropriate?
        
 
+        if isinstance(psrcalar,Calibrator):
+            cal = psrcalar
+        else:
+            # Calculate calibration levels
+            psrcalfreqs,psrcaldata,psrcalerrs = psrcalar.getLevels(differences=True)
+            
+            # Check if cal has the correct dimensions, if not perform interpolation
+            freqs = self.getAxis('F')
+            if len(freqs) != len(psrcalfreqs):
+                pass
 
-
-        # Calculate calibration levels
-        psrcalfreqs,psrcaldata,psrcalerrs = psrcalar.getLevels(differences=True)
-
-        # Check if cal has the correct dimensions, if not perform interpolation
-        freqs = self.getAxis('F')
-        if len(freqs) != len(psrcalfreqs):
-            pass
-
-        cal = Calibrator(psrcalfreqs,psrcaldata,psrcalerrs)
+            cal = Calibrator(psrcalfreqs,psrcaldata,psrcalerrs)
         #if fluxcalon is not None:
         #    fluxcaloncal = Calibrator(fluxcalonfreqs,fluxcalondata,fluxcalonerrs)
         #    fluxcaloffcal = Calibrator(fluxcalofffreqs,fluxcaloffdata,fluxcalofferrs)
@@ -1241,7 +1242,7 @@ class Archive:
                         sp = SP.SinglePulse(data[i],mpw=mpw,align=align)
                         baseline = sp.getOffpulseNoise(mean=True) #get mean value of offpulse
                         spfit = sp.fitPulse(template)
-                        if spfit!=None:
+                        if spfit is not None:
                             gs[i] = spfit[ind] #bhat
                             offs[i] = baseline
                             sig_gs[i] = spfit[4]
