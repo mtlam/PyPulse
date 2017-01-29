@@ -154,7 +154,7 @@ class DynamicSpectrum:
         return ss
 
     # allow for simple 1D fitting
-    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None):
+    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True):
         if self.acf is None:
             self.acf2d()
         if self.dT is None:
@@ -242,7 +242,10 @@ class DynamicSpectrum:
             ax.contour(fit(*np.indices(plotacf.shape)),levels, colors='k')
             #ax.set_xlim(len(xs)-20,len(xs)+20)
             #ax.set_ylim(len(ys)-10,len(ys)+10)
-            plt.show()
+            if savefig is not None:
+                plt.savefig(savefig)
+            if show:
+                plt.show()
         return delta_t_d,delta_nu_d,rotation #need to report errors
 
 
