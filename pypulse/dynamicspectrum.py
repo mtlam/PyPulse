@@ -154,7 +154,7 @@ class DynamicSpectrum:
         return ss
 
     # allow for simple 1D fitting
-    def scintillation_parameters(self,plotbound=1.0):
+    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None):
         if self.acf is None:
             self.acf2d()
         if self.dT is None:
@@ -180,10 +180,12 @@ class DynamicSpectrum:
             #center,hist = u.histogram(acf.flatten(),interval=0.001) #relies on 0.001
             #MIN = center[np.argmax(hist)]
             MIN = u.RMS(self.acf.flatten())
-        rslice = self.acf[centerrind:,centercind]
-        maxr = np.where(rslice<=MIN)[0][0]
-        cslice = self.acf[centerrind,centercind:]
-        maxc = np.where(cslice<=MIN)[0][0]
+        if maxr is None:
+            rslice = self.acf[centerrind:,centercind]
+            maxr = np.where(rslice<=MIN)[0][0]
+        if maxc is None:
+            cslice = self.acf[centerrind,centercind:]
+            maxc = np.where(cslice<=MIN)[0][0]
 
         plotacf = self.acf[centerrind-plotbound*maxr+1:centerrind+plotbound*maxr,centercind-plotbound*maxc+1:centercind+plotbound*maxc+1]
 
