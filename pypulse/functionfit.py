@@ -55,7 +55,7 @@ def gaussian2d(amplitude,center_x,center_y,width_x,width_y,rotation,baseline):
     return rotgauss
 
 def moments(data):
-    """Returns (height, x, y, width_x, width_y)
+    """Returns (height, x, y, width_x, width_y, rotation, baseline)
     the gaussian parameters of a 2D distribution by calculating its
     moments """
     total = np.sum(data)
@@ -63,12 +63,12 @@ def moments(data):
     x = np.sum(X*data)/total
     y = np.sum(Y*data)/total
     col = data[:, int(y)]
-    width_x = np.sqrt(np.abs((np.arange(col.size)-y)**2*col).sum()/col.sum())
+    width_x = np.sqrt(np.abs((np.arange(col.size)-x)**2*col).sum()/col.sum())
     row = data[int(x), :]
-    width_y = np.sqrt(np.abs((np.arange(row.size)-x)**2*row).sum()/row.sum())
+    width_y = np.sqrt(np.abs((np.arange(row.size)-y)**2*row).sum()/row.sum())
     height = np.max(data)
     baseline = np.min(data)
-    return height, x, y, width_x, width_y, 0.0, baseline
+    return height-baseline, x, y, width_x, width_y, 0.0, baseline
     
 def fitgaussian2d(data):
     """Returns (height, x, y, width_x, width_y)
