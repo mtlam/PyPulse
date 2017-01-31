@@ -14,6 +14,12 @@ import matplotlib.cm as cm
 from scipy.signal import fftconvolve
 import scipy.optimize as optimize
 
+import sys
+if sys.version_info.major == 2:
+    fmap = map    
+elif sys.version_info.major == 3:
+    fmap = lambda x,*args: list(map(x,*args))
+    xrange = range
 
 
 class DynamicSpectrum:
@@ -154,7 +160,7 @@ class DynamicSpectrum:
         return ss
 
     # allow for simple 1D fitting
-    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True):
+    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True,full_output=False):
         if self.acf is None:
             self.acf2d()
         if self.dT is None:
@@ -190,14 +196,15 @@ class DynamicSpectrum:
         plotacf = self.acf[centerrind-plotbound*maxr+1:centerrind+plotbound*maxr,centercind-plotbound*maxc+1:centercind+plotbound*maxc+1]
 
         
-        params, pcov = ffit.fitgaussian2d(plotacf)
+        params, pcov = ffit.fitgaussian2d(plotacf) #pcov already takes into account s_sq issue
+        SHAPE = np.shape(plotacf)
 
         fit = ffit.gaussian2d(*params)
         amplitude,center_x,center_y,width_x,width_y,rotation,baseline = params
         if self.verbose:
             paramnames = ["amplitude","center_x","center_y","width_x","width_y","rotation","baseline"]
             if pcov is not None:
-                paramerrors = np.array(list(map(np.sqrt,np.diagonal(pcov)))) #multiply by s_sq!!!!!
+                paramerrors = np.sqrt(np.diagonal(pcov))
             else:
                 paramerrors = np.zeros_like(params)
             for i,param in enumerate(params):
@@ -205,7 +212,6 @@ class DynamicSpectrum:
                 
 
         #Solve for scintillation parameters numerically
-        SHAPE = np.shape(plotacf)
         
         try:
             delta_t_d = (optimize.brentq(lambda y: fit(SHAPE[0]//2,y)-baseline-amplitude/np.e,(SHAPE[1]-1)//2,SHAPE[1]*2)-(SHAPE[1]-1)//2)*dT #FWHM test
@@ -215,6 +221,10 @@ class DynamicSpectrum:
             if self.verbose:
                 print("ERROR in delta_t_d")
             delta_t_d = SHAPE[1]*dT
+        if pcov is not None:
+            err_t_d = paramerrors[3]*dT #assume no rotaton for now
+        else:
+            err_t_d = None
 
         try:
             delta_nu_d = (optimize.brentq(lambda x: fit(x,SHAPE[1]//2)-baseline-amplitude/2.0,(SHAPE[0]-1)//2,SHAPE[0])-(SHAPE[0]-1)//2)*dF
@@ -224,10 +234,20 @@ class DynamicSpectrum:
             if self.verbose:
                 print("ERROR in delta_nu_d")
             delta_nu_d = SHAPE[0]*dF
+        if pcov is not None:
+            err_nu_d = paramerrors[4]*dF #assume no rotaton for now
+        else:
+            err_nu_d = None
+
+
+        err_rot = paramerrors[5]
+
+
 
         if self.verbose:
             print("dnu/dt %0.3f MHz/min" % ((dF/dT)*np.tan(rotation)))#((dF/dT)*np.tan(rotation))
 
+        if show or savefig is not None:
             fig = plt.figure()
             ax = fig.add_subplot(211)
             u.imshow(self.data)
@@ -246,7 +266,9 @@ class DynamicSpectrum:
                 plt.savefig(savefig)
             if show:
                 plt.show()
-        return delta_t_d,delta_nu_d,rotation #need to report errors
+        if full_output:
+            return delta_t_d,err_t_d,delta_nu_d,err_nu_d,rotation,err_rot
+        return delta_t_d,delta_nu_d,rotation
 
 
 
