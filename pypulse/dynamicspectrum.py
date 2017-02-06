@@ -148,7 +148,7 @@ class DynamicSpectrum:
 
         #return u.acf2d(self.data,speed=speed,mode=mode) #do more here
 
-    def secondary_spectrum(self,log=False):
+    def secondary_spectrum(self,remove_baseline=True,log=False):
         data = self.getData(remove_baseline=remove_baseline)
 
         ss = np.abs(np.fft.fftshift(np.fft.fft2(data)))**2
