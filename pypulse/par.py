@@ -186,6 +186,8 @@ class Par:
             F2s = np.zeros(Ncomponents)
         for i in range(Ncomponents):
             ts[i] = self.get('DMXEP_%04i'%(i+1))
+            if np.isnan(ts[i]):
+                ts[i] = 0.5*(self.get('DMXR1_%04i'%(i+1))+self.get('DMXR2_%04i'%(i+1)))
             dmxs[i] = self.get('DMX_%04i'%(i+1))
             errs[i] = self.get('DMX_%04i'%(i+1),error=True) #check to make sure this exists?
             if full_output:
