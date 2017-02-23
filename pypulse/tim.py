@@ -167,7 +167,7 @@ class Tim:
             FILE.write(output)
 
     def getMJDs(self):
-        mjds = fmap(lambda x: x.getMJD(),self.toas)
+        mjds = np.array(fmap(lambda x: x.getMJD(),self.toas))
         return mjds
 
 
