@@ -166,10 +166,13 @@ class Tim:
         with open(filename,'w') as FILE:
             FILE.write(output)
 
+    def getMJDs(self):
+        mjds = fmap(lambda x: x.getMJD(),self.toas)
+        return mjds
 
 
     def getTspan(self,years=False):
-        mjds = fmap(lambda x: x.getMJD(),self.toas)
+        mjds = self.getMJDs()
         if years:
             return np.ptp(mjds)/self.numwrap("365.25")
         return np.ptp(mjds)
