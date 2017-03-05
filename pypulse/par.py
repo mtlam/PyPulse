@@ -239,7 +239,7 @@ class Par:
 
     def getFD(self):
         coeffs = []
-        for param in self.paramlist:
+        for param in self.paramnames:
             if "FD" in param:
                 coeffs.append(self.get(param))
         if len(coeffs) == 0:
