@@ -88,6 +88,10 @@ class Parameter:
     def getFlagValue(self):
         return self.flagvalue
 
+
+
+
+
 #numwrap could be float
 class Par:
     def __init__(self,filename,numwrap=d.Decimal):
@@ -122,7 +126,12 @@ class Par:
 
 
     def save(self,filename):
-        pass
+        # Crude saving attempt
+        output = ""
+        for param in self.paramlist:
+            output += param.parstring
+        with open(filename,'w') as FILE:
+            FILE.write(output)
 
 
 
