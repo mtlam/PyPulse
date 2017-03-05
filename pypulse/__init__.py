@@ -1,4 +1,4 @@
-__all__ = ["archive","Archive","singlepulse","SinglePulse","dynamicspectrum","DynamicSpectrum","par","Par","tim","Tim","TOA"]
+__all__ = ["archive","Archive","singlepulse","SinglePulse","dynamicspectrum","DynamicSpectrum","par","Par","Parameter","tim","Tim","TOA","utils"]
 
 __version__ = 0.1
 
