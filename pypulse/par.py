@@ -1,15 +1,6 @@
 '''
 Michel Lam 2015
 Loads a parameter file
-
-Look at fit flags?
-
-Now takes either a list of strings or a filename
-
-
-
-if 3 or 5, maybe no fit flag
-Noise model parameters take a flag, should I store which flag that is? (e.g. store the "-f" or "-fe"?)
 '''
 
 import decimal as d
