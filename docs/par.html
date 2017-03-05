@@ -54,6 +54,10 @@
 <li><a class="reference internal" href="#methods">Methods</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#parameter-class">Parameter Class</a><ul>
+<li><a class="reference internal" href="#id1">Methods</a></li>
+</ul>
+</li>
 </ul>
 
   <h4>Previous topic</h4>
@@ -311,6 +315,120 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>years</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Divide the timespan by 365.25.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="parameter-class">
+<h1>Parameter Class<a class="headerlink" href="#parameter-class" title="Permalink to this headline">¶</a></h1>
+<p>The <em>Parameter</em> class handles individual pulsar parameters.</p>
+<dl class="class">
+<dt id="Parameter">
+<em class="property">class </em><code class="descname">Parameter</code><span class="sig-paren">(</span><em>name</em><span class="optional">[</span>, <em>value=None</em>, <em>fit=None</em>, <em>error=None</em>, <em>flag=None</em>, <em>flagvalue=None</em>, <em>numwrap=d.Decimal</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores the basic values of a Parameter in a par file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; If only the name parameter is specified, then this is the entire parameter string and will be parsed. Otherwise, this is the parameter name (e.g. PSR, P0/F0, etc.)</li>
+<li><strong>value</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Parameter value. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.</li>
+<li><strong>fit</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Parameter fit value, i.e. whether or not the parameter is to be fit in the timing model. Can be supplied a numeric value that will be wrapped with an int</li>
+<li><strong>error</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Parameter error. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.</li>
+<li><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; If there is a flag associated with the parameter</li>
+<li><strong>flagvalue</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The vale the flag is set to.</li>
+<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#type" title="(in Python v2.7)"><em>type</em></a>) &#8211; Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="section" id="id1">
+<h2>Methods<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt>
+<code class="descname">getName</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Return the name of the parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getValue">
+<code class="descname">getValue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value of the parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numwrap</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getError">
+<code class="descname">getError</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value of the parameter error.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numwrap</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFit">
+<code class="descname">getFit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value of the fit flag.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFlag">
+<code class="descname">getFlag</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFlag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value of the flag.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFlagValue">
+<code class="descname">getFlagValue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFlagValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value of the flag value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
 </tr>
 </tbody>
 </table>
