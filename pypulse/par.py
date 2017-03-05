@@ -24,6 +24,70 @@ PC_TO_M = 3.086e16
 MAS_TO_RAD = np.pi/(180*60*60*1000)
 YR_TO_S = 3.154e7
 
+
+class Parameter:
+    def __init__(self,name,value=None,fit=None,error=None,flag=None,flagvalue=None,numwrap=d.Decimal):
+        if name[0] == "#":
+            return None #?
+        self.numwrap = numwrap
+        # Initialize all values just in case
+        self.name = name
+        self.value = value
+        self.fit = fit
+        self.error = error
+        self.flag = flag
+        self.flagvalue = flagvalue
+        if value is None: #parse all arguments
+            self.parstring = name
+            splitstring = self.parstring.strip().split()
+            if len(splitstring) == 0:
+                return None #?
+            self.name = splitstring[0]
+                
+
+            if flagre.match(splitstring[1][:2]) and len(splitstring)>=4: #flag present
+                self.flag = splitstring[1]
+                self.flagvalue = splitstring[2]
+                self.value = numwrap(splitstring[3])
+                if len(splitstring) >= 5:                                    
+                    self.error = numwrap(splitstring[-1])
+                    if len(splitstring) == 6:
+                        self.fit = int(splitstring[4])
+            else: #no flag present
+                if numre.match(splitstring[1]):
+                    self.value = numwrap(splitstring[1].replace('D','e'))
+                elif splitstring[1].isdigit():
+                    self.value = int(splitstring[1])
+                elif splitstring[1][1:].isdigit() and (splitstring[1][0] == "+" or splitstring[1][0] == "-"):
+                    self.value = int(splitstring[1])
+                else:
+                    self.value = splitstring[1]
+
+                if len(splitstring) == 3 or len(splitstring) == 4:
+                    if numre.match(splitstring[-1]):
+                        self.error = numwrap(splitstring[-1].replace('D','e'))
+                    elif splitstring[1].isdigit():
+                        self.error = int(splitstring[-1])
+                    elif splitstring[1][1:].isdigit() and (splitstring[1][0] == "+" or splitstring[1][0] == "-"):
+                        self.error = int(splitstring[-1])
+                    else:
+                        self.error = splitstring[-1]
+                    if len(splitstring) == 3:
+                        self.fit = int(splitstring[2])
+
+    def getName(self):
+        return self.name
+    def getValue(self):
+        return self.value
+    def getFit(self):
+        return self.fit
+    def getError(self):
+        return self.error
+    def getFlag(self):
+        return self.flag
+    def getFlagValue(self):
+        return self.flagvalue
+
 #numwrap could be float
 class Par:
     def __init__(self,filename,numwrap=d.Decimal):
@@ -37,45 +101,13 @@ class Par:
             return None
 
         self.numwrap = numwrap
-        self.paramlist = list()
-        self.parameters = dict()
-        self.errors = dict()
+        self.paramlist = list() #each unique parameter
+        self.paramnames = list() #the names of each parameter
         for line in lines:
-            splitline = line.strip().split()
-            if len(splitline) <= 1:
-                continue
-            if splitline[0][0] == "#":
-                continue
-            self.paramlist.append(splitline[0])
-
-            if flagre.match(splitline[1][:2]) and len(splitline)>=4:
-                key = splitline[2]
-                value = numwrap(splitline[3])
-                self.parameters[(splitline[0],key)] = value
-                if len(splitline) == 6:
-                    error = numwrap(splitline[-1])
-                    self.errors[(splitline[0],key)] = error
-            else:
-                if numre.match(splitline[1]):
-                    value = numwrap(splitline[1].replace('D','e'))
-                elif splitline[1].isdigit():
-                    value = int(splitline[1])
-                elif splitline[1][1:].isdigit() and (splitline[1][0] == "+" or splitline[1][0] == "-"):
-                    value = int(splitline[1])
-                else:
-                    value = splitline[1]
-
-                if len(splitline) == 3 or len(splitline) == 4:
-                    if numre.match(splitline[-1]):
-                        error = numwrap(splitline[-1].replace('D','e'))
-                    elif splitline[1].isdigit():
-                        error = int(splitline[-1])
-                    elif splitline[1][1:].isdigit() and (splitline[1][0] == "+" or splitline[1][0] == "-"):
-                        error = int(splitline[-1])
-                    else:
-                        error = splitline[-1]
-                    self.errors[splitline[0]] = error
-                self.parameters[splitline[0]] = value
+            p = Parameter(line)
+            self.paramlist.append(p)
+            self.paramnames.append(p.getName())
+        self.paramnames = np.array(self.paramnames,dtype=np.str)
         if type(filename) == str:                
             FILE.close()
 
@@ -94,38 +126,38 @@ class Par:
 
 
 
-
+    def getInd(self,tag):
+        return np.where(self.paramnames==tag)[0]
     def get(self,tag,flag=None,error=False):
-        if flag:
-            tag = (tag,flag)
-        if error:
-            if tag in self.errors:
-                return self.errors[tag]
-            return None
-        if tag in self.parameters:
-            return self.parameters[tag]
+        if tag in self.paramnames:
+            ind = self.getInd(tag)
+            if error:
+                return self.paramlist[ind].getError()
+            if flag:
+                return self.paramlist[ind].getFlagValue()
+            return self.paramlist[ind].getValue()
         return None
     def getPeriod(self):
-        if 'P0' in self.parameters:
-            return self.parameters['P0']
-        if 'F0' in self.parameters:
-            F0 = self.parameters['F0']
-        elif 'F' in self.parameters:
-            F0 = self.parameters['F']
-        elif 'IF0' in self.parameters:
-            F0 = (self.parameters['IF0'] + self.parameters['FF0'])/self.numwrap(1000.0)
+        if 'P0' in self.paramnames:
+            return self.get('P0')
+        if 'F0' in self.paramnames:
+            F0 = self.get('F0')
+        elif 'F' in self.paramnames:
+            F0 = self.get('F')
+        elif 'IF0' in self.paramnames:
+            F0 = (self.get('IF0') + self.get('FF0'))/self.numwrap(1000.0)
         return self.numwrap(1.0)/F0
     def getPeriodDot(self,shklovskii=False):
-        if 'P1' in self.parameters:
-            Pdot = self.parameters['P1']
-        elif 'F1' in self.parameters:
-            Pdot = self.numwrap(-1.0)*self.parameters['F1'] / (self.parameters['F0']**2)
+        if 'P1' in self.paramnames:
+            Pdot = self.get('P1')
+        elif 'F1' in self.paramnames:
+            Pdot = self.numwrap(-1.0)*self.get('F1') / (self.get('F0')**2)
         else:
             return None
-        keys = self.parameters.keys()
+
         if shklovskii: #Correct for the shklovskii effect
             PM = self.getPM()
-            if PM is None or "PX" not in keys:
+            if PM is None or "PX" not in self.paramnames:
                 return Pdot
 
             P = self.getPeriod() #s
@@ -148,7 +180,7 @@ class Par:
         
             
     def getPM(self):
-        keys = self.parameters.keys()
+        keys = self.paramnames
         PM = None
         if "PMRA" in keys and "PMDEC" in keys:
             PM = np.sqrt(self.get("PMRA")**2 + self.get("PMDEC")**2) #mas/yr
@@ -168,7 +200,7 @@ class Par:
     def getDM(self):
         return self.get('DM')
     def getDMX(self,full_output=False):
-        keys = self.parameters.keys()
+        keys = self.paramnames
         Ncomponents = 0
         for key in keys:
             if key[0:4] == 'DMX_':
@@ -226,10 +258,10 @@ class Par:
         return f
 
     def getName(self):
-        if "PSR" in self.parameters:
-            return self.parameters["PSR"]
-        elif "PSRJ" in self.parameters:
-            return self.parameters["PSRJ"]
+        if "PSR" in self.paramnames:
+            return self.get("PSR")
+        elif "PSRJ" in self.paramnames:
+            return self.get("PSRJ")
         return None
 
     def getTspan(self,years=False):
