@@ -14,7 +14,10 @@ from scipy.signal import fftconvolve,correlate
 import matplotlib.pyplot as plt
 
 from multiprocessing import Process, Pipe
-from itertools import izip
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 
 
 
