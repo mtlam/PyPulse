@@ -63,7 +63,7 @@ class Parameter:
                         self.error = int(splitstring[-1])
                     else:
                         self.error = splitstring[-1]
-                    if len(splitstring) == 3:
+                    if len(splitstring) == 3 and not numre.match(splitstring[2]):
                         self.fit = int(splitstring[2])
 
     def getName(self):
