@@ -127,7 +127,7 @@ class Par:
 
 
     def getInd(self,tag):
-        return np.where(self.paramnames==tag)[0]
+        return np.where(self.paramnames==tag)[0][0]
     def get(self,tag,flag=None,error=False):
         if tag in self.paramnames:
             ind = self.getInd(tag)
