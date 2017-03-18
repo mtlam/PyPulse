@@ -35,8 +35,9 @@ class Parameter:
                 return None #?
             self.name = splitstring[0]
                 
-
-            if flagre.match(splitstring[1][:2]) and len(splitstring)>=4: #flag present
+            if len(splitstring) == 1: # sometimes true in PSRFITS PSREPHEM table
+                return
+            elif flagre.match(splitstring[1][:2]) and len(splitstring)>=4: #flag present
                 self.flag = splitstring[1]
                 self.flagvalue = splitstring[2]
                 self.value = numwrap(splitstring[3])
@@ -132,10 +133,15 @@ class Par:
         if tag in self.paramnames:
             ind = self.getInd(tag)
             if error:
-                return self.paramlist[ind].getError()
-            if flag:
-                return self.paramlist[ind].getFlagValue()
-            return self.paramlist[ind].getValue()
+                retval = self.paramlist[ind].getError()
+            elif flag:
+                retval = self.paramlist[ind].getFlagValue()
+            else:
+                retval = self.paramlist[ind].getValue()
+            try:
+                return self.numwrap(retval)
+            except TypeError:
+                return retval
         return None
     def getPeriod(self):
         if 'P0' in self.paramnames:
