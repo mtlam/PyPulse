@@ -1610,15 +1610,21 @@ class Archive:
     def getTbin(self,numwrap=float):
         """Returns the time per bin"""
         return numwrap(self.getPeriod()) / numwrap(self.getNbin())
-    def getDM(self):
+    def getDM(self,numwrap=float):
         """Returns the data header DM"""
-        return self.subintheader['DM']
+        if 'DM' in self.subintheader:
+            return numwrap(self.subintheader['DM'])
+        elif 'DM' in self.header:
+            return numwrap(self.header['DM'])
+        elif 'CHAN_DM' in self.header:
+            return numwrap(self.header['CHAN_DM'])
         #if self.params is None:
         #    return
         #return self.params.getDM()
-    def getRM(self):
+    def getRM(self,numwrap=float):
         """Returns the data header RM"""
-        return self.subintheader['RM']
+        if 'RM' in self.subintheader.keys():
+            return numwrap(self.subintheader['RM'])
     def getCoords(self,string=False,parse=False):
         """Returns the coordinate info in the header"""
         if string:
