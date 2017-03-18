@@ -100,6 +100,8 @@ class Par:
         self.paramlist = list() #each unique parameter
         self.paramnames = list() #the names of each parameter
         for line in lines:
+            if len(line) == 0:
+                continue
             p = Parameter(line)
             self.paramlist.append(p)
             self.paramnames.append(p.getName())
