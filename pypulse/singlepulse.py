@@ -255,7 +255,10 @@ class SinglePulse:
                     plt.show()
                     raise SystemExit
             return get_toa(template,self.data,1)
-        return get_toa(template,self.data,self.getOffpulseNoise())
+        try:
+            return get_toa(template,self.data,self.getOffpulseNoise()) #occasional failure at very low S/N
+        except:
+            return None
 
     #define this so a positive shift is forward
     # Implement shifts of mpw,opw?
