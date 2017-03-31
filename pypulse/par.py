@@ -142,7 +142,7 @@ class Par:
                 retval = self.paramlist[ind].getValue()
             try:
                 return self.numwrap(retval)
-            except TypeError:
+            except (TypeError, d.InvalidOperation):
                 return retval
         return None
     def getPeriod(self):
