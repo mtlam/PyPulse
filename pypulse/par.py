@@ -130,20 +130,25 @@ class Par:
 
 
     def getInd(self,tag):
-        return np.where(self.paramnames==tag)[0][0]
-    def get(self,tag,flag=None,error=False):
+        return np.where(self.paramnames==tag)[0]#[0]
+    def get(self,tag,flag=False,error=False):
         if tag in self.paramnames:
             ind = self.getInd(tag)
-            if error:
-                retval = self.paramlist[ind].getError()
-            elif flag:
-                retval = self.paramlist[ind].getFlagValue()
-            else:
-                retval = self.paramlist[ind].getValue()
-            try:
-                return self.numwrap(retval)
-            except (TypeError, d.InvalidOperation):
-                return retval
+            retval = []
+            for i in ind:
+                if error:
+                    val = self.paramlist[i].getError()
+                elif flag:
+                    val = self.paramlist[i].getFlagValue()
+                else:
+                    val = self.paramlist[i].getValue()
+                try:
+                    retval.append(self.numwrap(val))
+                except (TypeError, d.InvalidOperation):
+                    retval.append(val)
+            if len(retval) == 1:
+                return retval[0]
+            return np.array(retval)
         return None
     def getPeriod(self):
         if 'P0' in self.paramnames:
