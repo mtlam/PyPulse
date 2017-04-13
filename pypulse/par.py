@@ -18,8 +18,6 @@ YR_TO_S = 3.154e7
 
 class Parameter:
     def __init__(self,name,value=None,fit=None,error=None,flag=None,flagvalue=None,numwrap=d.Decimal):
-        if name[0] == "#":
-            return None #?
         self.numwrap = numwrap
         # Initialize all values just in case
         self.name = name
@@ -30,6 +28,10 @@ class Parameter:
         self.flagvalue = flagvalue
         if value is None: #parse all arguments
             self.parstring = name
+            if name[0] == "#": # this is a comment
+                self.name = "#"
+                self.value = name[1:]
+                return
             splitstring = self.parstring.strip().split()
             if len(splitstring) == 0:
                 return None #?
@@ -100,7 +102,7 @@ class Par:
         self.paramlist = list() #each unique parameter
         self.paramnames = list() #the names of each parameter
         for line in lines:
-            if len(line) == 0 or line[0] == "#":
+            if len(line) == 0:# or line[0] == "#":
                 continue
             p = Parameter(line)
             self.paramlist.append(p)
