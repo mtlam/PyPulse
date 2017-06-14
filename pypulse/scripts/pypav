@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+import argparse
+import sys
+from pypulse.archive import Archive
+
+
+
+parser = argparse.ArgumentParser(description='View data in a PSRCHIVE-like pav plot')
+
+parser.add_argument('-D',action='store_true',
+                    help='Plot a single profile (chan 0, poln 0, subint 0 by default)')
+parser.add_argument('-G',action='store_true',
+                    help='Plot an image of amplitude against frequency & phase')
+parser.add_argument('-Y',action='store_true',
+                    help='Plot colour map of sub-integrations against pulse phase')
+parser.add_argument('--waterfall',action='store_true',
+                    help='Plot waterfall map')
+
+parser.add_argument('-d',action='store_true',
+                    help='Dedisperse all channels')
+parser.add_argument('-F',action='store_true',
+                    help='Fscrunch all frequency channels')
+parser.add_argument('-T',action='store_true',
+                    help='Tscrunch all integrations')
+parser.add_argument('-p',action='store_true',
+                    help='Add all polarizations together')
+
+
+
+parser.add_argument("filename",
+                    help='Filename required')
+
+
+args = parser.parse_args()
+print args
+
+ar = Archive(args.filename,prepare=False)
+# Pre-processing
+if args.p:
+    ar.pscrunch()
+if args.D or args.d:
+    ar.dedisperse()
+if args.T:
+    ar.tscrunch()
+if args.F:
+    ar.fscrunch()
+
+# Plotting
+if args.D:
+    ar.plot()
+elif args.G:
+    ar.pavplot() #need to set mode 'GTpd' or otherwise?
+elif args.Y:
+    ar.pavplot()
+elif args.waterfall:
+    ar.waterfall()
+
+
