@@ -1,0 +1,92 @@
+#! /usr/bin/env python
+
+'''
+Michael Lam
+Last Updated: 9/12/2014
+
+Converts PSRFITS data arrays to npy arrays
+'''
+
+from pypulse.archive import Archive
+from optparse import OptionParser
+import sys
+import subprocess
+import gc
+
+
+cmdline = OptionParser(usage="usage: %prog [options] file1 (file2 ...)")
+#cmdline.add_option("-m", dest="overwrite",
+#  help="Overwrite input files", action="store_true", default=False)
+
+cmdline.add_option("-T",dest="tscrunch",
+                   help="Sum/scrunch over all times",action="store_true",default=False)
+#default=None) #add in factor here?
+
+cmdline.add_option("-F",dest="fscrunch",
+                   help="Sum/scrunch over all frequencies",action="store_true",default=False)
+#default=None) #add in factor here?
+
+cmdline.add_option("-p",dest="pscrunch",
+                   help="Sum/scrunch over all polarizations",action="store_true",default=False)
+#default=None) #add in factor here?
+
+cmdline.add_option("-v",dest="verbose",
+                   help="Verbose",action="store_true",default=False)
+#default=None) #add in factor here?
+
+
+cmdline.add_option("--header",dest="writeheader",
+                   help="Write out header in format filename.header.txt",action="store_true",default=False)
+#default=None) #add in factor here?
+
+cmdline.add_option("--ascii",dest="ascii",
+                   help="Write out to ascii txt file instead of npy",action="store_true",default=False)
+
+
+cmdline.add_option("-e", dest="ext",
+                   help="Extension to append to filename (default=npy)", action="store",
+                   type="string", default="npy")
+#cmdline.add_option("-n", "--nchan", dest="nchan",
+#  help="Original number of PFB channels in file (default=4)",
+#  action="store", type="int", default=4)
+
+(opt,args) = cmdline.parse_args()
+
+
+if (len(args)==0):
+    cmdline.print_help()
+    sys.exit()
+
+
+
+
+
+
+for fname in args:
+    if opt.writeheader:
+        p = subprocess.call("python fitsheader_to_txt %s"%fname,shell=True)
+
+
+    ar = Archive(fname,prepare=False,verbose=opt.verbose)
+    ar.dedisperse()
+
+
+    if opt.tscrunch:
+        if opt.verbose:
+            print "tscrunching"
+        ar.tscrunch()
+    if opt.pscrunch:
+        if opt.verbose:
+            print "pscrunching"
+        ar.pscrunch()
+    if opt.fscrunch:
+        if opt.verbose:
+            print "fscrunching"
+        ar.fscrunch()
+
+
+    ar.saveData(ext=opt.ext,ascii=opt.ascii)
+    ar.gc()
+
+
+# Error: if already pscrunched and do not select pscrunch, saveData will fail
