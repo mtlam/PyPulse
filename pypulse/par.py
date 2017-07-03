@@ -146,7 +146,7 @@ class Par:
                     val = self.paramlist[i].getValue()
                 try:
                     retval.append(self.numwrap(val))
-                except (TypeError, d.InvalidOperation):
+                except (ValueError, TypeError, d.InvalidOperation):
                     retval.append(val)
             if len(retval) == 1:
                 return retval[0]
