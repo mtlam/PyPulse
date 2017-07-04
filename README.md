@@ -82,4 +82,6 @@ Usage:
 Citations
 ---------
 
-See [http://ascl.net/1706.011](http://ascl.net/1706.011).
+See [http://ascl.net/1706.011](http://ascl.net/1706.011). You can cite as:
+
+Lam, M. T. 2017, PyPulse, Astrophysics Source Code Library, record ascl:1706.011
