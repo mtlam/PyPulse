@@ -77,3 +77,9 @@ Usage:
     t = Tim(FILENAME) #automatically parses each TOA with the TOA() class
     print t.toas[0].getMJD() #prints the MJD of the first TOA as a python Decimal
     print t.toas[0].get('snr') #prints the value of the -snr flag of the TOA if it is available
+
+
+Citations
+---------
+
+See [http://ascl.net/1706.011](http://ascl.net/1706.011).
