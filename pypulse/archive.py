@@ -1316,10 +1316,10 @@ class Archive:
             if ax is None:
                 fig = plt.figure()
                 ax = fig.add_subplot(111)
+            cmap = plt.cm.afmhot
+            cmap.set_bad(color='k',alpha=1.0)
             if shape[0] == 1 and shape[1] == 1: #fix this to match mode
                 Fedges = self.getAxis('F',edges=True) #is this true?
-                cmap = plt.cm.afmhot
-                cmap.set_bad(color='k',alpha=1.0)
                 u.imshow(self.getData(),ax=ax,extent=[0,1,Fedges[0],Fedges[-1]],cmap=cmap)
                 ax.set_xlabel("Pulse Phase")
                 ax.set_ylabel("Frequency (MHz)")
@@ -1331,8 +1331,6 @@ class Archive:
                     plt.show()
             if shape[2] == 1 and shape[1] == 1: #fix this to match mode
                 Tedges = self.getAxis('T',edges=True) #is this true?
-                cmap = plt.cm.afmhot
-                cmap.set_bad(color='k',alpha=1.0)
                 u.imshow(self.getData(),ax=ax,extent=[0,1,Tedges[0],Tedges[-1]],cmap=cmap)
                 ax.set_xlabel("Pulse Phase")
                 ax.set_ylabel("Time") #units
