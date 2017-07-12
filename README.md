@@ -84,4 +84,4 @@ Citations
 
 See [http://ascl.net/1706.011](http://ascl.net/1706.011). You can cite as:
 
-Lam, M. T., 2017, PyPulse, Astrophysics Source Code Library, record ascl:1706.011
+[Lam, M. T., 2017, PyPulse, Astrophysics Source Code Library, record ascl:1706.011](http://adsabs.harvard.edu/abs/2017ascl.soft06011L)
