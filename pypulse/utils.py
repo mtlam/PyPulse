@@ -754,7 +754,7 @@ def parmap(f,X):
 ### Optimizations of JMC's code
 ### ==================================================
 
-def shiftit(y, shift):
+def shiftit_old(y, shift):
     """
     shifts array y by amount shift (in sample numbers) 
     uses shift theorem and FFT
@@ -779,6 +779,16 @@ def shiftit(y, shift):
     workifft = np.fft.ifft(work)
     return workifft.real
 
+def shiftit(y, shift):
+    '''
+    Speed-ups via Paul Baker
+    '''
+    N = len(y)
+    yfft = np.fft.rfft(y)
+    fs = np.fft.rfftfreq(N)#, d=dt)
+    phase = 1j*2*np.pi*fs*shift  #reversed from Paul's code so that this matches the previous convention
+    yfft_sh = yfft * np.exp(phase)
+    return np.fft.irfft(yfft_sh)
 
 
 
