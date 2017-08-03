@@ -23,7 +23,7 @@ setup(
     zip_safe=False,
     license='GPLv3',
     description='A python package for handling and analyzing PSRFITS files.',
-    install_requires=['numpy', 'scipy'],
+    install_requires=['numpy', 'scipy', 'astropy'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
