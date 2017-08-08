@@ -85,8 +85,10 @@ class TOA:
         return value
 
     # Use these with extreme caution!
-    def comment(self):
+    def comment(self,cut=None):
         self.filename = "C "+self.filename
+        if cut is not None:
+            self.add("cut",cut)            
     def setFilename(self,filename):
         self.filename = filename
     def setFreq(self,freq):
