@@ -1,13 +1,13 @@
 Development Leads
 =================
 
-Michael Lam https://github.com/mtlam
+* Michael Lam https://github.com/mtlam
 
 Contributors
 ============
 
-Paul Baker
-James Cordes
-Steve Hawkins
-Jeffrey Hazboun
+* Paul Baker
+* James Cordes
+* Steve Hawkins
+* Jeffrey Hazboun
 
