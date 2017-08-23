@@ -7,7 +7,9 @@ Contributors
 ============
 
 * Paul Baker
+* Shami Chatterjee
 * James Cordes
 * Steve Hawkins
 * Jeffrey Hazboun
+* Glenn Jones
 
