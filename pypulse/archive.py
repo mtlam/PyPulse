@@ -28,6 +28,7 @@ import matplotlib.pyplot as plt
 import time
 import pypulse.utils as u
 import pypulse.singlepulse as SP
+import pypulse.dynamicspectrum as DS
 import pypulse.par as par
 Par = par.Par
 import pypulse.calibrator as calib
@@ -221,7 +222,8 @@ class Archive:
         else:
             #DAT_WTS /= np.max(DAT_WTS) #close???
             #DAT_WTS *= 50
-            self.weights = DAT_WTS
+            self.weights = DAT_WTS 
+            self.weight_sum = np.sum(DAT_WTS)
 
 
         if self.lowmem: #Replace the data arrays with memmaps to reduce memory load
@@ -1108,7 +1110,7 @@ class Archive:
             if np.ndim(self.freq) == 1:
                 return self.freq
             if self.getNchan() == len(self.freq[0]):
-                return self.freq[0] #return self.getSubintinfo('DAT_FREQ')[0]  ### This block is a temporary replacement
+                return self.freq[0] #return self.getSubintinfo('DATFREQ')[0]  ### This block is a temporary replacement
 
             nchan = self.getNchan()
             fc = self.getCenterFrequency(weighted=wcfreq)
@@ -1221,16 +1223,28 @@ class Archive:
                 wrapfunc = lambda x: np.transpose(x) #do not flipud?
             else:
                 wrapfunc = lambda x: np.transpose(x)
-            if template is not None and (mpw is not None or windowsize is not None):
 
+            if template is not None:
+                if isinstance(template,SP.SinglePulse):
+                    sptemp = template
+                elif isinstance(template,Archive): #use windowsize set to the default?
+                    sptemp = SP.SinglePulse(u.center_max(u.normalize(template.getData(),simple=True)),windowsize=template.getNbin()/8)
+                elif type(template) == str:
+                    artemp = Archive(template,verbose=False)
+                    sptemp = SP.SinglePulse(u.center_max(u.normalize(artemp.getData(),simple=True)),windowsize=template.getNbin()/8)
+
+
+                if mpw is not None: #best way to handle this now?
+                    sptemp.mpw = mpw 
+                elif windowsize is not None: #redo the windowsize
+                    sptemp = SP.SinglePulse(sptemp.data,windowsize=windowsize)
+                
+        
                 gs = np.zeros((fullshape[0],fullshape[2]))
                 offs = np.zeros((fullshape[0],fullshape[2]))
                 sig_gs = np.zeros((fullshape[0],fullshape[2]))
                 I = range(fullshape[0])
                 J = range(fullshape[2])
-
-
-                sptemp = SP.SinglePulse(template,mpw=mpw,windowsize=windowsize) #windowsize will overwrite mpw
 
                 if snr:
                     ind = -2
@@ -1245,29 +1259,34 @@ class Archive:
                     for i in K:
                         sp = SP.SinglePulse(data[i],opw=sptemp.opw,align=align)
                         baseline = sp.getOffpulseNoise(mean=True) #get mean value of offpulse
-                        spfit = sp.fitPulse(template)
+                        spfit = sp.fitPulse(sptemp.data)
                         if spfit is not None:
                             gs[i] = spfit[ind] #bhat
                             offs[i] = baseline
                             sig_gs[i] = spfit[4]
-                    return wrapfunc(gs),wrapfunc(baseline),wrapfunc(sig_gs)
-                for i in I:
-                    if verbose:
-                        print("i,%i"%(i,I[-1]))
-                    for j in J:
-                        sp = SP.SinglePulse(data[i,j],opw=sptemp.opw,align=align)
-                        baseline = sp.getOffpulseNoise(mean=True) #get mean value of offpulse
-                        spfit = sp.fitPulse(template)
-#                        if spfit==None:
-#                            print i,j
-#                            plot(self.data[i,j])
-#                            show()
-#                            raise SystemExit
-                        if spfit!=None:
-                            gs[i,j] = spfit[ind] #bhat
-                            offs[i,j] = baseline
-                            sig_gs[i,j] = spfit[4]  
-                return wrapfunc(gs),wrapfunc(offs),wrapfunc(sig_gs)
+                    gs,offs,sig_gs = wrapfunc(gs),wrapfunc(baseline),wrapfunc(sig_gs)
+                else:
+                    for i in I:
+                        if verbose:
+                            print("i,%i"%(i,I[-1]))
+                        for j in J:
+                            sp = SP.SinglePulse(data[i,j],opw=sptemp.opw,align=align)
+                            baseline = sp.getOffpulseNoise(mean=True) #get mean value of offpulse
+                            spfit = sp.fitPulse(sptemp.data)
+    #                        if spfit==None:
+    #                            print i,j
+    #                            plot(self.data[i,j])
+    #                            show()
+    #                            raise SystemExit
+                            if spfit!=None:
+                                gs[i,j] = spfit[ind] #bhat
+                                offs[i,j] = baseline
+                                sig_gs[i,j] = spfit[4]  
+                    gs,offs,sig_gs = wrapfunc(gs),wrapfunc(offs),wrapfunc(sig_gs)
+                #return wrapfunc(gs),wrapfunc(offs),wrapfunc(sig_gs)
+                Fedges = self.getAxis('F',edges=True)
+                Tedges = self.getAxis('T',edges=True)
+                return DS.DynamicSpectrum(gs,offs,sig_gs,F=Fedges,T=Tedges)
                 
             #kind of hard wired
             if window is None:
