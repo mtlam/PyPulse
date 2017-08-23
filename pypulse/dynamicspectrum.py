@@ -34,7 +34,7 @@ class DynamicSpectrum:
         else:            
             self.data = data
         #check if 1d array
-        if len(np.shape(self.data))>=1: #why==?????
+        if len(self.shape())>=1: #why==?????
 
             self.offdata = offdata
             self.errdata = errdata
@@ -121,14 +121,29 @@ class DynamicSpectrum:
         self.baseline_removed = True
         return self
         
+    def stretch(self,nuref,index=22.0/5):
+        # Modified from code by Glenn Jones, https://github.com/gitj/dynISM/blob/master/dynspec.py
+        #fc = np.sqrt(f.max()*f.min())
+        newFcenter = np.cumsum((self.Fcenter/nuref)**alpha)
+        nfout = np.floor(np.max(newFecenter))
+        rds = np.zeros((ds.shape[0],nfout))
+        x = np.arange(nfout)
+        for k in range(ds.shape[0]):
+            rds[k,:] = np.interp(x,f2,ds[k,:])
+        fout = np.interp(x,f2,f)
+        return rds,fc,fout
+
+
+
+
     def acf2d(self,remove_baseline=True,speed='fast',mode='full'):
         """
         Calculate the two-dimensional auto-correlation function of the dynamic spectrum
         """
         data = self.getData(remove_baseline=remove_baseline)
 
-        # Have if statement to apply mask: set ones in the norm to 0.0
 
+        # Have if statement to apply mask: set ones in the norm to 0.0
         ones = np.ones(np.shape(data))
         norm = fftconvolve(ones,np.flipud(np.fliplr(ones)),mode=mode)
         acf = fftconvolve(data,np.flipud(np.fliplr(data)),mode=mode)/norm
@@ -143,6 +158,7 @@ class DynamicSpectrum:
 
         self.acf = acf
         return acf
+
             
             
 
@@ -397,7 +413,7 @@ class DynamicSpectrum:
                 self.offdata = None
             else:
                 if self.offdata is None and ds.offdata is not None:
-                    self.offdata = np.zeros(np.shape(self.data))
+                    self.offdata = np.zeros(self.shape())
                 elif self.offdata is not None and ds.offdata is None:
                     ds.offdata = np.zeros(np.shape(ds.data))
                 self.offdata = np.hstack((self.offdata,ds.offdata))
@@ -405,7 +421,7 @@ class DynamicSpectrum:
                 self.errdata = None
             else:
                 if self.errdata is None and ds.errdata is not None:
-                    self.errdata = np.zeros(np.shape(self.data))
+                    self.errdata = np.zeros(self.shape())
                 elif self.errdata is not None and ds.errdata is None:
                     ds.errdata = np.zeros(np.shape(ds.data))
                 self.errdata = np.hstack((self.errdata,ds.errdata))
@@ -413,7 +429,7 @@ class DynamicSpectrum:
                 self.mask = None
             else:
                 if self.mask is None and ds.mask is not None:
-                    self.mask = np.zeros(np.shape(self.data))
+                    self.mask = np.zeros(self.shape())
                 elif self.mask is not None and ds.mask is None:
                     ds.mask = np.zeros(np.shape(ds.data))
                 self.mask = np.hstack((self.mask,ds.mask))
@@ -421,9 +437,13 @@ class DynamicSpectrum:
             #Regenerate Tcenter?
             #Add extras together?
 
-
+            
+    def shape(self):
+        """Return the current shape of the data array"""
+        return np.shape(self.data)
 
     def getData(self,remove_baseline=True):
+        """Returns the data array"""
         if remove_baseline:
             self.remove_baseline()
         return self.data
