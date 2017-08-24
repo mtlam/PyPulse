@@ -47,13 +47,13 @@ class DynamicSpectrum:
             self.dT = None
             if F is not None:
                 d = np.diff(self.F)
-                self.Fcenter = d/2.0 + self.F[:-1]
+                self.Fcenter = d/2.0 + self.F[:-1] #is this correct?
                 self.dF = np.mean(d)
             if T is not None:
                 d = np.diff(self.T)
                 self.Tcenter = d/2.0 + self.T[:-1]
                 self.dT = np.mean(d)
-            if extras is None:
+            if extras is None:   
                 self.extras = dict()
             else:
                 self.extras = extras
@@ -121,17 +121,36 @@ class DynamicSpectrum:
         self.baseline_removed = True
         return self
         
-    def stretch(self,nuref,index=22.0/5):
+    def stretch(self,nuref=None,index=(-22.0/5),save=True):
         # Modified from code by Glenn Jones, https://github.com/gitj/dynISM/blob/master/dynspec.py
-        #fc = np.sqrt(f.max()*f.min())
-        newFcenter = np.cumsum((self.Fcenter/nuref)**alpha)
-        nfout = np.floor(np.max(newFecenter))
-        rds = np.zeros((ds.shape[0],nfout))
+        F = self.F
+        if nuref is None:
+            nuref = np.sqrt(np.max(F)*np.min(F))
+        
+        f2 = np.cumsum((F/nuref)**index) #stretched axis (non-interpolated)
+        nfout = int(np.floor(np.max(f2))) #number of out frequencies
+        retval = np.zeros((nfout,self.shape()[1]))
         x = np.arange(nfout)
-        for k in range(ds.shape[0]):
-            rds[k,:] = np.interp(x,f2,ds[k,:])
-        fout = np.interp(x,f2,f)
-        return rds,fc,fout
+        data = self.getData()
+        for i in range(self.shape()[1]): #iterate over each subintegration
+            retval[:,i] = np.interp(x,f2,data[:,i])
+
+
+
+        fout = np.interp(x,f2,F) #stretched axis (interpolated)
+        if save:
+            self.data = retval
+            self.offdata = None #can do the same thing as above
+            self.errdata = None #need to figure this out
+            self.mask = None#need to figure this out
+            self.F = fout
+
+            # this is not correct
+            d = np.diff(self.F)
+            self.Fcenter = d/2.0 + self.F[:-1] #is this correct?
+            self.dF = np.mean(d)
+
+        return retval,nuref,fout
 
 
 
@@ -295,14 +314,14 @@ class DynamicSpectrum:
         if err:
             spec = self.errdata
         else:
-            spec = self.data
-        T=self.T
+            spec = self.getData()
+        T = self.T
         if self.T is None:
             if self.Tcenter is None:
                 T = np.arange(len(spec))
             else:
                 T = self.Tcenter
-        F=self.F
+        F = self.F
         if self.F is None:
             if self.Fcenter is None:
                 F = np.arange(len(spec[0]))
