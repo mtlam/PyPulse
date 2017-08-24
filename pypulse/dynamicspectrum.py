@@ -228,7 +228,7 @@ class DynamicSpectrum:
             cslice = self.acf[centerrind,centercind:]
             maxc = np.where(cslice<=MIN)[0][0]
 
-        plotacf = self.acf[centerrind-plotbound*maxr+1:centerrind+plotbound*maxr,centercind-plotbound*maxc+1:centercind+plotbound*maxc+1]
+        plotacf = self.acf[int(centerrind-plotbound*maxr+1):int(centerrind+plotbound*maxr),int(centercind-plotbound*maxc+1):int(centercind+plotbound*maxc+1)]
 
         
         params, pcov = ffit.fitgaussian2d(plotacf) #pcov already takes into account s_sq issue
@@ -388,12 +388,19 @@ class DynamicSpectrum:
             exec("self.%s=x['%s']"%(key,key))
         exec("self.extras = dict(%s)"%self.extras)
         #Convert array(None) to None
-        if self.offdata is not None and len(np.shape(self.offdata))==0:
+        if self.offdata is not None and len(np.shape(self.offdata)) == 0:
             self.offdata = None
-        if self.errdata is not None and len(np.shape(self.errdata))==0:
+        if self.errdata is not None and len(np.shape(self.errdata)) == 0:
             self.errdata = None
-        if self.mask is not None and len(np.shape(self.mask))==0:
+        if self.mask is not None and len(np.shape(self.mask)) == 0:
             self.mask = None
+        if self.acf is not None and len(np.shape(self.acf)) == 0:
+            self.acf = None
+        if self.ss is not None and len(np.shape(self.ss)) == 0:
+            self.ss = None
+
+
+
 
 
         x.close()
@@ -405,7 +412,7 @@ class DynamicSpectrum:
         """
         if self.verbose:
             print("Dynamic Spectrum: Saving to file: %s" % filename)
-        np.savez(filename,data=self.data,offdata=self.offdata,errdata=self.errdata,mask=self.mask,F=self.F,T=self.T,Fcenter=self.Fcenter,Tcenter=self.Tcenter,baseline_removed=self.baseline_removed,acf=self.acf,ss=self.ss,extras=self.extras)
+        np.savez(filename,data=self.data,offdata=self.offdata,errdata=self.errdata,mask=self.mask,F=self.F,T=self.T,Fcenter=self.Fcenter,Tcenter=self.Tcenter,baseline_removed=self.baseline_removed,acf=self.acf,ss=self.ss,extras=self.extras,dT=self.dT,dF=self.dF)
         return
 
         
