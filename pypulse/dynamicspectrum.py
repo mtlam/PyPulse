@@ -215,9 +215,9 @@ class DynamicSpectrum:
             
         if simple: # Do 1D slices
             NF = len(self.F)
-            Faxis = (np.arange(-(NF-1),NF,dtype=np.float)*dF)
+            Faxis = (np.arange(-(NF-1),NF,dtype=np.float)*np.abs(dF)) #why abs?
             NT = len(self.T)
-            Taxis = (np.arange(-(NT-1),NT,dtype=np.float)*dT)[1:-1] #???
+            Taxis = (np.arange(-(NT-1),NT,dtype=np.float)*np.abs(dT))[1:-1] #???
 
 
             pout, errs = ffit.gaussianfit(Taxis[NT/2:3*NT/2],self.acf[centerrind,NT/2:3*NT/2],baseline=True)
@@ -227,6 +227,7 @@ class DynamicSpectrum:
             #except:
             #    print "dtd",pout
             #    plt.plot(Taxis,self.acf[centerrind,:])
+            #    plt.plot(Taxis,f(Taxis))
             #    plt.show()
 
             pout, errs = ffit.gaussianfit(Faxis[NF/2:3*NF/2],self.acf[NF/2:3*NF/2,centercind],baseline=True)
@@ -234,9 +235,12 @@ class DynamicSpectrum:
             #try:
             delta_nu_d = optimize.brentq(f,0,Faxis[-1])
             #except:
-            #    print "dnud",pout
-            #    plt.plot(Faxis,self.acf[:,centercind])
-            #    plt.show()
+            #print "dnud",pout,Faxis[-1],dF
+            #print Faxis
+            #raise SystemExit
+            #plt.plot(Faxis,self.acf[:,centercind])
+            #plt.plot(Faxis,f(Faxis))
+            #plt.show()
 
             return delta_t_d,delta_nu_d
 
