@@ -3,20 +3,25 @@ import scipy.optimize as optimize
 import scipy.special as special
 
 
-def funcgaussian(p,x):
+def funcgaussian(p,x,baseline=False):
+    if baseline:
+        return p[0] * np.exp(-((x-p[1])/(np.sqrt(2)*p[2]))**2) + p[3]
     return p[0] * np.exp(-((x-p[1])/(np.sqrt(2)*p[2]))**2)
-def errgaussian(p,x,y):
-    return funcgaussian(p,x) - y
-def gaussianfit(x,y):
+def errgaussian(p,x,y,baseline=False):
+    return funcgaussian(p,x,baseline=baseline) - y
+def gaussianfit(x,y,baseline=False):
     x=np.array(x)
     y=np.array(y)
     height=max(y)
     mu=np.sum(x*y)/np.sum(y)
     sigma=np.sqrt(np.abs(np.sum((x-mu)**2*y)/np.sum(y)))
-    p0=[height,mu,sigma]
-    p1, success = optimize.leastsq(errgaussian, p0[:], args=(x,y))
+    if baseline:
+        p0=[height,mu,sigma,0.0]
+    else:
+        p0=[height,mu,sigma]
+    p1, success = optimize.leastsq(errgaussian, p0[:], args=(x,y,baseline))
     #Return values are the coefficients,the residuals
-    return p1, errgaussian(p1,x,y)
+    return p1, errgaussian(p1,x,y,baseline)
 
 
 #area = np.sum(binwidths*hist)
