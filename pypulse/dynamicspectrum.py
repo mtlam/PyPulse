@@ -220,13 +220,23 @@ class DynamicSpectrum:
             Taxis = (np.arange(-(NT-1),NT,dtype=np.float)*dT)[1:-1] #???
 
 
-            pout, errs = ffit.gaussianfit(Taxis[NT/4:7*NT/4],self.acf[centerrind,NT/4:7*NT/4],baseline=True)
+            pout, errs = ffit.gaussianfit(Taxis[NT/2:3*NT/2],self.acf[centerrind,NT/2:3*NT/2],baseline=True)
             f = interpolate.interp1d(Taxis,ffit.funcgaussian(pout,Taxis,baseline=True)-(pout[3]+pout[0]/np.e))
+            #try:
             delta_t_d = optimize.brentq(f,0,Taxis[-1])
+            #except:
+            #    print "dtd",pout
+            #    plt.plot(Taxis,self.acf[centerrind,:])
+            #    plt.show()
 
-            pout, errs = ffit.gaussianfit(Faxis[NF/4:7*NF/4],self.acf[NF/4:7*NF/4,centercind],baseline=True)
+            pout, errs = ffit.gaussianfit(Faxis[NF/2:3*NF/2],self.acf[NF/2:3*NF/2,centercind],baseline=True)
             f = interpolate.interp1d(Faxis,ffit.funcgaussian(pout,Faxis,baseline=True)-(pout[3]+pout[0]/2))
+            #try:
             delta_nu_d = optimize.brentq(f,0,Faxis[-1])
+            #except:
+            #    print "dnud",pout
+            #    plt.plot(Faxis,self.acf[:,centercind])
+            #    plt.show()
 
             return delta_t_d,delta_nu_d
 
