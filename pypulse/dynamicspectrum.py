@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from scipy.signal import fftconvolve
 import scipy.optimize as optimize
+import scipy.interpolate as interpolate
 
 import sys
 if sys.version_info.major == 2:
@@ -195,7 +196,7 @@ class DynamicSpectrum:
         return ss
 
     # allow for simple 1D fitting
-    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True,full_output=False):
+    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True,full_output=False,simple=False):
         if self.acf is None:
             self.acf2d()
         if self.dT is None:
@@ -212,8 +213,27 @@ class DynamicSpectrum:
         centerrind = acfshape[0]//2
         centercind = acfshape[1]//2
             
-        # Look for the central peak in the ACF
+        if simple: # Do 1D slices
+            NF = len(self.F)
+            Faxis = (np.arange(-(NF-1),NF,dtype=np.float)*dF)
+            NT = len(self.T)
+            Taxis = (np.arange(-(NT-1),NT,dtype=np.float)*dT)[1:-1] #???
 
+
+            pout, errs = ffit.gaussianfit(Taxis[NT/4:7*NT/4],self.acf[centerrind,NT/4:7*NT/4],baseline=True)
+            f = interpolate.interp1d(Taxis,ffit.funcgaussian(pout,Taxis,baseline=True)-(pout[3]+pout[0]/np.e))
+            delta_t_d = optimize.brentq(f,0,Taxis[-1])
+
+            pout, errs = ffit.gaussianfit(Faxis[NF/4:7*NF/4],self.acf[NF/4:7*NF/4,centercind],baseline=True)
+            f = interpolate.interp1d(Faxis,ffit.funcgaussian(pout,Faxis,baseline=True)-(pout[3]+pout[0]/2))
+            delta_nu_d = optimize.brentq(f,0,Faxis[-1])
+
+            return delta_t_d,delta_nu_d
+
+
+
+
+        # Look for the central peak in the ACF
         MIN = np.min(self.acf) 
         if MIN < 0: #The min value is approximately from a gaussian distribution
             MIN = np.abs(MIN)
