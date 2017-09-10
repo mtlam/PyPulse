@@ -196,7 +196,7 @@ class DynamicSpectrum:
         return ss
 
     # allow for simple 1D fitting
-    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True,full_output=False,simple=False):
+    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True,full_output=False,simple=False,eta=0.2):
         if self.acf is None:
             self.acf2d()
         if self.dT is None:
@@ -241,7 +241,20 @@ class DynamicSpectrum:
             #plt.plot(Faxis,self.acf[:,centercind])
             #plt.plot(Faxis,f(Faxis))
             #plt.show()
+            
+            #following Glenn's code and Cordes 1986 (Space Velocities...)
+            # Errors from finite scintle effect:
+            bw = self.getBandwidth()
+            T = self.getTspan()
+            N_d = (1+eta * bw/delta_nu_d) * (1+eta*T/delta_t_d)
+            fse_nu_d = delta_nu_d/(2*np.log(2)*np.sqrt(N_d)) #log because of FWHM?
+            fse_t_d = delta_t_d/(2*np.sqrt(N_d))
 
+            err_nu_d = fse_nu_d
+            err_t_d = fse_t_d #need to add in fitting errors
+
+            if full_output:
+                return delta_t_d,err_t_d,delta_nu_d,err_nu_d
             return delta_t_d,delta_nu_d
 
 
@@ -311,6 +324,9 @@ class DynamicSpectrum:
 
         err_rot = paramerrors[5]
 
+        #finite-scintle errors
+        
+        
 
 
         if self.verbose:
@@ -512,4 +528,9 @@ class DynamicSpectrum:
         if self.acf is None:
             return self.acf2d(remove_baseline=remove_baseline)
         return self.acf
+
+    def getBandwidth(self):
+        return np.abs(self.F[-1]-self.F[0])
+    def getTspan(self):
+        return np.abs(self.T[-1]-self.T[0])
 
