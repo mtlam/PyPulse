@@ -357,7 +357,7 @@ class DynamicSpectrum:
 
 
 
-    def imshow(self,err=False,cbar=False,ax=None,show=True,border=False,ZORDER=0,cmap=cm.binary,alpha=True,cdf=True):
+    def imshow(self,err=False,cbar=False,ax=None,show=True,border=False,ZORDER=0,cmap=cm.binary,alpha=True,cdf=True,savefig=None):
         """
         Basic plotting of the dynamic spectrum
         """
@@ -421,8 +421,11 @@ class DynamicSpectrum:
         if cbar:
             plt.colorbar(cax)
         #im.set_clim(0.0001,None)
+        if savefig is not None:
+            plt.savefig(savefig)
         if show:
             plt.show()
+
 
         return ax
 
