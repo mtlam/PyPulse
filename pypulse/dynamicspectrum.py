@@ -206,9 +206,9 @@ class DynamicSpectrum:
 
         self.ss = ss
         dt = self.T[1] - self.T[0]
-        self.ssconjT = np.fft.fftshift(np.fft.fftfreq(len(ds.T),d=dt))
+        self.ssconjT = np.fft.fftshift(np.fft.fftfreq(len(self.T),d=dt))
         df = self.F[1] - self.F[0]
-        self.ssconjF = np.fft.fftshift(np.fft.fftfreq(len(ds.F),d=df))
+        self.ssconjF = np.fft.fftshift(np.fft.fftfreq(len(self.F),d=df))
         if full_output:
             return self.conjT,self.conjF,ss
         return ss
@@ -384,7 +384,7 @@ class DynamicSpectrum:
 
 
 
-    def imshow(self,err=False,cbar=False,ax=None,show=True,border=False,ZORDER=0,cmap=cm.binary,alpha=True,cdf=True,savefig=None,acf=False,ss=False,extent=None):
+    def imshow(self,err=False,cbar=False,ax=None,show=True,border=False,zorder=0,cmap=cm.binary,alpha=True,cdf=True,savefig=None,acf=False,ss=False,extent=None):
         """
         Basic plotting of the dynamic spectrum
         """
@@ -443,19 +443,19 @@ class DynamicSpectrum:
             maxT = T[-1]
             minF = F[0]
             maxF = F[-1]
-            estent = [minT,maxT,minF,maxF]
+            extent = [minT,maxT,minF,maxF]
 
 #        print inds
 #        raise SystemExit
 #        spec[inds] = np.nan
-        cax=u.imshow(spec,ax=ax,extent=extent,cmap=cmap,zorder=ZORDER)
+        cax=u.imshow(data,ax=ax,extent=extent,cmap=cmap,zorder=zorder)
 
         #border here?
         if border:# and self.extras['name']!='EFF I':
-            plt.plot([T[0],T[-1]],[F[0],F[0]],'0.50',zorder=ZORDER+0.1)
-            plt.plot([T[0],T[-1]],[F[-1],F[-1]],'0.50',zorder=ZORDER+0.1)
-            plt.plot([T[0],T[0]],[F[0],F[-1]],'0.50',zorder=ZORDER+0.1)
-            plt.plot([T[-1],T[-1]],[F[0],F[-1]],'0.50',zorder=ZORDER+0.1)
+            plt.plot([T[0],T[-1]],[F[0],F[0]],'0.50',zorder=zorder+0.1)
+            plt.plot([T[0],T[-1]],[F[-1],F[-1]],'0.50',zorder=zorder+0.1)
+            plt.plot([T[0],T[0]],[F[0],F[-1]],'0.50',zorder=zorder+0.1)
+            plt.plot([T[-1],T[-1]],[F[0],F[-1]],'0.50',zorder=zorder+0.1)
 
 
         if cbar:
