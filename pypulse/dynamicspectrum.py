@@ -50,10 +50,14 @@ class DynamicSpectrum:
                 d = np.diff(self.F)
                 self.Fcenter = d/2.0 + self.F[:-1] #is this correct?
                 self.dF = np.mean(d)
+            else:
+                self.F = np.arange(self.shape()[0])
             if T is not None:
                 d = np.diff(self.T)
                 self.Tcenter = d/2.0 + self.T[:-1]
                 self.dT = np.mean(d)
+            else:
+                self.T = np.arange(self.shape()[1])
             if extras is None:   
                 self.extras = dict()
             else:
@@ -62,7 +66,11 @@ class DynamicSpectrum:
         # Pre-define variables
         self.baseline_removed = False
         self.acf = None
+        self.acfT = None
+        self.acfF = None
         self.ss = None
+        self.ssconjT = None
+        self.ssconjF = None
 
 
     def getValue(self,f,t,df=1,dt=1,err=False,index=False):
@@ -70,7 +78,7 @@ class DynamicSpectrum:
         Returns value of dynamic spectrum
         if index==False, f,t are values to search for
         '''
-        if index or self.F is None or self.T is None:
+        if index:# or self.F is None or self.T is None:
             if err:
                 return self.errdata[f,t]
             return self.data[f,t]
@@ -156,7 +164,7 @@ class DynamicSpectrum:
 
 
 
-    def acf2d(self,remove_baseline=True,speed='fast',mode='full'):
+    def acf2d(self,remove_baseline=True,speed='fast',mode='full',full_output=False):
         """
         Calculate the two-dimensional auto-correlation function of the dynamic spectrum
         """
@@ -177,6 +185,10 @@ class DynamicSpectrum:
         acf[centerrind,centercind] = np.max(acf[centerrind-1:centerrind+2,centercind-1:centercind+2])
 
         self.acf = acf
+        self.acfT = np.shape(np.concatenate((-1*self.T[:-1][::-1],self.T[1:-1])))
+        self.acfF = np.shape(np.concatenate((-1*self.F[:-1][::-1],self.F[1:-1])))
+        if full_output:
+            return self.acfT,self.acfF,acf
         return acf
 
             
@@ -184,7 +196,7 @@ class DynamicSpectrum:
 
         #return u.acf2d(self.data,speed=speed,mode=mode) #do more here
 
-    def secondary_spectrum(self,remove_baseline=True,log=False):
+    def secondary_spectrum(self,remove_baseline=True,log=False,full_output=False):
         data = self.getData(remove_baseline=remove_baseline)
 
         ss = np.abs(np.fft.fftshift(np.fft.fft2(data)))**2
@@ -193,6 +205,12 @@ class DynamicSpectrum:
             ss = np.log10(ss)
 
         self.ss = ss
+        dt = self.T[1] - self.T[0]
+        self.ssconjT = np.fft.fftshift(np.fft.fftfreq(len(ds.T),d=dt))
+        df = self.F[1] - self.F[0]
+        self.ssconjF = np.fft.fftshift(np.fft.fftfreq(len(ds.F),d=df))
+        if full_output:
+            return self.conjT,self.conjF,ss
         return ss
 
     # allow for simple 1D fitting
@@ -366,58 +384,71 @@ class DynamicSpectrum:
 
 
 
-    def imshow(self,err=False,cbar=False,ax=None,show=True,border=False,ZORDER=0,cmap=cm.binary,alpha=True,cdf=True,savefig=None):
+    def imshow(self,err=False,cbar=False,ax=None,show=True,border=False,ZORDER=0,cmap=cm.binary,alpha=True,cdf=True,savefig=None,acf=False,ss=False,extent=None):
         """
         Basic plotting of the dynamic spectrum
         """
-        if err:
-            spec = self.errdata
+        if acf:
+            if self.acf is None:
+                self.acf2d()
+            data = self.acf
+        elif ss:
+            if self.ss is None:
+                self.secondary_spectrum()
+            data = self.ss
+        elif err:
+            data = self.errdata
         else:
-            spec = self.getData()
-        T = self.T
-        if self.T is None:
-            if self.Tcenter is None:
-                T = np.arange(len(spec))
+            data = self.getData()
+        if extent is None:
+
+            if acf:
+                T = self.acfT
+                F = self.acfF
+            elif ss:
+                T = self.ssconjT
+                F = self.ssconjF
             else:
-                T = self.Tcenter
-        F = self.F
-        if self.F is None:
-            if self.Fcenter is None:
-                F = np.arange(len(spec[0]))
-            else:
-                F = self.Fcenter
+                if self.Tcenter is None:
+                    T = self.T
+                else:
+                    T = self.Tcenter
+                if self.Fcenter is None:
+                    F = self.F
+                else:
+                    F = self.Fcenter
         #cmap = cm.binary#jet
         if alpha:
             cmap.set_bad(alpha=0.0)
 
 
         if alpha: #do this?
-            for i in range(len(spec)):
-                for j in range(len(spec[0])):
-                    if spec[i,j] <= 0.0:# or self.errdata[i][j]>3*sigma:
-                        spec[i,j] = np.nan
+            for i in range(len(data)):
+                for j in range(len(data[0])):
+                    if data[i,j] <= 0.0:# or self.errdata[i][j]>3*sigma:
+                        data[i,j] = np.nan
         
-        minT = T[0]
-        maxT = T[-1]
-        minF = F[0]
-        maxF = F[-1]
-
 
         if cdf:
-            xcdf,ycdf = u.ecdf(spec.flatten())
+            xcdf,ycdf = u.ecdf(data.flatten())
             low,high = u.likelihood_evaluator(xcdf,ycdf,cdf=True,values=[0.01,0.99])
-            for i in range(len(spec)):
-                for j in range(len(spec[0])):
-                    if spec[i,j] <= low:
-                        spec[i,j] = low
-                    elif spec[i,j] >= high:
-                        spec[i,j] = high
-
+            for i in range(len(data)):
+                for j in range(len(data[0])):
+                    if data[i,j] <= low:
+                        data[i,j] = low
+                    elif data[i,j] >= high:
+                        data[i,j] = high
+        if extent is None:
+            minT = T[0]
+            maxT = T[-1]
+            minF = F[0]
+            maxF = F[-1]
+            estent = [minT,maxT,minF,maxF]
 
 #        print inds
 #        raise SystemExit
 #        spec[inds] = np.nan
-        cax=u.imshow(spec,ax=ax,extent = [minT,maxT,minF,maxF],cmap=cmap,zorder=ZORDER)
+        cax=u.imshow(spec,ax=ax,extent=extent,cmap=cmap,zorder=ZORDER)
 
         #border here?
         if border:# and self.extras['name']!='EFF I':
