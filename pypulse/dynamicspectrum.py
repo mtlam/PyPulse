@@ -24,7 +24,7 @@ elif sys.version_info.major == 3:
 
 
 class DynamicSpectrum:
-    def __init__(self,data,offdata=None,errdata=None,mask=None,F=None,T=None,extras=None,verbose=True,Funits="arb.",Tunits="arb."):
+    def __init__(self,data,offdata=None,errdata=None,mask=None,F=None,T=None,extras=None,verbose=True,Funit="arb.",Tunit="arb."):
         self.verbose=verbose
         if type(data) == type(""):
             name = data
@@ -58,8 +58,8 @@ class DynamicSpectrum:
                 self.dT = np.mean(d)
             else:
                 self.T = np.arange(self.shape()[1])
-            self.Funits = Funits
-            self.Tunits = Tunits
+            self.Funit = Funit
+            self.Tunit = Tunit
             if extras is None:   
                 self.extras = dict()
             else:
@@ -384,7 +384,7 @@ class DynamicSpectrum:
 
 
 
-    def imshow(self,err=False,cbar=False,ax=None,show=True,border=False,zorder=0,cmap=cm.binary,alpha=True,cdf=True,savefig=None,acf=False,ss=False,extent=None):
+    def imshow(self,err=False,cbar=False,ax=None,show=True,border=False,zorder=0,cmap=cm.binary,alpha=True,cdf=True,savefig=None,acf=False,ss=False,extent=None,log=False,xlim=None,ylim=None):
         """
         Basic plotting of the dynamic spectrum
         """
@@ -394,7 +394,7 @@ class DynamicSpectrum:
             data = self.acf
         elif ss:
             if self.ss is None:
-                self.secondary_spectrum()
+                self.secondary_spectrum(log=log)
             data = self.ss
         elif err:
             data = self.errdata
@@ -416,6 +416,9 @@ class DynamicSpectrum:
                     F = self.F
                 else:
                     F = self.Fcenter
+
+        if log and not ss:
+            data = np.log10(data)
 
 
         if alpha and not (acf or ss): #or just ignore?
@@ -449,8 +452,14 @@ class DynamicSpectrum:
         if ax is None:
             fig = plt.figure()
             ax = fig.add_subplot(111)
+        
 
         cax=u.imshow(data,ax=ax,extent=extent,cmap=cmap,zorder=zorder)
+
+        if xlim is not None:
+            plt.xlim(xlim)
+        if ylim is not None:
+            plt.ylim(ylim)
 
         #border here?
         if border:# and self.extras['name']!='EFF I':
@@ -459,6 +468,15 @@ class DynamicSpectrum:
             plt.plot([T[0],T[0]],[F[0],F[-1]],'0.50',zorder=zorder+0.1)
             plt.plot([T[-1],T[-1]],[F[0],F[-1]],'0.50',zorder=zorder+0.1)
 
+        if acf:
+            plt.xlabel('Time Lag (%s)'%self.Tunit)
+            plt.ylabel('Frequency Lag (%s)'%self.Funit)
+        elif ss:
+            plt.xlabel('Conjugate Time (1/%s)'%self.Tunit)
+            plt.ylabel('Conjugate Frequency (1/%s)'%self.Funit)
+        else:
+            plt.xlabel('Time (%s)'%self.Tunit)
+            plt.ylabel('Frequency (%s)'%self.Funit)
 
         if cbar:
             plt.colorbar(cax)
