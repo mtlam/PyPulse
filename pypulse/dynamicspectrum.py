@@ -214,7 +214,7 @@ class DynamicSpectrum:
         return ss
         
     # allow for simple 1D fitting
-    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True,full_output=False,simple=False,eta=0.2):
+    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True,full_output=False,simple=False,eta=0.2,cmap=cm.binary):
         if self.acf is None:
             self.acf2d()
         if self.dT is None:
@@ -363,10 +363,10 @@ class DynamicSpectrum:
         if show or savefig is not None:
             fig = plt.figure()
             ax = fig.add_subplot(211)
-            u.imshow(self.data)
+            u.imshow(self.data,cmap=cmap)
             ax = fig.add_subplot(212)
 
-            u.imshow(plotacf)
+            u.imshow(plotacf,cmap=cmap)
             plt.colorbar()
             levels = (amplitude*np.array([1.0,0.5,1.0/np.e]))+baseline
             levels = (amplitude*np.array([0.5]))+baseline
