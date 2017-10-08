@@ -358,7 +358,9 @@ class DynamicSpectrum:
 
 
         if self.verbose:
-            print("dnu/dt %0.3e %s/%s" % ((dF/dT)*np.tan(rotation),self.Funit,self.Tunit))#((dF/dT)*np.tan(rotation))
+            f = (dF/dT)*np.tan(rotation)
+            df = (dF/dT)*np.cos(rotation)**2 * err_rot
+            print("dnu/dt %0.3e+/-%0.3e %s/%s" % (f,df,self.Funit,self.Tunit))#((dF/dT)*np.tan(rotation))
 
         if show or savefig is not None:
             fig = plt.figure()
