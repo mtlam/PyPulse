@@ -310,12 +310,13 @@ class DynamicSpectrum:
 
         fit = ffit.gaussian2d(*params)
         amplitude,center_x,center_y,width_x,width_y,rotation,baseline = params
+
+        paramnames = ["amplitude","center_x","center_y","width_x","width_y","rotation","baseline"]
+        if pcov is not None:
+            paramerrors = np.sqrt(np.diagonal(pcov))
+        else:
+            paramerrors = np.zeros_like(params)
         if self.verbose:
-            paramnames = ["amplitude","center_x","center_y","width_x","width_y","rotation","baseline"]
-            if pcov is not None:
-                paramerrors = np.sqrt(np.diagonal(pcov))
-            else:
-                paramerrors = np.zeros_like(params)
             for i,param in enumerate(params):
                 print("%s: %0.2e+/-%0.2e"%(paramnames[i],param,paramerrors[i]))
                 
@@ -369,7 +370,7 @@ class DynamicSpectrum:
             plt.colorbar()
             levels = (amplitude*np.array([1.0,0.5,1.0/np.e]))+baseline
             levels = (amplitude*np.array([0.5]))+baseline
-            print(levels)
+            #print(levels)
 
             ax.contour(fit(*np.indices(plotacf.shape)),levels, colors='k')
             #ax.set_xlim(len(xs)-20,len(xs)+20)
