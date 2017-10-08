@@ -24,7 +24,7 @@ elif sys.version_info.major == 3:
 
 
 class DynamicSpectrum:
-    def __init__(self,data,offdata=None,errdata=None,mask=None,F=None,T=None,extras=None,verbose=True):
+    def __init__(self,data,offdata=None,errdata=None,mask=None,F=None,T=None,extras=None,verbose=True,Funits="arb.",Tunits="arb."):
         self.verbose=verbose
         if type(data) == type(""):
             name = data
@@ -58,6 +58,8 @@ class DynamicSpectrum:
                 self.dT = np.mean(d)
             else:
                 self.T = np.arange(self.shape()[1])
+            self.Funits = Funits
+            self.Tunits = Tunits
             if extras is None:   
                 self.extras = dict()
             else:
@@ -185,8 +187,8 @@ class DynamicSpectrum:
         acf[centerrind,centercind] = np.max(acf[centerrind-1:centerrind+2,centercind-1:centercind+2])
 
         self.acf = acf
-        self.acfT = np.shape(np.concatenate((-1*self.T[:-1][::-1],self.T[1:-1])))
-        self.acfF = np.shape(np.concatenate((-1*self.F[:-1][::-1],self.F[1:-1])))
+        self.acfT = np.concatenate((-1*self.T[:-1][::-1],self.T[1:-1]))
+        self.acfF = np.concatenate((-1*self.F[:-1][::-1],self.F[1:-1]))
         if full_output:
             return self.acfT,self.acfF,acf
         return acf
@@ -205,14 +207,12 @@ class DynamicSpectrum:
             ss = np.log10(ss)
 
         self.ss = ss
-        dt = self.T[1] - self.T[0]
-        self.ssconjT = np.fft.fftshift(np.fft.fftfreq(len(self.T),d=dt))
-        df = self.F[1] - self.F[0]
-        self.ssconjF = np.fft.fftshift(np.fft.fftfreq(len(self.F),d=df))
+        self.ssconjT = np.fft.fftshift(np.fft.fftfreq(len(self.T),d=self.dT))
+        self.ssconjF = np.fft.fftshift(np.fft.fftfreq(len(self.F),d=self.dF))
         if full_output:
             return self.conjT,self.conjF,ss
         return ss
-
+        
     # allow for simple 1D fitting
     def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True,full_output=False,simple=False,eta=0.2):
         if self.acf is None:
@@ -401,7 +401,6 @@ class DynamicSpectrum:
         else:
             data = self.getData()
         if extent is None:
-
             if acf:
                 T = self.acfT
                 F = self.acfF
@@ -417,17 +416,15 @@ class DynamicSpectrum:
                     F = self.F
                 else:
                     F = self.Fcenter
-        #cmap = cm.binary#jet
-        if alpha:
+
+
+        if alpha and not (acf or ss): #or just ignore?
             cmap.set_bad(alpha=0.0)
 
-
-        if alpha: #do this?
             for i in range(len(data)):
                 for j in range(len(data[0])):
                     if data[i,j] <= 0.0:# or self.errdata[i][j]>3*sigma:
                         data[i,j] = np.nan
-        
 
         if cdf:
             xcdf,ycdf = u.ecdf(data.flatten())
@@ -444,10 +441,15 @@ class DynamicSpectrum:
             minF = F[0]
             maxF = F[-1]
             extent = [minT,maxT,minF,maxF]
-
+        #return np.shape(data)
+        #raise SystemExit
 #        print inds
 #        raise SystemExit
 #        spec[inds] = np.nan
+        if ax is None:
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+
         cax=u.imshow(data,ax=ax,extent=extent,cmap=cmap,zorder=zorder)
 
         #border here?
@@ -467,7 +469,7 @@ class DynamicSpectrum:
             plt.show()
 
 
-        return ax
+        #return ax
 
 
     def load(self,filename):
@@ -565,12 +567,18 @@ class DynamicSpectrum:
         """Returns the data array"""
         if remove_baseline:
             self.remove_baseline()
-        return self.data
+        return np.copy(self.data)
 
     def getACF(self,remove_baseline=True): 
         if self.acf is None:
             return self.acf2d(remove_baseline=remove_baseline)
-        return self.acf
+        return np.copy(self.acf)
+    
+    def getSS(self,remove_baseline=True,log=False):
+        if self.ss is None:
+            return self.secondary_spectrum(remove_baseline=remove_baseline)
+        return np.copy(self.ss)
+        
 
     def getBandwidth(self):
         return np.abs(self.F[-1]-self.F[0])
