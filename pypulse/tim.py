@@ -153,7 +153,7 @@ class Tim:
 
 
 
-    def save(self,filename):
+    def save(self,filename=None):
         output = ""
 
         ntoa = 0
@@ -165,6 +165,8 @@ class Tim:
             else:
                 output += (str(self.toas[ntoa])+"\n")
                 ntoa += 1
+        if filename is None:
+            filename = self.filename
         with open(filename,'w') as FILE:
             FILE.write(output)
 
