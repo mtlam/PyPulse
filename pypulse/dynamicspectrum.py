@@ -210,7 +210,7 @@ class DynamicSpectrum:
         self.ssconjT = np.fft.fftshift(np.fft.fftfreq(len(self.T),d=self.dT))
         self.ssconjF = np.fft.fftshift(np.fft.fftfreq(len(self.F),d=self.dF))
         if full_output:
-            return self.conjT,self.conjF,ss
+            return self.ssconjT,self.ssconjF,ss
         return ss
         
     # allow for simple 1D fitting
