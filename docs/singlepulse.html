@@ -383,7 +383,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>template</strong> (<em>list/numpy.ndarray/SinglePulse</em>) &#8211; Template shape to fit to the data array.</li>
-<li><strong>fixedphase</strong> (<em>book</em>) &#8211; Return only the signal-to-noise with the template shape fixed in its phase.</li>
+<li><strong>fixedphase</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Return only the signal-to-noise with the template shape fixed in its phase.</li>
 <li><strong>rms_baseline</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Provide a different value of the off-pulse root-mean-square noise.</li>
 </ul>
 </td>
@@ -423,7 +423,7 @@
 <dd><p>Iterative cubic spline interpolation for smooth template generation. The spline-generation algorithm is defined by D.S.G. Pollock 1999 (Smoothing with Cubic Splines), in which the cubic spline preserves slope and curvature through each of the control points, i.e., it minimizes the function:</p>
 <div class="math">
 \[L = \lambda \chi^2 + (1-\lambda) \int \left[S^{''}(\phi)\right]^2 d\phi\]</div>
-<p>where <span class="math">\(\chi^2\)</span> is the sum of the residuals (&#8220;chi-squared&#8221;), the integral is the curvature of the spline over all of pulse phase, and <span class="math">\(\lambda\)</span> represents the paramter (&#8220;lam&#8221;) that weights the importance of the two components.</p>
+<p>where <span class="math">\(\chi^2\)</span> is the sum of the residuals (&#8220;chi-squared&#8221;), the integral is the curvature of the spline over all of pulse phase <span class="math">\(\phi\)</span>, and <span class="math">\(\lambda\)</span> represents the paramter (&#8220;lam&#8221;) that weights the importance of the two components.</p>
 <p>Control points (knots) are generated iteratively. Polynomials up to quartic order are fit over the data array. If a quadratic well fits the data, then return without adding a knot, else subdivide the data in half and return the midpoint as a knot. The data array is continuously divided into two halves up to some minimum separation (default=16). In locations <span class="math">\(\phi_i\)</span> where a knot is decided to be placed, the phase bins closest to that knot location are fit by a cubic <span class="math">\(f(\phi\)</span> and the knot is placed at <span class="math">\((\phi_i,f(\phi))\)</span>. After the initial knots locations are chosen, run the cubic spline interpolation as described before. If there is a location where a new knot will help the fit (the residuals must be greater than 4 times the RMS and the location in phase must be 3 times the off-pulse RMS, i.e., the current spline model fails there and it must be a location where actual pulse intensity is present), include that knot and re-run the cubic spline interpolation until the residuals RMS is low.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -433,6 +433,35 @@
 <li><strong>lam</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The lambda parameter that determines the relative weight of fitting through the knots and minimizing the curvature of the spline. Can take values from (0,1], where 1 = fit exactly through the knots and 0 = minimized curvature of the spline. If not provided, it is calculated as 1-(off-pulse rms)^2.</li>
 <li><strong>**kwargs</strong> &#8211; <p>Additional arguments to pass to <code class="xref py py-func docutils literal"><span class="pre">utils.subdivide()</span></code>.</p>
 </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">template, <em>numpy.ndarray</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="component_fitting">
+<code class="descname">component_fitting</code><span class="sig-paren">(</span><span class="optional">[</span><em>mode='gaussian'</em>, <em>nmax=10</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#component_fitting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iteratively fits a total of nmax components to a pulse profile. The iteration will end when the <span class="math">\(\chi_r^2\)</span> is minimized.</p>
+<p>If mode == &#8216;gaussian&#8217;, will fit components of the form</p>
+<div class="math">
+\[f(\phi) = A \exp\left[-\frac{1}{2}\left(\frac{\phi-\mu}{\sigma}\right)\right]\]</div>
+<p>where <span class="math">\(\phi\)</span> is the pulse phase, <span class="math">\(A\)</span> is the component amplitude, <span class="math">\(\mu\)</span> is the mean pulse phase, and <span class="math">\(\sigma\)</span> is the component width.</p>
+<p>If mode == &#8216;vonmises&#8217;, will fit components of the form</p>
+<div class="math">
+\[f(\phi) = A \frac{\exp\left[\kappa \cos(\phi-\mu)\right]}{2\pi I_0(\kappa)}\]</div>
+<p>where again <span class="math">\(\phi\)</span> is the pulse phase and <span class="math">\(A\)</span> is the component amplitude, <span class="math">\(\mu\)</span> is the mean pulse phase, and <span class="math">\(1/\kappa\)</span> is the analogous to the component width (squared) of a Gaussian, <span class="math">\(\sigma^2\)</span>. The function <span class="math">\(I_0\)</span> is the modified Bessel function of order 0.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The function to fit, can choose: &#8220;gaussian&#8221;, &#8220;vonmises&#8221;.</li>
+<li><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Maximum number of components to test.</li>
 </ul>
 </td>
 </tr>
