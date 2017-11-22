@@ -516,7 +516,10 @@ def fit_components(xdata,ydata,mode='gaussian',N=1):
 
         resids = ydata-fitfunc(pfit,xdata)
         imax = np.argmax(resids)
-        pinitprime = np.array([resids[imax],xdata[imax],0.02*nbins]) #2% duty cycle
+        if mode == 'gaussian':
+            pinitprime = np.array([resids[imax],xdata[imax],0.02*nbins]) #2% duty cycle
+        elif mode == 'vonmises':
+            pinitprime = np.array([resids[imax],xdata[imax],1.0/(0.02*nbins)]) #need a sqrt?
         pinit = np.concatenate((pfit,pinitprime))
         
     s_sq = (errfunc(out[0],xdata,ydata)**2).sum()/(len(ydata)-len(pinit)-1) #-1 included here!
