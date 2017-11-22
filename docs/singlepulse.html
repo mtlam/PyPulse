@@ -460,13 +460,45 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The function to fit, can choose: &#8220;gaussian&#8221;, &#8220;vonmises&#8221;.</li>
+<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The function to fit, can choose: &#8216;gaussian&#8217;, .vonmises&#8217;.</li>
 <li><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Maximum number of components to test.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">template, <em>numpy.ndarray</em></p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gaussian_smoothing">
+<code class="descname">gaussian_smoothing</code><span class="sig-paren">(</span><span class="optional">[</span><em>nmax=10</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#gaussian_smoothing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs <a class="reference internal" href="#component_fitting" title="component_fitting"><code class="xref py py-func docutils literal"><span class="pre">component_fitting()</span></code></a> with mode = &#8216;gaussian&#8217;</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Maximum number of components to test.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">template, <em>numpy.ndarray</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descname">gaussian_smoothing</code><span class="sig-paren">(</span><span class="optional">[</span><em>nmax=10</em><span class="optional">]</span><span class="sig-paren">)</span></dt>
+<dd><p>Runs <a class="reference internal" href="#component_fitting" title="component_fitting"><code class="xref py py-func docutils literal"><span class="pre">component_fitting()</span></code></a> with mode = &#8216;vonmises&#8217;</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Maximum number of components to test.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">template, <em>numpy.ndarray</em></td>
 </tr>
 </tbody>
 </table>
