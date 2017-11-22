@@ -487,17 +487,23 @@ def subdivide(tdata,ydata,noise,rms=True,minsep=16,maxsep=64,fac=1.25):
         print len(knotsL),len(knotsR)
     '''
     return np.concatenate((knotsL,knotsR,[half+tdata[0]]))
-def fit_gaussians(xdata,ydata,N=1):
+
+
+
+
+def fit_components(xdata,ydata,mode='gaussian',N=1):
     nbins = len(xdata)
     imax = np.argmax(ydata)
     pinit = np.array([ydata[imax],xdata[imax],0.02*nbins]) #2% duty cycle
+
+    fitter = eval(mode)
 
     # perform this fit iteratively
     for n in range(1,N+1): 
         def fitfunc(p,x):
             retval = np.zeros(len(x))
             for i in range(n):
-                retval += gaussian(x,p[3*i],p[3*i+1],p[3*i+2])
+                retval += fitter(x,p[3*i],p[3*i+1],p[3*i+2])
             return retval
         def errfunc(p,x,y):
             return y - fitfunc(p,x)
@@ -517,9 +523,19 @@ def fit_gaussians(xdata,ydata,N=1):
     return fitfunc,errfunc,out[0],out[1],s_sq
 
 
+def fit_gaussians(xdata,ydata,N=1):
+    return fit_components(xdata,ydata,mode='gaussian',N=N)
+def fit_vonmises(xdata,ydata,N=1):
+    return fit_components(xdata,ydata,mode='vonmises',N=N)
 
-def gaussian(x,a,b,c): #move this?
-    return a*np.exp(-0.5*((x-b)/c)**2)
+def gaussian(x,amp,mu,sigma): 
+    return amp*np.exp(-0.5*((x-mu)/sigma)**2)
+def vonmises(x,amp,mu,kappa):
+    return amp*np.exp(kappa*np.cos(x-mu))/(2*np.pi*speical.iv(0,kappa))
+
+
+
+
 def pbf_clean(t,y,g=None,taud=1.0,opw=None,gamma=0.05,m=1.0,x=1.5,stop=1.5):
     '''
     gamma - loop gain

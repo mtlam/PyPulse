@@ -457,27 +457,36 @@ class SinglePulse:
         return ytemp
 
 
-    def gaussian_smoothing(self,nmax=10):
-        n=1
-        chisq = 10000
+
+    def component_fitting(self,mode='gaussian',nmax=10):
+        n = 1
+        chisqs = 10000.0
+        fitter = lambda x,y,n: u.fit_components(x,y,mode,n)
+
         while True:
-            fitfunc,errfunc,pfit,perr,s_sq = u.fit_gaussians(self.bins,self.data,n)
+            fitfunc,errfunc,pfit,perr,s_sq = fitter(self.bins,self.data,n)
             #print s_sq
             if s_sq < chisq:
                 chisq = s_sq
             else:
                 break
-            n+=1
+            n += 1
             if n == nmax:
                 break
 
         n -= 1
         if n <= 0:
             n = 1
-        fitfunc,errfunc,pfit,perr,s_sq = u.fit_gaussians(self.bins,self.data,n)
+        fitfunc,errfunc,pfit,perr,s_sq = fitter(self.bins,self.data,n)
         return fitfunc(pfit,self.bins)
         #return fitfunc,errfunc,pfit,perr,s_sq,n
+            
 
+    def gaussian_smoothing(self,nmax=10):
+        return self.component_fitting(self,mode='gaussian',nmax=nmax)
+    def vonmises_smoothing(self,nmax=10):
+        return self.component_fitting(self,mode='vonmises',nmax=nmax)
+    vonMises_smoothing = vonmises_smoothing
 
 
 
