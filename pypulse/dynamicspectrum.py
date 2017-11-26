@@ -531,6 +531,18 @@ class DynamicSpectrum:
         np.savez(filename,data=self.data,offdata=self.offdata,errdata=self.errdata,mask=self.mask,F=self.F,T=self.T,Fcenter=self.Fcenter,Tcenter=self.Tcenter,baseline_removed=self.baseline_removed,acf=self.acf,ss=self.ss,extras=self.extras,dT=self.dT,dF=self.dF)
         return
 
+    def savetxt(self,filename,acf=False,ss=False):
+        # Need to check if acf or ss exist
+        if acf:
+            u.write2Dtxt(filename,self.acf,self.acfT,self.acfF)
+            return
+        elif ss:
+            u.write2Dtxt(filename,self.ss,self.ssconjT,self.ssconjF)
+            return
+        else:
+            u.write2Dtxt(filename,self.ds,self.T,self.F)
+
+
         
     # Must be in time order!
     def add(self,ds,axis='T'):

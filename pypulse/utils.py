@@ -19,6 +19,12 @@ try:
 except ImportError:
     izip = zip
 
+import sys
+if sys.version_info.major == 2:
+    fmap = map    
+elif sys.version_info.major == 3:
+    fmap = lambda x,*args: list(map(x,*args))
+    xrange = range
 
 
 
@@ -360,6 +366,21 @@ def likelihood_evaluator(x,y,cdf=False,median=False,pm=True,values=None):
             indv = np.argmin(np.abs(ycdf - v))
             retval[i] = x[indv]
         return retval
+
+
+
+'''
+2D data saving
+'''
+def write2Dtxt(filename,array,x=None,y=None,info=True,**kwargs):
+    if x is None and y is None:
+        np.savetxt(filename,array,**kwargs)
+    # what about one of them being None
+    else:
+        header = " ".join(fmap(str,x)) + "\n" + " ".join(fmap(str,y)) + "\n"
+        # check if header is in kwargs
+        np.savetxt(filename,array,comments='',header=header,**kwargs)
+    
 
 
 
