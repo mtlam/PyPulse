@@ -125,13 +125,14 @@ class Calibrator:
         if PAR_ANG is None:
             POS_ANG = ar.getSubintinfo('POS_ANG')
             if POS_ANG is None:
-                raise IndexError("No parallactic/position angle information")
+                print("No parallactic/position angle information")
             elif self.verbose:
                 print("Calibrating using position angles")
             PAR_ANG = POS_ANG
         elif self.verbose:
             print("Calibrating using parallactic angles")
-        PAR_ANG *= np.pi/180 #check if degrees!
+        if PAR_ANG is not None:
+            PAR_ANG *= np.pi/180 #check if degrees!
 
 
         dG = 2*self.Q/self.I
@@ -152,13 +153,18 @@ class Calibrator:
         calibrated_data = np.zeros_like(data)
         for i in I:
             print(i)
-            M_PA = self.buildMuellerMatrixPA(PAR_ANG[i])
+            if PAR_ANG is not None:
+                M_PA = self.buildMuellerMatrixPA(PAR_ANG[i])
             for j in J:
                 M_differential = self.buildMuellerMatrixDifferential((dG[j],dpsi[j])) # must match exactly
-                M = np.dot(M_differential,M_PA)
+                if PAR_ANG is not None:
+                    M = np.dot(M_differential,M_PA)
+                else:
+                    M = M_differential
                 Minv = np.linalg.inv(M)
                 for k in K:
                     S = self.convertPolarization(data[i,:,j,k],POL_TYPE,"IQUV")
+                    #print np.shape(Minv),np.shape(S),np.shape(calibrated_data[i,:,j,k])
                     calibrated_data[i,:,j,k] = self.convertPolarization(np.dot(Minv,S),"IQUV",POL_TYPE)
                 # reset baseline
                 #if i == 5 and j == 50:
@@ -271,7 +277,7 @@ class Calibrator:
             cos = np.cos(2*feed)
             sin = np.sin(2*feed)
             M_feed = [[1,0,0,0],
-                      [0,cosarg,0,sin],
+                      [0,cos,0,sin],
                       [0,0,1,0],
                       [0,-sin,0,cos]]
         if CC is None:
