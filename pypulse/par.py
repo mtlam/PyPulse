@@ -28,7 +28,7 @@ class Parameter:
         self.flagvalue = flagvalue
         if value is None: #parse all arguments
             self.parstring = name
-            if name[0] == "#": # this is a comment
+            if name[0] == "#":# this is a comment
                 self.name = "#"
                 self.value = name[1:]
                 return
@@ -36,6 +36,9 @@ class Parameter:
             if len(splitstring) == 0:
                 return None #?
             self.name = splitstring[0]
+            if self.name == "C": #this is also a comment:
+                self.value = self.parstring[2:]
+                return
                 
             if len(splitstring) == 1: # sometimes true in PSRFITS PSREPHEM table
                 return
