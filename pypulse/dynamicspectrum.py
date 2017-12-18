@@ -490,7 +490,7 @@ class DynamicSpectrum:
             plt.show()
 
 
-        #return ax
+        return ax
 
 
     def load(self,filename):
