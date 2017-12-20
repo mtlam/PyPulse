@@ -1551,7 +1551,7 @@ class Archive:
                 
                 #print "foo",tauhat,self.channel_delays[j],self.subint_starts[i]/Decimal(86400)#self.getTbin(),self.getTbin()*2048
                 toa = '{0:0.15f}'.format(Decimal(tauhat[i,j])+Decimal(t0)+self.channel_delays[j]/Decimal(86400))
-                output += "%s %f %s   %0.3f  %s   -fe %s -be %s -bw %f -tobs %f -tmplt %s -nbin %i -nch %i -snr %0.2f -flux %0.2f -fluxerr %0.2f\n"%(self.filename,F,toa,sigma_tau[i,j],telescope,frontend,backend,chanbw,tobs,tempname,nbin,nchan,snrs[i,j],bhat[i,j],sigma_b[i,j])
+                output += "%s %f %s   %0.3f  %s   -fe %s -be %s -bw %f -tobs %f -tmplt %s -nbin %i -nch %i -chan %i -subint %i -snr %0.2f -flux %0.2f -fluxerr %0.2f\n"%(self.filename,F,toa,sigma_tau[i,j],telescope,frontend,backend,chanbw,tobs,tempname,nbin,nchan,j,i,snrs[i,j],bhat[i,j],sigma_b[i,j])
                 
 
         if filename is None:
