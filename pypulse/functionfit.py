@@ -20,6 +20,7 @@ def gaussianfit(x,y,baseline=False):
     else:
         p0=[height,mu,sigma]
     p1, success = optimize.leastsq(errgaussian, p0[:], args=(x,y,baseline))
+    p1[2] = np.abs(p1[2]) #enforces positive sigma
     #Return values are the coefficients,the residuals
     return p1, errgaussian(p1,x,y,baseline)
 
