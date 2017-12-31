@@ -1452,7 +1452,7 @@ class Archive:
             tempname = template
             artemp = Archive(tempname)
             template = artemp.getData()
-        elif isinstance(template,np.ndarray) or isinstance(template,list):
+        elif isinstance(template,(list,np.ndarray)):
             tempname = "None"
         else:
             return
