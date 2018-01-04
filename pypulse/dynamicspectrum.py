@@ -504,16 +504,29 @@ class DynamicSpectrum:
             exec("self.%s=x['%s']"%(key,key))
         exec("self.extras = dict(%s)"%self.extras)
         #Convert array(None) to None
-        if self.offdata is not None and len(np.shape(self.offdata)) == 0:
+        if not hasattr(self,'offdata') or (self.offdata is not None and len(np.shape(self.offdata)) == 0):
             self.offdata = None
-        if self.errdata is not None and len(np.shape(self.errdata)) == 0:
+        if not hasattr(self,'errdata') or (self.errdata is not None and len(np.shape(self.errdata)) == 0):
             self.errdata = None
-        if self.mask is not None and len(np.shape(self.mask)) == 0:
+        if not hasattr(self,'mask') or (self.mask is not None and len(np.shape(self.mask)) == 0):
             self.mask = None
-        if self.acf is not None and len(np.shape(self.acf)) == 0:
+        if not hasattr(self,'acf') or (self.acf is not None and len(np.shape(self.acf)) == 0):
             self.acf = None
-        if self.ss is not None and len(np.shape(self.ss)) == 0:
+        if not hasattr(self,'ss') or (self.ss is not None and len(np.shape(self.ss)) == 0):
             self.ss = None
+        
+        # Patch
+        if not hasattr(self,'baseline_removed'):
+            self.baseline_removed = False
+        for elem in ['acfT','acfF','ssconjT','ssconjF']:
+            if not hasattr(self,elem):
+                exec("self.%s = None"%elem)
+        for elem in ['Tunit','Funit']:
+            if not hasattr(self,elem):
+                exec("self.%s = \"arb.\""%elem)
+
+
+
 
 
 
@@ -528,7 +541,7 @@ class DynamicSpectrum:
         """
         if self.verbose:
             print("Dynamic Spectrum: Saving to file: %s" % filename)
-        np.savez(filename,data=self.data,offdata=self.offdata,errdata=self.errdata,mask=self.mask,F=self.F,T=self.T,Fcenter=self.Fcenter,Tcenter=self.Tcenter,baseline_removed=self.baseline_removed,acf=self.acf,ss=self.ss,extras=self.extras,dT=self.dT,dF=self.dF)
+        np.savez(filename,data=self.data,offdata=self.offdata,errdata=self.errdata,mask=self.mask,F=self.F,T=self.T,Fcenter=self.Fcenter,Tcenter=self.Tcenter,Tunit=self.Tunit,Funit=self.Funit,baseline_removed=self.baseline_removed,acf=self.acf,acfT=self.acfT,acfF=self.acfF,ss=self.ss,ssconjT=self.ssconjT,ssconjF=self.ssconjF,extras=self.extras,dT=self.dT,dF=self.dF)
         return
 
     def savetxt(self,filename,acf=False,ss=False):
