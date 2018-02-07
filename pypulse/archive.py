@@ -566,7 +566,7 @@ class Archive:
             self.data[:,:,0,:] = np.mean(self.data,axis=2)
             self.data = self.data[:,:,0:1,:]
             self.weights[:,0] = np.mean(self.weights,axis=1) #problem?
-            self.weigths = self.weights[:,0:1]
+            self.weights = self.weights[:,0:1]
         if 'D' in arg:
             if "wcfreq" in kwargs:
                 self.dedisperse(wcfreq=kwargs['wcfreq'])
