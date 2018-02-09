@@ -501,7 +501,11 @@ class DynamicSpectrum:
             print("Dynamic Spectrum: Loading from file: %s" % filename)
         x = np.load(filename)
         for key in x.keys():
-            exec("self.%s=x['%s']"%(key,key))
+            val = eval("x['%s']"%key)
+            if np.ndim(val) == 0 and isinstance(val,np.ndarray): #loading of non-array values (e.g., a None) needs to be handled this way
+                exec("self.%s=x['%s'].item()"%(key,key))
+            else:
+                exec("self.%s=x['%s']"%(key,key))
         exec("self.extras = dict(%s)"%self.extras)
         #Convert array(None) to None
         if not hasattr(self,'offdata') or (self.offdata is not None and len(np.shape(self.offdata)) == 0):
