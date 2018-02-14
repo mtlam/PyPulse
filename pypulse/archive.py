@@ -1228,10 +1228,10 @@ class Archive:
                 if isinstance(template,SP.SinglePulse):
                     sptemp = template
                 elif isinstance(template,Archive): #use windowsize set to the default?
-                    sptemp = SP.SinglePulse(u.center_max(u.normalize(template.getData(),simple=True)),windowsize=template.getNbin()/8)
+                    sptemp = SP.SinglePulse(u.center_max(u.normalize(template.getData(),simple=True)),windowsize=template.getNbin()//8)
                 elif type(template) == str:
                     artemp = Archive(template,verbose=False)
-                    sptemp = SP.SinglePulse(u.center_max(u.normalize(artemp.getData(),simple=True)),windowsize=template.getNbin()/8)
+                    sptemp = SP.SinglePulse(u.center_max(u.normalize(artemp.getData(),simple=True)),windowsize=template.getNbin()//8)
 
 
                 if mpw is not None: #best way to handle this now?
@@ -1467,7 +1467,7 @@ class Archive:
         if "opw" in kwargs.items():
             opw = (kwargs['opw'] + rollval)%len(kwargs['opw']) # "roll" the array with the template
         else:
-            sptemp = SP.SinglePulse(template,windowsize=len(template)/8)
+            sptemp = SP.SinglePulse(template,windowsize=len(template)//8)
             kwargs['opw'] = sptemp.opw
 
         tauhat,bhat,sigma_tau,sigma_b,snrs = self.fitPulses(template,[1,2,3,4,5],**kwargs) #tauhat is a relative shift
