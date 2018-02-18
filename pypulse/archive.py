@@ -1505,6 +1505,7 @@ class Archive:
 
             #tauhatdec += (-1*tauhatdec) #template tests implies tauhat is unnecessary?
             #tauhatdec = np.array(fmap(lambda x: x-int(x)+rollval,tauhatdec)) #why the heck
+            #print tauhatdec,np.dtype(tauhatdec)
             tauhatdec = np.array(fmap(lambda x: x+Decimal(rollval),tauhatdec)) #why the heck            
 
             #print tauhatdec
