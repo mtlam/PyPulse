@@ -1229,6 +1229,8 @@ class Archive:
                     sptemp = template
                 elif isinstance(template,Archive): #use windowsize set to the default?
                     sptemp = SP.SinglePulse(u.center_max(u.normalize(template.getData(),simple=True)),windowsize=template.getNbin()//8)
+                elif isinstance(template,np.ndarray):
+                    sptemp = SP.SinglePulse(u.center_max(u.normalize(template,simple=True)),windowsize=len(template)//8)
                 elif type(template) == str:
                     artemp = Archive(template,verbose=False)
                     sptemp = SP.SinglePulse(u.center_max(u.normalize(artemp.getData(),simple=True)),windowsize=template.getNbin()//8)
