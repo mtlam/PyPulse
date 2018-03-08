@@ -657,7 +657,7 @@ def get_fitPulse_TOA(retval):
 get_tauhat = get_fitPulse_TOA
 def get_fitPulse_ScaleFactor(retval):
     return retval[2]
-get_bhat = getfitPulseScaleFactor
+get_bhat = get_fitPulse_ScaleFactor
 def get_fitPulse_TOAerror(retval):
     return retval[3]
 get_sigma_tau = get_fitPulse_TOAerror
