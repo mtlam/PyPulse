@@ -647,3 +647,23 @@ class SinglePulse:
         ax.set_ylabel("Intensity")
         if show:
             plt.show()
+
+
+
+ #Helper functions for fitPulse
+# tauccf, tauhat, bhat, sigma_Tau, sigma_b, snr, rho
+def get_fitPulse_TOA(retval):
+    return retval[1]
+get_tauhat = get_fitPulse_TOA
+def get_fitPulse_ScaleFactor(retval):
+    return retval[2]
+get_bhat = getfitPulseScaleFactor
+def get_fitPulse_TOAerror(retval):
+    return retval[3]
+get_sigma_tau = get_fitPulse_TOAerror
+def get_fitPulse_ScaleFactorerr(retval):
+    return retval[4]
+get_sigma_b = get_fitPulse_ScaleFactorerr
+def get_fitPulse_SN(retval):
+    return retval[5]
+get_snr = get_fitPulse_SN
