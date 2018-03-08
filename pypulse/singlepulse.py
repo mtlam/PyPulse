@@ -189,6 +189,9 @@ class SinglePulse:
         return self.data[self.opw]
     def getAllpulse(self):
         return self.getMainpulse(),self.getInterpulse(),self.getOffpulse()
+    def getPulse(self):
+        return self.data
+    getData = getPulse
 
     ### Get each of the auto-correlation functions of the pulse components, if they exist
     def getMainpulseACF(self):
@@ -206,6 +209,8 @@ class SinglePulse:
         return u.acf(op,var=False,norm_by_tau=True)
     def getAllACF(self):
         return self.getMainpulseACF(),self.getInterpulseACF(),self.getOffpulseACF()
+    def getACF(self):
+        return u.acf(self.getData(),var=False,norm_by_tau=True)
     
     
     def getOffpulseNoise(self,mean=False,full=False):
