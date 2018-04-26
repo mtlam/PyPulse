@@ -174,6 +174,9 @@ class Tim:
         mjds = np.array(fmap(lambda x: x.getMJD(),self.toas))
         return mjds
 
+    def get(self,value):
+        retval = np.array(fmap(lambda x: x.get(value),self.toas))
+        return retval
 
     def getTspan(self,years=False):
         mjds = self.getMJDs()
