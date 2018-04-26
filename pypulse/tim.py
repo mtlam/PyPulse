@@ -170,10 +170,21 @@ class Tim:
         with open(filename,'w') as FILE:
             FILE.write(output)
 
+    def getFreqs(self):
+        freqs = np.array(fmap(lambda x: x.getFreq(),self.toas))
+        return freqs
+
+
     def getMJDs(self):
         mjds = np.array(fmap(lambda x: x.getMJD(),self.toas))
         return mjds
 
+
+    def getErrors(self):
+        errors = np.array(fmap(lambda x: x.getError(),self.toas)) 
+        return errors
+
+    
     def get(self,value):
         retval = np.array(fmap(lambda x: x.get(value),self.toas))
         return retval
