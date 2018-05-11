@@ -185,8 +185,11 @@ class Tim:
         return errors
 
     
-    def get(self,value):
-        retval = np.array(fmap(lambda x: x.get(value),self.toas))
+    def get(self,value,numwrap=None):
+        if numwrap is None:
+            retval = np.array(fmap(lambda x: x.get(value),self.toas))
+        else:
+            retval = np.array(fmap(lambda x: numwrap(x.get(value)),self.toas))
         return retval
 
     def getTspan(self,years=False):
