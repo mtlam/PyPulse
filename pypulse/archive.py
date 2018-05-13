@@ -589,31 +589,34 @@ class Archive:
                 factor += 1
         self.record(inspect.currentframe())
 
-        nsub = self.getNsubint()
-        retval = np.zeros((len(np.r_[0:nsub:factor]),self.getNpol(),self.getNchan(),self.getNbin()))
-        counts = np.zeros_like(retval)
+
+        nsubint = self.getNsubint()
+        npol = self.getNpol()
+        nchan = self.getNchan()
+        nbin = self.getNbin()
+        
+        retval = np.zeros((len(np.r_[0:nsub:factor]),npol,nchan,nbin))
         newdurations = np.zeros(np.shape(retval)[0])
-        wretval = np.zeros((len(np.r_[0:nsub:factor]),self.getNchan()))
-        wcounts = np.zeros_like(wretval)
-        for i in xrange(factor):
-            # Data array
-            arr = self.data[i:nsub:factor,:,:,:] 
-            count = np.ones_like(arr)
-            length = np.shape(arr)[0]
-            retval[:length,:,:,:] += arr
-            counts[:length,:,:,:] += count
-            newdurations[:length] += self.durations[i:nsub:factor]
-            # Weights array
-            arr = self.weights[i:nsub:factor,:]
-            count = np.ones_like(arr)
-            #print np.shape(retval),np.shape(wretval),length
-            wretval[:length,:] += arr
-            wcounts[:length,:] += count
-        retval = retval/counts
-        #wretval = wretval/wcounts #is this correct?
-        self.data = retval
+
+        weightsum = np.sum(self.weights)
+        weightretval = np.zeros((len(np.r_[0:nsub:factor]),nchan))
+
+        newnsubint = nsubint//factor
+        for i in xrange(newnsubint):
+            weightretval[i,:] = np.sum(self.weights[i*factor:(i+1)*factor,:],axis=0)
+            
+        for i in xrange(newnsubint):
+            newdurations[i] += np.sum(self.durations[i*factor:(i+1)*factor])
+            for j in xrange(npol):
+                for k in xrange(nchan):
+                    for l in xrange(nbin):
+                        retval[i,j,k,l] = np.sum(self.data[i*factor:(i+1)*factor,j,k,l] * self.weights[i*factor:(i+1)*factor,k])
+                
+        
+        self.data = retval/weightsum
+        self.weights = weightretval
         self.durations = newdurations
-        self.weights = wretval
+
         return self
 
     def pscrunch(self):
@@ -663,18 +666,29 @@ class Archive:
                 factor += 1
         self.record(inspect.currentframe())
 
-        nch = self.getNchan()
-        retval = np.zeros((self.getNsubint(),self.getNpol(),len(np.r_[0:nch:factor]),self.getNbin()))
-        counts = np.zeros_like(retval)
-        for i in xrange(factor):        
-            arr = self.data[:,:,i:nch:factor,:]
-            count = np.ones_like(arr)
-            length = np.shape(arr)[2]
-            retval[:,:,:length,:] += arr
-            counts[:,:,:length,:] += count
-        retval = retval/counts
-        self.data = retval
-        #self.freq = 
+        nsubint = self.getNsubint()
+        npol = self.getNpol()
+        nchan = self.getNchan()
+        nbin = self.getNbin()
+        
+        retval = np.zeros((self.getNsubint(),self.getNpol(),len(np.r_[0:nchan:factor]),self.getNbin()))
+
+        weightsum = np.sum(self.weights)
+        weightretval = np.zeros((self.getNsubint(),len(np.r_[0:nchan:factor])))
+
+        newnchan = nchan//factor
+        for k in xrange(newnchan):
+            weightretval[:,k] = np.sum(self.weights[:,k*factor:(k+1)*factor],axis=1)
+            
+        for i in xrange(nsubint):
+            for j in xrange(npol):
+                for k in xrange(newnchan):
+                    for l in xrange(nbin):
+                        retval[i,j,k,l] = np.sum(self.data[i,j,k*factor:(k+1)*factor,l] * self.weights[i,k*factor:(k+1)*factor])
+                
+        
+        self.data = retval/weightsum
+        self.weights = weightretval
         return self
 
     def bscrunch(self,nbins=None,factor=None):
@@ -1385,7 +1399,7 @@ class Archive:
                 ax=fig.add_subplot(111,axisbg=bgcolor)
                 color='w'
             else: 
-                bgcolor = 'white'
+                bgcolor = 'w'#hite'
                 ax=fig.add_subplot(111)
                 color='k'
 
