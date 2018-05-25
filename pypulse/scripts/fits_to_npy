@@ -44,8 +44,8 @@ cmdline.add_option("--ascii",dest="ascii",
 
 
 cmdline.add_option("-e", dest="ext",
-                   help="Extension to append to filename (default=npy)", action="store",
-                   type="string", default="npy")
+                   help="Extension to append to filename (default=npy or txt)", action="store",
+                   type="string", default="default")
 #cmdline.add_option("-n", "--nchan", dest="nchan",
 #  help="Original number of PFB channels in file (default=4)",
 #  action="store", type="int", default=4)
@@ -84,8 +84,15 @@ for fname in args:
             print "fscrunching"
         ar.fscrunch()
 
-
-    ar.saveData(ext=opt.ext,ascii=opt.ascii)
+    if op.ext == "default":
+        if opt.ascii:
+            ext = "txt"
+        else:
+            ext = "npy"
+    else:
+        ext = op.ext
+        
+    ar.saveData(ext=ext,ascii=opt.ascii)
     ar.gc()
 
 
