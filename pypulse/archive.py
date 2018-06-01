@@ -1091,9 +1091,8 @@ class Archive:
                         for l in xrange(nbin):
                             output += "%i %i %i %i %.18e\n" % (i,j,k,l,self.data[i,j,k,l])
 
-            FILE = open(filename,'w')
-            FILE.write(output)
-            FILE.close()
+            with open(filename,'w') as FILE:
+                FILE.write(output)
         else:
             np.save(filename,self.getData())
         return
@@ -1574,9 +1573,8 @@ class Archive:
         if filename is None:
             print(output)
         else:
-            FILE = open(filename,'w')
-            FILE.write(output)
-            FILE.close()
+            with open(filename,'w') as FILE:
+                FILE.write(output)
         return
 
 
