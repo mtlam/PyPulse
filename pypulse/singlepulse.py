@@ -133,7 +133,7 @@ class SinglePulse:
             factor = self.period/self.nbins
         return factor*dbin
 
-    def getFW(self,value=0.5,simple=False,timeunits=True)
+    def getFW(self,value=0.5,simple=False,timeunits=True):
         """
         Get the full width at some value (e.g., 0.5 = FWHM) of the main component of the pulse
         """
