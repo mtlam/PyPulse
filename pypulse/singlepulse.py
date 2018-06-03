@@ -132,7 +132,17 @@ class SinglePulse:
         if timeunits and self.period is not None:
             factor = self.period/self.nbins
         return factor*dbin
-        
+
+    def getFW(self,value=0.5,simple=False,timeunits=True)
+        """
+        Get the full width at some value (e.g., 0.5 = FWHM) of the main component of the pulse
+        """
+        #remove baseline? what if no offpulse window?
+        dbin = u.FW(self.data,value=value,notcentered=True)#,window=800)
+        factor=1
+        if timeunits and self.period is not None:
+            factor = self.period/self.nbins
+        return factor*dbin
 
 
     def getWeff(self,fourier=False,sumonly=False,timeunits=True):

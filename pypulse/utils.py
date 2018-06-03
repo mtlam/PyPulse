@@ -423,9 +423,12 @@ def center_max(array,full=False):
 #notcentered is very rudimentary
 #have norm be simple
 def FWHM(series,norm=True,simple=False,notcentered=False):
+    return FW(series,value=0.5,norm=norm,simple=simple,notcentered=notcentered)
+
+def FW(series,value=0.5,norm=True,simple=False,notcentered=False):
     if norm:
         series=normalize(series) #assumes these are floats, not integers!
-    y=np.abs(series-0.5)
+    y=np.abs(series-value)
     
     N=len(series)
     half=N//2
@@ -442,10 +445,10 @@ def FWHM(series,norm=True,simple=False,notcentered=False):
     iR=np.argmin(y[half:])+half
     if not simple:
         x=np.arange(len(series))
-        f=interp.interp1d(x,series-0.5)
+        f=interp.interp1d(x,series-value)
 
-        negindsL = np.where(np.logical_and(series<0.5,x<half))[0]
-        negindsR = np.where(np.logical_and(series<0.5,x>half))[0]
+        negindsL = np.where(np.logical_and(series<value,x<half))[0]
+        negindsR = np.where(np.logical_and(series<value,x>half))[0]
         iL=optimize.brentq(f,negindsL[-1],negindsL[-1]+1)#half)
         iR=optimize.brentq(f,negindsR[0]-1,negindsR[0])#half,wR)
     return iR-iL
