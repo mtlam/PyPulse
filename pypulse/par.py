@@ -213,7 +213,10 @@ class Par:
         elif "PMBETA" in keys:
             PM = abs(self.get("PMBETA"))
         return PM
-
+    def getPX(self):
+        return self.get('PX')
+    def getDIST(self):
+        return 1.0/self.getPX()
 
     def getDM(self):
         return self.get('DM')
