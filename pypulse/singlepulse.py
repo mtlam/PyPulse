@@ -485,11 +485,11 @@ class SinglePulse:
                 chisq = s_sq
             else:
                 break
-            n += 1
             if n == nmax:
                 break
+            n += 1
 
-        n -= 1
+        #n -= 1
         if n <= 0:
             n = 1
         fitfunc,errfunc,pfit,perr,s_sq = fitter(self.bins,self.data,n)
