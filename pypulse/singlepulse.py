@@ -49,7 +49,8 @@ class SinglePulse:
             self.ipw = None
         #Define off pulse
         self.nbins = len(data)
-        self.bins=np.arange(self.nbins)
+        self.bins = np.arange(self.nbins)
+        self.phases = np.arange(self.nbins,dtype=np.float)/self.nbins
 
 
         if windowsize is not None:
