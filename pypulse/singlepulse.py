@@ -475,7 +475,7 @@ class SinglePulse:
 
     def component_fitting(self,mode='gaussian',nmax=10):
         n = 1
-        chisqs = 10000.0
+        chisq = 10000.0
         fitter = lambda x,y,n: u.fit_components(x,y,mode,n)
 
         while True:
@@ -498,9 +498,9 @@ class SinglePulse:
             
 
     def gaussian_smoothing(self,nmax=10):
-        return self.component_fitting(self,mode='gaussian',nmax=nmax)
+        return self.component_fitting(mode='gaussian',nmax=nmax)
     def vonmises_smoothing(self,nmax=10):
-        return self.component_fitting(self,mode='vonmises',nmax=nmax)
+        return self.component_fitting(mode='vonmises',nmax=nmax)
     vonMises_smoothing = vonmises_smoothing
 
 
