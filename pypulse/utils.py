@@ -518,8 +518,10 @@ def subdivide(tdata,ydata,noise,rms=True,minsep=16,maxsep=64,fac=1.25):
 def fit_components(xdata,ydata,mode='gaussian',N=1):
     nbins = len(xdata)
     imax = np.argmax(ydata)
-    pinit = np.array([ydata[imax],xdata[imax],0.02*nbins]) #2% duty cycle
-
+    if mode == 'gaussian':
+        pinit = np.array([ydata[imax],xdata[imax],0.02*nbins]) #2% duty cycle
+    elif mode == 'vonmises':
+        pinit = np.array([ydata[imax],xdata[imax],nbins]) 
     fitter = eval(mode)
 
     # perform this fit iteratively
@@ -543,7 +545,7 @@ def fit_components(xdata,ydata,mode='gaussian',N=1):
         if mode == 'gaussian':
             pinitprime = np.array([resids[imax],xdata[imax],0.02*nbins]) #2% duty cycle
         elif mode == 'vonmises':
-            pinitprime = np.array([resids[imax],xdata[imax],100])#1.0/(0.02*nbins)]) #need a sqrt?
+            pinitprime = np.array([resids[imax],xdata[imax],nbins])#1.0/(0.02*nbins)]) #need a sqrt?
         pinit = np.concatenate((pfit,pinitprime))
         
     s_sq = (errfunc(out[0],xdata,ydata)**2).sum()/(len(ydata)-len(pinit)-1) #-1 included here!

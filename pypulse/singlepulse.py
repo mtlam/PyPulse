@@ -475,12 +475,15 @@ class SinglePulse:
 
 
     def component_fitting(self,mode='gaussian',nmax=10,full=False):
+        '''
+        Fitting to phases is much more numerically stable for von mises function
+        '''
         n = 1
         chisq = 10000.0
         fitter = lambda x,y,n: u.fit_components(x,y,mode,n)
 
         while True:
-            fitfunc,errfunc,pfit,perr,s_sq = fitter(self.bins,self.data,n)
+            fitfunc,errfunc,pfit,perr,s_sq = fitter(self.phases,self.data,n)
             #print s_sq
             if s_sq < chisq:
                 chisq = s_sq
@@ -493,10 +496,10 @@ class SinglePulse:
         #n -= 1
         if n <= 0:
             n = 1
-        fitfunc,errfunc,pfit,perr,s_sq = fitter(self.bins,self.data,n)
+        fitfunc,errfunc,pfit,perr,s_sq = fitter(self.phases,self.data,n)
         if full:
-            return fitfunc(pfit,self.bins),n
-        return fitfunc(pfit,self.bins)
+            return fitfunc(pfit,self.phases),n
+        return fitfunc(pfit,self.phases)
         #return fitfunc,errfunc,pfit,perr,s_sq,n
             
 
