@@ -499,10 +499,10 @@ class SinglePulse:
         #return fitfunc,errfunc,pfit,perr,s_sq,n
             
 
-    def gaussian_smoothing(self,nmax=10):
-        return self.component_fitting(mode='gaussian',nmax=nmax)
-    def vonmises_smoothing(self,nmax=10):
-        return self.component_fitting(mode='vonmises',nmax=nmax)
+    def gaussian_smoothing(self,nmax=10,full=False):
+        return self.component_fitting(mode='gaussian',nmax=nmax,full=full)
+    def vonmises_smoothing(self,nmax=10,full=False):
+        return self.component_fitting(mode='vonmises',nmax=nmax,full=full)
     vonMises_smoothing = vonmises_smoothing
 
 
