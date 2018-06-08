@@ -473,7 +473,7 @@ class SinglePulse:
 
 
 
-    def component_fitting(self,mode='gaussian',nmax=10):
+    def component_fitting(self,mode='gaussian',nmax=10,full=False):
         n = 1
         chisq = 10000.0
         fitter = lambda x,y,n: u.fit_components(x,y,mode,n)
@@ -493,6 +493,8 @@ class SinglePulse:
         if n <= 0:
             n = 1
         fitfunc,errfunc,pfit,perr,s_sq = fitter(self.bins,self.data,n)
+        if full:
+            return fitfunc(pfit,self.bins),n
         return fitfunc(pfit,self.bins)
         #return fitfunc,errfunc,pfit,perr,s_sq,n
             
