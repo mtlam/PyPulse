@@ -558,7 +558,7 @@ def fit_vonmises(xdata,ydata,N=1):
 def gaussian(x,amp,mu,sigma): 
     return amp*np.exp(-0.5*((x-mu)/sigma)**2)
 def vonmises(x,amp,mu,kappa):
-    return amp*np.exp(kappa*np.cos(x-mu))/(2*np.pi*speical.iv(0,kappa))
+    return amp*np.exp(kappa*np.cos(x-mu))/(2*np.pi*special.iv(0,kappa))
 
 
 
