@@ -543,7 +543,7 @@ def fit_components(xdata,ydata,mode='gaussian',N=1):
         if mode == 'gaussian':
             pinitprime = np.array([resids[imax],xdata[imax],0.02*nbins]) #2% duty cycle
         elif mode == 'vonmises':
-            pinitprime = np.array([resids[imax],xdata[imax],1.0/(0.02*nbins)]) #need a sqrt?
+            pinitprime = np.array([resids[imax],xdata[imax],100])#1.0/(0.02*nbins)]) #need a sqrt?
         pinit = np.concatenate((pfit,pinitprime))
         
     s_sq = (errfunc(out[0],xdata,ydata)**2).sum()/(len(ydata)-len(pinit)-1) #-1 included here!
@@ -558,7 +558,19 @@ def fit_vonmises(xdata,ydata,N=1):
 def gaussian(x,amp,mu,sigma): 
     return amp*np.exp(-0.5*((x-mu)/sigma)**2)
 def vonmises(x,amp,mu,kappa):
-    return amp*np.exp(kappa*np.cos(x-mu))/(2*np.pi*special.iv(0,kappa))
+    #return amp*np.exp(kappa*np.cos(x-mu))/(2*np.pi*special.iv(0,kappa))
+    '''
+    # More numerically stable:
+    ive(v, z) = iv(v, z) * exp(-abs(z.real)), z here must be positive number here
+    therefore
+    iv(v, z) = ive(v, z) / exp(-z)
+    log(iv(v,z)) = log(ive(v, z) / exp(-z)) = log(ive(v,z)) - log(exp(-z)) = log(ive(v,z)) + z
+    '''
+    numer = kappa*np.cos(x-mu)
+    denom = np.log(2*np.pi) + np.log(special.ive(0,kappa)) + kappa
+    y = np.exp(numer - denom)
+    y /= np.max(y)
+    return amp*y
 
 
 
