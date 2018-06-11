@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pypulse.utils as u
 import scipy.optimize as optimize
+import scipy.stats as stats
 
 import sys
 get_toa = u.get_toa3 #try this one
@@ -474,16 +475,56 @@ class SinglePulse:
 
 
 
-    def component_fitting(self,mode='gaussian',nmax=10,full=False):
+    def component_fitting(self,mode='gaussian',nmax=10,full=False,alpha=0.05):
         '''
         Fitting to phases is much more numerically stable for von mises function
         '''
-        n = 1
-        chisq = 10000.0
+
         fitter = lambda x,y,n: u.fit_components(x,y,mode,n)
 
-        while True:
+        N = self.nbins
+        
+        # Fit first component
+        n = 1
+        nparamA = 3
+        fitfunc,errfunc,pfit,perr,s_sq = fitter(self.phases,self.data,n)
+        residsA = self.data - fitfunc(pfit,self.phases)
+        RSS_funcA = np.sum(residsA**2)
+        
+
+        
+        for n in range(2,nmax+1):
+            nparamB = 3*n
             fitfunc,errfunc,pfit,perr,s_sq = fitter(self.phases,self.data,n)
+            residsB = self.data - fitfunc(pfit,self.phases)
+            RSS_funcB = np.sum(residsB**2)
+
+
+            # F-test
+            F = ((RSS_funcA-RSS_funcB)/(nparamB-nparamA))/(RSS_funcB/(N-nparamB-1))
+
+            p_value = stats.f.sf(F,nparamB-nparamA,N-nparamB-1) #cdf?
+            #print F,RSS_funcA,RSS_funcB,nparamA,nparamB,p_value
+            if p_value > alpha: # if p_value < alpha, then B is significant, so keep going
+                if full:
+                    return fitfunc(pfit,self.phases),n
+                return fitfunc(pfit,self.phases)
+            # Replace old values
+            nparamA = nparamB
+            residsA = residsB
+            RSS_funcA = RSS_funcB
+            
+        if full:
+            return fitfunc(pfit,self.phases),n
+        return fitfunc(pfit,self.phases)        
+
+        '''
+        n = 1
+        chisq = 10000.0
+        
+
+        while True:
+            
             #print s_sq
             if s_sq < chisq:
                 chisq = s_sq
@@ -500,6 +541,7 @@ class SinglePulse:
         if full:
             return fitfunc(pfit,self.phases),n
         return fitfunc(pfit,self.phases)
+        '''
         #return fitfunc,errfunc,pfit,perr,s_sq,n
             
 
