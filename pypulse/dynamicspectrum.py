@@ -214,7 +214,7 @@ class DynamicSpectrum:
         return ss
         
     # allow for simple 1D fitting
-    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True,full_output=False,simple=False,eta=0.2,cmap=cm.binary,finitescintileerrors=True):
+    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True,full_output=False,simple=False,eta=0.2,cmap=cm.binary,finitescintleerrors=True):
         if self.acf is None:
             self.acf2d()
         if self.dT is None:
