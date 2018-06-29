@@ -214,7 +214,7 @@ class DynamicSpectrum:
         return ss
         
     # allow for simple 1D fitting
-    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True,full_output=False,simple=False,eta=0.2,cmap=cm.binary):
+    def scintillation_parameters(self,plotbound=1.0,maxr=None,maxc=None,savefig=None,show=True,full_output=False,simple=False,eta=0.2,cmap=cm.binary,finitescintileerrors=True):
         if self.acf is None:
             self.acf2d()
         if self.dT is None:
@@ -353,7 +353,23 @@ class DynamicSpectrum:
         err_rot = paramerrors[5]
 
         #finite-scintle errors
-        
+        if finitescintleerrors:
+            bw = self.getBandwidth()
+            T = self.getTspan()
+            if delta_t_d == 0.0:
+                N_d = (1+eta * bw/delta_nu_d)
+            elif delta_nu_d == 0.0:
+                N_d = (1+eta*T/delta_t_d)
+            else:
+                N_d = (1+eta * bw/delta_nu_d) * (1+eta*T/delta_t_d)
+            fse_nu_d = delta_nu_d/(2*np.log(2)*np.sqrt(N_d)) #log because of FWHM?
+            fse_t_d = delta_t_d/(2*np.sqrt(N_d))
+
+            fse_rot = rotation * np.sqrt((fse_nu_d/delta_nu_d)**2 + (fse_t_d/delta_t_d)**2)
+            
+            err_nu_d = np.sqrt(err_nu_d**2 + fse_nu_d**2)
+            err_t_d = np.sqrt(err_t_d**2 + fse_t_d**2)
+            err_rot = np.sqrt(err_rot **2 + fse_rot**2)
         
 
 
