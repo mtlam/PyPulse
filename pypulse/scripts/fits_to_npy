@@ -84,13 +84,13 @@ for fname in args:
             print "fscrunching"
         ar.fscrunch()
 
-    if op.ext == "default":
+    if opt.ext == "default":
         if opt.ascii:
             ext = "txt"
         else:
             ext = "npy"
     else:
-        ext = op.ext
+        ext = opt.ext
         
     ar.saveData(ext=ext,ascii=opt.ascii)
     ar.gc()
