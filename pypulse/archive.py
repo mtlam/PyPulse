@@ -210,7 +210,13 @@ class Archive:
             DAT_WTS = np.ones(np.shape(DAT_WTS))
         DAT_SCL = np.ascontiguousarray(hdulist['SUBINT'].data['DAT_SCL'])
         DAT_OFFS = np.ascontiguousarray(hdulist['SUBINT'].data['DAT_OFFS'])# + 0.5 #testing
-        self.DAT_SCL = DAT_SCL #testing
+        # Enforce appropriate shapes in odd cases
+        SHAPE = np.shape(DATA)
+        DAT_SCL = DAT_SCL.reshape(SHAPE[0],SHAPE[2])
+        DAT_WTS = DAT_WTS.reshape(SHAPE[0],SHAPE[2])
+        DAT_OFFS = DAT_OFFS.reshape(SHAPE[0],SHAPE[2])
+
+        #self.DAT_SCL = DAT_SCL #testing
 
 
 
