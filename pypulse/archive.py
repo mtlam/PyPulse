@@ -601,11 +601,11 @@ class Archive:
         nchan = self.getNchan()
         nbin = self.getNbin()
         
-        retval = np.zeros((len(np.r_[0:nsub:factor]),npol,nchan,nbin))
+        retval = np.zeros((len(np.r_[0:nsubint:factor]),npol,nchan,nbin))
         newdurations = np.zeros(np.shape(retval)[0])
 
         weightsum = np.sum(self.weights)
-        weightretval = np.zeros((len(np.r_[0:nsub:factor]),nchan))
+        weightretval = np.zeros((len(np.r_[0:nsubint:factor]),nchan))
 
         newnsubint = nsubint//factor
         for i in xrange(newnsubint):
