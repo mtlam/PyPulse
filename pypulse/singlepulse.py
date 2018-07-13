@@ -475,13 +475,14 @@ class SinglePulse:
 
 
 
-    def component_fitting(self,mode='gaussian',nmax=10,full=False,alpha=0.05):
+    def component_fitting(self,mode='gaussian',nmax=10,full=False,minamp=None,alpha=0.05):
         '''
         Fitting to phases is much more numerically stable for von mises function
         '''
 
         fitter = lambda x,y,n: u.fit_components(x,y,mode,n)
 
+        MAX = np.max(self.data)*minamp
         N = self.nbins
         
         # Fit first component
@@ -492,6 +493,11 @@ class SinglePulse:
         RSS_funcA = np.sum(residsA**2)
         
 
+        def doreturn():
+            if full:
+                return fitfunc(pfit,self.phases),pfit,n
+            return fitfunc(pfit,self.phases)
+
         
         for n in range(2,nmax+1):
             nparamB = 3*n
@@ -500,23 +506,22 @@ class SinglePulse:
             RSS_funcB = np.sum(residsB**2)
 
 
+            if minamp is not None and np.all(residsB<MAX):
+                return doreturn()
+
             # F-test
             F = ((RSS_funcA-RSS_funcB)/(nparamB-nparamA))/(RSS_funcB/(N-nparamB-1))
 
             p_value = stats.f.sf(F,nparamB-nparamA,N-nparamB-1) #cdf?
             #print F,RSS_funcA,RSS_funcB,nparamA,nparamB,p_value
             if p_value > alpha: # if p_value < alpha, then B is significant, so keep going
-                if full:
-                    return fitfunc(pfit,self.phases),n
-                return fitfunc(pfit,self.phases)
             # Replace old values
+                return doreturn()
             nparamA = nparamB
             residsA = residsB
             RSS_funcA = RSS_funcB
-            
-        if full:
-            return fitfunc(pfit,self.phases),n
-        return fitfunc(pfit,self.phases)        
+        return doreturn()
+
 
         '''
         n = 1
@@ -545,10 +550,10 @@ class SinglePulse:
         #return fitfunc,errfunc,pfit,perr,s_sq,n
             
 
-    def gaussian_smoothing(self,nmax=10,full=False):
-        return self.component_fitting(mode='gaussian',nmax=nmax,full=full)
-    def vonmises_smoothing(self,nmax=10,full=False):
-        return self.component_fitting(mode='vonmises',nmax=nmax,full=full)
+    def gaussian_smoothing(self,**kwargs):
+        return self.component_fitting(mode='gaussian',**kwargs)
+    def vonmises_smoothing(self,**kwargs):
+        return self.component_fitting(mode='vonmises',**kwargs)
     vonMises_smoothing = vonmises_smoothing
 
 
