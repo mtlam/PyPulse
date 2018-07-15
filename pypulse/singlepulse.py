@@ -163,6 +163,14 @@ class SinglePulse:
         self.weff=P/np.sqrt(N*tot)
         return self.weff
 
+    def getUscale(self):
+        """
+        Following Lam et al. 2018a Optimal FRequencies approach, equation 11.
+        """
+        Uobsbar = np.mean(self.data)
+        return 1.0/Uobsbar
+
+
     def getSN(self):
         """
         Calculate a very crude S/N
