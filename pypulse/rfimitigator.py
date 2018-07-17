@@ -9,18 +9,19 @@ class RFImitigator:
         self.archive = archive
 
 
-    def can_mitigate(self,mode='frequency'):
+    def can_mitigate(self,flag='F'):
         '''
         Check if the shape of the data array is conducive to mitigation
         '''
-        if mode == 'frequency':
-            INDEX = 2
-
-        SHAPE = self.archive.shape(squeeze=False)
-        if SHAPE[2] == 1:
-            return False
-        else:
+        if flag == 'F':
+            if self.archive.getNchan() == 1:
+                return False
             return True
+        if flag == 'T':
+            if self.archive.getNsubint() == 1:
+                return False
+            return True
+
         
     def zap_frequency_range(self,nulow,nuhigh):
         '''
@@ -48,11 +49,19 @@ class RFImitigator:
                 self.archive.setWeights(0.0,f=elem)
 
         
-    def zap_minmax(self):
+    def zap_minmax(self,windowsize=20,threshold=4):
         '''
-        Run NANOGrav algorithm
+        Run NANOGrav algorithm, median zapping. Run per subintegration
+        windowsize = 20 frequency bins long
+        threshold = 4 sigma
         '''
         if not self.can_mitigate():
             return
 
-        SHAPE = self.archive.shape(squeeze=False)
+
+        nsubint = self.getNsubint()
+        nchan = self.getNchan()
+
+        for i,t in enumerate(nsubint):
+            for j,f in enumerate(nchan):
+                return
