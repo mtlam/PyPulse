@@ -490,7 +490,8 @@ class SinglePulse:
 
         fitter = lambda x,y,n: u.fit_components(x,y,mode,n)
 
-        MAX = np.max(self.data)*minamp
+        if minamp is not None:
+            MAX = np.max(self.data)*minamp
         N = self.nbins
         
         # Fit first component
