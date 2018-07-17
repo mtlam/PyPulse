@@ -22,6 +22,12 @@ class RFImitigator:
                 return False
             return True
 
+
+    def zap(self,val=0.0,t=None,f=None):
+        '''
+        Passes straight to archive's setWeights()
+        '''
+        self.archive.setWeights(val,t=t,f=f)
         
     def zap_frequency_range(self,nulow,nuhigh):
         '''
@@ -33,7 +39,7 @@ class RFImitigator:
         Faxis = self.archive.getAxis('F')
         inds = np.where((nulow<=Faxis)&(Faxis<=nuhigh))[0]
         for ind in inds:
-            self.archive.setWeights(0.0,f=ind)
+            self.zap(f=ind)
 
         
     def zap_channels(self,index):
@@ -46,9 +52,11 @@ class RFImitigator:
             self.archive.setWeights(0.0,f=index)
         elif isinstance(index,(list,tuple,np.ndarray)):
             for elem in index:
-                self.archive.setWeights(0.0,f=elem)
+                self.zap(f=elem)
 
-        
+
+
+
     def zap_minmax(self,windowsize=20,threshold=4):
         '''
         Run NANOGrav algorithm, median zapping. Run per subintegration
@@ -62,6 +70,38 @@ class RFImitigator:
         nsubint = self.getNsubint()
         nchan = self.getNchan()
 
+        # Prepare data
+        data = self.archive.getData(squeeze=False)
+        spavg = self.archive.spavg #SinglePulse average profile, no need to invoke creating more SinglePulse instances
+        opw = spavg.opw
+        
+        if nchan <= windowsize:
+            for i,t in enumerate(nsubint):
+                ptps = np.array(map(lambda subdata: np.ptp(subdata,axis=1),data[i,0,:,opw]))
+                med = np.median(ptps)
+                for j,f in enumerate(nchan):
+                    if ptps[j] > threshold*med:
+                        self.zap(f=ind)
+            return
+
+        
         for i,t in enumerate(nsubint):
             for j,f in enumerate(nchan):
-                return
+                low = f - windowsize//2
+                high = f + windowsize//2
+
+                if low < 0:
+                    high = abs(low)
+                    low = 0
+                elif high > nchan:
+                    diff = high - nchan
+                    high -= diff
+                    low -= diff
+                
+                ptps = np.array(map(lambda subdata: np.ptp(subdata,axis=1),data[i,0,low:high,opw]))
+                med = np.median(ptps)
+                for j,f in enumerate(nchan):
+                    if ptps[j] > threshold*med:
+                        self.zap(f=ind)
+                
+        return
