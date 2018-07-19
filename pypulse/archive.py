@@ -1347,6 +1347,8 @@ class Archive:
                 plt.savefig(filename)
             if show:
                 plt.show()
+            else:
+                plt.close()
         else:
             print("Invalid dimensions")
         return ax
