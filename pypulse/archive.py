@@ -1333,7 +1333,7 @@ class Archive:
                 plt.show()
         else:
             print("Invalid dimensions")
-    def imshow(self,ax=None,cbar=False,mask=None,show=True,**kwargs):
+    def imshow(self,ax=None,cbar=False,mask=None,show=True,filename=None,**kwargs):
         """Basic imshow of data"""
         data = self.getData(setnan=0.0)
         if len(np.shape(data))==2:
@@ -1343,6 +1343,8 @@ class Archive:
                 u.imshow(data,ax=ax,**kwargs) 
             if cbar:
                 plt.colorbar()
+            if filename is not None:
+                plt.savefig(filename)
             if show:
                 plt.show()
         else:
