@@ -1465,7 +1465,7 @@ class Archive:
             
     ### NOTE: THIS NEEDS TO BE CHECKED WITH THE NEW CHANGES ###
         
-    def time(self,template,filename,MJD=False,simple=False,wcfreq=False,**kwargs):
+    def time(self,template,filename,MJD=False,simple=False,wcfreq=False,flags="",**kwargs):
         """
         Times the pulses and outputs in the tempo2_IPTA format similar to pat.
         MJD: if True, return TOAs in MJD units, else in time units corresponding to a bin number
@@ -1579,7 +1579,14 @@ class Archive:
                 
                 #print "foo",tauhat,self.channel_delays[j],self.subint_starts[i]/Decimal(86400)#self.getTbin(),self.getTbin()*2048
                 toa = '{0:0.15f}'.format(Decimal(tauhat[i,j])+Decimal(t0)+self.channel_delays[j]/Decimal(86400))
-                output += "%s %f %s   %0.3f  %s   -fe %s -be %s -bw %f -tobs %f -tmplt %s -nbin %i -nch %i -chan %i -subint %i -snr %0.2f -flux %0.2f -fluxerr %0.2f\n"%(self.filename,F,toa,sigma_tau[i,j],telescope,frontend,backend,chanbw,tobs,tempname,nbin,nchan,j,i,snrs[i,j],bhat[i,j],sigma_b[i,j])
+
+                if isinstance(flags,(tuple,list,np.ndarray)):
+                    flags = " ".join(flags)
+                elif not is instance(flags,str):
+                    raise ValueError("Flags must be in string, tuple, list, or np.ndarray format")
+
+                
+                output += "%s %f %s   %0.3f  %s   -fe %s -be %s -bw %f -tobs %f -tmplt %s -nbin %i -nch %i -chan %i -subint %i -snr %0.2f -flux %0.2f -fluxerr %0.2f %s\n"%(self.filename,F,toa,sigma_tau[i,j],telescope,frontend,backend,chanbw,tobs,tempname,nbin,nchan,j,i,snrs[i,j],bhat[i,j],sigma_b[i,j],flags)
                 
 
         if filename is None:
