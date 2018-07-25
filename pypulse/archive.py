@@ -1582,7 +1582,7 @@ class Archive:
 
                 if isinstance(flags,(tuple,list,np.ndarray)):
                     flags = " ".join(flags)
-                elif not is instance(flags,str):
+                elif not isinstance(flags,str):
                     raise ValueError("Flags must be in string, tuple, list, or np.ndarray format")
 
                 
