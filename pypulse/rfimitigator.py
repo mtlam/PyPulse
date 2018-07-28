@@ -4,7 +4,7 @@ import numpy as np
 
 
 
-class RFImitigator:
+class RFIMitigator:
     def __init__(self,archive):
         self.archive = archive
 
