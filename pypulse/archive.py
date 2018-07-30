@@ -1071,11 +1071,15 @@ class Archive:
 
 
 
-    def saveData(self,filename=None,ext='npy',ascii=False):
+    def saveData(self,filename=None,ext='npy',ascii=False,outdir=None):
         """Save the data array to a different format"""
         if filename is None:
             filename = self.filename
             filename = ".".join(filename.split(".")[:-1])+"."+ext
+            
+        if outdir is not None:
+            filename = outdir + "/" + filename.split("/")[-1]
+
         if self.verbose:
             print("Saving: %s" % filename)
         if ascii:

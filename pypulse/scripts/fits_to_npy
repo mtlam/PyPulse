@@ -46,6 +46,12 @@ cmdline.add_option("--ascii",dest="ascii",
 cmdline.add_option("-e", dest="ext",
                    help="Extension to append to filename (default=npy or txt)", action="store",
                    type="string", default="default")
+
+cmdline.add_option("-o", dest="outdir",
+                   help="Output directory (default=initial directory),"action="store",
+                   type="string", default="default")
+
+
 #cmdline.add_option("-n", "--nchan", dest="nchan",
 #  help="Original number of PFB channels in file (default=4)",
 #  action="store", type="int", default=4)
@@ -91,8 +97,13 @@ for fname in args:
             ext = "npy"
     else:
         ext = opt.ext
+
+    if opt.outdir == "default":
+        outdir = None
+    else:
+        outdir = opt.outdir
         
-    ar.saveData(ext=ext,ascii=opt.ascii)
+    ar.saveData(ext=ext,ascii=opt.ascii,outdir=outdir)
     ar.gc()
 
 
