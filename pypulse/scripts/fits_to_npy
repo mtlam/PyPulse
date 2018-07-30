@@ -48,8 +48,8 @@ cmdline.add_option("-e", dest="ext",
                    type="string", default="default")
 
 cmdline.add_option("-o", dest="outdir",
-                   help="Output directory (default=initial directory),"action="store",
-                   type="string", default="default")
+                   help="Output directory (default=initial directory)",action="store",
+                   type="string", default=".") # default to the directory you are in
 
 
 #cmdline.add_option("-n", "--nchan", dest="nchan",
@@ -102,7 +102,8 @@ for fname in args:
         outdir = None
     else:
         outdir = opt.outdir
-        
+
+
     ar.saveData(ext=ext,ascii=opt.ascii,outdir=outdir)
     ar.gc()
 
