@@ -1594,11 +1594,11 @@ class Archive:
                 
 
         if filename is None:
-            if not appendto:
+            if not appendto: #make the user decide whether or not to print this every time in a loop or not
                 output = "FORMAT 1\n" + output
             print(output)
         else:
-            if appendto:
+            if appendto and os.path.isfile(filename):
                 with open(filename,'a') as FILE:
                     FILE.write(output)
             else:
