@@ -1,6 +1,12 @@
 
 
 import numpy as np
+import sys
+if sys.version_info.major == 2:
+    fmap = map    
+elif sys.version_info.major == 3:
+    fmap = lambda x,*args: list(map(x,*args))
+    xrange = range
 
 
 
@@ -27,12 +33,13 @@ class RFIMitigator:
         '''
         Passes straight to archive's setWeights()
         '''
-        self.archive.setWeights(val,t=t,f=f)
+        self.archive.setWeights(val=val,t=t,f=f)
     def unzap(self):
         '''
         Gets rid of all weighting
         '''
-        self.archive.setWeights(1.0)
+        MAX = np.max(self.archive.getWeights())
+        self.archive.setWeights(MAX)
 
         
     def zap_frequency_range(self,nulow,nuhigh):
@@ -73,8 +80,8 @@ class RFIMitigator:
             return
 
 
-        nsubint = self.getNsubint()
-        nchan = self.getNchan()
+        nsubint = self.archive.getNsubint()
+        nchan = self.archive.getNchan()
 
         # Prepare data
         data = self.archive.getData(squeeze=False)
@@ -82,19 +89,25 @@ class RFIMitigator:
         opw = spavg.opw
         
         if nchan <= windowsize:
-            for i,t in enumerate(nsubint):
-                ptps = np.array(map(lambda subdata: np.ptp(subdata,axis=1),data[i,0,:,opw]))
-                med = np.median(ptps)
-                for j,f in enumerate(nchan):
-                    if ptps[j] > threshold*med:
-                        self.zap(f=ind)
+            for i in xrange(nsubint):
+                for j in xrange(nchan):
+                    subdata = data[i,0,:,opw] 
+                    compptp = np.ptp(data[i,0,j,opw])
+                    ptps = np.zeros(windowsize)
+                    for k in xrange(windowsize):
+                        ptps[k] = np.ptp(subdata[k,:])
+                
+
+                    med = np.median(ptps)
+                    if compptp > threshold*med:
+                        self.zap(f=j)
             return
 
         
-        for i,t in enumerate(nsubint):
-            for j,f in enumerate(nchan):
-                low = f - windowsize//2
-                high = f + windowsize//2
+        for i in xrange(nsubint):
+            for j in xrange(nchan):
+                low = j - windowsize//2
+                high = j + windowsize//2
 
                 if low < 0:
                     high = abs(low)
@@ -103,11 +116,17 @@ class RFIMitigator:
                     diff = high - nchan
                     high -= diff
                     low -= diff
-                
-                ptps = np.array(map(lambda subdata: np.ptp(subdata,axis=1),data[i,0,low:high,opw]))
+
+                subdata = data[i,0,low:high,opw] 
+                compptp = np.ptp(data[i,0,j,opw])
+                ptps = np.zeros(windowsize)
+                for k in xrange(windowsize):
+                    ptps[k] = np.ptp(subdata[k,:])
+                    
+                #ptps = np.array(map(lambda subdata: np.ptp(subdata),data[i,0,low:high,opw]))
+
                 med = np.median(ptps)
-                for j,f in enumerate(nchan):
-                    if ptps[j] > threshold*med:
-                        self.zap(f=ind)
+                if compptp > threshold*med:
+                    self.zap(f=j)
                 
         return
