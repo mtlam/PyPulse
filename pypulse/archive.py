@@ -1605,7 +1605,7 @@ class Archive:
                 output = "FORMAT 1\n" + output
                 with open(filename,'w') as FILE:
                     FILE.write(output) 
-       return
+        return
 
 
 
