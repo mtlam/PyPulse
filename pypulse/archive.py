@@ -1469,7 +1469,7 @@ class Archive:
             
     ### NOTE: THIS NEEDS TO BE CHECKED WITH THE NEW CHANGES ###
         
-    def time(self,template,filename,MJD=False,simple=False,wcfreq=False,flags="",**kwargs):
+    def time(self,template,filename,MJD=False,simple=False,wcfreq=False,flags="",appendto=False,**kwargs):
         """
         Times the pulses and outputs in the tempo2_IPTA format similar to pat.
         MJD: if True, return TOAs in MJD units, else in time units corresponding to a bin number
@@ -1491,7 +1491,7 @@ class Archive:
         #template = u.shiftit(template,-4.8)
         rollval,template = u.center_max(u.normalize(template,simple=True),full=True) # enforces a good fit
         #print artemp.channel_delays[0]
-        #print "roll",rollval 
+        #print "roll",type(rollval)
 
 
         #If given an offpulse, use that, else calculate a pre-defined one in the template Archive
@@ -1550,7 +1550,7 @@ class Archive:
             checknan = lambda x: np.isnan(x)
         sigma_tau *= (dt*1e6)
 
-        output = "FORMAT 1\n"
+        output = ""
 
         t0 = 0.0
         start_time = self.getMJD(full=True,numwrap=Decimal)
@@ -1594,11 +1594,18 @@ class Archive:
                 
 
         if filename is None:
+            if not appendto:
+                output = "FORMAT 1\n" + output
             print(output)
         else:
-            with open(filename,'w') as FILE:
-                FILE.write(output)
-        return
+            if appendto:
+                with open(filename,'a') as FILE:
+                    FILE.write(output)
+            else:
+                output = "FORMAT 1\n" + output
+                with open(filename,'w') as FILE:
+                    FILE.write(output) 
+       return
 
 
 
