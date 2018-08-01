@@ -1337,9 +1337,9 @@ class Archive:
                 plt.show()
         else:
             print("Invalid dimensions")
-    def imshow(self,ax=None,cbar=False,mask=None,show=True,filename=None,**kwargs):
+    def imshow(self,ax=None,cbar=False,mask=None,show=True,filename=None,setnan=0.0,**kwargs):
         """Basic imshow of data"""
-        data = self.getData(setnan=0.0)
+        data = self.getData(setnan=setnan)
         if len(np.shape(data))==2:
             if mask is not None:
                 u.imshow(ma.masked_array(data,mask=mask),ax=ax,**kwargs)
