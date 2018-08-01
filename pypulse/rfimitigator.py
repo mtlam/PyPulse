@@ -28,6 +28,12 @@ class RFIMitigator:
         Passes straight to archive's setWeights()
         '''
         self.archive.setWeights(val,t=t,f=f)
+    def unzap(self):
+        '''
+        Gets rid of all weighting
+        '''
+        self.archive.setWeights(1.0)
+
         
     def zap_frequency_range(self,nulow,nuhigh):
         '''
