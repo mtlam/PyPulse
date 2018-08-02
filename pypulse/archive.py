@@ -1537,7 +1537,7 @@ class Archive:
             #tauhatdec += (-1*tauhatdec) #template tests implies tauhat is unnecessary?
             #tauhatdec = np.array(fmap(lambda x: x-int(x)+rollval,tauhatdec)) #why the heck
             #print tauhatdec,np.dtype(tauhatdec)
-            tauhatdec = np.array(fmap(lambda x: x+Decimal(rollval),tauhatdec)) #why the heck            
+            tauhatdec = np.array(fmap(lambda x: x+Decimal(rollval.item()),tauhatdec)) # .item() allows for numpy.int to be cast in Python 3
 
             #print tauhatdec
             tauhat = tauhatdec * Decimal(dt)/Decimal(86400) #day units
