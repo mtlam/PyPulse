@@ -684,10 +684,20 @@ class Archive:
         weightsum = np.sum(self.weights)
         weightretval = np.zeros((self.getNsubint(),len(np.r_[0:nchan:factor])))
 
+
         newnchan = nchan//factor
+
+        # Force the frequency axis to be 1D
+        if np.ndim(self.freq) == 1:
+            freq = self.freq
+        else:
+            freq = self.freq[0]
+        newfreq = np.zeros(newnchan) #this will only be 1D
+        
         for k in xrange(newnchan):
             weightretval[:,k] = np.sum(self.weights[:,k*factor:(k+1)*factor],axis=1)
-            
+            newfreq[k] = np.sum(freq[k*factor:(k+1)*factor]) #unweighted!
+        
         for i in xrange(nsubint):
             for j in xrange(npol):
                 for k in xrange(newnchan):
@@ -697,6 +707,7 @@ class Archive:
         
         self.data = retval/weightsum
         self.weights = weightretval
+        self.freq = newfreq
         return self
 
     def bscrunch(self,nbins=None,factor=None):
@@ -1118,7 +1129,7 @@ class Archive:
     
 
 
-    def getAxis(self,flag=None,edges=False,wcfreq=False):
+    def getAxis(self,flag=None,edges=False,wcfreq=False,datfreq=True):
         """
         Get F/T axes for plotting
         If edges: do not return centers for each. Better for imshow plotting because of extents.
@@ -1721,7 +1732,7 @@ class Archive:
         """Returns the subintegration durations"""
         return self.durations
     def getCenterFrequency(self,weighted=False):
-        """Returns the center frequency"""
+        """Returns the center frequency"""      
         if weighted:
             return np.sum(self.freq*self.weights)/np.sum(self.weights)
         if "HISTORY" in self.keys:
