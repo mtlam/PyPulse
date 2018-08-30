@@ -696,7 +696,7 @@ class Archive:
         
         for k in xrange(newnchan):
             weightretval[:,k] = np.sum(self.weights[:,k*factor:(k+1)*factor],axis=1)
-            newfreq[k] = np.sum(freq[k*factor:(k+1)*factor]) #unweighted!
+            newfreq[k] = np.sum(freq[k*factor:(k+1)*factor])/float(factor) #unweighted!
         
         for i in xrange(nsubint):
             for j in xrange(npol):
