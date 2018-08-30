@@ -1469,7 +1469,7 @@ class Archive:
             
     ### NOTE: THIS NEEDS TO BE CHECKED WITH THE NEW CHANGES ###
         
-    def time(self,template,filename,MJD=False,simple=False,wcfreq=False,flags="",appendto=False,**kwargs):
+    def time(self,template,filename,MJD=False,simple=False,wcfreq=False,flags="",appendto=False,overridecfreq=0.0,**kwargs):
         """
         Times the pulses and outputs in the tempo2_IPTA format similar to pat.
         MJD: if True, return TOAs in MJD units, else in time units corresponding to a bin number
@@ -1504,7 +1504,11 @@ class Archive:
         tauhat,bhat,sigma_tau,sigma_b,snrs = self.fitPulses(template,[1,2,3,4,5],**kwargs) #tauhat is a relative shift
         Taxis = self.getAxis('T')
         Faxis = self.getAxis('F',wcfreq=wcfreq)
-        
+        if overridecfreq != 0.0:
+            fc = self.getCenterFrequency(weighted=wcfreq)
+            Faxis = Faxis - fc + overridecfreq
+
+            
         #Reshape if necessary
         tauhat = tauhat.reshape(len(Taxis),len(Faxis))
         bhat = bhat.reshape(len(Taxis),len(Faxis))
