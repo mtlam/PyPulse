@@ -106,12 +106,14 @@ class SinglePulse:
         Align the pulse such that the main pulse is at phase=0.25 and the interpulse is at phase = 0.75
         """
         self.data = np.roll(u.center_max(self.data),-len(self.data)//4)
+        return self
 
     def center_align(self):
         """
         Align the pulse such that the peak is in the center
         """
         self.data = u.center_max(self.data)
+        return self
         
     def normalize(self,area=False):
         """
@@ -122,6 +124,7 @@ class SinglePulse:
         else:
             minimum = np.mean(self.getOffpulse())
             self.data = u.normalize(self.data,minimum=minimum)
+        return self
         
 
     def getFWHM(self,simple=False,timeunits=True):
@@ -189,7 +192,7 @@ class SinglePulse:
         opmean = np.mean(self.getOffpulse())
         if save:
             self.data = self.data - opmean
-            return self.data
+            return self
         return self.data - opmean
 
     
@@ -294,6 +297,7 @@ class SinglePulse:
         x = u.shiftit(self.data,-1*shift)
         if save:
             self.data = x
+            return self
         return x
 
 
