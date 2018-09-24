@@ -1,0 +1,149 @@
+#! /usr/bin/env python
+
+'''
+Michael Lam
+Last Updated: 9/24/2018
+
+Takes a Par file and calculates the number of pulses from a given time.
+Can also calculate the eccentricity errors if available
+'''
+
+from pypulse.par import Par
+from optparse import OptionParser
+import numpy as np
+from decimal import *
+getcontext().prec = 32
+from astropy.time import Time
+import datetime
+
+one = Decimal(1)
+half = Decimal(0.5)
+ltsec = Decimal(299792458) #meters
+def fix(num):
+    return "0"+str(num+one)[1:]
+
+
+cmdline = OptionParser(usage="usage: %prog [options] parfile")
+
+cmdline.add_option("-t", dest="now",
+                   help="Provide the time in iso format \"YYYY-MM-DD HH:MM:SS\", otherwise use the current system time", action="store",
+                   type="string", default="default")
+
+
+(opt,args) = cmdline.parse_args()
+
+
+if (len(args)==0):
+    cmdline.print_help()
+    raise SystemExit
+
+
+
+
+for fname in args:
+    print opt.now
+    if opt.now == 'default':
+        now = Time(datetime.datetime.utcnow())
+    else:
+        try:
+            now = Time(opt.now,format='iso')
+        except ValueError:
+            print("Exiting: Provided time must be in format \"YYYY-MM-DD HH:MM:SS\"")
+            raise SystemExit
+
+
+    print("Using time: %s"%str(now))
+
+    p = Par(fname,numwrap=Decimal)
+    
+
+    f = p.getFrequency()
+    ferr = p.get('F0',error=True)
+    fdot = p.getFrequencyDot()
+    fdoterr = p.get('F1',error=True)
+
+    
+    P = one/f
+    Perr = P*ferr/f
+    print("P = %s"%P)
+    print("+/- %s s"%fix(Perr))
+    Pdot = -one*fdot/f**2
+    Pdoterr = Pdot*((fdoterr/fdot)**2 + 2*(ferr/f)**2).sqrt()
+    print("Pdot = %s"%fix(Pdot))
+    print("   +/- %s s/s"%fix(Pdoterr))
+    print
+
+    # P = [dP/dt]T -> T = P/[dP/dt]
+    # the last digit in P is 10^-18 s.
+    # Pdot = 1.402548e-20 s/s
+    print("The last digit in P changes every %s s"%str(Decimal(1e-18)/Pdot)) #that digit is 10^-18 s
+    print("The 1e-16 digit in P changes every %s hr"%str(Decimal(1e-16)/Pdot/Decimal(60*60))) #that digit is 10^-18 s
+    print("The 1e-10 digit in P changes every %s yr"%str(Decimal(1e-10)/Pdot/Decimal(86400*365.25))) #that digit is 10^-18 s
+    print
+
+
+    # Need other binary models
+    if p.get('BINARY') == 'ELL1':
+        x = p.get('A1')
+        xerr = p.get('A1',error=True)
+        eps1 = p.get('EPS1')
+        eps2 = p.get('EPS2')
+        eps1err = p.get('EPS1',error=True)
+        eps2err = p.get('EPS2',error=True)
+
+        q = (eps1**2 + eps2**2)
+        ecc = q.sqrt()
+
+        qerr = ((2*eps1*eps1err)**2 + (2*eps2*eps2err)**2).sqrt()
+        eccerr = half*q**(Decimal(-0.5)) * qerr
+
+        sini = p.get('SINI')
+        sinierr = p.get('SINI',error=True)
+
+
+        
+
+        a = (x/sini)*ltsec
+        aerr = a*((xerr/x)**2 + (sinierr/sini)**2).sqrt()
+
+
+        print("Eccentricity calculations:")
+        print("a = %s"%str(a))
+        print("  +/- %s m"%str(aerr))
+
+
+        # Eccentricity e = sqrt(1-(b/a)^2)
+        # Therefore, b = a*sqrt(1-e^2)
+        # difference between both is a-b = a-a*sqrt(1-e^2) = a*(1-sqrt(1-e^2))
+
+
+
+        eccsq = ecc**2 
+        eccsqerr = eccsq*(2*eccerr/ecc)
+        q = 1-eccsq #1-e^2
+        qerr = eccsqerr
+        r = q.sqrt() #sqrt(1-e^2)
+        rerr = r*(half*qerr/q)
+        s = 1-r #1-sqrt(1-e^2)
+        serr = rerr
+        fac = a*s
+        facerr = fac*((aerr/a)**2 + (serr/s)**2).sqrt()
+        print("a-b = %s"%str(fac))
+        print("  +/- %s m"%str(fix(facerr)))
+        print
+
+
+        
+        
+    print("Number of rotations:")
+    pepoch = Time(float(p.get('PEPOCH')),format='mjd')
+    print("PEPOCH: %s"%str(pepoch.iso))
+    dt = Decimal((now.mjd-pepoch.mjd)*86400) #seconds
+    # phi = phi0 + f*(t-t0) + (1/2)*fdot*(t-t0)^2
+    # where t0 = 0, phi0 = 0
+    phi = f*dt + half*fdot*dt**2
+    print("N = %s"%str(phi))
+
+    fprime = f + fdot*dt
+    print("Spin Period = %s s"%str(one/fprime))
+
