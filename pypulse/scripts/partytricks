@@ -26,7 +26,7 @@ def fix(num):
 cmdline = OptionParser(usage="usage: %prog [options] parfile")
 
 cmdline.add_option("-t", dest="now",
-                   help="Provide the time in iso format \"YYYY-MM-DD HH:MM:SS\", otherwise use the current system time", action="store",
+                   help="Provide the UTC time in iso format \"YYYY-MM-DD HH:MM:SS\", otherwise use the current system time", action="store",
                    type="string", default="default")
 
 
@@ -48,7 +48,7 @@ for fname in args:
         try:
             now = Time(opt.now,format='iso')
         except ValueError:
-            print("Exiting: Provided time must be in format \"YYYY-MM-DD HH:MM:SS\"")
+            print("Exiting: Provided UTC time must be in format \"YYYY-MM-DD HH:MM:SS\"")
             raise SystemExit
 
 
