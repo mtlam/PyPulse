@@ -1422,7 +1422,7 @@ class Archive:
             fig = plt.figure(figsize=(6,6))           
             if album:
                 bgcolor = 'black'
-                ax=fig.add_subplot(111,axisbg=bgcolor)
+                ax=fig.add_subplot(111,facecolor=bgcolor) #axisbg
                 color='w'
             else: 
                 bgcolor = 'w'#hite'
