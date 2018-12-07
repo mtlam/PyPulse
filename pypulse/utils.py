@@ -515,9 +515,12 @@ def subdivide(tdata,ydata,noise,rms=True,minsep=16,maxsep=64,fac=1.25):
 
 
 
-def fit_components(xdata,ydata,mode='gaussian',N=1):
+def fit_components(xdata,ydata,mode='gaussian',N=1,allownegative=False):
     nbins = len(xdata)
-    imax = np.argmax(ydata)
+    if allownegative:
+        imax = np.argmax(np.abs(ydata))
+    else:
+        imax = np.argmax(ydata)
     if mode == 'gaussian':
         pinit = np.array([ydata[imax],xdata[imax],0.02*nbins]) #2% duty cycle
     elif mode == 'vonmises':
@@ -525,7 +528,7 @@ def fit_components(xdata,ydata,mode='gaussian',N=1):
     fitter = eval(mode)
 
     # perform this fit iteratively
-    for n in range(1,N+1): 
+    for n in range(1,N+1):
         def fitfunc(p,x):
             retval = np.zeros(len(x))
             for i in range(n):
@@ -541,7 +544,10 @@ def fit_components(xdata,ydata,mode='gaussian',N=1):
         pfit = out[0]
 
         resids = ydata-fitfunc(pfit,xdata)
-        imax = np.argmax(resids)
+        if allownegative:
+            imax = np.argmax(np.abs(resids))
+        else:
+            imax = np.argmax(resids)
         if mode == 'gaussian':
             pinitprime = np.array([resids[imax],xdata[imax],0.02*nbins]) #2% duty cycle
         elif mode == 'vonmises':
@@ -571,7 +577,9 @@ def vonmises(x,amp,mu,kappa):
     numer = kappa*np.cos(x-mu)
     denom = np.log(2*np.pi) + np.log(special.ive(0,kappa)) + kappa
     y = np.exp(numer - denom)
-    y /= np.max(y)
+    #y /= np.max(y)
+    # Allow for negatives
+    y /= np.max(np.abs(y))
     return amp*y
 
 

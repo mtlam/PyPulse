@@ -487,12 +487,12 @@ class SinglePulse:
 
 
 
-    def component_fitting(self,mode='gaussian',nmax=10,full=False,minamp=None,alpha=0.05):
+    def component_fitting(self,mode='gaussian',nmax=10,full=False,minamp=None,alpha=0.05,allownegative=False,verbose=False):
         '''
         Fitting to phases is much more numerically stable for von mises function
         '''
 
-        fitter = lambda x,y,n: u.fit_components(x,y,mode,n)
+        fitter = lambda x,y,n: u.fit_components(x,y,mode,n,allownegative=allownegative)
 
         if minamp is not None:
             MAX = np.max(self.data)*minamp
@@ -513,6 +513,8 @@ class SinglePulse:
 
         
         for n in range(2,nmax+1):
+            if verbose:
+                print("Fitting component: %i"%n)
             nparamB = 3*n
             fitfunc,errfunc,pfit,perr,s_sq = fitter(self.phases,self.data,n)
             residsB = self.data - fitfunc(pfit,self.phases)
