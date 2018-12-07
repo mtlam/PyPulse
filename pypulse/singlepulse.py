@@ -49,7 +49,7 @@ class SinglePulse:
         else:
             self.ipw = None
         #Define off pulse
-        self.nbins = len(data)
+        self.nbins = self.getNbins()
         self.bins = np.arange(self.nbins)
         self.phases = np.arange(self.nbins,dtype=np.float)/self.nbins
 
@@ -135,7 +135,7 @@ class SinglePulse:
         dbin = u.FWHM(self.data,notcentered=True)#,window=800)
         factor=1
         if timeunits and self.period is not None:
-            factor = self.period/self.nbins
+            factor = self.period/self.getNbins()
         return factor*dbin
 
     def getFW(self,value=0.5,simple=False,timeunits=True):
@@ -146,7 +146,7 @@ class SinglePulse:
         dbin = u.FW(self.data,value=value,notcentered=True)#,window=800)
         factor=1
         if timeunits and self.period is not None:
-            factor = self.period/self.nbins
+            factor = self.period/self.getNbins()
         return factor*dbin
 
 
@@ -157,7 +157,7 @@ class SinglePulse:
         if not timeunits or self.period is None:
             return None
         P=self.period
-        N=self.nbins
+        N=self.getNbins()
         U=u.normalize(self.data,simple=True) #remove baseline?
         
         tot=np.sum(np.power(U[1:]-U[:-1],2))
@@ -264,7 +264,7 @@ class SinglePulse:
         """
         if isinstance(template,SinglePulse):
             template = template.data
-        if self.null or len(template) != self.nbins:
+        if self.null or len(template) != self.getNbins():
             return None
         if rms_baseline is None:
             self.remove_baseline()
@@ -496,7 +496,7 @@ class SinglePulse:
 
         if minamp is not None:
             MAX = np.max(self.data)*minamp
-        N = self.nbins
+        N = self.getNbins()
         
         # Fit first component
         n = 1
@@ -579,7 +579,7 @@ class SinglePulse:
             fwhm = self.getFWHM(timeunits=False) #in bin units
             tauds = np.linspace(fwhm/4,fwhm,ntauds)
 
-            tauds = np.linspace(2,self.nbins/4,ntauds)
+            tauds = np.linspace(2,self.getNbins()/4,ntauds)
             tauds = np.linspace(2,fwhm,ntauds)
         else:
             tauds = np.copy(searchtauds)
@@ -667,13 +667,19 @@ class SinglePulse:
     def getPeriod(self):
         return self.period
 
-    def getNbin(self):
+    def getNbins(self):
         return len(self.data)
+    getNbin = getNbins
 
+    
     def getTbin(self):
         if self.period is not None:
-            return self.getPeriod()/self.getNbin()
+            return self.getPeriod()/self.getNbins()
 
+    def getBin(self,index):
+        return self.data[index]
+
+        
     def plot(self,show=True):
         """
         Simple plot
