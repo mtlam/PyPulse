@@ -134,8 +134,8 @@ class SinglePulse:
         #remove baseline? what if no offpulse window?
         dbin = u.FWHM(self.data,notcentered=True)#,window=800)
         factor=1
-        if timeunits and self.period is not None:
-            factor = self.period/self.getNbins()
+        if timeunits and self.getPeriod() is not None:
+            factor = self.getPeriod()/self.getNbins()
         return factor*dbin
 
     def getFW(self,value=0.5,simple=False,timeunits=True):
@@ -145,8 +145,8 @@ class SinglePulse:
         #remove baseline? what if no offpulse window?
         dbin = u.FW(self.data,value=value,notcentered=True)#,window=800)
         factor=1
-        if timeunits and self.period is not None:
-            factor = self.period/self.getNbins()
+        if timeunits and self.getPeriod() is not None:
+            factor = self.getPeriod()/self.getNbins()
         return factor*dbin
 
 
@@ -154,9 +154,9 @@ class SinglePulse:
         """
         Calculate the effective width of the pulse
         """
-        if not timeunits or self.period is None:
+        if not timeunits or self.getPeriod() is None:
             return None
-        P=self.period
+        P=self.getPeriod()
         N=self.getNbins()
         U=u.normalize(self.data,simple=True) #remove baseline?
         
@@ -673,7 +673,7 @@ class SinglePulse:
 
     
     def getTbin(self):
-        if self.period is not None:
+        if self.getPeriod() is not None:
             return self.getPeriod()/self.getNbins()
 
     def getBin(self,index):
