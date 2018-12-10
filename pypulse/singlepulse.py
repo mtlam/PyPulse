@@ -212,8 +212,11 @@ class SinglePulse:
         return self.data[self.opw]
     def getAllpulse(self):
         return self.getMainpulse(),self.getInterpulse(),self.getOffpulse()
-    def getPulse(self):
-        return self.data
+    def getPulse(self,ind=None):
+        if ind is None:
+            return self.data
+        else:
+            return self.data[ind]
     getData = getPulse
 
     ### Get each of the auto-correlation functions of the pulse components, if they exist
@@ -675,9 +678,6 @@ class SinglePulse:
     def getTbin(self):
         if self.getPeriod() is not None:
             return self.getPeriod()/self.getNbins()
-
-    def getBin(self,index):
-        return self.data[index]
 
         
     def plot(self,show=True):
