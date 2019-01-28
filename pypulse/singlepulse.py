@@ -55,15 +55,8 @@ class SinglePulse:
 
 
         if windowsize is not None:
-            # Find minimum in the area
-            integral = np.zeros_like(self.data)
-            for i in self.bins:
-                win = np.arange(i-windowsize//2,i+windowsize//2) % self.nbins
-                integral[i] = np.trapz(self.data[win])
-            minind = np.argmin(integral)
-            self.opw = np.arange(minind-windowsize//2,minind+windowsize//2+1)
-            self.opw = self.opw % self.nbins
-            self.mpw = self.bins[np.logical_not(np.in1d(self.bins,self.opw))]
+            self.calcWindow()
+
 
         elif opw is None:
             if self.mpw is None and self.ipw is None:
@@ -194,9 +187,22 @@ class SinglePulse:
             self.data = self.data - opmean
             return self
         return self.data - opmean
+    removeBaseline = remove_baseline
 
-    
 
+    def calcWindow(self):
+        # Find minimum in the area
+        integral = np.zeros_like(self.data)
+        for i in self.bins:
+            win = np.arange(i-windowsize//2,i+windowsize//2) % self.nbins
+            integral[i] = np.trapz(self.data[win])
+        minind = np.argmin(integral)
+        self.opw = np.arange(minind-windowsize//2,minind+windowsize//2+1)
+        self.opw = self.opw % self.nbins
+        self.mpw = self.bins[np.logical_not(np.in1d(self.bins,self.opw))]
+
+
+        
     ### Get each of the pulse components, if they exist
     def getMainpulse(self):
         if self.mpw is None:
@@ -487,7 +493,7 @@ class SinglePulse:
         ytemp /= np.max(ytemp)
 
         return ytemp
-
+    splienSmoothing = spline_smoothing
 
 
     def component_fitting(self,mode='gaussian',nmax=10,full=False,minamp=None,alpha=0.05,allownegative=False,verbose=False):
@@ -566,7 +572,7 @@ class SinglePulse:
         return fitfunc(pfit,self.phases)
         '''
         #return fitfunc,errfunc,pfit,perr,s_sq,n
-            
+    componentFitting = component_fitting
 
     def gaussian_smoothing(self,**kwargs):
         return self.component_fitting(mode='gaussian',**kwargs)
