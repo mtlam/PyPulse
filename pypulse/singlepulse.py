@@ -203,7 +203,7 @@ class SinglePulse:
         self.opw = np.arange(minind-windowsize//2,minind+windowsize//2+1)
         self.opw = self.opw % self.nbins
         self.mpw = self.bins[np.logical_not(np.in1d(self.bins,self.opw))]
-
+        return self.opw
 
         
     ### Get each of the pulse components, if they exist
