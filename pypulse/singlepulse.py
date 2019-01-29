@@ -55,7 +55,7 @@ class SinglePulse:
 
 
         if windowsize is not None:
-            self.calcWindow()
+            self.calcWindow(windowsize)
 
 
         elif opw is None:
@@ -190,8 +190,11 @@ class SinglePulse:
     removeBaseline = remove_baseline
 
 
-    def calcWindow(self):
+    def calcOffpulseWindow(self,windowsize=None):
         # Find minimum in the area
+        if windowsize is None:
+            windowsize = self.nbins/8
+            
         integral = np.zeros_like(self.data)
         for i in self.bins:
             win = np.arange(i-windowsize//2,i+windowsize//2) % self.nbins
