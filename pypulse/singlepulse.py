@@ -55,7 +55,7 @@ class SinglePulse:
 
 
         if windowsize is not None:
-            self.calcWindow(windowsize)
+            self.calcOffpulseWindow(windowsize)
 
 
         elif opw is None:
