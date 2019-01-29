@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>SinglePulse Class &#8212; PyPulse 0.0.1 documentation</title>
+    <title>SinglePulse Class &mdash; PyPulse 0.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,6 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="PyPulse 0.0.1 documentation" href="index.html" />
     <link rel="next" title="Calibrator Class" href="calibrator.html" />
     <link rel="prev" title="Archive Class" href="archive.html" /> 
@@ -43,7 +41,7 @@
         <li class="right" >
           <a href="archive.html" title="Archive Class"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -72,11 +70,14 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -88,6 +89,8 @@
           <div class="body" role="main">
             
   <div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
 </div>
 <div class="section" id="singlepulse-class">
 <h1>SinglePulse Class<a class="headerlink" href="#singlepulse-class" title="Permalink to this headline">¶</a></h1>
@@ -104,10 +107,10 @@
 <li><strong>mpw</strong> (<em>list/numpy.ndarray</em>) &#8211; Indices of the main-pulse window</li>
 <li><strong>ipw</strong> (<em>list/numpy.ndarray</em>) &#8211; Indices of the inter-pulse window</li>
 <li><strong>opw</strong> (<em>list/numpy.ndarray</em>) &#8211; Indices of the off-pulse window</li>
-<li><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Run <a class="reference internal" href="#interpulse_align" title="interpulse_align"><code class="xref py py-func docutils literal"><span class="pre">interpulse_align()</span></code></a></li>
-<li><strong>align</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Rotate the pulse by this amount in phase bin units.</li>
+<li><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Run <a class="reference internal" href="#interpulse_align" title="interpulse_align"><code class="xref py py-func docutils literal"><span class="pre">interpulse_align()</span></code></a></li>
+<li><strong>align</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; Rotate the pulse by this amount in phase bin units.</li>
 <li><strong>float</strong> (<em>period</em>) &#8211; Provide pulse period.</li>
-<li><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Overrides mpw, ipw, opw. Defines an off-pulse window of a given size about the minimum-integral region.</li>
+<li><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) &#8211; Overrides mpw, ipw, opw. Defines an off-pulse window of a given size about the minimum-integral region.</li>
 </ul>
 </td>
 </tr>
@@ -160,7 +163,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>area</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Normalize the pulse so that the area has a value of 1.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>area</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Normalize the pulse so that the area has a value of 1.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -218,9 +221,25 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>save</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Replace the data array with the rotated versions.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>save</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Replace the data array with the rotated versions.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">subtracted_array, <em>numpy.ndarray</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="calcOffpulseWindow">
+<code class="descname">calcOffpulseWindow</code><span class="sig-paren">(</span><span class="optional">[</span><em>windowsize=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#calcOffpulseWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate an offpulse window automatically by finding where the area under the curve is minimized. Returns the offpulse window indices</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) &#8211; Window size in bin units. The default is the length of the data array divided by 8</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">opw, <em>numpy.ndarray</em></td>
 </tr>
 </tbody>
 </table>
@@ -347,8 +366,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>mean</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Calculate the mean value of the off-pulse intensities instead of the roo-mean-square.</li>
-<li><strong>full</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Return both the off-pulse mean and RMS.</li>
+<li><strong>mean</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Calculate the mean value of the off-pulse intensities instead of the roo-mean-square.</li>
+<li><strong>full</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Return both the off-pulse mean and RMS.</li>
 </ul>
 </td>
 </tr>
@@ -383,8 +402,8 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>template</strong> (<em>list/numpy.ndarray/SinglePulse</em>) &#8211; Template shape to fit to the data array.</li>
-<li><strong>fixedphase</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Return only the signal-to-noise with the template shape fixed in its phase.</li>
-<li><strong>rms_baseline</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Provide a different value of the off-pulse root-mean-square noise.</li>
+<li><strong>fixedphase</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Return only the signal-to-noise with the template shape fixed in its phase.</li>
+<li><strong>rms_baseline</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; Provide a different value of the off-pulse root-mean-square noise.</li>
 </ul>
 </td>
 </tr>
@@ -408,8 +427,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>shift</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Rotate the pulse in bin units.</li>
-<li><strong>save</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Replace the data array with the rotated versions.</li>
+<li><strong>shift</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; Rotate the pulse in bin units.</li>
+<li><strong>save</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Replace the data array with the rotated versions.</li>
 </ul>
 </td>
 </tr>
@@ -430,7 +449,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>lam</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The lambda parameter that determines the relative weight of fitting through the knots and minimizing the curvature of the spline. Can take values from (0,1], where 1 = fit exactly through the knots and 0 = minimized curvature of the spline. If not provided, it is calculated as 1-(off-pulse rms)^2.</li>
+<li><strong>lam</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) &#8211; The lambda parameter that determines the relative weight of fitting through the knots and minimizing the curvature of the spline. Can take values from (0,1], where 1 = fit exactly through the knots and 0 = minimized curvature of the spline. If not provided, it is calculated as 1-(off-pulse rms)^2.</li>
 <li><strong>**kwargs</strong> &#8211; <p>Additional arguments to pass to <code class="xref py py-func docutils literal"><span class="pre">utils.subdivide()</span></code>.</p>
 </li>
 </ul>
@@ -460,8 +479,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The function to fit, can choose: &#8216;gaussian&#8217;, .vonmises&#8217;.</li>
-<li><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Maximum number of components to test.</li>
+<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) &#8211; The function to fit, can choose: &#8216;gaussian&#8217;, .vonmises&#8217;.</li>
+<li><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) &#8211; Maximum number of components to test.</li>
 </ul>
 </td>
 </tr>
@@ -480,7 +499,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Maximum number of components to test.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) &#8211; Maximum number of components to test.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">template, <em>numpy.ndarray</em></td>
 </tr>
@@ -496,7 +515,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Maximum number of components to test.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) &#8211; Maximum number of components to test.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">template, <em>numpy.ndarray</em></td>
 </tr>
@@ -554,7 +573,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Show the plot.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Show the plot.</td>
 </tr>
 </tbody>
 </table>
@@ -568,7 +587,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Show the plot.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Show the plot.</td>
 </tr>
 </tbody>
 </table>
@@ -595,12 +614,12 @@
         <li class="right" >
           <a href="archive.html" title="Archive Class"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2016, Michael T. Lam.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.
+        &copy; Copyright 2016, Michael T. Lam.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
     </div>
   </body>
 </html>
