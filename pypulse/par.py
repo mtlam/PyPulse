@@ -213,8 +213,8 @@ class Par:
         elif "PMBETA" in keys:
             PM = abs(self.get("PMBETA"))
         return PM
-    def getPX(self):
-        return self.get('PX')
+    def getPX(self,error=False):
+        return self.get('PX',error=error)
     def getDIST(self):
         return 1.0/self.getPX()
 
