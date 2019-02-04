@@ -197,22 +197,38 @@ class Par:
         return self.numwrap(-1.0) * self.getPeriodDot(shklovskii=shklovskii) / self.getPeriod()**2
         
             
-    def getPM(self):
+    def getPM(self,error=False):
         keys = self.paramnames
-        PM = None
+        retval = None
         if "PMRA" in keys and "PMDEC" in keys:
-            PM = np.sqrt(self.get("PMRA")**2 + self.get("PMDEC")**2) #mas/yr
+            PMRA = self.get("PMRA")
+            PMDEC = self.get("PMDEC")
+            PM = np.sqrt(PMRA**2 + PMDEC**2) #mas/yr
+            if error:
+                PMRAerr = self.get("PMRA",error=True)
+                PMDECerr = self.get("PMDEC",error=True)
+                retval = np.sqrt((PMRAerr*PMRA/PM)**2 + (PMDECerr*PMDEC/PM)**2)
+            else:
+                retval = PM
         elif "PMRA" in keys:
-            PM = abs(self.get("PMRA"))
+            retval = abs(self.get("PMRA",error=error))
         elif "PMDEC" in keys:
-            PM = abs(self.get("PMDEC"))
+            retval = abs(self.get("PMDEC",error=error))
         elif "PMLAMBDA" in keys and "PMBETA" in keys:
-            PM = np.sqrt(self.get("PMLAMBDA")**2 + self.get("PMBETA")**2) #mas/yr
+            PMLAMBDA = self.get("PMLAMBDA")
+            PMBETA = self.get("PMBETA")
+            PM = np.sqrt(PMLAMBDA**2 + PMBETA**2) #mas/yr
+            if error:
+                PMLAMBDAerr = self.get("PMLAMBDA",error=True)
+                PMBETAerr = self.get("PMBETA",error=True)
+                retval = np.sqrt((PMLAMBDAerr*PMLAMBDA/PM)**2 + (PMBETAerr*PMBETA/PM)**2)
+            else:
+                retval = PM
         elif "PMLAMBDA" in keys:
-            PM = abs(self.get("PMLAMBDA"))
+            retval = abs(self.get("PMLAMBDA",error=error))
         elif "PMBETA" in keys:
-            PM = abs(self.get("PMBETA"))
-        return PM
+            retval = abs(self.get("PMBETA",error=error))
+        return retval
     def getPX(self,error=False):
         return self.get('PX',error=error)
     def getDIST(self):
