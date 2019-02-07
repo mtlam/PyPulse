@@ -29,6 +29,7 @@ elif sys.version_info.major == 3:
 
 
 
+
 '''
 ACF
 var=True: calculate variance, var=False, do not calculate. var=number: use as number

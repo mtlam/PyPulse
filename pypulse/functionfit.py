@@ -84,7 +84,7 @@ def fitgaussian2d(data):
     p, cov, infodict, mesg, ier = optimize.leastsq(errorfunction, params, full_output = True)
     #Must multiply by reduced chi-squared first
     #http://stackoverflow.com/questions/14581358/getting-standard-errors-on-fitted-parameters-using-the-optimize-leastsq-method-i
-    s_sq = (errorfunction(p)**2).sum()/(reduce(lambda x,y: x*y,np.shape(data))-len(p))
+    s_sq = (errorfunction(p)**2).sum()/(data.size - len(p))
     if cov is not None:
         cov *= s_sq
     return p,cov
