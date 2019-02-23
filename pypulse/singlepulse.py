@@ -53,7 +53,6 @@ class SinglePulse:
         self.bins = np.arange(self.nbins)
         self.phases = np.arange(self.nbins,dtype=np.float)/self.nbins
 
-
         if windowsize is not None:
             self.calcOffpulseWindow(windowsize)
 
@@ -499,7 +498,7 @@ class SinglePulse:
     splienSmoothing = spline_smoothing
 
 
-    def component_fitting(self,mode='gaussian',nmax=10,full=False,minamp=None,alpha=0.05,allownegative=False,verbose=False):
+    def component_fitting(self,mode='gaussian',nmax=10,full=False,minamp=None,alpha=0.05,allownegative=False,verbose=False,save=False):
         '''
         Fitting to phases is much more numerically stable for von mises function
         '''
@@ -518,7 +517,9 @@ class SinglePulse:
         RSS_funcA = np.sum(residsA**2)
         
 
-        def doreturn():
+        def doreturn(save=False):
+            if save:
+                self.data = fitfunc(pfit,self.phases)
             if full:
                 return fitfunc(pfit,self.phases),pfit,n
             return fitfunc(pfit,self.phases)
@@ -534,7 +535,7 @@ class SinglePulse:
 
 
             if minamp is not None and np.all(residsB<MAX):
-                return doreturn()
+                return doreturn(save=save)
 
             # F-test
             F = ((RSS_funcA-RSS_funcB)/(nparamB-nparamA))/(RSS_funcB/(N-nparamB-1))
@@ -543,11 +544,11 @@ class SinglePulse:
             #print F,RSS_funcA,RSS_funcB,nparamA,nparamB,p_value
             if p_value > alpha: # if p_value < alpha, then B is significant, so keep going
             # Replace old values
-                return doreturn()
+                return doreturn(save=save)
             nparamA = nparamB
             residsA = residsB
             RSS_funcA = RSS_funcB
-        return doreturn()
+        return doreturn(save=save)
 
 
         '''
