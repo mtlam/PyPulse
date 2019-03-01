@@ -241,7 +241,7 @@ class DynamicSpectrum:
             
 
             #try:
-            pout, errs = ffit.gaussianfit(Taxis[NT/2:3*NT/2],self.acf[centerrind,NT/2:3*NT/2],baseline=True)
+            pout, errs = ffit.gaussianfit(Taxis[NT//2:3*NT//2],self.acf[centerrind,NT//2:3*NT//2],baseline=True)
             f = interpolate.interp1d(Taxis,ffit.funcgaussian(pout,Taxis,baseline=True)-(pout[3]+pout[0]/np.e))
             delta_t_d = optimize.brentq(f,0,Taxis[-1])
             #except:
@@ -252,7 +252,7 @@ class DynamicSpectrum:
             #    plt.show()
 
             #try:
-            pout, errs = ffit.gaussianfit(Faxis[NF/2:3*NF/2],self.acf[NF/2:3*NF/2,centercind],baseline=True)
+            pout, errs = ffit.gaussianfit(Faxis[NF//2:3*NF//2],self.acf[NF//2:3*NF//2,centercind],baseline=True)
             f = interpolate.interp1d(Faxis,ffit.funcgaussian(pout,Faxis,baseline=True)-(pout[3]+pout[0]/2))
             delta_nu_d = optimize.brentq(f,0,Faxis[-1])
             #except:
