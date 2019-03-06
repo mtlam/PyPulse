@@ -233,6 +233,16 @@ class Par:
         return self.get('PX',error=error)
     def getDIST(self):
         return 1.0/self.getPX()
+    def getVpperp(self):
+        '''
+        Get transverse velocity
+        v = 4.74 km/s (D/kpc) (mu/ mas yr^-1)
+        '''
+        PM = self.getPM() #mas yr^-1
+        DIST = self.getPX() #kpc
+        return 4.74 * PM * DIST
+        
+        
 
     def getDM(self):
         return self.get('DM')
