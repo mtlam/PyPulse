@@ -587,8 +587,10 @@ class Archive:
 
     def tscrunch(self,nsubint=None,factor=None):
         """average the data cube along the time dimension"""
-        if nsubint == 1 or (factor is None and nsubint is None):
-            return self.scrunch('T')
+        #if nsubint == 1 or (factor is None and nsubint is None):
+        #    return self.scrunch('T')
+        if factor is None and nsubint is None:
+            nsubint = 1
         if factor == 1:
             return self
         if factor is None and nsubint is not None:
@@ -664,8 +666,10 @@ class Archive:
 
     def fscrunch(self,nchan=None,factor=None):
         """average the data cube along the frequency dimension"""
-        if nchan == 1 or (factor is None and nchan is None):
-            return self.scrunch('F')
+        #if nchan == 1 or (factor is None and nchan is None):
+        #    return self.scrunch('F')
+        if factor is None and nchan is None:
+            nchan = 1
         if factor == 1:
             return self
         if factor is None and nchan is not None:
