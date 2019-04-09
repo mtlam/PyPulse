@@ -232,12 +232,15 @@
 <dl class="function">
 <dt id="calcOffpulseWindow">
 <code class="descname">calcOffpulseWindow</code><span class="sig-paren">(</span><span class="optional">[</span><em>windowsize=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#calcOffpulseWindow" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate an offpulse window automatically by finding where the area under the curve is minimized. Returns the offpulse window indices</p>
+<dd><p>Calculate an offpulse window automatically by finding where the area under the curve is minimized, i.e., where</p>
+<div class="math">
+\[\min \sum_{i=i_0}^{i_0+N} U(\phi_i)\]</div>
+<p>is satisfied. The template (or profile) shape as a function of phase is <span class="math">\(U(\phi)\)</span>, <span class="math">\(i_0\)</span> is the initial index and <span class="math">\(N\)</span> is the length of the window. Returns the offpulse window indices.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) &#8211; Window size in bin units. The default is the length of the data array divided by 8</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) &#8211; Window size (<span class="math">\(N\)</span>) in bin units. The default is the length of the data array divided by 8.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">opw, <em>numpy.ndarray</em></td>
 </tr>
