@@ -395,10 +395,10 @@
 <dl class="function">
 <dt id="fitPulse">
 <code class="descname">fitPulse</code><span class="sig-paren">(</span><em>template</em><span class="optional">[</span>, <em>fixedphase=False</em>, <em>rms_baseline=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#fitPulse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform the template-matching procedure of Taylor 1992 in the Fourier domain. Matched filtering assumes that the data profile <span class="math">\(I(\phi)\)</span> is a scaled and shifted version of a template profile <span class="math">\(U(\phi)\)</span>, plus additive noise, i.e.,</p>
+<dd><p>Perform the template-matching procedure of Taylor 1992 in the Fourier domain. Matched filtering assumes that the data profile <span class="math">\(I(t)\)</span> is a scaled and shifted version of a template profile <span class="math">\(U(t)\)</span>, plus additive noise, i.e.,</p>
 <div class="math">
-\[I(\phi) = b U(\phi - \phi_0) + n(\phi)\]</div>
-<p>where <span class="math">\(\phi\)</span> is pulse phase, <span class="math">\(n(\phi)\)</span> is the additive noise, and <span class="math">\(b\)</span> and <span class="math">\(\phi_0\)</span> are the scale factor and shift, respectively. PyPulse performs this fit in terms of phase but these numbers can be translated into absolute arrival times.</p>
+\[I(t) = b U(t - \tau) + n(t)\]</div>
+<p>where <span class="math">\(t\)</span> is time (in pulse phase units), <span class="math">\(n(t)\)</span> is the additive noise, and <span class="math">\(b\)</span> and <span class="math">\(\tau\)</span> are the scale factor and shift, respectively. PyPulse performs this fit in terms of phase but these numbers can be translated into absolute arrival times.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
