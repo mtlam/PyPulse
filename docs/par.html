@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Par Class &#8212; PyPulse 0.0.1 documentation</title>
+    <title>Par Class &mdash; PyPulse 0.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,6 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="PyPulse 0.0.1 documentation" href="index.html" />
     <link rel="next" title="Tim Class" href="tim.html" />
     <link rel="prev" title="DynamicSpectrum Class" href="dynamicspectrum.html" /> 
@@ -43,7 +41,7 @@
         <li class="right" >
           <a href="dynamicspectrum.html" title="DynamicSpectrum Class"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -76,11 +74,14 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -92,6 +93,8 @@
           <div class="body" role="main">
             
   <div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
 </div>
 <div class="section" id="par-class">
 <h1>Par Class<a class="headerlink" href="#par-class" title="Permalink to this headline">¶</a></h1>
@@ -104,8 +107,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Path to a .par file</li>
-<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#type" title="(in Python v2.7)"><em>type</em></a>) &#8211; Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</li>
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) &#8211; Path to a .par file</li>
+<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#type" title="(in Python v3.7)"><em>type</em></a>) &#8211; Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</li>
 </ul>
 </td>
 </tr>
@@ -132,8 +135,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Return the value of a parameter with a flag provided. For example, noise parameters can be given a backend as a flag, e.g., for parameter &#8220;JUMP -fe L-wide 0.0 1 0.0&#8221;, the flag would be &#8220;L-wide&#8221;.</li>
-<li><strong>error</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Return the value of the error associated with a parameter.</li>
+<li><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) &#8211; Return the value of a parameter with a flag provided. For example, noise parameters can be given a backend as a flag, e.g., for parameter &#8220;JUMP -fe L-wide 0.0 1 0.0&#8221;, the flag would be &#8220;L-wide&#8221;.</li>
+<li><strong>error</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Return the value of the error associated with a parameter.</li>
 </ul>
 </td>
 </tr>
@@ -152,7 +155,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)">float</a></td>
 </tr>
 </tbody>
 </table>
@@ -166,9 +169,9 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shklovskii</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Attempt to correct for the Shklovskii effect if proper motion and parallax information is provided.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shklovskii</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Attempt to correct for the Shklovskii effect if proper motion and parallax information is provided.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)">float</a></td>
 </tr>
 </tbody>
 </table>
@@ -182,7 +185,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)">float</a></td>
 </tr>
 </tbody>
 </table>
@@ -196,9 +199,9 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shklovskii</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Attempt to correct for the Shklovskii effect if proper motion and parallax information is provided.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shklovskii</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Attempt to correct for the Shklovskii effect if proper motion and parallax information is provided.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)">float</a></td>
 </tr>
 </tbody>
 </table>
@@ -206,13 +209,61 @@
 
 <dl class="function">
 <dt id="getPM">
-<code class="descname">getPM</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getPM" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getPM</code><span class="sig-paren">(</span><span class="optional">[</span><em>error=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the proper motion in mas/yr. If only one of the two basis parameters is provided, return that value.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>error</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; If true, return the error on the proper motion.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getPX">
+<code class="descname">getPX</code><span class="sig-paren">(</span><span class="optional">[</span><em>error=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the parallax in mas.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>error</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; If true, return the error on the parallax.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getDIST">
+<code class="descname">getDIST</code><span class="sig-paren">(</span><span class="optional">[</span><em>error=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getDIST" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the distance in kpc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>error</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; If true, return the error on the distance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getVpperp">
+<code class="descname">getVpperp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getVpperp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the transverse velocity in km/s.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)">float</a></td>
 </tr>
 </tbody>
 </table>
@@ -226,7 +277,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)">float</a></td>
 </tr>
 </tbody>
 </table>
@@ -240,7 +291,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>full_output</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Return a tuple of the times, DMXs, DMX errors, DMXR1s, DMXR2s, DMXF1s, DMXF2s</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>full_output</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Return a tuple of the times, DMXs, DMX errors, DMXR1s, DMXR2s, DMXF1s, DMXF2s</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">times (<em>numpy.ndarray</em>), DM (<em>numpy.ndarray</em>), DM errors (<em>numpy.ndarray</em>), unless full_output=True.</td>
 </tr>
@@ -248,6 +299,24 @@
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="getXMX">
+<code class="descname">getXMX</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getXMX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a tuple of the XMX values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">xmxs (<em>numpy.ndarray</em>), errs (<em>numpy.ndarray</em>), R1s (<em>numpy.ndarray</em>), R2s (<em>numpy.ndarray</em>), EXPs (<em>numpy.ndarray</em>),</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This function is under construction.</p>
+</div>
 <dl class="function">
 <dt id="getDMseries">
 <code class="descname">getDMseries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getDMseries" title="Permalink to this definition">¶</a></dt>
@@ -298,7 +367,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
 </tr>
 </tbody>
 </table>
@@ -312,9 +381,9 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>years</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Divide the timespan by 365.25.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>years</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) &#8211; Divide the timespan by 365.25.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)">float</a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v3.7)">float</a></td>
 </tr>
 </tbody>
 </table>
@@ -334,13 +403,13 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; If only the name parameter is specified, then this is the entire parameter string and will be parsed. Otherwise, this is the parameter name (e.g. PSR, P0/F0, etc.)</li>
-<li><strong>value</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Parameter value. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.</li>
-<li><strong>fit</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Parameter fit value, i.e. whether or not the parameter is to be fit in the timing model. Can be supplied a numeric value that will be wrapped with an int</li>
-<li><strong>error</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Parameter error. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.</li>
-<li><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; If there is a flag associated with the parameter</li>
-<li><strong>flagvalue</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The vale the flag is set to.</li>
-<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#type" title="(in Python v2.7)"><em>type</em></a>) &#8211; Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</li>
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) &#8211; If only the name parameter is specified, then this is the entire parameter string and will be parsed. Otherwise, this is the parameter name (e.g. PSR, P0/F0, etc.)</li>
+<li><strong>value</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) &#8211; Parameter value. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.</li>
+<li><strong>fit</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) &#8211; Parameter fit value, i.e. whether or not the parameter is to be fit in the timing model. Can be supplied a numeric value that will be wrapped with an int</li>
+<li><strong>error</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) &#8211; Parameter error. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.</li>
+<li><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) &#8211; If there is a flag associated with the parameter</li>
+<li><strong>flagvalue</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) &#8211; The vale the flag is set to.</li>
+<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#type" title="(in Python v3.7)"><em>type</em></a>) &#8211; Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</li>
 </ul>
 </td>
 </tr>
@@ -358,7 +427,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
 </tr>
 </tbody>
 </table>
@@ -400,7 +469,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v3.7)">int</a></td>
 </tr>
 </tbody>
 </table>
@@ -414,7 +483,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
 </tr>
 </tbody>
 </table>
@@ -428,7 +497,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
 </tr>
 </tbody>
 </table>
@@ -455,12 +524,12 @@
         <li class="right" >
           <a href="dynamicspectrum.html" title="DynamicSpectrum Class"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2016, Michael T. Lam.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.
+        &copy; Copyright 2016, Michael T. Lam.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
     </div>
   </body>
 </html>
