@@ -64,12 +64,15 @@ class Parameter:
                     if numre.match(splitstring[-1]):
                         self.error = numwrap(splitstring[-1].replace('D','e'))
                     elif splitstring[1].isdigit():
-                        self.error = int(splitstring[-1])
+                        if splitstring[-1] == "NaN":
+                            self.error = np.nan
+                        else:
+                            self.error = int(splitstring[-1])
                     elif splitstring[1][1:].isdigit() and (splitstring[1][0] == "+" or splitstring[1][0] == "-"):
                         self.error = int(splitstring[-1])
                     else:
                         self.error = splitstring[-1]
-                    if len(splitstring) == 3 and not numre.match(splitstring[2]):
+                    if len(splitstring) == 3 and not numre.match(splitstring[2]) and splitstring[2] != "NaN":
                         self.fit = int(splitstring[2])
 
     def getName(self):
