@@ -234,8 +234,13 @@ class Par:
         return retval
     def getPX(self,error=False):
         return self.get('PX',error=error)
-    def getDIST(self):
-        return 1.0/self.getPX()
+    def getDIST(self,error=False):
+        if error:
+            PX = self.getPX()
+            PXerr = self.getPX(error=True)
+            return PXerr/PX**2
+        else:
+            return 1.0/self.getPX()
     def getVpperp(self):
         '''
         Get transverse velocity
