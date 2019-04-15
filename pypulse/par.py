@@ -235,20 +235,29 @@ class Par:
     def getPX(self,error=False):
         return self.get('PX',error=error)
     def getDIST(self,error=False):
+        PX = self.getPX()
         if error:
-            PX = self.getPX()
             PXerr = self.getPX(error=True)
             return PXerr/PX**2
         else:
-            return 1.0/self.getPX()
-    def getVpperp(self):
+            return 1.0/PX
+    def getVpperp(self,error=False):
         '''
         Get transverse velocity
         v = 4.74 km/s (D/kpc) (mu/ mas yr^-1)
+
+        for errors: assuming PM and PX are 
         '''
         PM = self.getPM() #mas yr^-1
-        DIST = self.getPX() #kpc
-        return 4.74 * PM * DIST
+        DIST = self.getDIST() #kpc
+        retval = 4.74 * PM * DIST
+        
+        if error:
+            PMerr = self.getPM(error=True)
+            DISTerr = self.getDIST(error=True)
+            return retval * np.sqrt((PMerr/PM)**2 + (DISTerr/DIST)**2)
+        else:
+            return retval
         
         
 
