@@ -26,7 +26,7 @@ else filename is a string and must be parsed
 kwargs are flags
 '''
 
-DECIMAL = d.decimal
+DECIMAL = d.Decimal
 
 class TOA:
     def __init__(self,filename,freq=None,MJD=None,err=None,siteID=None,numwrap=float,**kwargs):
