@@ -16,9 +16,14 @@ MAS_TO_RAD = np.pi/(180*60*60*1000)
 YR_TO_S = 3.154e7
 
 
+DECIMAL = d.Decimal
+
 class Parameter:
-    def __init__(self,name,value=None,fit=None,error=None,flag=None,flagvalue=None,numwrap=d.Decimal):
-        self.numwrap = numwrap
+    def __init__(self,name,value=None,fit=None,error=None,flag=None,flagvalue=None,numwrap=float,usedecimal=False):
+        if usedecimal:
+            self.numwrap = DECIMAL
+        else:
+            self.numwrap = numwrap
         # Initialize all values just in case
         self.name = name
         self.value = value

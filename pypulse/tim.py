@@ -25,8 +25,11 @@ else filename is a string and must be parsed
 
 kwargs are flags
 '''
+
+DECIMAL = d.decimal
+
 class TOA:
-    def __init__(self,filename,freq=None,MJD=None,err=None,siteID=None,numwrap=d.Decimal,**kwargs):
+    def __init__(self,filename,freq=None,MJD=None,err=None,siteID=None,numwrap=float,**kwargs):
         self.flags = []
         if freq is not None and MJD is not None and err is not None and siteID is not None: #behave using all arguments regularly
             self.filename = filename
@@ -117,8 +120,11 @@ class TOA:
 
 
 class Tim:
-    def __init__(self,filename,numwrap=d.Decimal):
-        self.numwrap = numwrap
+    def __init__(self,filename,numwrap=float,usedecimal=False):
+        if usedecimal:
+            self.numwrap = DECIMAL
+        else:
+            self.numwrap = numwrap
         self.load(filename)
 
     def load(self,filename):
