@@ -240,7 +240,7 @@ class Par:
             PXerr = self.getPX(error=True)
             return PXerr/PX**2
         else:
-            return 1.0/PX
+            return self.numwrap(1.0)/PX
     def getVpperp(self,error=False):
         '''
         Get transverse velocity
@@ -250,7 +250,7 @@ class Par:
         '''
         PM = self.getPM() #mas yr^-1
         DIST = self.getDIST() #kpc
-        retval = 4.74 * PM * DIST
+        retval = self.numwrap(4.74) * PM * DIST
         
         if error:
             PMerr = self.getPM(error=True)
