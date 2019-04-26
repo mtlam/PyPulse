@@ -1699,9 +1699,9 @@ class Archive:
             return numwrap(self.header['DM'])
         elif 'CHAN_DM' in self.header:
             return numwrap(self.header['CHAN_DM'])
-        #if self.params is None:
-        #    return
-        #return self.params.getDM()
+        if self.params is None:
+            return
+        return self.params.getDM()
     def getRM(self,numwrap=float):
         """Returns the data header RM"""
         if 'RM' in self.subintheader.keys():
