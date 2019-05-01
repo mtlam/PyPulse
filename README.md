@@ -7,11 +7,11 @@ Read the documentation [here](https://mtlam.github.io/PyPulse/).
 
 This is an alternate code base from [PSRCHIVE](http://psrchive.sourceforge.net/).
 
-Requires:
-python 2.7 or 3.X
-numpy
-scipy
-matplotlib
+Requires:<br>
+python 2.7 or 3.X<br>
+numpy<br>
+scipy<br>
+matplotlib<br>
 astropy or pyfits
 
 
