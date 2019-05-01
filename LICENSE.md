@@ -1,7 +1,7 @@
 LICENSE
 -------
 
-Copyright (c) 2015-2017, Michael T. Lam
+Copyright (c) 2015-2019, Michael T. Lam
 
 All rights reserved.
 
