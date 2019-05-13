@@ -75,6 +75,8 @@ class TOA:
         return self.freq
     def getMJD(self):
         return self.MJD
+    def getErr(self):
+        return self.getError()
     def getError(self):
         return self.err
     def getSiteID(self):
