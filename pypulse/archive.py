@@ -90,6 +90,9 @@ class Archive:
             t1=time.time()
             print("Load time: %0.2f s" % (t1-t0))
 
+
+        self.template = None
+
         #self.reset(False) #put prepare into here?, copying to arch is done here
 
         #if prepare:
@@ -1269,7 +1272,7 @@ class Archive:
 
 
     #just bscrunch this?
-    def getDynamicSpectrum(self,window=None,template=None,mpw=None,align=None,windowsize=None,weight=True,verbose=False,snr=False):
+    def getDynamicSpectrum(self,window=None,template=None,mpw=None,align=None,windowsize=None,weight=True,verbose=False,snr=False,maketemplate=False):
         """
         Return the dynamic spectrum
         window: return the dynamic spectrum using only a certain phase bins
@@ -1287,6 +1290,13 @@ class Archive:
             else:
                 wrapfunc = lambda x: np.transpose(x)
 
+
+            if template is None and maketemplate:
+                if self.template is None:
+                    template = self.calculateTemplate()
+                else:
+                    template = self.template
+                
             if template is not None:
                 if isinstance(template,SP.SinglePulse):
                     sptemp = template
