@@ -835,6 +835,9 @@ class Archive:
 
 
     def calculateAverageProfile(self):
+        """
+        Averages the data along the time/polarization/frequency axes
+        """
         self.average_profile = np.mean(np.mean(self.data,axis=2),axis=0)
         if np.shape(self.average_profile)[0] != 1: #polarization add
             if self.subintheader['POL_TYPE'] == "AABBCRCI": #Coherence
@@ -844,11 +847,31 @@ class Archive:
         else:
             self.average_profile = self.average_profile[0,:]
         self.calculateOffpulseWindow()
+        retrun self.average_profile
 
     def calculateOffpulseWindow(self):
+        """
+        Automatically calculates the off-pulse window
+        """
         self.spavg = SP.SinglePulse(self.average_profile,windowsize=int(self.getNbin()//8))
         self.opw = self.spavg.opw
+        return self.opw
 
+    def calculateTemplate(self,mode='vonmises',sigma=None,lam=None,**kwargs):
+        """
+        
+        """
+        if mode == "vonmises":
+            self.template = self.spavg.vonmises_smoothing(**kwargs)
+        elif mode == "gaussian":
+            self.template = self.spavg.gaussian_smoothing(**kwargs)
+        elif mode == "spline":
+            self.template = self.spavg.spline_smoothing(sigma=sigma,lam=lam,**kwargs)
+        else:
+            self.template = None
+        # Recalculate opw?
+        return self.template
+        
 
     def superprep(self):
         """
