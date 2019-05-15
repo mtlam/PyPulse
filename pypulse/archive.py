@@ -865,14 +865,17 @@ class Archive:
         
         """
         if mode == "vonmises":
-            self.template = self.spavg.vonmises_smoothing(**kwargs)
+            template = self.spavg.vonmises_smoothing(**kwargs)
         elif mode == "gaussian":
-            self.template = self.spavg.gaussian_smoothing(**kwargs)
+            template = self.spavg.gaussian_smoothing(**kwargs)
         elif mode == "spline":
-            self.template = self.spavg.spline_smoothing(sigma=sigma,lam=lam,**kwargs)
+            template = self.spavg.spline_smoothing(sigma=sigma,lam=lam,**kwargs)
         else:
+            template = None
             self.template = None
-        # Recalculate opw?
+        if template is not None:
+            self.template = SP.SinglePulse(template,windowsize=int(self.getNbin()//8))
+            self.opw = self.template.opw
         return self.template
         
 
