@@ -860,7 +860,7 @@ class Archive:
         self.opw = self.spavg.opw
         return self.opw
 
-    def calculateTemplate(self,mode='vonmises',sigma=None,lam=None,**kwargs):
+    def calculateTemplate(self,mode='vonmises',sigma=None,lam=None,window_length=11,polyorder=5,**kwargs):
         """
         Calculate a template shape
         """
@@ -870,6 +870,8 @@ class Archive:
             template = self.spavg.gaussian_smoothing(**kwargs)
         elif mode == "spline":
             template = self.spavg.spline_smoothing(sigma=sigma,lam=lam,**kwargs)
+        elif mode == "savgol":
+            template = self.spavg.savgol_smoothing(window_length=window_length,polyorder=5)
         else:
             template = None
             self.template = None

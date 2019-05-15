@@ -11,6 +11,7 @@ import numpy as np
 import pypulse.utils as u
 import scipy.optimize as optimize
 import scipy.stats as stats
+import scipy.signal as signal
 
 import sys
 get_toa = u.get_toa3 #try this one
@@ -585,8 +586,14 @@ class SinglePulse:
         return self.component_fitting(mode='vonmises',**kwargs)
     vonMises_smoothing = vonmises_smoothing
 
+    def savgol_smoothing(self,window_length=11,polyorder=5):
+        """
+        Savitzky-Golay filter smoothing
+        """
+        return signal.savgol_filter(self.data,window_length,polyorder)
 
-    def smooth(self,mode='vonmises',sigma=None,lam=None,**kwargs):
+
+    def smooth(self,mode='vonmises',sigma=None,lam=None,window_length=11,polyorder=5,**kwargs):
         """
         Generic smoothing caller
         """
@@ -596,7 +603,9 @@ class SinglePulse:
             return self.gaussian_smoothing(**kwargs)
         elif mode == "spline":
             return self.spline_smoothing(sigma=sigma,lam=lam,**kwargs)
-        
+        elif mode == "savgol":
+            return self.savgol_smoothing(window_length=window_length,polyorder=polyorder)
+        return None
             
     def estimateScatteringTimescale(self,searchtauds=None,ntauds=25,name=None,fourier=False,**kwargs):
         if searchtauds is None:
