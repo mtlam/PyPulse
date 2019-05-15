@@ -344,6 +344,7 @@ class SinglePulse:
         knots = np.array(np.sort(knots),dtype=np.int)
         knots = np.concatenate(([0],knots,[N])) #Add endpoints
 
+        setsigma = False
         if sigma is None:
             setsigma = True
 
@@ -585,8 +586,18 @@ class SinglePulse:
     vonMises_smoothing = vonmises_smoothing
 
 
-
-
+    def smooth(self,mode='vonmises',sigma=None,lam=None,**kwargs):
+        """
+        Generic smoothing caller
+        """
+        if mode == "vonmises":
+            return self.vonmises_smoothing(**kwargs)
+        elif mode == "gaussian":
+            return self.gaussian_smoothing(**kwargs)
+        elif mode == "spline":
+            return self.spline_smoothing(sigma=sigma,lam=lam,**kwargs)
+        
+            
     def estimateScatteringTimescale(self,searchtauds=None,ntauds=25,name=None,fourier=False,**kwargs):
         if searchtauds is None:
             fwhm = self.getFWHM(timeunits=False) #in bin units

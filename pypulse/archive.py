@@ -862,7 +862,7 @@ class Archive:
 
     def calculateTemplate(self,mode='vonmises',sigma=None,lam=None,**kwargs):
         """
-        
+        Calculate a template shape
         """
         if mode == "vonmises":
             template = self.spavg.vonmises_smoothing(**kwargs)
