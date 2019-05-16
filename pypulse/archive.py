@@ -850,7 +850,7 @@ class Archive:
         else:
             self.average_profile = self.average_profile[0,:]
         self.calculateOffpulseWindow()
-        retrun self.average_profile
+        return self.average_profile
 
     def calculateOffpulseWindow(self):
         """
