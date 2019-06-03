@@ -1317,8 +1317,12 @@ class Archive:
                 if mpw is not None: #best way to handle this now?
                     sptemp.mpw = mpw 
                 elif windowsize is not None: #redo the windowsize
+                    if windowsize >= len(sptemp.data):
+                        raise IndexError("Improper window size")
                     sptemp = SP.SinglePulse(sptemp.data,windowsize=windowsize)
-                
+
+
+                    
         
                 gs = np.zeros((fullshape[0],fullshape[2]))
                 offs = np.zeros((fullshape[0],fullshape[2]))
@@ -1358,7 +1362,7 @@ class Archive:
     #                            plot(self.data[i,j])
     #                            show()
     #                            raise SystemExit
-                            if spfit!=None:
+                            if spfit is not None:
                                 gs[i,j] = spfit[ind] #bhat
                                 offs[i,j] = baseline
                                 sig_gs[i,j] = spfit[4]  
