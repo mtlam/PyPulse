@@ -109,6 +109,10 @@ class DynamicSpectrum:
         if redo == False and self.baseline_removed == True:
             return self
         flatdata = self.data.flatten()
+        if np.all(flatdata==np.median(flatdata))[0]:
+            self.data -= np.median(flatdata)
+            self.baseline_removed = True
+            return self
         interval = np.power(10,np.floor(np.log10(np.ptp(flatdata/100)))) #~100 divisions, but bins to an even power of 10
         center,hist = u.histogram(flatdata,interval=interval)
 
