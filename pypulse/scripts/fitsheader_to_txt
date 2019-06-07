@@ -1,0 +1,93 @@
+#! /usr/bin/env python
+
+'''
+Michael Lam
+Last Updated: 9/12/2014
+
+Converts PSRFITS header to txt
+'''
+
+from optparse import OptionParser
+import pyfits
+import sys 
+
+
+cmdline = OptionParser(usage="usage: %prog [options] file1 (file2 ...)")
+#cmdline.add_option("-m", dest="overwrite",
+#  help="Overwrite input files", action="store_true", default=False)
+
+
+cmdline.add_option("-e", dest="ext",
+  help="Extension to append to filename (default=header.txt)", action="store",
+  type="string", default="header.txt")
+#cmdline.add_option("-n", "--nchan", dest="nchan",
+#  help="Original number of PFB channels in file (default=4)",
+#  action="store", type="int", default=4)
+
+(opt,args) = cmdline.parse_args()
+
+
+if (len(args)==0):
+  cmdline.print_help()
+  sys.exit()
+
+
+
+
+
+for fname in args:
+  
+  hdulist = pyfits.open(fname)
+  header = hdulist[0].header
+  #print hdulist.info()
+
+  hdunames = map(lambda x: x.name,hdulist)
+  basename = "".join(fname.split('.')[:-1])
+
+  
+  outfilename = basename + "." + opt.ext
+
+
+
+  #Write out header to file
+  header.toTxtFile(outfilename,clobber=True)
+  FILE = open(outfilename,"a")
+
+  output = ""
+
+  #for key in header:
+  #  print "%s\t%s"%(key,header[key])
+
+  if 'HISTORY' in hdunames:  
+    output += "==============================\n"
+    output += "==========HISTORY=============\n"
+    output += "==============================\n"
+
+    historyheader = map(lambda x: x.name,hdulist['HISTORY'].columns)
+    output += ",".join(historyheader) + "\n"
+    for d in hdulist['HISTORY'].data:
+      output += ",".join(map(lambda x: str(x),d)) + "\n"
+
+  if "PSRPARAM" in hdunames:
+    output += "==============================\n"
+    output += "=========PARAMETERS===========\n"
+    output += "==============================\n"
+
+    for d in hdulist['PSRPARAM'].data:
+      output += d[0] + "\n"
+
+  if "POLYCO" in hdunames:
+    output += "==============================\n"
+    output += "==========POLYCO==============\n"
+    output += "==============================\n"
+
+    polycoheader = map(lambda x: x.name,hdulist['POLYCO'].columns)
+    output += ",".join(polycoheader) + "\n"
+    for d in hdulist['POLYCO'].data:
+      output += ",".join(map(lambda x: str(x),d)) + "\n"
+
+  # Do not include any info from hdulist['SUBINT']
+    
+  FILE.write(output)
+  FILE.close()
+  hdulist.close()
