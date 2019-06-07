@@ -1201,6 +1201,13 @@ class Archive:
         else: #do both?
             pass
 
+    def getFrequencies(self,**kwargs):
+        """Convenience function for getAxis"""
+        return getAxis('F',**kwargs)
+    def getTimes(self,**kwargs):
+        """Convenience function for getAxis"""
+        return getAxis('T',**kwargs)
+
 
     #Assumes the shape of data is (t,f,b) (i.e. polarization scrunched)
     def getPulse(self,t,f=None):
