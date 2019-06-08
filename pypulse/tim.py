@@ -158,7 +158,7 @@ class Tim:
                 toa = TOA(line,numwrap=self.numwrap)
                 self.toas.append(toa)
 
-    def comment(func,cut=None):
+    def comment(self,func,cut=None):
         """ Apply boolean function to comment TOAs """
         for i in range(self.numlines):
             if func(self.toas[i]):
