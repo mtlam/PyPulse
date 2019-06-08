@@ -160,8 +160,8 @@ class Tim:
 
     def comment(self,func,cut=None):
         """ Apply boolean function to comment TOAs """
-        for i in range(self.numlines):
-            if func(self.toas[i]):
+        for i,toa in enumerate(self.toas):
+            if func(toa):
                 self.toas[i].comment(cut=cut)
 
 
