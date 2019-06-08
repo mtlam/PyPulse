@@ -166,6 +166,7 @@ class Tim:
 
 
     def save(self,filename=None):
+        """ Save tim file """
         output = ""
 
         ntoa = 0
@@ -183,21 +184,22 @@ class Tim:
             FILE.write(output)
 
     def getFreqs(self):
-        freqs = np.array(fmap(lambda x: x.getFreq(),self.toas))
-        return freqs
+        """ Return frequencies of all TOAs """
+        return np.array(fmap(lambda x: x.getFreq(),self.toas))
 
 
     def getMJDs(self):
-        mjds = np.array(fmap(lambda x: x.getMJD(),self.toas))
-        return mjds
+        """ Return MJDs of all TOAs """
+        return np.array(fmap(lambda x: x.getMJD(),self.toas))
 
 
     def getErrors(self):
-        errors = np.array(fmap(lambda x: x.getError(),self.toas)) 
-        return errors
+        """ Return uncertainties of all TOAs """
+        return np.array(fmap(lambda x: x.getError(),self.toas)) 
 
     
     def get(self,value,numwrap=None):
+        """ Return value of flag """
         if numwrap is None:
             retval = np.array(fmap(lambda x: x.get(value),self.toas))
         else:
@@ -205,6 +207,7 @@ class Tim:
         return retval
 
     def getTspan(self,years=False):
+        """ Return total timespan of data """
         mjds = self.getMJDs()
         if years:
             return np.ptp(mjds)/self.numwrap("365.25")
