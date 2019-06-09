@@ -50,14 +50,14 @@ class Parameter:
             elif flagre.match(splitstring[1][:2]) and len(splitstring)>=4: #flag present
                 self.flag = splitstring[1]
                 self.flagvalue = splitstring[2]
-                self.value = numwrap(splitstring[3])
+                self.value = self.numwrap(splitstring[3])
                 if len(splitstring) >= 5:                                    
-                    self.error = numwrap(splitstring[-1])
+                    self.error = self.numwrap(splitstring[-1])
                     if len(splitstring) == 6:
                         self.fit = int(splitstring[4])
             else: #no flag present
                 if numre.match(splitstring[1]):
-                    self.value = numwrap(splitstring[1].replace('D','e'))
+                    self.value = self.numwrap(splitstring[1].replace('D','e'))
                 elif splitstring[1].isdigit():
                     self.value = int(splitstring[1])
                 elif splitstring[1][1:].isdigit() and (splitstring[1][0] == "+" or splitstring[1][0] == "-"):
@@ -67,7 +67,7 @@ class Parameter:
 
                 if len(splitstring) == 3 or len(splitstring) == 4:
                     if numre.match(splitstring[-1]):
-                        self.error = numwrap(splitstring[-1].replace('D','e'))
+                        self.error = self.numwrap(splitstring[-1].replace('D','e'))
                     elif splitstring[1].isdigit():
                         if splitstring[-1] == "NaN":
                             self.error = np.nan
@@ -99,7 +99,7 @@ class Parameter:
 
 #numwrap could be float
 class Par:
-    def __init__(self,filename,numwrap=d.Decimal):
+    def __init__(self,filename,numwrap=float,usedecimal=False):
         self.filename = filename
         if type(filename) == list or type(filename) == np.ndarray:
             lines = filename
@@ -109,13 +109,17 @@ class Par:
         else:
             return None
 
-        self.numwrap = numwrap
+
+        if usedecimal:
+            self.numwrap = DECIMAL
+        else:
+            self.numwrap = numwrap
         self.paramlist = list() #each unique parameter
         self.paramnames = list() #the names of each parameter
         for line in lines:
             if len(line) == 0:
                 continue
-            p = Parameter(line)
+            p = Parameter(line,numwrap=self.numwrap)
             self.paramlist.append(p)
             self.paramnames.append(p.getName())
         self.paramnames = np.array(self.paramnames,dtype=np.str)
