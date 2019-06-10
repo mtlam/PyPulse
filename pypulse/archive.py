@@ -1418,7 +1418,7 @@ class Archive:
             else:
                 plt.close()
         else:
-            print("Invalid dimensions")
+            raise IndexError("Invalud dimensions for plotting")
         return ax
 
 
