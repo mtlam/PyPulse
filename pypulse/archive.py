@@ -1308,6 +1308,9 @@ class Archive:
                     template = self.calculateTemplate()
                 else:
                     template = self.template
+                    
+            Fedges = self.getAxis('F',edges=True)
+            Tedges = self.getAxis('T',edges=True)
                 
             if template is not None:
                 if isinstance(template,SP.SinglePulse):
@@ -1375,15 +1378,13 @@ class Archive:
                                 sig_gs[i,j] = spfit[4]  
                     gs,offs,sig_gs = wrapfunc(gs),wrapfunc(offs),wrapfunc(sig_gs)
                 #return wrapfunc(gs),wrapfunc(offs),wrapfunc(sig_gs)
-                Fedges = self.getAxis('F',edges=True)
-                Tedges = self.getAxis('T',edges=True)
                 return DS.DynamicSpectrum(gs,offs,sig_gs,F=Fedges,T=Tedges)
                 
             #kind of hard wired
             if window is None:
-                return wrapfunc(np.mean(data,axis=2))
+                return DS.DynamicSpectrum(wrapfunc(np.mean(data,axis=2)),F=Fedges,T=Tedges)
             else:
-                return wrapfunc(np.mean(data[:,:,window],axis=2))
+                return DS.DynamicSpectrum(wrapfunc(np.mean(data[:,:,window],axis=2)),F=Fedges,T=Tedges)
 
 
 
