@@ -164,7 +164,21 @@ class Tim:
             if func(toa):
                 self.toas[i].comment(cut=cut)
 
+    def any(self,func):
+        """ Apply boolean function and see if any TOA meets said condition """
+        for i,toa in enumerate(self.toas):
+            if func(toa):
+                return True
+        return False
 
+    def all(self,func):
+        """ Apply boolean function and see if all TOAs meet said condition """
+        for i,toa in enumerate(self.toas):
+            if not func(toa):
+                return False
+        return True
+
+                
     def save(self,filename=None):
         """ Save tim file """
         output = ""
