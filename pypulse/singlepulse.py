@@ -161,7 +161,7 @@ class SinglePulse:
 
     def getUscale(self):
         """
-        Following Lam et al. 2018a Optimal FRequencies approach, equation 11.
+        Following Lam et al. 2018a Optimal Frequencies approach, equation 11.
         """
         Uobsbar = np.mean(self.data)
         return 1.0/Uobsbar
