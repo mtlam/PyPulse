@@ -226,3 +226,11 @@ class Tim:
         if years:
             return np.ptp(mjds)/self.numwrap("365.25")
         return np.ptp(mjds)
+
+
+    def set(self,flag,value):
+        """ Set value of flag for all TOAs """
+        for i,toa in enumerate(self.toas):
+            toa.set(flag,value)
+        return
+
