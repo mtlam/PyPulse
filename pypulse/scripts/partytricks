@@ -41,7 +41,7 @@ if (len(args)==0):
 
 
 for fname in args:
-    print opt.now
+    print(opt.now)
     if opt.now == 'default':
         now = Time(datetime.datetime.utcnow())
     else:
