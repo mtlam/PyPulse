@@ -147,13 +147,14 @@ class Tim:
 
         self.toas = list()
         for i,line in enumerate(lines):
-            if line[:2] == "C " or line[:3] == "CC " or line[0] == "#":
+            line = line.strip() #for non-IPTA-compliant TOAs
+            if len(line) == 0 or line[:2] == "C " or line[:2] == "CC" or line[0] == "#": #CC might be bad, but otherwise there are too many variants
                 self.comment_dict[i] = line
                 continue
             stripline = line.strip()
             count = stripline.count(" ")
             splitline = stripline.split()
-            if splitline[0] in COMMANDS or count < 4: #is a command
+            if len(splitline) == 0 or splitline[0] in COMMANDS or count < 4: #is a command
                 self.command_dict[i] = tuple(splitline) #primitive handling
             else:
                 toa = TOA(line,numwrap=self.numwrap)
