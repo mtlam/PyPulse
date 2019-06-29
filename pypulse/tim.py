@@ -3,7 +3,7 @@ Michel Lam 2015
 Loads a tim file
 '''
 
-import decimal as d
+import decimal
 import numpy as np
 import re
 import sys
@@ -26,7 +26,7 @@ else filename is a string and must be parsed
 kwargs are flags
 '''
 
-DECIMAL = d.Decimal
+DECIMAL = decimal.Decimal
 
 class TOA:
     def __init__(self,filename,freq=None,MJD=None,err=None,siteID=None,numwrap=float,**kwargs):
@@ -56,7 +56,7 @@ class TOA:
     #def __repr__(self):
     #    return 
     def __str__(self):
-        if isinstance(self.MJD,d.Decimal):
+        if isinstance(self.MJD,DECIMAL):
             retval = "%s %0.6f %s % 7.3f %+4s  "%(self.filename,self.freq,self.MJD,self.err,str(self.siteID))
         else:
             retval = "%s %0.6f %0.15f % 7.3f %+4s  "%(self.filename,self.freq,self.MJD,self.err,str(self.siteID))
@@ -123,7 +123,8 @@ class TOA:
 
 class Tim:
     def __init__(self,filename,numwrap=float,usedecimal=False):
-        if usedecimal:
+        self.usedecimal = usedecimal
+        if self.usedecimal:
             self.numwrap = DECIMAL
         else:
             self.numwrap = numwrap
@@ -157,6 +158,11 @@ class Tim:
             else:
                 toa = TOA(line,numwrap=self.numwrap)
                 self.toas.append(toa)
+
+
+    def __repr__(self):
+        numwrapstr = repr(self.numwrap).split("'")[1]
+        return "Tim(%r,numwrap=%s,usedecimal=%r)" % (self.filename,numwrapstr,self.usedecimal)
 
     def comment(self,func,cut=None):
         """ Apply boolean function to comment TOAs """
