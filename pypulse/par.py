@@ -3,7 +3,7 @@ Michel Lam 2015
 Loads a parameter file
 '''
 
-import decimal as d
+import decimal
 import numpy as np
 import re
 
@@ -16,7 +16,7 @@ MAS_TO_RAD = np.pi/(180*60*60*1000)
 YR_TO_S = 3.154e7
 
 
-DECIMAL = d.Decimal
+DECIMAL = decimal.Decimal
 
 class Parameter:
     def __init__(self,name,value=None,fit=None,error=None,flag=None,flagvalue=None,numwrap=float,usedecimal=False):
@@ -96,8 +96,6 @@ class Parameter:
 
 
 
-
-#numwrap could be float
 class Par:
     def __init__(self,filename,numwrap=float,usedecimal=False):
         self.filename = filename
@@ -109,8 +107,8 @@ class Par:
         else:
             return None
 
-
-        if usedecimal:
+        self.usedecimal = usedecimal
+        if self.usedecimal:
             self.numwrap = DECIMAL
         else:
             self.numwrap = numwrap
@@ -128,7 +126,9 @@ class Par:
 
 
     def __repr__(self):
-        return "Par(%r)"%self.filename #numwrap?
+        numwrapstr = repr(self.numwrap).split("'")[1]
+        return "Par(%r,numwrap=%s,usedecimal=%r)" % (self.filename,numwrapstr,self.usedecimal)
+    
     def __str__(self):
         if type(self.filename) == list or type(self.filename) == np.ndarray:
             return "\n".join(self.filename)
@@ -161,7 +161,7 @@ class Par:
                     val = self.paramlist[i].getValue()
                 try:
                     retval.append(self.numwrap(val))
-                except (ValueError, TypeError, d.InvalidOperation):
+                except (ValueError, TypeError, decimal.InvalidOperation):
                     retval.append(val)
             if len(retval) == 1:
                 return retval[0]
