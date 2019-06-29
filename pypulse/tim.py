@@ -147,7 +147,7 @@ class Tim:
 
         self.toas = list()
         for i,line in enumerate(lines):
-            if line[:2] == "C " or line[0] == "#":
+            if line[:2] == "C " or line[:3] == "CC " or line[0] == "#":
                 self.comment_dict[i] = line
                 continue
             stripline = line.strip()
