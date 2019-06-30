@@ -2,17 +2,20 @@
 Michael Lam 2019
 Loads a dmxparse DMX file (tempo output)
 '''
-import numpy as np
 import sys
-if sys.version_info.major == 2:
-    fmap = map    
-elif sys.version_info.major == 3:
-    fmap = lambda x,*args: list(map(x,*args))
+import numpy as np
 
-    
+if sys.version_info.major == 2:
+    fmap = map
+elif sys.version_info.major == 3:
+    fmap = lambda x, *args: list(map(x, *args))
+
+
 class DM:
-    def __init__(self,epoch,value=None,err=None,R1=None,R2=None,F1=None,F2=None,dmxbin=None):
-        if value is not None and err is not None and R1 is not None and R2 is not None and F1 is not None and F2 is not None and dmxbin is not None:
+    def __init__(self, epoch, value=None, err=None, R1=None, R2=None,
+                 F1=None, F2=None, dmxbin=None):
+        if (value is not None and err is not None and R1 is not None and
+                R2 is not None and F1 is not None and F2 is not None and dmxbin is not None):
             self.epoch = epoch
             self.value = value
             self.err = err
@@ -62,44 +65,44 @@ class DM:
         return self.dmxbin
 
     # Use these with extreme caution!
-    def setMJD(self,epoch):
+    def setMJD(self, epoch):
         self.setEpoch(epoch)
-    def setEpoch(self,epoch):
+    def setEpoch(self, epoch):
         self.epoch = epoch
-    def setDM(self,value):
+    def setDM(self, value):
         self.setValue(value)
-    def setValue(self,value):
+    def setValue(self, value):
         self.value = value
-    def setErr(self,err):
+    def setErr(self, err):
         self.setError(err)
-    def setError(self,err):
+    def setError(self, err):
         self.err = err
-    def setR1(self,R1):
+    def setR1(self, R1):
         self.R1 = R1
-    def setR2(self,R2):
+    def setR2(self, R2):
         self.R2 = R2
-    def setF1(self,F1):
+    def setF1(self, F1):
         self.F1 = F1
-    def setF2(self,F2):
+    def setF2(self, F2):
         self.F2 = F2
-    def setBin(self,dmxbin):
+    def setBin(self, dmxbin):
         self.setDMXbin(dmxbin)
-    def setDMXbin(self,dmxbin):
+    def setDMXbin(self, dmxbin):
         self.dmxbin = dmxbin
 
 
 
 class DMX:
-    def __init__(self,filename):
+    def __init__(self, filename):
         self.filename = filename
 
-        with open(filename,'r') as FILE:
+        with open(filename, 'r') as FILE:
             lines = FILE.readlines()
 
         self.DMs = []
         self.comment_dict = dict()
         
-        for i,line in enumerate(lines):
+        for i, line in enumerate(lines):
             if line[0] == "#":
                 self.comment_dict[i] = line
                 continue
@@ -109,10 +112,10 @@ class DMX:
     def __repr__(self):
         return "DMX(%s)"%self.filename
 
-    def save(self,filename=None):
+    def save(self, filename=None):
         """ Save DMX file """
         pass
-    
+
     def getMJDs(self):
         """ Return MJDs of all DMs """
         return self.getEpochs()
@@ -150,10 +153,10 @@ class DMX:
         """ Return DMX bin of all DMs """
         return self.getter(lambda x: x.getDMXbin())
 
-    
-    def getter(self,func):
+
+    def getter(self, func):
         """ Generic getter. Not written as get() because it requires a function """
-        return np.array(fmap(func,self.DMs))
+        return np.array(fmap(func, self.DMs))
 
 
     def getDMseries(self):
@@ -161,9 +164,9 @@ class DMX:
         ts = self.getMJDs()
         dmxs = self.getValues()
         errs = self.getErrs()
-        return ts,dmxs,errs
-    
-    def getTspan(self,years=False):
+        return ts, dmxs, errs
+
+    def getTspan(self, years=False):
         """ Return total timespan of data """
         mjds = self.getMJDs()
         if years:
