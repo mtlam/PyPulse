@@ -149,6 +149,13 @@ class DMX:
         return np.array(fmap(func,self.DMs))
 
 
+    def getDMseries(self):
+        """ get the time series, mirroring Par() """
+        ts = self.getMJDs()
+        dmxs = self.getValues()
+        errs = self.getErrs()
+        return ts,dmxs,errs
+    
     def getTspan(self,years=False):
         """ Return total timespan of data """
         mjds = self.getMJDs()
