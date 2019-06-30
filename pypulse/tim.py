@@ -102,6 +102,8 @@ class TOA:
         self.freq = freq
     def setMJD(self,MJD):
         self.MJD = MJD
+    def setErr(self,err):
+        self.setError(err)
     def setError(self,err):
         self.err = err
     def setSiteID(self,siteID):
