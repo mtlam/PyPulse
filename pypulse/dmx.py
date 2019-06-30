@@ -40,6 +40,8 @@ class DM:
         return self.getEpoch()
     def getEpoch(self):
         return self.epoch
+    def getDM(self):
+        return self.value
     def getValue(self):
         return self.value
     def getErr(self):
@@ -115,6 +117,9 @@ class DMX:
     def getEpochs(self):
         """ Return MJDs of all DMs """
         return self.getter(lambda x: x.getEpoch())
+    def getDMs(self):
+        """ Return values of all DMs """
+        return self.getter(lambda x: x.getValue())
     def getValues(self):
         """ Return values of all DMs """
         return self.getter(lambda x: x.getValue())
