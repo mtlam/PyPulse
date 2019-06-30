@@ -3,6 +3,7 @@ Michael Lam 2019
 Loads a dmxparse DMX file (tempo output)
 '''
 import numpy as np
+import sys
 if sys.version_info.major == 2:
     fmap = map    
 elif sys.version_info.major == 3:
@@ -10,27 +11,27 @@ elif sys.version_info.major == 3:
 
     
 class DM:
-    self __init__(self,epoch,value=None,err=None,R1=None,R2=None,F1=None,F2=None,dmxbin=None):
-    if value is not None and err is not None and R1 is not None and R2 is not None and F1 is not None and F2 is not None and dmxbin is not None:
-        self.epoch = epoch
-        self.value = value
-        self.err = err
-        self.R1 = R1
-        self.R2 = R2
-        self.F1 = F1
-        self.F2 = F2
-        self.dmxbin = dmxbin
-    else: #parse all arguments
-        self.dmstring = epoch #stores string
-        splitstring = self.dmstring.strip().split()
-        self.epoch = float(splitstring[0])
-        self.value = float(splitstring[1])
-        self.err = float(splitstring[2])
-        self.R1 = float(splitstring[3])
-        self.R2 = float(splitstring[4])
-        self.F1 = float(splitstring[5])
-        self.F2 = float(splitstring[6])
-        self.dmxbin = splitstring[7]
+    def __init__(self,epoch,value=None,err=None,R1=None,R2=None,F1=None,F2=None,dmxbin=None):
+        if value is not None and err is not None and R1 is not None and R2 is not None and F1 is not None and F2 is not None and dmxbin is not None:
+            self.epoch = epoch
+            self.value = value
+            self.err = err
+            self.R1 = R1
+            self.R2 = R2
+            self.F1 = F1
+            self.F2 = F2
+            self.dmxbin = dmxbin
+        else: #parse all arguments
+            self.dmstring = epoch #stores string
+            splitstring = self.dmstring.strip().split()
+            self.epoch = float(splitstring[0])
+            self.value = float(splitstring[1])
+            self.err = float(splitstring[2])
+            self.R1 = float(splitstring[3])
+            self.R2 = float(splitstring[4])
+            self.F1 = float(splitstring[5])
+            self.F2 = float(splitstring[6])
+            self.dmxbin = splitstring[7]
 
     def __str__(self):
         pass
