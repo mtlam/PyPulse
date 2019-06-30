@@ -7,3 +7,4 @@ from pypulse.singlepulse import SinglePulse
 from pypulse.dynamicspectrum import DynamicSpectrum
 from pypulse.par import Par
 from pypulse.tim import Tim,TOA
+from pypulse.dmx import DMX,DM
