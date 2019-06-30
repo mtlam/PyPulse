@@ -114,34 +114,34 @@ class DMX:
         return self.getEpochs()
     def getEpochs(self):
         """ Return MJDs of all DMs """
-        return getter(lambda x: x.getEpoch())
+        return self.getter(lambda x: x.getEpoch())
     def getValues(self):
         """ Return values of all DMs """
-        return getter(lambda x: x.getValue())
+        return self.getter(lambda x: x.getValue())
     def getErrs(self):
         """ Return errors of all DMs """
         return self.getErrors()
     def getErrors(self):
         """ Return errors of all DMs """
-        return getter(lambda x: x.getError())
+        return self.getter(lambda x: x.getError())
     def getR1s(self):
         """ Return R1s of all DMs """
-        return getter(lambda x: x.getR1())
+        return self.getter(lambda x: x.getR1())
     def getR2s(self):
         """ Return R2 of all DMs """
-        return getter(lambda x: x.getR2())
+        return self.getter(lambda x: x.getR2())
     def getF1s(self):
         """ Return F1s of all DMs """
-        return getter(lambda x: x.getF1())
+        return self.getter(lambda x: x.getF1())
     def getF2s(self):
         """ Return F2 of all DMs """
-        return getter(lambda x: x.getF2())
+        return self.getter(lambda x: x.getF2())
     def getBin(self):
         """ Return DMX bin of all DMs """
         return self.getDMXbin()
     def getDMXbin(self):
         """ Return DMX bin of all DMs """
-        return getter(lambda x: x.getDMXbin())
+        return self.getter(lambda x: x.getDMXbin())
 
     
     def getter(self,func):
