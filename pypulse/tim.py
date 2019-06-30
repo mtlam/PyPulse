@@ -3,20 +3,20 @@ Michel Lam 2015
 Loads a tim file
 '''
 
+import sys
 import decimal
 import numpy as np
-import re
-import sys
+#import re
 if sys.version_info.major == 2:
-    fmap = map    
+    fmap = map
 elif sys.version_info.major == 3:
-    fmap = lambda x,*args: list(map(x,*args))
+    fmap = lambda x, *args: list(map(x, *args))
 
-numre = re.compile('(\d+[.]\d+D[+]\d+)|(-?\d+[.]\d+)')
+#numre = re.compile('(\d+[.]\d+D[+]\d+)|(-?\d+[.]\d+)')
 #flagre = re.compile('-[a-zA-Z]')
 
 #www.atnf.csiro.au/research/pulsar/tempo2/index.php?n=Documentation.ObservationFiles
-COMMANDS = ["EFAC","EQUAD","T2EFAC","T2EQUAD","GLOBAL_EFAC","EMAX","EMIN","EFLOOR","END","FMAX","FMIN","INCLUDE","INFO","MODE","NOSKIP","PHASE","SIGMA","SKIP","TIME","TRACK"]
+COMMANDS = ["EFAC", "EQUAD", "T2EFAC", "T2EQUAD", "GLOBAL_EFAC", "EMAX", "EMIN", "EFLOOR", "END", "FMAX", "FMIN", "INCLUDE", "INFO", "MODE", "NOSKIP", "PHASE", "SIGMA", "SKIP", "TIME", "TRACK"]
 
 
 '''
@@ -28,17 +28,19 @@ kwargs are flags
 
 DECIMAL = decimal.Decimal
 
-class TOA:
-    def __init__(self,filename,freq=None,MJD=None,err=None,siteID=None,numwrap=float,**kwargs):
+class TOA(object):
+    def __init__(self, filename, freq=None, MJD=None, err=None,
+                 siteID=None, numwrap=float, **kwargs):
         self.flags = []
-        if freq is not None and MJD is not None and err is not None and siteID is not None: #behave using all arguments regularly
+        #behave using all arguments regularly
+        if freq is not None and MJD is not None and err is not None and siteID is not None:
             self.filename = filename
             self.freq = float(freq) #numwrap?
             self.MJD = numwrap(MJD)
             self.err = float(err) #numwrap?
             self.siteID = siteID
-            for flag,value in kwargs.items():
-                setattr(self,flag,value)
+            for flag, value in kwargs.items():
+                setattr(self, flag, value)
                 self.flags.append(flag)
         else: #parse all arguments
             self.toastring = filename #stores toa string
@@ -48,20 +50,20 @@ class TOA:
             self.MJD = numwrap(splitstring[2])
             self.err = float(splitstring[3])
             self.siteID = splitstring[4]
-            for i in range(5,len(splitstring),2):
+            for i in range(5, len(splitstring), 2):
                 flag = splitstring[i][1:]
-                setattr(self,flag,splitstring[i+1])
+                setattr(self, flag, splitstring[i+1])
                 self.flags.append(flag)
 
     #def __repr__(self):
-    #    return 
+    #    return
     def __str__(self):
-        if isinstance(self.MJD,DECIMAL):
-            retval = "%s %0.6f %s % 7.3f %+4s  "%(self.filename,self.freq,self.MJD,self.err,str(self.siteID))
+        if isinstance(self.MJD, DECIMAL):
+            retval = "%s %0.6f %s % 7.3f %+4s  "%(self.filename, self.freq, self.MJD, self.err, str(self.siteID))
         else:
-            retval = "%s %0.6f %0.15f % 7.3f %+4s  "%(self.filename,self.freq,self.MJD,self.err,str(self.siteID))
-        for i,flag in enumerate(self.flags):
-            retval += "-%s %s "%(flag,getattr(self,flag))
+            retval = "%s %0.6f %0.15f % 7.3f %+4s  "%(self.filename, self.freq, self.MJD, self.err, str(self.siteID))
+        for flag in self.flags:
+            retval += "-%s %s "%(flag, getattr(self, flag))
         retval = retval[:-1]
         return retval
     
@@ -81,50 +83,50 @@ class TOA:
         return self.err
     def getSiteID(self):
         return self.siteID
-    def get(self,flag):
+    def get(self, flag):
         value = None
         try:
-            value = getattr(self,flag)
+            value = getattr(self, flag)
         except AttributeError:
             return None
         return value
 
     # Use these with extreme caution!
-    def comment(self,cut=None):
+    def comment(self, cut=None):
         self.filename = "C "+self.filename
         if cut is not None:
-            self.add("cut",cut)            
-    def setFilename(self,filename):
+            self.add("cut", cut)            
+    def setFilename(self, filename):
         self.filename = filename
-    def setFreq(self,freq):
+    def setFreq(self, freq):
         self.setFrequency(freq)
-    def setFrequency(self,freq):
+    def setFrequency(self, freq):
         self.freq = freq
-    def setMJD(self,MJD):
+    def setMJD(self, MJD):
         self.MJD = MJD
-    def setErr(self,err):
+    def setErr(self, err):
         self.setError(err)
-    def setError(self,err):
+    def setError(self, err):
         self.err = err
-    def setSiteID(self,siteID):
+    def setSiteID(self, siteID):
         self.siteID = siteID
-    def set(self,flag,value):
-        if hasattr(self,flag):
-            setattr(self,flag,value)
+    def set(self, flag, value):
+        if hasattr(self, flag):
+            setattr(self, flag, value)
         else:
             raise AttributeError("TOA does not contain flag: %s"%flag)
 
-    def add(self,flag,value):
-        if hasattr(self,flag):
+    def add(self, flag, value):
+        if hasattr(self, flag):
             raise AttributeError("Flag already exists: %s"%flag)
         else:
             self.flags.append(flag)
-            setattr(self,flag,value)
+            setattr(self, flag, value)
 
 
 
-class Tim:
-    def __init__(self,filename,numwrap=float,usedecimal=False):
+class Tim(object):
+    def __init__(self, filename, numwrap=float, usedecimal=False):
         self.usedecimal = usedecimal
         if self.usedecimal:
             self.numwrap = DECIMAL
@@ -132,13 +134,13 @@ class Tim:
             self.numwrap = numwrap
         self.load(filename)
 
-    def load(self,filename):
+    def load(self, filename):
         self.filename = filename
 
-        if type(filename) == list or type(filename) == np.ndarray:
+        if isinstance(filename, list) or isinstance(filename, np.ndarray):
             lines = filename
-        elif type(filename) == str or type(filename) == np.str or isinstance(filename,np.str_):
-            with open(filename,'r') as FILE:#this assumes the file exists
+        elif isinstance(filename, (str, np.str)):
+            with open(filename, 'r') as FILE:#this assumes the file exists
                 lines = FILE.readlines()
         else:
             return None
@@ -148,7 +150,7 @@ class Tim:
         self.numlines = len(lines)
 
         self.toas = list()
-        for i,line in enumerate(lines):
+        for i, line in enumerate(lines):
             line = line.strip() #for non-IPTA-compliant TOAs
             if len(line) == 0 or line[:2] == "C " or line[:2] == "CC" or line[0] == "#": #CC might be bad, but otherwise there are too many variants
                 self.comment_dict[i] = line
@@ -159,36 +161,36 @@ class Tim:
             if len(splitline) == 0 or splitline[0] in COMMANDS or count < 4: #is a command
                 self.command_dict[i] = tuple(splitline) #primitive handling
             else:
-                toa = TOA(line,numwrap=self.numwrap)
+                toa = TOA(line, numwrap=self.numwrap)
                 self.toas.append(toa)
 
 
     def __repr__(self):
         numwrapstr = repr(self.numwrap).split("'")[1]
-        return "Tim(%r,numwrap=%s,usedecimal=%r)" % (self.filename,numwrapstr,self.usedecimal)
+        return "Tim(%r,numwrap=%s,usedecimal=%r)" % (self.filename, numwrapstr, self.usedecimal)
 
-    def comment(self,func,cut=None):
+    def comment(self, func, cut=None):
         """ Apply boolean function to comment TOAs """
-        for i,toa in enumerate(self.toas):
+        for i, toa in enumerate(self.toas):
             if func(toa):
                 self.toas[i].comment(cut=cut)
 
-    def any(self,func):
+    def any(self, func):
         """ Apply boolean function and see if any TOA meets said condition """
-        for i,toa in enumerate(self.toas):
+        for toa in self.toas:
             if func(toa):
                 return True
         return False
 
-    def all(self,func):
+    def all(self, func):
         """ Apply boolean function and see if all TOAs meet said condition """
-        for i,toa in enumerate(self.toas):
+        for toa in self.toas:
             if not func(toa):
                 return False
         return True
 
-                
-    def save(self,filename=None):
+
+    def save(self, filename=None):
         """ Save tim file """
         output = ""
 
@@ -203,33 +205,33 @@ class Tim:
                 ntoa += 1
         if filename is None:
             filename = self.filename
-        with open(filename,'w') as FILE:
+        with open(filename, 'w') as FILE:
             FILE.write(output)
 
     def getFreqs(self):
         """ Return frequencies of all TOAs """
-        return np.array(fmap(lambda x: x.getFreq(),self.toas))
+        return np.array(fmap(lambda x: x.getFreq(), self.toas))
 
 
     def getMJDs(self):
         """ Return MJDs of all TOAs """
-        return np.array(fmap(lambda x: x.getMJD(),self.toas))
+        return np.array(fmap(lambda x: x.getMJD(), self.toas))
 
 
     def getErrors(self):
         """ Return uncertainties of all TOAs """
-        return np.array(fmap(lambda x: x.getError(),self.toas)) 
+        return np.array(fmap(lambda x: x.getError(), self.toas)) 
 
-    
-    def get(self,value,numwrap=None):
+
+    def get(self, value, numwrap=None):
         """ Return value of flag """
         if numwrap is None:
-            retval = np.array(fmap(lambda x: x.get(value),self.toas))
+            retval = np.array(fmap(lambda x: x.get(value), self.toas))
         else:
-            retval = np.array(fmap(lambda x: numwrap(x.get(value)),self.toas))
+            retval = np.array(fmap(lambda x: numwrap(x.get(value)), self.toas))
         return retval
 
-    def getTspan(self,years=False):
+    def getTspan(self, years=False):
         """ Return total timespan of data """
         mjds = self.getMJDs()
         if years:
@@ -237,9 +239,9 @@ class Tim:
         return np.ptp(mjds)
 
 
-    def set(self,flag,value):
+    def set(self, flag, value):
         """ Set value of flag for all TOAs """
-        for i,toa in enumerate(self.toas):
-            toa.set(flag,value)
+        for toa in self.toas:
+            toa.set(flag, value)
         return
 
