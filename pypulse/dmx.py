@@ -11,7 +11,7 @@ elif sys.version_info.major == 3:
     fmap = lambda x, *args: list(map(x, *args))
 
 
-class DM:
+class DM(object):
     def __init__(self, epoch, value=None, err=None, R1=None, R2=None,
                  F1=None, F2=None, dmxbin=None):
         if (value is not None and err is not None and R1 is not None and
@@ -92,7 +92,7 @@ class DM:
 
 
 
-class DMX:
+class DMX(object):
     def __init__(self, filename):
         self.filename = filename
 

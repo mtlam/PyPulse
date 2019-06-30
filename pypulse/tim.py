@@ -137,7 +137,7 @@ class Tim(object):
     def load(self, filename):
         self.filename = filename
 
-        if isinstance(filename, list) or isinstance(filename, np.ndarray):
+        if isinstance(filename, (list, np.ndarray)):
             lines = filename
         elif isinstance(filename, (str, np.str)):
             with open(filename, 'r') as FILE:#this assumes the file exists
@@ -167,7 +167,7 @@ class Tim(object):
 
     def __repr__(self):
         numwrapstr = repr(self.numwrap).split("'")[1]
-        return "Tim(%r,numwrap=%s,usedecimal=%r)" % (self.filename, numwrapstr, self.usedecimal)
+        return "Tim(%r, numwrap=%s, usedecimal=%r)" % (self.filename, numwrapstr, self.usedecimal)
 
     def comment(self, func, cut=None):
         """ Apply boolean function to comment TOAs """
