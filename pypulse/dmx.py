@@ -66,6 +66,8 @@ class DM:
         self.setEpoch(epoch)
     def setEpoch(self,epoch):
         self.epoch = epoch
+    def setDM(self,value):
+        self.setValue(value)
     def setValue(self,value):
         self.value = value
     def setErr(self,err):
