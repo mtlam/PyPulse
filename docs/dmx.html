@@ -114,7 +114,7 @@
 
 <p>Usage:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">DMX</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">)</span> <span class="c1">#automatically parses each DM line with the DM() class</span>
-<span class="k">print</span> <span class="n">d</span><span class="o">.</span><span class="n">DMs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getMJD</span><span class="p">()</span> <span class="c1">#prints the MJD of the first TOA as a python Decimal</span>
+<span class="k">print</span> <span class="n">d</span><span class="o">.</span><span class="n">DMs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getMJD</span><span class="p">()</span> <span class="c1">#prints the MJD of the first DM value.</span>
 <span class="k">print</span> <span class="n">d</span><span class="o">.</span><span class="n">getMJDs</span><span class="p">()</span> <span class="c1">#prints the values of all of the epochs.</span>
 </pre></div>
 </div>
@@ -136,7 +136,7 @@
 
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last"><a class="reference internal" href="tim.html#save" title="save"><code class="xref py py-func docutils literal"><span class="pre">save()</span></code></a> is currently not fully implemented</p>
+<p class="last"><a class="reference internal" href="#save" title="save"><code class="xref py py-func docutils literal"><span class="pre">save()</span></code></a> is currently not fully implemented</p>
 </div>
 <dl class="function">
 <dt id="getMJDs">
@@ -183,7 +183,7 @@
 <dl class="function">
 <dt id="getErrs">
 <code class="descname">getErrs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getErrs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the DM uncertainties for each measurement. Loops over <a class="reference internal" href="tim.html#getError" title="getError"><code class="xref py py-func docutils literal"><span class="pre">getError()</span></code></a> in <a class="reference internal" href="#DM" title="DM"><code class="xref py py-class docutils literal"><span class="pre">DM</span></code></a>.</p>
+<dd><p>Return the DM uncertainties for each measurement. Loops over <a class="reference internal" href="#getError" title="getError"><code class="xref py py-func docutils literal"><span class="pre">getError()</span></code></a> in <a class="reference internal" href="#DM" title="DM"><code class="xref py py-class docutils literal"><span class="pre">DM</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -197,7 +197,7 @@
 <dl class="function">
 <dt id="getErrors">
 <code class="descname">getErrors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getErrors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the DM uncertainties for each measurement. Loops over <a class="reference internal" href="tim.html#getError" title="getError"><code class="xref py py-func docutils literal"><span class="pre">getError()</span></code></a> in <a class="reference internal" href="#DM" title="DM"><code class="xref py py-class docutils literal"><span class="pre">DM</span></code></a>.</p>
+<dd><p>Return the DM uncertainties for each measurement. Loops over <a class="reference internal" href="#getError" title="getError"><code class="xref py py-func docutils literal"><span class="pre">getError()</span></code></a> in <a class="reference internal" href="#DM" title="DM"><code class="xref py py-class docutils literal"><span class="pre">DM</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
