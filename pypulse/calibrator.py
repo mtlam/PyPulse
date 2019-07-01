@@ -5,17 +5,18 @@
 
 '''
 
-import numpy as np
 
-from matplotlib.pyplot import *
-import astropy.coordinates as coordinates
-import astropy.units as units
+
 import os
 import sys
+import numpy as np
+import matplotlib.pyplot as plt
+import astropy.coordinates as coordinates
+import astropy.units as units
 if sys.version_info.major == 2:
-    fmap = map    
+    fmap = map
 elif sys.version_info.major == 3:
-    fmap = lambda x,*args: list(map(x,*args))
+    fmap = lambda x, *args: list(map(x, *args))
     xrange = range
 
 ON = "ON"
@@ -23,19 +24,19 @@ OFF = "OFF"
 
 
 
-class Calibrator:
-    def __init__(self,freqs,S,Serr=None,pol_type='Coherence',fd_poln='LIN',verbose=True):
+class Calibrator(object):
+    def __init__(self, freqs, S, Serr=None, pol_type='Coherence', fd_poln='LIN', verbose=True):
         self.pol_type = pol_type
         self.freqs = np.array(freqs)
         self.S = np.array(S)
         if Serr is None:
-            Serr = np.zeros(4,dtype=np.float32) 
+            Serr = np.zeros(4, dtype=np.float32)
         self.Serr = np.array(Serr)
         self.verbose = verbose
 
         if self.pol_type == 'Coherence' or self.pol_type == 'AABBCRCI':
-            A,B,C,D = S
-            Aerr,Berr,Cerr,Derr = Serr
+            A, B, C, D = S
+            Aerr, Berr, Cerr, Derr = Serr
             if fd_poln == 'LIN':
                 S0 = A+B #I
                 S1 = A-B #Q
@@ -46,8 +47,8 @@ class Calibrator:
                 S2err = 2*Cerr
                 S3err = 2*Derr
         elif self.pol_type == 'Stokes' or self.pol_type == 'IQUV':
-            S0,S1,S2,S3 = S
-            S0err,S1err,S2err,S3err = Serr
+            S0, S1, S2, S3 = S
+            S0err, S1err, S2err, S3err = Serr
         else:
             raise SystemExit
         self.I = S0
@@ -68,38 +69,38 @@ class Calibrator:
         See More/Polarimetry/SingleAxisSolver.C
         '''
         dG = 2*self.Q/self.I
-        dpsi = np.arctan2(self.V,self.U)
-        subplot(311)
-        plot(dpsi,'k.')
-        subplot(312)
-        plot(100*dG,'k.')
-        subplot(313)
+        dpsi = np.arctan2(self.V, self.U)
+        plt.subplot(311)
+        plt.plot(dpsi, 'k.')
+        plt.subplot(312)
+        plt.plot(100*dG, 'k.')
+        plt.subplot(313)
         U_0 = self.U/np.cos(dpsi)
         #plot(self.I)
-        #plot(np.sqrt(self.U**2+self.V**2)/U_0,'k.')
-        show()
+        #plot(np.sqrt(self.U**2+self.V**2)/U_0, 'k.')
+        plt.show()
 
     def pacv_csu(self):
         '''
         Emulates pacv -n csu <archive>
         '''
 
-        errorbar(self.freqs,self.I,yerr=self.Ierr,fmt='k.')
-        errorbar(self.freqs,self.Q,yerr=self.Qerr,fmt='r.')
-        errorbar(self.freqs,self.U,yerr=self.Uerr,fmt='g.')
-        errorbar(self.freqs,self.V,yerr=self.Verr,fmt='b.')
-        xlabel('Frequency')
-        ylabel('Calibrator Stokes')
-        show()
-        
+        plt.errorbar(self.freqs, self.I, yerr=self.Ierr, fmt='k.')
+        plt.errorbar(self.freqs, self.Q, yerr=self.Qerr, fmt='r.')
+        plt.errorbar(self.freqs, self.U, yerr=self.Uerr, fmt='g.')
+        plt.errorbar(self.freqs, self.V, yerr=self.Verr, fmt='b.')
+        plt.xlabel('Frequency')
+        plt.ylabel('Calibrator Stokes')
+        plt.show()
 
 
-    def applyFluxcal(self,fluxcalonar,fluxcaloffar=None):
+
+    def applyFluxcal(self, fluxcalonar, fluxcaloffar=None):
         if fluxcaloffar is None: #The fluxcalon file contains both ON and OFF observations
             pass
         else:
-            fluxcalonfreqs,fluxcalondatalow,fluxcalondatahigh,fluxcalonerrslow,fluxcalonerrshigh = fluxcalonar.getLevels()
-            fluxcalofffreqs,fluxcaloffdatalow,fluxcaloffdatahigh,fluxcalofferrslow,fluxcalofferrshigh = fluxcaloffar.getLevels()
+            fluxcalonfreqs, fluxcalondatalow, fluxcalondatahigh, fluxcalonerrslow, fluxcalonerrshigh = fluxcalonar.getLevels()
+            fluxcalofffreqs, fluxcaloffdatalow, fluxcaloffdatahigh, fluxcalofferrslow, fluxcalofferrshigh = fluxcaloffar.getLevels()
 
 
         source = fluxcalonar.getName()
@@ -107,19 +108,19 @@ class Calibrator:
             raise ValueError("Mismatch in fluxcal names")
 
         config = CalibratorConfig()
-        calflux = config.calculateCalibratorFlux(source,self.freqs)
-            
+        calflux = config.calculateCalibratorFlux(source, self.freqs)
 
-        S_cal = fluxcalondatalow - fluxcaloffdatalow # Flux calibrator amplitudes, the difference between on and off source without the noise diode operational.
-        #print np.shape(calflux),np.shape(S_cal)
-            
+        # Flux calibrator amplitudes, the difference between on and off source without the noise diode operational.
+        S_cal = fluxcalondatalow - fluxcaloffdatalow
+        #print np.shape(calflux), np.shape(S_cal)
+
         #self.I = self.I
 
 
-            
 
 
-    def applyCalibration(self,ar):
+
+    def applyCalibration(self, ar):
         M_PAs = []
         PAR_ANG = ar.getSubintinfo('PAR_ANG')
         if PAR_ANG is None:
@@ -136,7 +137,7 @@ class Calibrator:
 
 
         dG = 2*self.Q/self.I
-        dpsi = np.arctan2(self.V,self.U)
+        dpsi = np.arctan2(self.V, self.U)
 
 
 
@@ -156,72 +157,72 @@ class Calibrator:
             if PAR_ANG is not None:
                 M_PA = self.buildMuellerMatrixPA(PAR_ANG[i])
             for j in J:
-                M_differential = self.buildMuellerMatrixDifferential((dG[j],dpsi[j])) # must match exactly
+                M_differential = self.buildMuellerMatrixDifferential((dG[j], dpsi[j])) # must match exactly
                 if PAR_ANG is not None:
-                    M = np.dot(M_differential,M_PA)
+                    M = np.dot(M_differential, M_PA)
                 else:
                     M = M_differential
                 Minv = np.linalg.inv(M)
                 for k in K:
-                    S = self.convertPolarization(data[i,:,j,k],POL_TYPE,"IQUV")
-                    #print np.shape(Minv),np.shape(S),np.shape(calibrated_data[i,:,j,k])
-                    calibrated_data[i,:,j,k] = self.convertPolarization(np.dot(Minv,S),"IQUV",POL_TYPE)
+                    S = self.convertPolarization(data[i, :, j, k], POL_TYPE, "IQUV")
+                    #print np.shape(Minv), np.shape(S), np.shape(calibrated_data[i, :, j, k])
+                    calibrated_data[i, :, j, k] = self.convertPolarization(np.dot(Minv, S), "IQUV", POL_TYPE)
                 # reset baseline
                 #if i == 5 and j == 50:
-                #    plot(calibrated_data[i,0,j,:])
+                #    plot(calibrated_data[i, 0, j, :])
                 #    show()
-                    #imshow(calibrated_data[i,1,:,:])
+                    #imshow(calibrated_data[i, 1, :, :])
                     #show()
-                    #imshow(calibrated_data[i,2,:,:])
+                    #imshow(calibrated_data[i, 2, :, :])
                     #show()
-                    #imshow(calibrated_data[i,3,:,:])
+                    #imshow(calibrated_data[i, 3, :, :])
                     #show()
                 #    raise SystemExit
-                #calibrated_data[i,:,j,:] -= np.mean(calibrated_data[i,:,j,ar.opw])
+                #calibrated_data[i, :, j, :] -= np.mean(calibrated_data[i, :, j, ar.opw])
             #if i == 10:
-            #    imshow(calibrated_data[i,0,:,:])
+            #    imshow(calibrated_data[i, 0, :, :])
             #    show()
             #    raise SystemExit
 
-                
-        #print np.mean(calibrated_data[5,:,25,:])
+
+        #print np.mean(calibrated_data[5, :, 25, :])
         ar.setData(calibrated_data)
 
 
 
-    def buildMuellerMatrixPA(self,PA):
+    def buildMuellerMatrixPA(self, PA):
         if PA is None:
             M_PA = np.identity(4)
         else:
             cos = np.cos(2*PA)
             sin = np.sin(2*PA)
-            M_PA = [[1,0,0,0],
-                    [0,cos,sin,0],
-                    [0,-sin,cos,0],
-                    [0,0,0,1]]
+            M_PA = [[1, 0, 0, 0],
+                    [0, cos, sin, 0],
+                    [0, -sin, cos, 0],
+                    [0, 0, 0, 1]]
         return M_PA
 
-    def buildMuellerMatrixDifferential(self,differential):
+    def buildMuellerMatrixDifferential(self, differential):
         if differential is None:
             M_differential = np.identity(4)
         else:
-            dG,dpsi = differential
+            dG, dpsi = differential
             cos = np.cos(dpsi)
             sin = np.sin(dpsi)
-            M_differential = [[1,dG/2.0,0,0],
-                              [dG/2.0,1,0,0],
-                              [0,0,cos,-sin],
-                              [0,0,sin,cos]]
+            M_differential = [[1, dG/2.0, 0, 0],
+                              [dG/2.0, 1, 0, 0],
+                              [0, 0, cos, -sin],
+                              [0, 0, sin, cos]]
         return M_differential
 
 
 
 
-    def convertPolarization(self,S,intype,outtype,linear=True):
+    def convertPolarization(self, S, intype, outtype, linear=True):
         if intype == outtype:
             return S
         elif intype == "AABBCRCI" and outtype == "IQUV": # Coherence -> Stokes
-            A,B,C,D = S
+            A, B, C, D = S
             if linear:
                 I = A+B
                 Q = A-B
@@ -232,9 +233,9 @@ class Calibrator:
                 Q = 2*C
                 U = 2*D
                 V = A-B
-            outS = [I,Q,U,V]
+            outS = [I, Q, U, V]
         elif intype == "IQUV" and outtype == "AABBCRCI": # Stokes -> Coherence
-            I,Q,U,V = S
+            I, Q, U, V = S
             if linear:
                 pass
                 A = (I+Q)/2.0
@@ -246,19 +247,19 @@ class Calibrator:
                 B = (I-V)/2.0
                 C = Q/2.0
                 D = U/2.0
-            outS = [A,B,C,D]
-        if type(S) == np.ndarray:
+            outS = [A, B, C, D]
+        if isinstance(S, np.ndarray):
             return np.array(outS)
-        elif type(S) == list:
+        elif isinstance(S, list):
             return outS
-            
 
 
-    def buildMuellerMatrix(self,PA=None,feed=None,CC=None,differential=None):
+
+    def buildMuellerMatrix(self, PA=None, feed=None, CC=None, differential=None):
         """
         Following Lorimer & Kramer methodology
         PA = parallactic angle (scalar)
-        feed = 
+        feed =
         CC = cross coupling (4-vector of )
         differential = differential gain and phase (2-vector)
         """
@@ -267,19 +268,19 @@ class Calibrator:
         else:
             cos = np.cos(2*PA)
             sin = np.sin(2*PA)
-            M_PA = [[1,0,0,0],
-                    [0,cos,sin,0],
-                    [0,-sin,cos,0],
-                    [0,0,0,1]]
+            M_PA = [[1, 0, 0, 0],
+                    [0, cos, sin, 0],
+                    [0, -sin, cos, 0],
+                    [0, 0, 0, 1]]
         if feed is None:
             M_feed = np.identity(4)
         else:
             cos = np.cos(2*feed)
             sin = np.sin(2*feed)
-            M_feed = [[1,0,0,0],
-                      [0,cos,0,sin],
-                      [0,0,1,0],
-                      [0,-sin,0,cos]]
+            M_feed = [[1, 0, 0, 0],
+                      [0, cos, 0, sin],
+                      [0, 0, 1, 0],
+                      [0, -sin, 0, cos]]
         if CC is None:
             M_CC = np.identity(4)
         else:
@@ -287,25 +288,26 @@ class Calibrator:
         if differential is None:
             M_differential = np.identity(4)
         else:
-            dG,dpsi = differential
+            dG, dpsi = differential
             cos = np.cos(dpsi)
             sin = np.sin(dpsi)
-            M_differential = [[1,dG/2.0,0,0],
-                              [dG/2.0,1,0,0],
-                              [0,0,cos,-sin],
-                              [0,0,sin,cos]]
-        return np.dot(np.dot(np.dot(M_differential,M_CC),M_feed),M_PA)
-        
+            M_differential = [[1, dG/2.0, 0, 0],
+                              [dG/2.0, 1, 0, 0],
+                              [0, 0, cos, -sin],
+                              [0, 0, sin, cos]]
+        return np.dot(np.dot(np.dot(M_differential, M_CC), M_feed), M_PA)
 
 
-    def calculatePA(self,lat,dec,HA):
+
+    def calculatePA(self, lat, dec, HA):
         """
         Helper function
         lat = latitude
         dec = declination of source
         HA = hour angle
         """
-        return np.arctan2(np.sin(HA)*np.cos(lat),np.sin(lat)*np.cos(dec) - np.cos(lat)*np.sin(phi)*np.cos(HA))
+        return np.arctan2(np.sin(HA)*np.cos(lat),
+                          np.sin(lat)*np.cos(dec) - np.cos(lat)*np.sin(dec)*np.cos(HA))
 
 
 
@@ -317,9 +319,9 @@ class Calibrator:
 ### ==================================================
 
 class CalibratorConfig:
-    def __init__(self,filename=None):
+    def __init__(self, filename=None):
         if filename is None:
-            filename = os.path.join(os.path.dirname(__file__),"config","fluxcal.cfg")
+            filename = os.path.join(os.path.dirname(__file__), "config", "fluxcal.cfg")
         self.filename = filename
         self.configlines = self.readConfigFile()
 
@@ -327,21 +329,21 @@ class CalibratorConfig:
 
     def readConfigFile(self):
         """
-        Process the fluxcal.cfg file. 
+        Process the fluxcal.cfg file.
         """
-        with open(self.filename,'r') as FILE:
+        with open(self.filename, 'r') as FILE:
             lines = FILE.readlines()
         retval = []
-        for i,line in enumerate(lines):
+        for i, line in enumerate(lines):
             if line[0] == "\n" or line[0] == "#" or line[0] == " ":
                 continue
             retval.append(line.strip())
         return retval
 
-    def getConfigLine(self,source):
+    def getConfigLine(self, source):
         currentvals = []
         found = False
-        for i,line in enumerate(self.configlines):
+        for i, line in enumerate(self.configlines):
             splitline = line.split()
             if len(currentvals) == 0:
                 currentvals = splitline
@@ -358,44 +360,45 @@ class CalibratorConfig:
             raise ValueError("Flux calibration source not found")
         return currentvals
 
-    def getCalibratorCoords(self,source):
+    def getCalibratorCoords(self, source):
         configline = self.getConfigLine(source)
-        return coordinates.SkyCoord("%s %s"%(configline[1],configline[2]),unit=(units.hourangle,units.degree))
+        return coordinates.SkyCoord("%s %s"%(configline[1], configline[2]), unit=(units.hourangle, units.degree))
 
 
-    def checkOnOff(self,source,coords,tolerance=1):
+    def checkOnOff(self, source, coords, tolerance=1):
         """
         Check if the flux cal is on or off source
         Tolerance in arcminutes
         """
         configline = self.getConfigLine(source)
         sourcecoords = self.getCalibratorCoords(source)
-        #print coords,sourcecoords,sourcecoords.separation(coords)
-        if sourcecoords.separation(coords)<=tolerance*units.arcmin:
+        #print coords, sourcecoords, sourcecoords.separation(coords)
+        if sourcecoords.separation(coords) <= tolerance*units.arcmin:
             return ON
         return OFF
 
-    
 
-    def calculateCalibratorFlux(self,source,freqs):
+
+    def calculateCalibratorFlux(self, source, freqs):
         """
-        All frequencies must be in MHz!    
+        All frequencies must be in MHz!
         """
         configline = self.getConfigLine(source)
 
         freqs = np.array(freqs)
         fluxes = np.zeros(len(freqs))
-        if configline[0][0] == "&": #Format 2, Flux in Jy for a frequency in GHz is: log10(S) = a_0 + a_1*log10(f) + a_2*(log10(f))^2 + ...
+        #Format 2, Flux in Jy for a frequency in GHz is: log10(S) = a_0 + a_1*log10(f) + a_2*(log10(f))^2 + ...
+        if configline[0][0] == "&": 
             logfreqs = np.log10(freqs/1000.0)
-            coeffs = map(lambda x: float(x),configline[3:])
-            for i,coeff in enumerate(coeffs):
-                fluxes += coeff*np.power(logfreqs,i)
+            coeffs = fmap(float, configline[3:])
+            for i, coeff in enumerate(coeffs):
+                fluxes += coeff*np.power(logfreqs, i)
         else:
             freq = float(configline[3]) #MHz
             flux = float(configline[4]) #Jy
             index = float(configline[5])
 
-            fluxes = flux*np.power((freqs/freq),-1*index)
+            fluxes = flux*np.power((freqs/freq), -1*index)
         return fluxes
 
 
