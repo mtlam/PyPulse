@@ -108,14 +108,10 @@ class Archive(object):
         """
         if filename is None: #Needed?
             filename = self.filename
-        try:
-            if self.lowmem:
-                hdulist = pyfits.open(filename, ignore_missing_end=True, memmap=True)
-            else:
-                hdulist = pyfits.open(filename, ignore_missing_end=True)
-        except IOError:
-            print("Filename not found")
-            raise SystemExit
+        if self.lowmem:
+            hdulist = pyfits.open(filename, ignore_missing_end=True, memmap=True)
+        else:
+            hdulist = pyfits.open(filename, ignore_missing_end=True)
         self.header = hdulist[0].header
         self.keys = fmap(lambda x: x.name, hdulist)
         tablenames = self.keys[:] #temporary list for checking other tables
@@ -167,7 +163,7 @@ class Archive(object):
             self.tables.append(hdulist[tablename].copy())
 
         if isFluxcal:
-            raise SystemExit
+            raise ValueError("This is a fluxcal file!")
 
         self.subintinfo = dict()
         self.subintinfolist = fmap(lambda x: x.name, hdulist['SUBINT'].columns[:-5])
