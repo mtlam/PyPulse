@@ -213,13 +213,12 @@ class Archive(object):
             DATA = np.memmap(tfDATA.name, dtype=np.int16, mode='r', shape=SHAPE)
 
             tf = tempfile.NamedTemporaryFile()
-            self.data = np.memmap(tf.name,
+            self._data = np.memmap(tf.name,
                                   dtype=np.float32,
                                   mode='w+',
                                   shape=(nsubint, npol, nchan, nbin))
-
         else:
-            self.data = np.zeros((nsubint,npol,nchan,nbin))
+            self._data = np.zeros((nsubint,npol,nchan,nbin))
         
         I = range(nsubint)
         J = range(npol)
@@ -228,7 +227,7 @@ class Archive(object):
         self.freq = DAT_FREQ
 
         if nsubint == 1 and npol == 1 and nchan == 1:
-            self.data = (DAT_SCL*DATA+DAT_OFFS)#*DAT_WTS
+            self._data = (DAT_SCL*DATA+DAT_OFFS)#*DAT_WTS
         elif nsubint == 1 and npol == 1:
             for k in K:
                 self.data[0, 0, k, :] = (DAT_SCL[0, k]*DATA[0, 0, k, :]+DAT_OFFS[0, k])#*DAT_WTS[0, k] #dat WTS[0]?
@@ -309,8 +308,9 @@ class Archive(object):
                 scale = DAT_SCL.reshape(nsub, npol, nchan)
                 offset = DAT_OFFS.reshape(nsub, npol, nchan)
                 weights = DAT_WTS.reshape(nsub, 1, nchan, 1)
-                self.data = (scale*DATA.transpose((3, 0, 1, 2)) + offset).transpose((1, 2, 3, 0))
+                self._data = (scale*DATA.transpose((3, 0, 1, 2)) + offset).transpose((1, 2, 3, 0))
             t1 = time.time()
+        self.data = self._data
 
         bw = self.getBandwidth()
         
@@ -914,19 +914,20 @@ class Archive(object):
         cal.applyCalibration(self)
         return cal
         # Apply calibrations
-
+    
+    @property
+    def data(self):
+        return self._data
+    
+    @data.setter
+    def data(self, value):
+        self._data = value
+        self.weighted_data = value*self.weights[:,None,:,None]
+    
     def getData(self, squeeze=True, setnan=None, weight=True):
         """Returns the data array, fully squeezed"""
         if weight:
-            data = np.zeros_like(self.data)
-            I, J, K, L = np.shape(self.data)
-            I = range(I)
-            J = range(J)
-            K = range(K)
-            for i in I:
-                for j in J:
-                    for k in K:
-                        data[i, j, k, :] = self.data[i, j, k, :]*self.weights[i, k]
+            data = self.weighted_data
         else:
             data = self.data
 
@@ -936,7 +937,7 @@ class Archive(object):
         if setnan is not None:
             data = np.where(data == setnan, np.nan, data)
 
-        return np.copy(data) #removes pointer to data
+        return data
 
     def setData(self, newdata):
         """Sets the data,  very dangerous!"""
