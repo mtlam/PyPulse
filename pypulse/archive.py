@@ -110,6 +110,7 @@ class Archive(object):
     def __repr__(self):
         return "Archive(%r, prepare=%r, lowmem=%r, verbose=%r)" % \
                 (self.filename, self.prepare, self.lowmem, self.verbose)
+    
     def __str__(self):
         return self.filename
 
@@ -192,8 +193,7 @@ class Archive(object):
 
         #if self.header['OBS_MODE'] == 'PCM':
         if isFluxcal:
-
-            raise SystemExit
+            raise ValueError("This is a fluxcal file: currently not implemented")
 
 
 
@@ -943,7 +943,7 @@ class Archive(object):
                 for k in xrange(nchan):
                     temp = self.data[i, j, k, :]
                     temp = u.shiftit(temp, sign*delay)
-                    self.data[i, j, k, :] = np.roll(temp, diff)# - np.mean(temp[self.spavg.opw])
+                    self.data[i, j, k, :] = np.roll(temp, diff)
         self.average_profile -= np.mean(self.average_profile[self.spavg.opw])
         return self
 
