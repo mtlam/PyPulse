@@ -675,24 +675,17 @@ class Archive(object):
         Kconst = 1.0/2.41e-4 #constant used to be more consistent with PSRCHIVE
         time_delays = K*DM*(cfreq**(-2) - np.power(Faxis,-2)) #freq in MHz, delays in seconds
         
-        dt = self.getTbin(numwrap=Decimal)
+        dt = self.getTbin(numwrap=float)
         if reverse:
             sign = 1
         else:
             sign = -1
-
-        I = range(nchan)
-        J = range(nsubint)
-        K = range(npol)
         
-        for j in J:
-            for k in K:
-                for i in I:
-                    #freq in MHz, delays in seconds:
-                    time_delay = Kconst*DM*(cfreq**(-2) - Faxis[j, i]**(-2))
-                    bin_delay = Decimal(str(time_delay)) / dt
-                    bin_delay = bin_delay % Decimal(nbin)
-                    self.data[j, k, i, :] = u.shiftit(self.data[j,k,i,:],sign*float(bin_delay))
+        #freq in MHz, delays in seconds
+        time_delay = Kconst*DM*(cfreq**(-2) - Faxis[:, None, :]**(-2))
+        bin_delay = time_delay / dt
+        bin_delay = bin_delay % nbin
+        self.data = u.shiftit(self.data, sign*bin_delay)
         self.calculateAverageProfile() #re-calculate the average profile
         return self
 

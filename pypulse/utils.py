@@ -848,7 +848,10 @@ def shiftit(y, shift):
     '''
     Speed-ups via Paul Baker
     '''
-    N = len(y)
+    try:
+        shift = shift[...,np.newaxis]
+    except (TypeError, IndexError): pass
+    N = y.shape[-1]
     yfft = np.fft.rfft(y)
     fs = np.fft.rfftfreq(N)#, d=dt)
     phase = 1j*2*np.pi*fs*shift  #reversed from Paul's code so that this matches the previous convention
