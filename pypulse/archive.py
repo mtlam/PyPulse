@@ -658,7 +658,7 @@ class Archive(object):
         if nchan == 1: #do not dedisperse?
             return self
         self.record(inspect.currentframe())
-        Faxis = self.getAxis('F', wcfreq=wcfreq)#, edges=True)[:-1]
+        Faxis = self.getAxis('F', wcfreq=wcfreq)
 
         Faxis = self.freq #potentially two-dimensional thing?
 
@@ -693,15 +693,6 @@ class Archive(object):
                     bin_delay = Decimal(str(time_delay)) / dt
                     bin_delay = bin_delay % Decimal(nbin)
                     self.data[j, k, i, :] = u.shiftit(self.data[j,k,i,:],sign*float(bin_delay))
-        self.calculateAverageProfile() #re-calculate the average profile
-        return self
-
-        for i, delay in enumerate(bin_delays):
-            d = Decimal(sign*(delay))*dt
-            self.channel_delays[i] += Decimal(d) #how can this be right
-            for j in J:
-                for k in K:
-                    self.data[j, k, i, :] = u.shiftit(self.data[j, k, i, :], sign*float(delay))
         self.calculateAverageProfile() #re-calculate the average profile
         return self
 
