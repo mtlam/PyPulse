@@ -281,13 +281,13 @@ class Archive(object):
             '''
 
             tf = tempfile.NamedTemporaryFile()
-            self._data = np.memmap(tf.name,
+            self.data = np.memmap(tf.name,
                                    dtype=np.float32,
                                    mode='w+',
                                    shape=(nsubint, npol, nchan, nbin))
 
         else:
-            self._data = np.zeros((nsubint, npol, nchan, nbin))
+            self.data = np.zeros((nsubint, npol, nchan, nbin))
 
         #self.data = np.zeros((nsubint, npol, nchan, nbin))
         #data = np.zeros((nsubint, npol, nchan, nbin))
@@ -303,7 +303,7 @@ class Archive(object):
 
 
         if nsubint == 1 and npol == 1 and nchan == 1:
-            self._data = (DAT_SCL*DATA+DAT_OFFS)#*DAT_WTS
+            self.data = (DAT_SCL*DATA+DAT_OFFS)#*DAT_WTS
         elif nsubint == 1 and npol == 1:
             for k in K:
                 self.data[0, 0, k, :] = (DAT_SCL[0, k]*DATA[0, 0, k, :]+DAT_OFFS[0, k])#*DAT_WTS[0, k] #dat WTS[0]?
@@ -947,10 +947,7 @@ class Archive(object):
         maxind = np.argmax(self.average_profile)
         diff = center_bin - maxind
 
-        for i in xrange(nsubint):
-            for j in xrange(npol):
-                for k in xrange(nchan):
-                    self.data[i, j, k, :] = np.roll(self.data[i, j, k, :], diff)
+        self.data = np.roll(self.data, diff, axis=-1)
         self.average_profile = np.roll(self.average_profile, diff)
         #print "diff", diff, diff*self.getTbin()
         self.channel_delays += Decimal(str(-1*diff*self.getTbin())) #this is unnecessary? FIX THIS
@@ -965,11 +962,8 @@ class Archive(object):
         nchan = self.getNchan()
         nbin = self.getNbin()
 
-        for i in xrange(nsubint):
-            for j in xrange(npol):
-                for k in xrange(nchan):
-                    baseline = np.mean(self.data[i, j, k, self.spavg.opw])
-                    self.data[i, j, k, :] -= baseline
+        baseline = np.mean(self.data[..., self.spavg.opw], axis=-1)
+        self.data -= baseline[..., np.newaxis]
         self.average_profile -= np.mean(self.average_profile[self.spavg.opw])
         return self
     remove_baseline = removeBaseline
