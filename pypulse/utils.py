@@ -846,9 +846,11 @@ def shiftit_old(y, shift):
 
 def shiftit(y, shift):
     '''
-    Speed-ups via Paul Baker
+    Speed-ups via Paul Baker, Ross Jennings
     '''
-    N = len(y)
+    if isinstance(shift,np.ndarray):
+        shift = shift[...,np.newaxis]
+    N = y.shape[-1]
     yfft = np.fft.rfft(y)
     fs = np.fft.rfftfreq(N)#, d=dt)
     phase = 1j*2*np.pi*fs*shift  #reversed from Paul's code so that this matches the previous convention
