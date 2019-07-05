@@ -305,11 +305,11 @@ class Archive(object):
                             self.data[i, j, k, :] = (DAT_SCL[i, jnchan+k]*DATA[i, j, k, :]+DAT_OFFS[i, jnchan+k])#*DAT_WTS[i, k]
                 u.parmap(loop_func, I)
             elif not cudasuccess:
-                for i in I:
-                    for j in J:
-                        jnchan = j*nchan
-                        for k in K:
-                            self.data[i, j, k, :] = (DAT_SCL[i, jnchan+k]*DATA[i, j, k, :]+DAT_OFFS[i, jnchan+k])#*DAT_WTS[i, k]
+                nsub, npol, nchan, nbin = DATA.shape
+                scale = DAT_SCL.reshape(nsub, npol, nchan)
+                offset = DAT_OFFS.reshape(nsub, npol, nchan)
+                weights = DAT_WTS.reshape(nsub, 1, nchan, 1)
+                self.data = (scale*DATA.transpose((3, 0, 1, 2)) + offset).transpose((1, 2, 3, 0))
             t1 = time.time()
 
         bw = self.getBandwidth()
