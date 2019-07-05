@@ -809,10 +809,7 @@ class Archive(object):
         maxind = np.argmax(self.average_profile)
         diff = center_bin - maxind
 
-        for i in xrange(nsubint):
-            for j in xrange(npol):
-                for k in xrange(nchan):
-                    self.data[i, j, k, :] = np.roll(self.data[i, j, k, :], diff)
+        self.data = np.roll(self.data, diff, axis=-1)
         self.average_profile = np.roll(self.average_profile, diff)
         self.channel_delays += Decimal(str(-1*diff*self.getTbin())) #this is unnecessary? FIX THIS
         self.calculateOffpulseWindow()
@@ -826,11 +823,8 @@ class Archive(object):
         nchan = self.getNchan()
         nbin = self.getNbin()
 
-        for i in xrange(nsubint):
-            for j in xrange(npol):
-                for k in xrange(nchan):
-                    baseline = np.mean(self.data[i, j, k, self.spavg.opw])
-                    self.data[i, j, k, :] -= baseline
+        baseline = np.mean(self.data[..., self.spavg.opw], axis=-1)
+        self.data -= baseline[..., np.newaxis]
         self.average_profile -= np.mean(self.average_profile[self.spavg.opw])
         return self
     remove_baseline = removeBaseline
