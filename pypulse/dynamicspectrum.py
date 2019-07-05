@@ -110,7 +110,7 @@ class DynamicSpectrum(object):
         if not redo and self.baseline_removed:
             return self
         flatdata = self.data.flatten()
-        if np.all(flatdata == np.median(flatdata))[0]:
+        if np.all(flatdata == np.median(flatdata)):#[0]:
             self.data -= np.median(flatdata)
             self.baseline_removed = True
             return self
