@@ -281,13 +281,13 @@ class Archive(object):
             '''
 
             tf = tempfile.NamedTemporaryFile()
-            self.data = np.memmap(tf.name,
-                                  dtype=np.float32,
-                                  mode='w+',
-                                  shape=(nsubint, npol, nchan, nbin))
+            self._data = np.memmap(tf.name,
+                                   dtype=np.float32,
+                                   mode='w+',
+                                   shape=(nsubint, npol, nchan, nbin))
 
         else:
-            self.data = np.zeros((nsubint, npol, nchan, nbin))
+            self._data = np.zeros((nsubint, npol, nchan, nbin))
 
         #self.data = np.zeros((nsubint, npol, nchan, nbin))
         #data = np.zeros((nsubint, npol, nchan, nbin))
@@ -303,7 +303,7 @@ class Archive(object):
 
 
         if nsubint == 1 and npol == 1 and nchan == 1:
-            self.data = (DAT_SCL*DATA+DAT_OFFS)#*DAT_WTS
+            self._data = (DAT_SCL*DATA+DAT_OFFS)#*DAT_WTS
         elif nsubint == 1 and npol == 1:
             for k in K:
                 self.data[0, 0, k, :] = (DAT_SCL[0, k]*DATA[0, 0, k, :]+DAT_OFFS[0, k])#*DAT_WTS[0, k] #dat WTS[0]?
@@ -402,11 +402,11 @@ class Archive(object):
                             self.data[i, j, k, :] = (DAT_SCL[i, jnchan+k]*DATA[i, j, k, :]+DAT_OFFS[i, jnchan+k])#*DAT_WTS[i, k]
                 u.parmap(loop_func, I)
             elif not cudasuccess:
-                for i in I:
-                    for j in J:
-                        jnchan = j*nchan
-                        for k in K:
-                            self.data[i, j, k, :] = (DAT_SCL[i, jnchan+k]*DATA[i, j, k, :]+DAT_OFFS[i, jnchan+k])#*DAT_WTS[i, k]
+                nsub, npol, nchan, nbin = DATA.shape
+                scale = DAT_SCL.reshape(nsub, npol, nchan)
+                offset = DAT_OFFS.reshape(nsub, npol, nchan)
+                weights = DAT_WTS.reshape(nsub, 1, nchan, 1)
+                self.data = (scale*DATA.transpose((3, 0, 1, 2)) + offset).transpose((1, 2, 3, 0))
             t1 = time.time()
             #print t1-t0
 
