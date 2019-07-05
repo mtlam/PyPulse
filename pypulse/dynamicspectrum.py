@@ -223,7 +223,7 @@ class DynamicSpectrum(object):
     def scintillation_parameters(self, plotbound=1.0, maxr=None, maxc=None,
                                  savefig=None, show=True, full_output=False,
                                  simple=False, eta=0.2, cmap=cm.binary,
-                                 finitescintleerrors=True):
+                                 finitescintleerrors=True,diagnostic=False):
         if self.acf is None:
             self.acf2d()
         if self.dT is None:
@@ -307,12 +307,24 @@ class DynamicSpectrum(object):
         if maxr is None:
             rslice = self.acf[centerrind:, centercind]
             maxr = np.where(rslice <= MIN)[0][0]
+            if maxr == 0:
+                maxr = np.shape(self.acf)[0]//2
         if maxc is None:
             cslice = self.acf[centerrind, centercind:]
             maxc = np.where(cslice <= MIN)[0][0]
-
+            if maxc == 0:
+                maxc = np.shape(self.acf)[1]//2
+                
         plotacf = self.acf[int(centerrind-plotbound*maxr+1):int(centerrind+plotbound*maxr),
                            int(centercind-plotbound*maxc+1):int(centercind+plotbound*maxc+1)]
+
+        if diagnostic:
+            print(np.shape(self.acf))
+            print(centerrind-plotbound*maxr+1,centerrind+plotbound*maxr+1)
+            print(centercind-plotbound*maxc+1,centercind+plotbound*maxc+1)
+            u.imshow(plotacf)
+            plt.show()
+            return plotacf
 
         params, pcov = ffit.fitgaussian2d(plotacf) #pcov already takes into account s_sq issue
         SHAPE = np.shape(plotacf)
