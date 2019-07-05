@@ -505,10 +505,8 @@ class Archive(object):
         cols.append(pyfits.Column(name='DAT_FREQ', format='%iE'%np.shape(self.freq)[1], unit='MHz', array=self.freq)) #correct size? check units?
         cols.append(pyfits.Column(name='DAT_WTS', format='%iE'%np.shape(self.weights)[1], array=self.weights)) #call getWeights()
 
-        nsubint = self.getNsubint()
-        npol = self.getNpol()
-        nchan = self.getNchan()
-        nbin = self.getNbin()
+        nsubint, npol, nchan, nbin = self.shape(squeeze=False)
+        
         DAT_OFFS = np.zeros((nsubint, npol*nchan), dtype=np.float32)
         DAT_SCL = np.zeros((nsubint, npol*nchan), dtype=np.float32)
         DATA = self.getData(squeeze=False, weight=False)
@@ -618,11 +616,7 @@ class Archive(object):
                 factor += 1
         self.record(inspect.currentframe())
 
-
-        nsubint = self.getNsubint()
-        npol = self.getNpol()
-        nchan = self.getNchan()
-        nbin = self.getNbin()
+        nsubint, npol, nchan, nbin = self.shape(squeeze=False)
 
         retval = np.zeros((len(np.r_[0:nsubint:factor]), npol, nchan, nbin))
         newdurations = np.zeros(np.shape(retval)[0])
@@ -697,18 +691,12 @@ class Archive(object):
                 factor += 1
         self.record(inspect.currentframe())
 
-        nsubint = self.getNsubint()
-        npol = self.getNpol()
-        nchan = self.getNchan()
-        nbin = self.getNbin()
-
-        retval = np.zeros((self.getNsubint(),
-                           self.getNpol(),
-                           len(np.r_[0:nchan:factor]),
-                           self.getNbin()))
+        nsubint, npol, nchan, nbin = self.shape(squeeze=False)
+        
+        retval = np.zeros((nsubint, npol, len(np.r_[0:nchan:factor]), nbin))
 
         weightsum = np.sum(self.weights)
-        weightretval = np.zeros((self.getNsubint(), len(np.r_[0:nchan:factor])))
+        weightretval = np.zeros((nsubint, len(np.r_[0:nchan:factor])))
 
 
         newnchan = nchan//factor
@@ -749,11 +737,9 @@ class Archive(object):
                 factor += 1
         else:
             self.record(inspect.currentframe())
-            nbin = self.getNbin()
-            retval = np.zeros((self.getNsubint(),
-                               self.getNpol(),
-                               self.getNchan(),
-                               len(np.r_[0:nbin:factor])))
+            nsubint, npol, nchan, nbin = self.shape(squeeze=False)
+            
+            retval = np.zeros((nsubint, npol, nchan, len(np.r_[0:nbin:factor])))
             counts = np.zeros_like(retval)
             for i in xrange(factor):
                 arr = self.data[:, :, :, i:nbin:factor]
@@ -780,10 +766,7 @@ class Archive(object):
 
         Faxis = self.freq #potentially two-dimensional thing?
 
-        nsubint = self.getNsubint()
-        npol = self.getNpol()
-        nchan = self.getNchan()
-        nbin = self.getNbin()
+        nsubint, npol, nchan, nbin = self.shape(squeeze=False)
         if DM is None:
             DM = self.getDM()
         cfreq = self.getCenterFrequency(weighted=wcfreq)
@@ -877,19 +860,13 @@ class Archive(object):
         This will do pscrunching, centering, and dedispersing all at once to avoid multiple loops?
         Does not work so far.
         """
-        nsubint = self.getNsubint()
-        npol = self.getNpol()
-        nchan = self.getNchan()
-        nbin = self.getNbin()
+        nsubint, npol, nchan, nbin = self.shape(squeeze=False)
 
         center_bin = int(nbin*phase_offset)
         maxind = np.argmax(self.average_profile)
         diff = center_bin - maxind
 
         Faxis = self.getAxis('F', wcfreq=wcfreq)
-        nsubint = self.getNsubint()
-        npol = self.getNpol()
-        nbin = self.getNbin()
         DM = self.getDM()
         cfreq = self.getCenterFrequency()
         time_delays = 4.149e3*DM*(cfreq**(-2) - np.power(Faxis, -2)) #DM in MHz, delays in seconds
@@ -921,10 +898,7 @@ class Archive(object):
         Center the peak of the pulse in the middle of the data arrays.
         """
         self.record(inspect.currentframe())
-        nsubint = self.getNsubint()
-        npol = self.getNpol()
-        nchan = self.getNchan()
-        nbin = self.getNbin()
+        nsubint, npol, nchan, nbin = self.shape(squeeze=False)
 
         if phase_offset >= 1 or phase_offset <= 0:
             phase_offset = 0.5
@@ -942,10 +916,7 @@ class Archive(object):
     def removeBaseline(self):
         """Removes the baseline of the pulses given an offpulse window"""
         self.record(inspect.currentframe())
-        nsubint = self.getNsubint()
-        npol = self.getNpol()
-        nchan = self.getNchan()
-        nbin = self.getNbin()
+        nsubint, npol, nchan, nbin = self.shape(squeeze=False)
 
         baseline = np.mean(self.data[..., self.spavg.opw], axis=-1)
         self.data -= baseline[..., np.newaxis]
@@ -1113,18 +1084,14 @@ class Archive(object):
         if self.verbose:
             print("Saving: %s" % filename)
         if ascii:
-            shape = self.shape(squeeze=False)
-            nsubint = self.getNsubint()
-            npol = self.getNpol()
-            nchan = self.getNchan()
-            nbin = self.getNbin()
+            nsubint, npol, nchan, nbin = self.shape(squeeze=False)
             output = ""
-            if shape[0] == 1 and shape[1] == 1 and shape[2] == 1:
+            if nsubint == 1 and npol == 1 and chan == 1:
                 np.savetxt(filename, self.getData())
                 return
-            elif ((shape[0] == 1 and shape[1] == 1) or
-                  (shape[0] == 1 and shape[2] == 1) or
-                  (shape[1] == 1 and shape[2] == 1)):
+            elif ((nsubint == 1 and npol == 1) or
+                  (nsubint == 1 and nchan == 1) or
+                  (npol == 1 and nchan == 1)):
                 np.savetxt(filename, self.getData())
                 return
             for i in xrange(nsubint):
