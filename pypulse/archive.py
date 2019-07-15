@@ -27,6 +27,7 @@ import gc as g
 import decimal as d
 Decimal = d.Decimal
 import time
+import warnings
 from importlib import import_module
 import inspect
 import tempfile
@@ -1712,6 +1713,9 @@ class Archive(object):
         return numwrap(self.header['STT_IMJD'])+numwrap(self.header['STT_OFFS'])
     def getTbin(self, numwrap=float):
         """Returns the time per bin"""
+        if self.getPeriod() is None:
+            warnings.warn("getTbin: Period not set")
+            return numwrap(1)
         return numwrap(self.getPeriod()) / numwrap(self.getNbin())
     def getDM(self, numwrap=float):
         """Returns the data header DM"""
