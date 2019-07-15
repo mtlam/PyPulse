@@ -400,7 +400,7 @@ class Archive(object):
                     for j in J:
                         jnchan = j*nchan
                         for k in K:
-                            self.data[i, j, k, :] = (DAT_SCL[i, jnchan+k]*DATA[i, j, k, :]+DAT_OFFS[i, jnchan+k])#*DAT_WTS[i, k]
+                            self._data[i, j, k, :] = (DAT_SCL[i, jnchan+k]*DATA[i, j, k, :]+DAT_OFFS[i, jnchan+k])#*DAT_WTS[i, k]
                 u.parmap(loop_func, I)
             elif not cudasuccess:
                 nsub, npol, nchan, nbin = DATA.shape
@@ -551,6 +551,7 @@ class Archive(object):
         """Manually clear the data cube for python garbage collection"""
         if self.verbose:
             t0 = time.time()
+        self._data = None
         self.data = None
         self.data_orig = None
         self.weights = None
@@ -636,9 +637,8 @@ class Archive(object):
                     for l in xrange(nbin):
                         retval[i, j, k, l] = np.sum(self.data[i*factor:(i+1)*factor, j, k, l] * self.weights[i*factor:(i+1)*factor, k])
 
-
-        self.data = retval/weightsum
         self.weights = weightretval
+        self.data = retval/weightsum
         self.durations = newdurations
 
         return self
@@ -671,7 +671,7 @@ class Archive(object):
         if self.subintheader['POL_TYPE'] == "AABBCRCI": #Coherence:
             A = self.data[:, 0, :, :]
             B = self.data[:, 1, :, :]
-            self.data[:, 0, :, :] = A+B
+            self._data[:, 0, :, :] = A+B
         elif self.subintheader['POL_TYPE'] == "IQUV": #Stokes
             I = self.data[:, 0, :, :] #No need to average the other dimensions?
             self.data[:, 0, :, :] = I
@@ -721,8 +721,8 @@ class Archive(object):
                         np.sum(self.data[i, j, k*factor:(k+1)*factor, l] * self.weights[i, k*factor:(k+1)*factor])
 
 
-        self.data = retval/weightsum
         self.weights = weightretval
+        self.data = retval/weightsum
         self.freq = newfreq
         return self
 
@@ -1034,7 +1034,7 @@ class Archive(object):
         if weight:
             data = self.weighted_data
         else:
-            data = self.data
+            data = self._data
 
         if squeeze:
             data = data.squeeze()
