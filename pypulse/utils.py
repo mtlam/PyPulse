@@ -900,7 +900,7 @@ def toa_errors_additive(tfft, b, sigma_t):
     """
     Nfft = np.size(tfft)
     Nsum = Nfft // 2
-    kvec = np.arange(1, cNsum)
+    kvec = np.arange(1, Nsum)
     sigma_b = sigma_t*np.sqrt(float(Nfft) / (2.*np.sum(np.abs(tfft[1:Nsum])**2)))
     sigma_tau = (sigma_t*Nfft/(2.*np.pi*np.abs(b))) * np.sqrt(float(Nfft) / (2.*np.sum(kvec**2*np.abs(tfft[1:Nsum])**2)))
     return sigma_tau, sigma_b
