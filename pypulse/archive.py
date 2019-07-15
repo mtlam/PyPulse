@@ -1379,7 +1379,7 @@ class Archive(object):
             else:
                 plt.close()
         else:
-            raise IndexError("Invalud dimensions for plotting")
+            raise IndexError("Invalid dimensions for plotting")
         return ax
 
 
@@ -1672,12 +1672,14 @@ class Archive(object):
         """Returns period of the pulsar"""
         if self.isCalibrator():
             return 1.0/self.header['CAL_FREQ']
-        if self.params is None:
-            return None
+        #if self.params is None:FOO
+        #    return None
         if header or self.polyco is None:
             return self.params.getPeriod()
         else:
             P0 = self.polyco.calculatePeriod()
+            return P0
+        
             #print P0,self.params.getPeriod()
             if np.abs(P0) < 1e-5: #Problem with large DT POLYCO values?
                 return self.params.getPeriod()
@@ -1713,9 +1715,6 @@ class Archive(object):
         return numwrap(self.header['STT_IMJD'])+numwrap(self.header['STT_OFFS'])
     def getTbin(self, numwrap=float):
         """Returns the time per bin"""
-        if self.getPeriod() is None:
-            warnings.warn("getTbin: Period not set")
-            return numwrap(1)
         return numwrap(self.getPeriod()) / numwrap(self.getNbin())
     def getDM(self, numwrap=float):
         """Returns the data header DM"""
