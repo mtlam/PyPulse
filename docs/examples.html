@@ -43,6 +43,7 @@
 <li><a class="reference internal" href="#">Examples</a><ul>
 <li><a class="reference internal" href="#calculating-scintillation-parameters">Calculating scintillation parameters</a></li>
 <li><a class="reference internal" href="#make-a-joy-division-plot">Make a Joy Division plot</a></li>
+<li><a class="reference internal" href="#make-a-template-shape">Make a template shape</a></li>
 <li><a class="reference internal" href="#comment-out-toas-in-a-tim-file-with-a-given-condition">Comment out TOAs in a .tim file with a given condition</a></li>
 </ul>
 </li>
@@ -97,6 +98,14 @@
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ar</span> <span class="o">=</span> <span class="n">Archive</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">)</span> <span class="c1">#loads archive, dedispersed and polarization averaged by default</span>
 <span class="n">ar</span><span class="o">.</span><span class="n">fscrunch</span><span class="p">()</span> <span class="c1">#frequency-average the data, if applicable.</span>
 <span class="n">ar</span><span class="o">.</span><span class="n">joyDivision</span><span class="p">()</span> <span class="c1">#makes the Joy-Division-style plot for pulses in time and phase</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="make-a-template-shape">
+<h2>Make a template shape<a class="headerlink" href="#make-a-template-shape" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ar</span> <span class="o">=</span> <span class="n">Archive</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">)</span> <span class="c1">#loads archive, dedispersed and polarization averaged by default</span>
+<span class="n">ar</span><span class="o">.</span><span class="n">tscrunch</span><span class="p">()</span> <span class="c1">#time-average the data, if applicable.</span>
+<span class="n">ar</span><span class="o">.</span><span class="n">calculateTemplate</span><span class="p">()</span> <span class="c1">#By default, will use von Mises functions</span>
 </pre></div>
 </div>
 </div>
