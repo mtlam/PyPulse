@@ -814,7 +814,7 @@ class Archive(object):
         """
         Averages the data along the time/polarization/frequency axes
         """
-        self.average_profile = np.mean(np.mean(self.getData(squeeze=False), axis=2), axis=0) #This may not be the appropriate weighting
+        self.average_profile = np.mean(np.mean(self.getData(squeeze=False, weight=False), axis=2), axis=0) #This may not be the appropriate weighting
         if np.shape(self.average_profile)[0] != 1: #polarization add
             if self.subintheader['POL_TYPE'] == "AABBCRCI": #Coherence
                 self.average_profile = (self.average_profile[0, :] +
