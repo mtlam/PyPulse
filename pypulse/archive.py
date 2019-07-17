@@ -1678,7 +1678,7 @@ class Archive(object):
             return self.params.getPeriod()
         else:
             P0 = self.polyco.calculatePeriod()
-            return P0
+            #return P0
         
             #print P0,self.params.getPeriod()
             if np.abs(P0) < 1e-5: #Problem with large DT POLYCO values?
