@@ -1,18 +1,13 @@
 '''
 
-
-
-
 '''
-
-
-
 import os
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import astropy.coordinates as coordinates
 import astropy.units as units
+
 if sys.version_info.major == 2:
     fmap = map
 elif sys.version_info.major == 3:
@@ -21,8 +16,6 @@ elif sys.version_info.major == 3:
 
 ON = "ON"
 OFF = "OFF"
-
-
 
 class Calibrator(object):
     def __init__(self, freqs, S, Serr=None, pol_type='Coherence', fd_poln='LIN', verbose=True):
@@ -60,9 +53,6 @@ class Calibrator(object):
         self.Uerr = S2err
         self.Verr = S3err
 
-
-
-
     def pacv(self):
         '''
         Emulates pacv <archive>
@@ -93,15 +83,12 @@ class Calibrator(object):
         plt.ylabel('Calibrator Stokes')
         plt.show()
 
-
-
     def applyFluxcal(self, fluxcalonar, fluxcaloffar=None):
         if fluxcaloffar is None: #The fluxcalon file contains both ON and OFF observations
             pass
         else:
             fluxcalonfreqs, fluxcalondatalow, fluxcalondatahigh, fluxcalonerrslow, fluxcalonerrshigh = fluxcalonar.getLevels()
             fluxcalofffreqs, fluxcaloffdatalow, fluxcaloffdatahigh, fluxcalofferrslow, fluxcalofferrshigh = fluxcaloffar.getLevels()
-
 
         source = fluxcalonar.getName()
         if source != fluxcaloffar.getName():
@@ -115,10 +102,6 @@ class Calibrator(object):
         #print np.shape(calflux), np.shape(S_cal)
 
         #self.I = self.I
-
-
-
-
 
     def applyCalibration(self, ar):
         M_PAs = []
@@ -135,18 +118,13 @@ class Calibrator(object):
         if PAR_ANG is not None:
             PAR_ANG *= np.pi/180 #check if degrees!
 
-
         dG = 2*self.Q/self.I
         dpsi = np.arctan2(self.V, self.U)
-
-
 
         data = ar.getData(squeeze=False) #perform checks here
         # Remove baselines?
 
-
         POL_TYPE = ar.subintheader['POL_TYPE']
-
 
         I = xrange(ar.getNsubint())
         J = xrange(ar.getNchan())
@@ -184,11 +162,8 @@ class Calibrator(object):
             #    show()
             #    raise SystemExit
 
-
         #print np.mean(calibrated_data[5, :, 25, :])
         ar.setData(calibrated_data)
-
-
 
     def buildMuellerMatrixPA(self, PA):
         if PA is None:
@@ -214,9 +189,6 @@ class Calibrator(object):
                               [0, 0, cos, -sin],
                               [0, 0, sin, cos]]
         return M_differential
-
-
-
 
     def convertPolarization(self, S, intype, outtype, linear=True):
         if intype == outtype:
@@ -252,8 +224,6 @@ class Calibrator(object):
             return np.array(outS)
         elif isinstance(S, list):
             return outS
-
-
 
     def buildMuellerMatrix(self, PA=None, feed=None, CC=None, differential=None):
         """
@@ -297,8 +267,6 @@ class Calibrator(object):
                               [0, 0, sin, cos]]
         return np.dot(np.dot(np.dot(M_differential, M_CC), M_feed), M_PA)
 
-
-
     def calculatePA(self, lat, dec, HA):
         """
         Helper function
@@ -308,11 +276,6 @@ class Calibrator(object):
         """
         return np.arctan2(np.sin(HA)*np.cos(lat),
                           np.sin(lat)*np.cos(dec) - np.cos(lat)*np.sin(dec)*np.cos(HA))
-
-
-
-
-
 
 ### ==================================================
 ### Helper functions
@@ -324,8 +287,6 @@ class CalibratorConfig:
             filename = os.path.join(os.path.dirname(__file__), "config", "fluxcal.cfg")
         self.filename = filename
         self.configlines = self.readConfigFile()
-
-
 
     def readConfigFile(self):
         """
@@ -364,7 +325,6 @@ class CalibratorConfig:
         configline = self.getConfigLine(source)
         return coordinates.SkyCoord("%s %s"%(configline[1], configline[2]), unit=(units.hourangle, units.degree))
 
-
     def checkOnOff(self, source, coords, tolerance=1):
         """
         Check if the flux cal is on or off source
@@ -376,8 +336,6 @@ class CalibratorConfig:
         if sourcecoords.separation(coords) <= tolerance*units.arcmin:
             return ON
         return OFF
-
-
 
     def calculateCalibratorFlux(self, source, freqs):
         """
@@ -400,9 +358,3 @@ class CalibratorConfig:
 
             fluxes = flux*np.power((freqs/freq), -1*index)
         return fluxes
-
-
-
-
-
-

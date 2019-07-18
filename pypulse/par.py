@@ -2,11 +2,9 @@
 Michel Lam 2015
 Loads a parameter file
 '''
-
 import decimal
 import re
 import numpy as np
-
 
 numre = re.compile('(\d+[.]\d+D[+]\d+)|(-?\d+[.]\d+)')
 flagre = re.compile('-[a-zA-Z]')
@@ -16,8 +14,8 @@ PC_TO_M = 3.086e16
 MAS_TO_RAD = np.pi/(180*60*60*1000)
 YR_TO_S = 3.154e7
 
-
 DECIMAL = decimal.Decimal
+
 
 class Parameter(object):
     def __init__(self, name, value=None, fit=None, error=None, flag=None,
@@ -84,18 +82,21 @@ class Parameter(object):
 
     def getName(self):
         return self.name
+
     def getValue(self):
         return self.value
+
     def getFit(self):
         return self.fit
+
     def getError(self):
         return self.error
+
     def getFlag(self):
         return self.flag
+
     def getFlagValue(self):
         return self.flagvalue
-
-
 
 
 class Par(object):
@@ -126,7 +127,6 @@ class Par(object):
         if isinstance(filename, str):
             FILE.close()
 
-
     def __repr__(self):
         numwrapstr = repr(self.numwrap).split("'")[1]
         return "Par(%r, numwrap=%s, usedecimal=%r)" % (self.filename, numwrapstr, self.usedecimal)
@@ -136,8 +136,6 @@ class Par(object):
             return "\n".join(self.filename)
         return self.filename
 
-
-
     def save(self, filename):
         # Crude saving attempt
         output = ""
@@ -146,10 +144,9 @@ class Par(object):
         with open(filename, 'w') as FILE:
             FILE.write(output)
 
-
-
     def getInd(self, tag):
         return np.where(self.paramnames == tag)[0]#[0]
+
     def get(self, tag, flag=False, error=False):
         if tag in self.paramnames:
             ind = self.getInd(tag)
@@ -169,6 +166,7 @@ class Par(object):
                 return retval[0]
             return np.array(retval)
         return None
+
     def getPeriod(self):
         if 'P0' in self.paramnames:
             return self.get('P0')
@@ -179,6 +177,7 @@ class Par(object):
         elif 'IF0' in self.paramnames:
             F0 = (self.get('IF0') + self.get('FF0'))/self.numwrap(1000.0)
         return self.numwrap(1.0)/F0
+
     def getPeriodDot(self, shklovskii=False):
         if 'P1' in self.paramnames:
             Pdot = self.get('P1')
@@ -207,9 +206,9 @@ class Par(object):
 
     def getFrequency(self):
         return self.numwrap(1.0)/self.getPeriod()
+
     def getFrequencyDot(self, shklovskii=False):
         return self.numwrap(-1.0) * self.getPeriodDot(shklovskii=shklovskii) / self.getPeriod()**2
-
 
     def getPM(self, error=False):
         keys = self.paramnames
@@ -243,8 +242,10 @@ class Par(object):
         elif "PMBETA" in keys:
             retval = abs(self.get("PMBETA", error=error))
         return retval
+
     def getPX(self, error=False):
         return self.get('PX', error=error)
+
     def getDIST(self, error=False):
         PX = self.getPX()
         if error:
@@ -252,6 +253,7 @@ class Par(object):
             return PXerr/PX**2
         else:
             return self.numwrap(1.0)/PX
+
     def getVpperp(self, error=False):
         '''
         Get transverse velocity
@@ -270,10 +272,9 @@ class Par(object):
         else:
             return retval
 
-
-
     def getDM(self):
         return self.get('DM')
+
     def getDMX(self, full_output=False):
         keys = self.paramnames
         Ncomponents = 0
@@ -307,6 +308,7 @@ class Par(object):
         if full_output:
             return ts, dmxs, errs, R1s, R2s, F1s, F2s
         return ts, dmxs, errs  
+
     def getXMX(self):#, full_output=False):
         keys = self.paramnames
         Ncomponents = 0
@@ -328,6 +330,7 @@ class Par(object):
             R2s[i] = self.get('XMXR2_%04i'%(i+1))
             EXPs[i] = self.get('XMXEXP_%04i'%(i+1))
         return xmxs, errs, R1s, R2s, EXPs
+
     def getDMseries(self):
         ts, dmxs, errs = self.getDMX()
         DM = self.getDM()
@@ -341,6 +344,7 @@ class Par(object):
         if len(coeffs) == 0:
             return None
         return np.array(coeffs)
+
     def getFDfunc(self):
         """
         Returns a function that provides the timing delays as a function of observing frequency

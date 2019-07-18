@@ -6,7 +6,6 @@ Interpulse will be roughly at 3*len/4
 
 Figure out way to add/average SPs.
 '''
-
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.optimize as optimize
@@ -18,7 +17,6 @@ get_toa = u.get_toa3 #try this one
 
 #ACF=lambda p: np.correlate(p, p, "full") #no longer used
 
-
 '''
 data : data array
 mpw : Main pulse window
@@ -28,11 +26,7 @@ prepare : Process data according to some metrics (deprecated)
 align : Roll pulse by this amount
 period : Set pulse period
 windowsize: Override mpw, ipw, opw, define an offpulse window about the minimum of this size
-
-
 '''
-
-
 
 
 class SinglePulse(object):
@@ -58,7 +52,6 @@ class SinglePulse(object):
         if windowsize is not None:
             self.calcOffpulseWindow(windowsize)
 
-
         elif opw is None:
             if self.mpw is None and self.ipw is None:
                 self.opw = None #do not define any windows
@@ -82,8 +75,6 @@ class SinglePulse(object):
                 #prepare=True #? #keep this for 1937?
             #self.shiftit(align, save=True)
 
-
-
         if prepare: #change this for jitter (prepare set to False here)
             self.interpulse_align()
             #self.normalize() #do not do this
@@ -93,7 +84,6 @@ class SinglePulse(object):
         self.null = False
         if np.all(self.data == self.data[0]) or np.all(np.isnan(self.data)):
             self.null = True
-
 
     def interpulse_align(self):
         """
@@ -121,7 +111,6 @@ class SinglePulse(object):
             self.data = u.normalize(self.data, minimum=minimum)
         return self
 
-
     def getFWHM(self, simple=False, timeunits=True):
         """
         Get the full width at half maximum of the main component of the pulse
@@ -143,7 +132,6 @@ class SinglePulse(object):
         if timeunits and self.getPeriod() is not None:
             factor = self.getPeriod()/self.getNbins()
         return factor*dbin
-
 
     def getWeff(self, fourier=False, sumonly=False, timeunits=True):
         """
@@ -168,14 +156,11 @@ class SinglePulse(object):
         Uobsbar = np.mean(self.data)
         return 1.0/Uobsbar
 
-
     def getSN(self):
         """
         Calculate a very crude S/N
         """
         return np.max(self.data)/self.getOffpulseNoise()
-
-
 
     def remove_baseline(self, save=True):
         """
@@ -190,7 +175,6 @@ class SinglePulse(object):
             return self
         return self.data - opmean
     removeBaseline = remove_baseline
-
 
     def calcOffpulseWindow(self, windowsize=None):
         # Find minimum in the area
@@ -207,22 +191,25 @@ class SinglePulse(object):
         self.mpw = self.bins[np.logical_not(np.in1d(self.bins, self.opw))]
         return self.opw
 
-
     ### Get each of the pulse components, if they exist
     def getMainpulse(self):
         if self.mpw is None:
             return None
         return self.data[self.mpw]
+
     def getInterpulse(self):
         if self.ipw is None:
             return None
         return self.data[self.ipw]
+
     def getOffpulse(self):
         if self.opw is None:
             return None
         return self.data[self.opw]
+
     def getAllpulse(self):
         return self.getMainpulse(), self.getInterpulse(), self.getOffpulse()
+
     def getPulse(self, ind=None):
         if ind is None:
             return self.data
@@ -234,21 +221,24 @@ class SinglePulse(object):
     def getMainpulseACF(self):
         mp = self.getMainpulse()
         return u.acf(mp, var=False, norm_by_tau=True)
+
     def getInterpulseACF(self):
         if self.ipw is None:
             return None
         ip = self.getInterpulse()
         return u.acf(ip, var=False, norm_by_tau=True)
+
     def getOffpulseACF(self):
         if self.opw is None:
             return None
         op = self.getOffpulse()
         return u.acf(op, var=False, norm_by_tau=True)
+
     def getAllACF(self):
         return self.getMainpulseACF(), self.getInterpulseACF(), self.getOffpulseACF()
+
     def getACF(self):
         return u.acf(self.getData(), var=False, norm_by_tau=True)
-
 
     def getOffpulseNoise(self, mean=False, full=False):
         """
@@ -268,8 +258,6 @@ class SinglePulse(object):
         Perform a zero-crossing test of the offpulse noise
         """
         return u.zct(self.getOffpulse(), full=True, meansub=True)
-
-
 
     # todo: include a goodness-of-fit flag (gof) as a measure of the residuals.
     def fitPulse(self, template, fixedphase=False, rms_baseline=None):
@@ -320,8 +308,6 @@ class SinglePulse(object):
             return self
         return x
 
-
-
     def spline_smoothing(self, sigma=None, lam=None, **kwargs):
         """ Cubic Spline Interplation
         sigma: phase bin error bars
@@ -332,8 +318,6 @@ class SinglePulse(object):
         tdata = self.bins
         ydata = u.normalize(self.data, simple=True)
         N = len(ydata)
-
-
 
         noise = self.getOffpulseNoise()
         if lam is None or (lam > 1 or lam <= 0):
@@ -377,9 +361,6 @@ class SinglePulse(object):
                 f = np.poly1d(p)
                 y[i] = f(tdata[knots[i]])
 
-
-
-
             if setsigma:
                 sigma = np.ones(len(y), dtype=np.float)
             Sigma = np.diag(sigma[:-1]) #matrix
@@ -420,7 +401,6 @@ class SinglePulse(object):
             Qp[-1, 0] = r[-1]
             Q = np.transpose(Qp)
 
-
             A = mu*np.dot(np.dot(Qp, Sigma), Q) + R
 
             b = np.linalg.solve(A, np.dot(Qp, y[:-1]))
@@ -443,14 +423,12 @@ class SinglePulse(object):
             for i in range(Narcs):
                 S.append(np.poly1d([a[i], b[i], c[i], d[i]]))
 
-
             ytemp = np.zeros_like(yshift)
             for i in range(Narcs):
                 ts = np.arange(t[i], t[i+1])
                 hs = ts-t[i]
                 yS = S[i](hs)
                 ytemp[int(t[i]):int(t[i+1])] = yS
-
 
             ytemp[-1] = ytemp[0]
             resids = yshift-ytemp
@@ -469,7 +447,6 @@ class SinglePulse(object):
             #print newinds
             #raise SystemExit
             #newind = np.argmax(np.abs(resids))
-
 
             newind = newinds[-1]
             i = 1
@@ -510,7 +487,6 @@ class SinglePulse(object):
         return ytemp
     splienSmoothing = spline_smoothing
 
-
     def component_fitting(self, mode='gaussian', nmax=10, full=False,
                           minamp=None, alpha=0.05, allownegative=False,
                           verbose=False, save=False):
@@ -531,14 +507,12 @@ class SinglePulse(object):
         residsA = self.data - fitfunc(pfit, self.phases)
         RSS_funcA = np.sum(residsA**2)
 
-
         def doreturn(save=False):
             if save:
                 self.data = fitfunc(pfit, self.phases)
             if full:
                 return fitfunc(pfit, self.phases), pfit, n
             return fitfunc(pfit, self.phases)
-
 
         for n in range(2, nmax+1):
             if verbose:
@@ -547,7 +521,6 @@ class SinglePulse(object):
             fitfunc, errfunc, pfit, perr, s_sq = fitter(self.phases, self.data, n)
             residsB = self.data - fitfunc(pfit, self.phases)
             RSS_funcB = np.sum(residsB**2)
-
 
             if minamp is not None and np.all(residsB < MAX):
                 return doreturn(save=save)
@@ -564,7 +537,6 @@ class SinglePulse(object):
             residsA = residsB
             RSS_funcA = RSS_funcB
         return doreturn(save=save)
-
 
         '''
         n = 1
@@ -605,7 +577,6 @@ class SinglePulse(object):
         Savitzky-Golay filter smoothing
         """
         return signal.savgol_filter(self.data, window_length, polyorder)
-
 
     def smooth(self, mode='vonmises', sigma=None, lam=None,
                window_length=11, polyorder=5, **kwargs):
@@ -652,8 +623,6 @@ class SinglePulse(object):
             Gammas[i] = Gamma
             f_rs[i] = f_r
 
-
-
         f_cs = (Gammas+f_rs)/2.0
 
         fig = plt.figure(figsize=(8, 12))
@@ -682,9 +651,6 @@ class SinglePulse(object):
                      f_cs=f_cs)
             plt.savefig("cleanimages/%s_clean_stats.png"%name)
             plt.close()
-
-
-
 
         ind = np.argmin(f_cs)
         #ind = np.argmin(Gammas)
@@ -717,11 +683,6 @@ class SinglePulse(object):
             plt.savefig("cleanimages/%s_clean.png"%name)
             plt.close()
 
-
-
-
-
-
     def getPeriod(self):
         """ Return the pulse period """
         return self.period
@@ -731,12 +692,10 @@ class SinglePulse(object):
         return len(self.data)
     getNbin = getNbins
 
-
     def getTbin(self):
         """ Return the time unit of one phase bin """
         if self.getPeriod() is not None:
             return self.getPeriod()/self.getNbins()
-
 
     def plot(self, show=True):
         """
@@ -752,6 +711,7 @@ class SinglePulse(object):
         ax.set_ylabel("Intensity")
         if show:
             plt.show()
+
     def plot_windows(self, show=True):
         """
         Diagnostic plot of the main-, inter-, and off-pulse regions
@@ -796,22 +756,24 @@ class SinglePulse(object):
         if show:
             plt.show()
 
-
-
  #Helper functions for fitPulse
 # tauccf, tauhat, bhat, sigma_Tau, sigma_b, snr, rho
 def get_fitPulse_TOA(retval):
     return retval[1]
 get_tauhat = get_fitPulse_TOA
+
 def get_fitPulse_ScaleFactor(retval):
     return retval[2]
 get_bhat = get_fitPulse_ScaleFactor
+
 def get_fitPulse_TOAerror(retval):
     return retval[3]
 get_sigma_tau = get_fitPulse_TOAerror
+
 def get_fitPulse_ScaleFactorerr(retval):
     return retval[4]
 get_sigma_b = get_fitPulse_ScaleFactorerr
+
 def get_fitPulse_SN(retval):
     return retval[5]
 get_snr = get_fitPulse_SN

@@ -3,7 +3,6 @@ Michael Lam 2015
 
 Useful mathematical commands
 '''
-
 import sys
 import numpy as np
 import scipy.fftpack as fft
@@ -25,10 +24,6 @@ if sys.version_info.major == 2:
 elif sys.version_info.major == 3:
     fmap = lambda x, *args: list(map(x, *args))
     xrange = range
-
-
-
-
 
 '''
 ACF
@@ -78,8 +73,6 @@ def lagfunction(func, t, x, e=None, dtau=1, tau_edges=None, mirror=False):
     if e is not None:
         weighted = True
 
-
-
     # this could be sped up several ways
     I = list(range(length))
     for i in I:
@@ -99,7 +92,6 @@ def lagfunction(func, t, x, e=None, dtau=1, tau_edges=None, mirror=False):
     #divide by zero problem!, only with one-pass algorithm
     retval = retval / N_taus
 
-
     if mirror: #fix this
     #mirror each:
         taus = np.concatenate((-1*taus[::-1][:-1], taus))
@@ -108,10 +100,6 @@ def lagfunction(func, t, x, e=None, dtau=1, tau_edges=None, mirror=False):
     #return tau_edges, retval
     return taus, retval
     #return tau_edges, retval #BAD
-
-
-
-
 
 def acf2d(array, speed='fast', mode='full', xlags=None, ylags=None):
     if speed == 'fast' or speed == 'slow':
@@ -168,7 +156,6 @@ def acf2d(array, speed='fast', mode='full', xlags=None, ylags=None):
                 retval[j, i] = np.mean(C[goodinds])
         return retval
 
-
 def lagaxis(arg, dtau=1):
     if isinstance(arg, (list, np.ndarray)): #generate a lag axis based on a time axis
         length = len(arg)
@@ -177,8 +164,6 @@ def lagaxis(arg, dtau=1):
     else: # Returns a generic lag axis
         half = arg//2 #arg should be odd
         return np.arange(-1*half, half+1)*dtau
-
-
 
 #Taken from diagnostics.py, set default threshold=3
 def zct(series, threshold=3, full=False, meansub=False):
@@ -203,9 +188,6 @@ def zct(series, threshold=3, full=False, meansub=False):
             return False, abs(count-average_zw)/sigma_zw, count
         return False
 
-
-
-
 '''
 Decimate the data
 Be careful with window_len!
@@ -228,8 +210,6 @@ def decimate(x, window_len, error=False):#, mean=True, remainder=False):
         for i in range(window_len):
             retval += x[i:length:window_len]
         return retval/window_len
-
-
 
 def imshow(x, ax=None, origin='lower', interpolation='nearest', aspect='auto', **kwargs):
     if ax is not None:
@@ -311,7 +291,6 @@ def plothistogram(center, hist, interval=1.0, bins=None, steps=False,
         plt.show()
     return p
 
-
 #Creates empirical cdf
 def ecdf(values, sort=True):
     if sort:
@@ -319,8 +298,10 @@ def ecdf(values, sort=True):
     return values, np.linspace(0, 1, len(values))
 
 EPS = special.erf(1.0/np.sqrt(2))/2.0
+
 def pdf_to_cdf(pdf, dt=1):
     return np.cumsum(pdf)*dt
+
 def likelihood_evaluator(x, y, cdf=False, median=False, pm=True, values=None):
     """
     cdf: if True, x,y describe the cdf
@@ -371,8 +352,6 @@ def likelihood_evaluator(x, y, cdf=False, median=False, pm=True, values=None):
             retval[i] = x[indv]
         return retval
 
-
-
 '''
 2D data saving
 '''
@@ -384,9 +363,6 @@ def write2Dtxt(filename, array, x=None, y=None, info=True, **kwargs):
         header = " ".join(fmap(str, x)) + "\n" + " ".join(fmap(str, y)) + "\n"
         # check if header is in kwargs
         np.savetxt(filename, array, comments='', header=header, **kwargs)
-
-
-
 
 '''
 Normalize an array to unit height
@@ -407,7 +383,6 @@ def normalize_area(array, x=None, full=False):
         return array/area, area
     return array/area
 
-
 '''
 Center the maximum value of the array
 Follows profiles.py
@@ -420,7 +395,6 @@ def center_max(array, full=False):
     if full:
         return diff, np.roll(array, diff)
     return np.roll(array, diff)
-
 
 #Follow profiles.py
 #notcentered is very rudimentary
@@ -439,7 +413,6 @@ def FW(series, value=0.5, norm=True, simple=False, notcentered=False):
     wL = 0
     wR = N-1
 
-
     #initial solution
     if notcentered:
         series = center_max(series)
@@ -455,8 +428,6 @@ def FW(series, value=0.5, norm=True, simple=False, notcentered=False):
         iL = optimize.brentq(f, negindsL[-1], negindsL[-1]+1)#half)
         iR = optimize.brentq(f, negindsR[0]-1, negindsR[0])#half, wR)
     return iR-iL
-
-
 
 def subdivide(tdata, ydata, noise, rms=True, minsep=16, maxsep=64, fac=1.25):
     """ Subdivide an array and determine where knots should be placed in spline smoothing """
@@ -492,8 +463,6 @@ def subdivide(tdata, ydata, noise, rms=True, minsep=16, maxsep=64, fac=1.25):
         return []
     #'''
 
-
-
     # Test new knot at the midpoint
     half = N/2
     tdataL = tdata[:half]
@@ -514,9 +483,6 @@ def subdivide(tdata, ydata, noise, rms=True, minsep=16, maxsep=64, fac=1.25):
         print len(knotsL), len(knotsR)
     '''
     return np.concatenate((knotsL, knotsR, [half+tdata[0]]))
-
-
-
 
 def fit_components(xdata, ydata, mode='gaussian', N=1, allownegative=False):
     nbins = len(xdata)
@@ -560,14 +526,15 @@ def fit_components(xdata, ydata, mode='gaussian', N=1, allownegative=False):
     s_sq = (errfunc(out[0], xdata, ydata)**2).sum()/(len(ydata)-len(pinit)-1) #-1 included here!
     return fitfunc, errfunc, out[0], out[1], s_sq
 
-
 def fit_gaussians(xdata, ydata, N=1):
     return fit_components(xdata, ydata, mode='gaussian', N=N)
+
 def fit_vonmises(xdata, ydata, N=1):
     return fit_components(xdata, ydata, mode='vonmises', N=N)
 
 def gaussian(x, amp, mu, sigma):
     return amp*np.exp(-0.5*((x-mu)/sigma)**2)
+
 def vonmises(x, amp, mu, kappa):
     #return amp*np.exp(kappa*np.cos(x-mu))/(2*np.pi*special.iv(0, kappa))
     '''
@@ -584,9 +551,6 @@ def vonmises(x, amp, mu, kappa):
     # Allow for negatives
     y /= np.max(np.abs(y))
     return amp*y
-
-
-
 
 def pbf_clean(t, y, g=None, taud=1.0, opw=None, gamma=0.05, m=1.0, x=1.5, stop=1.5):
     '''
@@ -639,8 +603,6 @@ def pbf_clean(t, y, g=None, taud=1.0, opw=None, gamma=0.05, m=1.0, x=1.5, stop=1
         oldrms = rms
         n += 1
 
-
-
     i_components = np.array(i_components)
     y_components = np.array(y_components)
     t_components = np.zeros_like(y_components)
@@ -653,8 +615,6 @@ def pbf_clean(t, y, g=None, taud=1.0, opw=None, gamma=0.05, m=1.0, x=1.5, stop=1
         t_components[n] = t[i_components[n]]
 
     C /= np.max(C)
-
-
 
     # N_f metric
     inds = np.where(np.abs(C) < 3*sigma_opw)[0] #C?
@@ -672,14 +632,13 @@ def pbf_clean(t, y, g=None, taud=1.0, opw=None, gamma=0.05, m=1.0, x=1.5, stop=1
     Gamma = avgt(3)/np.power(avgt(2), 1.5)
     #print Gamma
 
-
     # f_r metric
     inds = np.where(Dy < -x*sigma_opw)[0] #the step function
     #print len(inds)
     f_r = (m/(N*sigma_opw**2)) * np.sum(Dy[inds]**2)
 
-
     return Dy, C, N_f, sigma_offc, Gamma, f_r
+
 def pbf_fourier(t, y, g=None, taud=1.0, opw=None, m=1.0, x=1.5, **kwargs):
     N = len(t)
 
@@ -729,7 +688,6 @@ def pbf_fourier(t, y, g=None, taud=1.0, opw=None, m=1.0, x=1.5, **kwargs):
     #plt.plot(t, xt)
     #plt.show()
 
-
     # N_f metric
     #inds = np.where(np.abs(xt)<3*sigma_opw)[0] #C?
     #N_f = float(len(inds))/len(xt)
@@ -751,7 +709,6 @@ def pbf_fourier(t, y, g=None, taud=1.0, opw=None, m=1.0, x=1.5, **kwargs):
     Gamma = -Gamma #meh
     #print Gamma
 
-
     # f_r metric
     # is this the correct modification?
     #sigma_opw = RMS(xt[opw])
@@ -769,7 +726,6 @@ def RMS(series, subtract_mean=False):
     if subtract_mean:
         series = series - np.mean(series)
     return np.sqrt(np.mean(np.power(series, 2)))
-
 
 '''
 Return weighted sample mean and std
@@ -810,10 +766,6 @@ def parmap(f, X):
     ret = [p.recv() for (p, c) in pipe]
     [p.join() for p in proc]
     return ret
-
-
-
-
 
 ### ==================================================
 ### Optimizations of JMC's code
@@ -857,8 +809,6 @@ def shiftit(y, shift):
     yfft_sh = yfft * np.exp(phase)
     return np.fft.irfft(yfft_sh)
 
-
-
 def find_fwhm(array):
     """
     Finds full width at half maximum in sample numbers via interpolation.
@@ -884,8 +834,6 @@ def find_fwhm(array):
     fwhm = hwhm_minus+hwhm_plus
     return fwhm
 
-
-
 def toa_errors_additive(tfft, b, sigma_t):
     """
     Calculates error in b = scale factor and tau = TOA due to additive noise.
@@ -905,7 +853,6 @@ def toa_errors_additive(tfft, b, sigma_t):
     sigma_tau = (sigma_t*Nfft/(2.*np.pi*np.abs(b))) * np.sqrt(float(Nfft) / (2.*np.sum(kvec**2*np.abs(tfft[1:Nsum])**2)))
     return sigma_tau, sigma_b
 
-
 def tfresids(params, tfft, pfft):
     """
     """
@@ -918,8 +865,6 @@ def tfresids(params, tfft, pfft):
     #resids = abs(pfft[1:Nsum] - b*tfft[1:Nsum]*phasevec[1:Nsum])
     resids = np.abs(pfft[1:Nsum] - b*tfft[1:Nsum]*phasevec[1:Nsum])
     return resids
-
-
 
 def get_toa3(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, norder=2):
     """
