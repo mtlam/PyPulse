@@ -20,7 +20,6 @@ Flip order of arguments in scrunching?
 
 Check if time() still works.
 '''
-
 import os
 import sys
 import gc as g
@@ -61,10 +60,6 @@ FOF = "FOF"
 PCM = "PCM"
 SEARCH = "SEARCH"
 
-
-
-
-
 class Archive(object):
     def __init__(self, filename, prepare=True, lowmem=False, verbose=True,
                  weight=True, center_pulse=True, baseline_removal=True,
@@ -96,7 +91,6 @@ class Archive(object):
             t1 = time.time()
             print("Load time: %0.2f s" % (t1-t0))
 
-
         self.template = None
 
         #self.reset(False) #put prepare into here?, copying to arch is done here
@@ -114,8 +108,6 @@ class Archive(object):
     
     def __str__(self):
         return self.filename
-
-
 
     def load(self, filename, prepare=True, center_pulse=True,
              baseline_removal=True, weight=True, wcfreq=False):
@@ -169,14 +161,11 @@ class Archive(object):
         else:
             self.params = None
 
-
-
         if 'POLYCO' in self.keys:
             tablenames.remove('POLYCO')
             self.polyco = Polyco(hdulist['POLYCO'], MJD=self.getMJD(full=True))
         else:
             self.polyco = None
-
 
         tablenames.remove('PRIMARY')
         if 'SUBINT' in tablenames:
@@ -190,15 +179,9 @@ class Archive(object):
         for tablename in tablenames: #remaining table names to store
             self.tables.append(hdulist[tablename].copy())
 
-
-
         #if self.header['OBS_MODE'] == 'PCM':
         if isFluxcal:
             raise ValueError("This is a fluxcal file: currently not implemented")
-
-
-
-
 
         self.subintinfo = dict()
         self.subintinfolist = fmap(lambda x: x.name, hdulist['SUBINT'].columns[:-5])
@@ -234,7 +217,6 @@ class Archive(object):
 
         #self.DAT_SCL = DAT_SCL #testing
 
-
         #print DAT_WTS, np.max(DAT_WTS), np.min(DAT_WTS)
         if np.size(DAT_WTS) == 1:
             #DAT_WTS[0] = 1.0
@@ -246,11 +228,7 @@ class Archive(object):
             self.weights = DAT_WTS
             self.weight_sum = np.sum(DAT_WTS)
 
-
         if self.lowmem: #Replace the data arrays with memmaps to reduce memory load
-
-
-
             SHAPE = np.shape(DATA)
             tfDATA = tempfile.NamedTemporaryFile()
             fp = np.memmap(tfDATA.name, dtype=np.int16, mode='w+', shape=SHAPE)
@@ -297,11 +275,7 @@ class Archive(object):
         J = range(npol)
         K = range(nchan)
 
-
         self.freq = DAT_FREQ
-
-
-
 
         if nsubint == 1 and npol == 1 and nchan == 1:
             self._data = (DAT_SCL*DATA+DAT_OFFS)#*DAT_WTS
@@ -348,11 +322,6 @@ class Archive(object):
                 maxX = autoinit.device.get_attributes()[driver.device_attribute.MAX_BLOCK_DIM_X]
                 maxY = autoinit.device.get_attributes()[driver.device_attribute.MAX_BLOCK_DIM_Y]
                 maxZ = autoinit.device.get_attributes()[driver.device_attribute.MAX_BLOCK_DIM_Z]
-
-
-
-
-
 
                 #combine(driver.Out(self.data),driver.In(np.ascontiguousarray(DAT_SCL)),driver.In(np.ascontiguousarray(DATA)),driver.In(np.ascontiguousarray(DAT_OFFS)),nbin,block=(4,4,1))
                 data = np.zeros(np.shape(self.data), dtype='>i2')
@@ -413,7 +382,6 @@ class Archive(object):
 
         bw = self.getBandwidth()
 
-
         # All time-tagging info
         self.durations = self.getSubintinfo('TSUBINT')
         self.subint_starts = np.array(fmap(Decimal, self.getSubintinfo('OFFS_SUB')), dtype=np.dtype(Decimal))#+self.getTbin(numwrap=Decimal)*Decimal(nbin/2.0)#+self.getMJD(full=False, numwrap=Decimal) #converts center-of-bin times to start-of-bin times, in seconds, does not include the integer MJD part. This means that a template sitting in the center will have zero extra time
@@ -428,7 +396,6 @@ class Archive(object):
 
         self.calculateAverageProfile()
 
-
         if center_pulse and not self.isCalibrator() and prepare:
             #calibrator is not a pulse,
             # prepare must be run so that dedisperse is run?
@@ -439,7 +406,6 @@ class Archive(object):
 
         hdulist.close()
         return
-
 
     def save(self, filename):
         """Save the file to a new FITS file"""
@@ -462,7 +428,6 @@ class Archive(object):
             # Need to add in PyPulse changes into a HISTORY
         #else: #else start a HISTORY table
 
-
         if self.params is not None:
             #PARAM and not PSRPARAM?:
             cols = [pyfits.Column(name='PSRPARAM', format='128A', array=self.params.filename)]
@@ -472,9 +437,6 @@ class Archive(object):
             paramhdu = pyfits.BinTableHDU.from_columns(cols, name='PSRPARAM')
             hdulist.append(paramhdu)
             # Need to include mode for PSREPHEM
-
-
-
 
         if self.polyco is not None:
             cols = []
@@ -488,9 +450,6 @@ class Archive(object):
                 polycohdr[key] = self.polyco.header[key]
             polycohdu = pyfits.BinTableHDU.from_columns(cols, name='POLYCO', header=polycohdr)
             hdulist.append(polycohdu)
-
-
-
 
         if len(self.tables) > 0:
             for table in self.tables:
@@ -538,11 +497,7 @@ class Archive(object):
         subinthdu = pyfits.BinTableHDU.from_columns(cols, name='SUBINT', header=subinthdr)
         hdulist.append(subinthdu)
 
-
-
         hdulist.writeto(filename, clobber=True)#clobber=True?
-
-
 
     def unload(self, filename):
         return self.save(filename)
@@ -561,10 +516,10 @@ class Archive(object):
             print("Unload time: %0.2f s" % (t1-t0))
         g.collect()
 
-
     def shape(self, squeeze=True):
         """Return the current shape of the data array"""
         return np.shape(self.getData(squeeze=squeeze))
+
     def reset(self, prepare=True):
         """Replace the arch with the original clone"""
         self.record(inspect.currentframe()) #temporary, actually change the history!
@@ -576,7 +531,6 @@ class Archive(object):
         self.durations = self.getSubintinfo('TSUBINT')
         #if prepare:
         #    self.scrunch()
-
 
     def scrunch(self, arg='Dp', **kwargs):
         """average the data cube along different axes"""
@@ -752,8 +706,6 @@ class Archive(object):
             self.data = retval
         return self
 
-
-
     def dedisperse(self, DM=None, barycentric=True, reverse=False, wcfreq=False):
         """
         De-disperse the pulses
@@ -809,7 +761,6 @@ class Archive(object):
         self.dedisperse(DM=DM, barycentric=barycentric, reverse=True, wcfreq=wcfreq)
         return self
 
-
     def calculateAverageProfile(self):
         """
         Averages the data along the time/polarization/frequency axes
@@ -855,7 +806,6 @@ class Archive(object):
             self.opw = self.template.opw
         return self.template
 
-
     def superprep(self):
         """
         This will do pscrunching, centering, and dedispersing all at once to avoid multiple loops?
@@ -893,7 +843,6 @@ class Archive(object):
         self.calculateOffpulseWindow()
         return self
 
-
     def center(self, phase_offset=0.5):
         """
         Center the peak of the pulse in the middle of the data arrays.
@@ -924,8 +873,6 @@ class Archive(object):
         self.average_profile -= np.mean(self.average_profile[self.spavg.opw])
         return self
     remove_baseline = removeBaseline
-
-
 
     def getLevels(self, differences=False):
         """ Returns calibration levels if this is a calibrator"""
@@ -975,8 +922,6 @@ class Archive(object):
                     calerrslow[i, j] = np.std(data[i, j, lowinds]) / np.sqrt(len(lowinds))
                     calerrshigh[i, j] = np.std(data[i, j, highinds]) / np.sqrt(len(highinds))
 
-
-
         if differences:
             return freqs, caldata, calerrs
         return freqs, caldatalow, caldatahigh, calerrslow, calerrshigh
@@ -988,7 +933,6 @@ class Archive(object):
                  (isinstance(psrcalar, Archive) and psrcalar.isCalibrator()))):
             raise ValueError("Require calibration archive")
         # Check if cals are appropriate?
-
 
         if isinstance(psrcalar, Calibrator):
             cal = psrcalar
@@ -1006,8 +950,6 @@ class Archive(object):
         #    fluxcaloncal = Calibrator(fluxcalonfreqs, fluxcalondata, fluxcalonerrs)
         #    fluxcaloffcal = Calibrator(fluxcalofffreqs, fluxcaloffdata, fluxcalofferrs)
 
-
-
         if fluxcalonar is not None and fluxcaloffar is not None:
             fluxcaldata = np.zeros((npol, nchan))
             for i in xrange(npol):
@@ -1018,7 +960,6 @@ class Archive(object):
         cal.applyCalibration(self)
         return cal
         # Apply calibrations
-
 
     @property
     def data(self):
@@ -1050,12 +991,14 @@ class Archive(object):
         self.record(inspect.currentframe())
         if np.shape(newdata) == np.shape(self.data):
             self.data = np.copy(newdata)
+
     def getWeights(self, squeeze=True):
         """ Return copy of weights array """
         weights = self.weights
         if squeeze:
             weights = weights.squeeze()
         return np.copy(weights)
+
     def setWeights(self, val, t=None, f=None):
         """
         Set weights to a certain value
@@ -1070,8 +1013,6 @@ class Archive(object):
             self.weights[t, f] = val
         else:
             self.weights[t, f] = val
-
-
 
     def saveData(self, filename=None, ext='npy', ascii=False, outdir=None):
         """Save the data array to a different format"""
@@ -1100,21 +1041,16 @@ class Archive(object):
                     for k in xrange(nchan):
                         for l in xrange(nbin):
                             output += "%i %i %i %i %.18e\n" % (i, j, k, l, self.data[i, j, k, l])
-
             with open(filename, 'w') as FILE:
                 FILE.write(output)
         else:
             np.save(filename, self.getData())
         return
 
-
-
     def outputPulses(self, filename):
         """ Write out a .npy file"""
         np.save(filename, self.getData())
         return
-
-
 
     def getAxis(self, flag=None, edges=False, wcfreq=False, datfreq=True):
         """
@@ -1157,10 +1093,10 @@ class Archive(object):
     def getFrequencies(self, **kwargs):
         """Convenience function for getAxis"""
         return getAxis('F', **kwargs)
+
     def getTimes(self, **kwargs):
         """Convenience function for getAxis"""
         return getAxis('T', **kwargs)
-
 
     #Assumes the shape of data is (t, f, b) (i.e. polarization scrunched)
     def getPulse(self, t, f=None):
@@ -1171,19 +1107,17 @@ class Archive(object):
             return np.mean(self.getData()[t, :, :], axis=0)
         return self.getData()[t, f, :]
 
-
-
     # Assumes it is calibrated
     # Better to replace with SinglePulse's fitPulse
     def getPeakFlux(self, t, f=None):
         """Return the maximum value of the pulses, not typically used"""
         pulse = self.getPulse(t, f)
         return np.max(pulse)
+
     def getIntegratedFlux(self, t, f=None):
         """Return the integrated value of the pulses, not typically used"""
         pulse = self.getPulse(t, f)
         return np.trapz(pulse)
-
 
     def getSinglePulses(self, func=None, windowsize=None, **kwargs):
         """Efficiently wraps self.data with SP.SinglePulse"""
@@ -1235,7 +1169,6 @@ class Archive(object):
                 retval.append(d[num])
         return tuple(retval)
 
-
     #just bscrunch this?
     def getDynamicSpectrum(self, window=None, template=None, mpw=None,
                            align=None, windowsize=None, weight=True,
@@ -1257,7 +1190,6 @@ class Archive(object):
                 wrapfunc = lambda x: np.transpose(x) #do not flipud?
             else:
                 wrapfunc = lambda x: np.transpose(x)
-
 
             if template is None and maketemplate:
                 if self.template is None:
@@ -1282,16 +1214,12 @@ class Archive(object):
                     sptemp = SP.SinglePulse(u.center_max(u.normalize(artemp.getData(), simple=True)),
                                             windowsize=template.getNbin()//8)
 
-
                 if mpw is not None: #best way to handle this now?
                     sptemp.mpw = mpw
                 elif windowsize is not None: #redo the windowsize
                     if windowsize >= len(sptemp.data):
                         raise IndexError("Improper window size")
                     sptemp = SP.SinglePulse(sptemp.data, windowsize=windowsize)
-
-
-
 
                 gs = np.zeros((fullshape[0], fullshape[2]))
                 offs = np.zeros((fullshape[0], fullshape[2]))
@@ -1345,8 +1273,6 @@ class Archive(object):
             else:
                 return DS.DynamicSpectrum(wrapfunc(np.mean(data[:, :, window], axis=2)), F=Fedges, T=Tedges)
 
-
-
     def plot(self, ax=None, show=True):
         """Basic plotter of data"""
         data = self.getData()
@@ -1381,7 +1307,6 @@ class Archive(object):
         else:
             raise IndexError("Invalid dimensions for plotting")
         return ax
-
 
     def pavplot(self, ax=None, mode="GTpd", show=True, wcfreq=True):
         """Produces a pav-like plot for comparison"""
@@ -1419,10 +1344,10 @@ class Archive(object):
             print("Invalid dimensions")
         return ax
 
-
     def joyDivision(self, border=0.1, labels=False, album=True, **kwargs):
         """Calls waterfall() in the style of the Joy Division album cover"""
         return self.waterfall(border=border, labels=labels, album=album, **kwargs)
+
     def waterfall(self, offset=None, border=0, labels=True, album=False, bins=None, show=True):
         """
         Joy Division plot of data, works like imshow
@@ -1446,7 +1371,6 @@ class Archive(object):
             if bins is None:
                 bins = np.arange(self.getNbin())
 
-
             XMIN = 0
             #XMAX = len(data[0])-1
             XMAX = len(bins)-1
@@ -1456,7 +1380,6 @@ class Archive(object):
             XHIGH = (XMAX-XMIN)*border+XMAX
             YLOW = YMIN-(YMAX-YMIN)*border
             YHIGH = (YMAX-YMIN)*border+YMAX
-
 
             if album:
                 x = np.arange(len(data[0]))
@@ -1473,7 +1396,6 @@ class Archive(object):
                     ax.set_ylim(YLOW, YHIGH)
                     ax.fill_between(x, y, where=(y >= YLOW), color=bgcolor, zorder=z) #testing
 
-
             else:
                 for i in range(len(data)):
                     ax.plot(data[i][bins]+offset*i, color)
@@ -1488,9 +1410,6 @@ class Archive(object):
                 plt.show()
         else:
             print("Invalid dimensions")
-
-
-
 
     ### NOTE: THIS NEEDS TO BE CHECKED WITH THE NEW CHANGES ###
 
@@ -1520,14 +1439,12 @@ class Archive(object):
         #print artemp.channel_delays[0]
         #print "roll", type(rollval)
 
-
         #If given an offpulse, use that, else calculate a pre-defined one in the template Archive
         if "opw" in kwargs.items():
             opw = (kwargs['opw'] + rollval)%len(kwargs['opw']) # "roll" the array with the template
         else:
             sptemp = SP.SinglePulse(template, windowsize=len(template)//8)
             kwargs['opw'] = sptemp.opw
-
 
         tauhat, bhat, sigma_tau, sigma_b, snrs = \
         self.fitPulses(template, [1, 2, 3, 4, 5], **kwargs) #tauhat is a relative shift
@@ -1537,14 +1454,12 @@ class Archive(object):
             fc = self.getCenterFrequency(weighted=wcfreq)
             Faxis = Faxis - fc + overridecfreq
 
-
         #Reshape if necessary
         tauhat = tauhat.reshape(len(Taxis), len(Faxis))
         bhat = bhat.reshape(len(Taxis), len(Faxis))
         sigma_tau = sigma_tau.reshape(len(Taxis), len(Faxis))
         sigma_b = sigma_b.reshape(len(Taxis), len(Faxis))
         snrs = snrs.reshape(len(Taxis), len(Faxis))
-
 
         telescope = self.getTelescope() #lowercase? This may cause tempo2 errors
         frontend = self.getFrontend()
@@ -1607,10 +1522,6 @@ class Archive(object):
                     continue
                 #Testing
 
-
-
-
-
                 #if self.channel_delays[j] < 0:
                 #    plt.plot(template*np.max(self.getData()[j]),'k')
                 #    plt.plot(self.getData()[j],'r')
@@ -1630,9 +1541,7 @@ class Archive(object):
                 elif not isinstance(flags, str):
                     raise ValueError("Flags must be in string, tuple, list, or np.ndarray format")
 
-
                 output += "%s %f %s   %0.3f  %s   -fe %s -be %s -bw %f -tobs %f -tmplt %s -nbin %i -nch %i -chan %i -subint %i -snr %0.2f -flux %0.2f -fluxerr %0.2f %s\n"%(self.filename, F, toa, sigma_tau[i, j], telescope, frontend, backend, chanbw, tobs, tempname, nbin, nchan, j, i, snrs[i, j], bhat[i, j], sigma_b[i, j], flags)
-
 
         if filename is None:
             if not appendto: #make the user decide whether or not to print this every time in a loop or not
@@ -1648,9 +1557,6 @@ class Archive(object):
                     FILE.write(output)
         return
 
-
-
-
     ### ==============================
     ### Simple get functions
     ### ==============================
@@ -1659,15 +1565,19 @@ class Archive(object):
     def getNsubint(self):
         """Returns number of subintegrations"""
         return self.shape(squeeze=False)[0]
+
     def getNpol(self):
         """Returns number of polarizations"""
         return self.shape(squeeze=False)[1]
+
     def getNchan(self):
         """Returns number of channels"""
         return self.shape(squeeze=False)[2]
+
     def getNbin(self):
         """Returns number of phase bins"""
         return self.shape(squeeze=False)[3]
+
     def getPeriod(self, header=False):
         """Returns period of the pulsar"""
         if self.isCalibrator():
@@ -1689,6 +1599,7 @@ class Archive(object):
                     return self.params.getPeriod()
             return P0
             #return self.polyco.calculatePeriod()
+
     # Best replacement for without PSRCHIVE
     def getValue(self, value):
         """Looks for a key in one of the headers and returns"""
@@ -1699,23 +1610,28 @@ class Archive(object):
         if self.params is None:
             return None
         return self.params.get(value) #will return None if non-existent
+
     def getSubintinfo(self, value):
         """Returns value from subintinfo"""
         if value in self.subintinfo.keys():
             return self.subintinfo[value][-1]
         return None
+
     def getName(self):
         """Returns pulsar name"""
         return self.header['SRC_NAME']
+
     def getMJD(self, full=False, numwrap=float):
         """Returns MJD of observation"""
         if full:
             return (numwrap(self.header['STT_IMJD']) +
                     (numwrap(self.header['STT_SMJD'])+numwrap(self.header['STT_OFFS']))/numwrap(86400))
         return numwrap(self.header['STT_IMJD'])+numwrap(self.header['STT_OFFS'])
+
     def getTbin(self, numwrap=float):
         """Returns the time per bin"""
         return numwrap(self.getPeriod()) / numwrap(self.getNbin())
+
     def getDM(self, numwrap=float):
         """Returns the data header DM"""
         if 'DM' in self.subintheader:
@@ -1727,10 +1643,12 @@ class Archive(object):
         if self.params is None:
             return
         return self.params.getDM()
+
     def getRM(self, numwrap=float):
         """Returns the data header RM"""
         if 'RM' in self.subintheader.keys():
             return numwrap(self.subintheader['RM'])
+
     def getCoords(self, string=False, parse=False):
         """Returns the coordinate info in the header"""
         if string:
@@ -1748,19 +1666,23 @@ class Archive(object):
     def getTelescopeCoords(self):
         """Returns the telescope coordinates"""
         return self.header['ANT_X'], self.header['ANT_Y'], self.header['ANT_Z']
+
     def getBandwidth(self, header=False):
         """Returns the observation bandwidth"""
         if header:
             return self.header['OBSBW']
         else:
             return self.subintheader['CHAN_BW']*self.subintheader['NCHAN']
+
     def getDuration(self):
         """Returns the observation duratrion"""
         #return np.sum(self.subintinfo['TSUBINT']) #This is constant.
         return np.sum(self.getSubintinfo('TSUBINT')) #This is constant.
+
     def getDurations(self):
         """Returns the subintegration durations"""
         return self.durations
+
     def getCenterFrequency(self, weighted=False):
         """Returns the center frequency"""
         if weighted:
@@ -1769,15 +1691,19 @@ class Archive(object):
             return self.history.getLatest('CTR_FREQ')
         else:
             return self.header['OBSFREQ'] #perhaps do an unweighted version from DAT_FREQ?
+
     def getTelescope(self):
         """Returns the telescope name"""
         return self.header['TELESCOP']
+
     def getFrontend(self):
         """Returns the frontend name"""
         return self.header['FRONTEND']
+
     def getBackend(self):
         """Returns the backend name"""
         return self.header['BACKEND']
+
     def getSN(self):
         """Returns the average pulse S/N"""
         return self.spavg.getSN()
@@ -1789,9 +1715,9 @@ class Archive(object):
             return True
         return False
 
-
     #def varargtest(self,*args):
     #    self.record(inspect.currentframe())
+
     def record(self, frame):
         args, varargs, keywords, values = inspect.getargvalues(frame)
         funcname = frame.f_code.co_name
@@ -1817,10 +1743,6 @@ class Archive(object):
     def print_pypulse_history(self):
         for elem in self.pypulse_history:
             print(elem)
-
-
-
-
 
 
 # Takes hdulist['HISTORY']
@@ -1856,6 +1778,7 @@ class History(object):
             if value is None:
                 return
             print(name, self.getValue(name, i))
+
 
 # Takes hdulist['POLYCO']
 # Similar to History class
