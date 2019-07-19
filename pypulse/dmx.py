@@ -41,55 +41,76 @@ class DM(object):
 
     def getMJD(self):
         return self.getEpoch()
+
     def getEpoch(self):
         return self.epoch
+
     def getDM(self):
         return self.value
+
     def getValue(self):
         return self.value
+
     def getErr(self):
         return self.getError()
+
     def getError(self):
         return self.err
+
     def getR1(self):
         return self.R1
+
     def getR2(self):
         return self.R2
+
     def getF1(self):
         return self.F1
+
     def getF2(self):
         return self.F2
+
     def getBin(self):
         return self.getDMXbin()
+
     def getDMXbin(self):
         return self.dmxbin
 
     # Use these with extreme caution!
     def setMJD(self, epoch):
         self.setEpoch(epoch)
+
     def setEpoch(self, epoch):
         self.epoch = epoch
+
     def setDM(self, value):
         self.setValue(value)
+
     def setValue(self, value):
         self.value = value
+
     def setErr(self, err):
         self.setError(err)
+
     def setError(self, err):
         self.err = err
+
     def setR1(self, R1):
         self.R1 = R1
+
     def setR2(self, R2):
         self.R2 = R2
+
     def setF1(self, F1):
         self.F1 = F1
+
     def setF2(self, F2):
         self.F2 = F2
+
     def setBin(self, dmxbin):
         self.setDMXbin(dmxbin)
+
     def setDMXbin(self, dmxbin):
         self.dmxbin = dmxbin
-
 
 
 class DMX(object):
@@ -119,45 +140,54 @@ class DMX(object):
     def getMJDs(self):
         """ Return MJDs of all DMs """
         return self.getEpochs()
+
     def getEpochs(self):
         """ Return MJDs of all DMs """
         return self.getter(lambda x: x.getEpoch())
+
     def getDMs(self):
         """ Return values of all DMs """
         return self.getter(lambda x: x.getValue())
+
     def getValues(self):
         """ Return values of all DMs """
         return self.getter(lambda x: x.getValue())
+
     def getErrs(self):
         """ Return errors of all DMs """
         return self.getErrors()
+
     def getErrors(self):
         """ Return errors of all DMs """
         return self.getter(lambda x: x.getError())
+
     def getR1s(self):
         """ Return R1s of all DMs """
         return self.getter(lambda x: x.getR1())
+
     def getR2s(self):
         """ Return R2 of all DMs """
         return self.getter(lambda x: x.getR2())
+
     def getF1s(self):
         """ Return F1s of all DMs """
         return self.getter(lambda x: x.getF1())
+
     def getF2s(self):
         """ Return F2 of all DMs """
         return self.getter(lambda x: x.getF2())
+
     def getBin(self):
         """ Return DMX bin of all DMs """
         return self.getDMXbin()
+
     def getDMXbin(self):
         """ Return DMX bin of all DMs """
         return self.getter(lambda x: x.getDMXbin())
 
-
     def getter(self, func):
         """ Generic getter. Not written as get() because it requires a function """
         return np.array(fmap(func, self.DMs))
-
 
     def getDMseries(self):
         """ get the time series, mirroring Par() """

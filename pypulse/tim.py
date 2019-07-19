@@ -2,7 +2,6 @@
 Michel Lam 2015
 Loads a tim file
 '''
-
 import sys
 import decimal
 import numpy as np
@@ -66,23 +65,28 @@ class TOA(object):
             retval += "-%s %s "%(flag, getattr(self, flag))
         retval = retval[:-1]
         return retval
-    
-            
 
     def getFilename(self):
         return self.filename
+
     def getFreq(self):
         return self.getFrequency()
+
     def getFrequency(self):
         return self.freq
+
     def getMJD(self):
         return self.MJD
+
     def getErr(self):
         return self.getError()
+
     def getError(self):
         return self.err
+
     def getSiteID(self):
         return self.siteID
+
     def get(self, flag):
         value = None
         try:
@@ -95,21 +99,29 @@ class TOA(object):
     def comment(self, cut=None):
         self.filename = "C "+self.filename
         if cut is not None:
-            self.add("cut", cut)            
+            self.add("cut", cut)
+
     def setFilename(self, filename):
         self.filename = filename
+
     def setFreq(self, freq):
         self.setFrequency(freq)
+
     def setFrequency(self, freq):
         self.freq = freq
+
     def setMJD(self, MJD):
         self.MJD = MJD
+
     def setErr(self, err):
         self.setError(err)
+
     def setError(self, err):
         self.err = err
+
     def setSiteID(self, siteID):
         self.siteID = siteID
+
     def set(self, flag, value):
         if hasattr(self, flag):
             setattr(self, flag, value)
@@ -122,7 +134,6 @@ class TOA(object):
         else:
             self.flags.append(flag)
             setattr(self, flag, value)
-
 
 
 class Tim(object):
@@ -164,7 +175,6 @@ class Tim(object):
                 toa = TOA(line, numwrap=self.numwrap)
                 self.toas.append(toa)
 
-
     def __repr__(self):
         numwrapstr = repr(self.numwrap).split("'")[1]
         return "Tim(%r, numwrap=%s, usedecimal=%r)" % (self.filename, numwrapstr, self.usedecimal)
@@ -189,7 +199,6 @@ class Tim(object):
                 return False
         return True
 
-
     def save(self, filename=None):
         """ Save tim file """
         output = ""
@@ -212,16 +221,13 @@ class Tim(object):
         """ Return frequencies of all TOAs """
         return np.array(fmap(lambda x: x.getFreq(), self.toas))
 
-
     def getMJDs(self):
         """ Return MJDs of all TOAs """
         return np.array(fmap(lambda x: x.getMJD(), self.toas))
 
-
     def getErrors(self):
         """ Return uncertainties of all TOAs """
         return np.array(fmap(lambda x: x.getError(), self.toas)) 
-
 
     def get(self, value, numwrap=None):
         """ Return value of flag """
@@ -238,10 +244,8 @@ class Tim(object):
             return np.ptp(mjds)/self.numwrap("365.25")
         return np.ptp(mjds)
 
-
     def set(self, flag, value):
         """ Set value of flag for all TOAs """
         for toa in self.toas:
             toa.set(flag, value)
         return
-

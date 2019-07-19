@@ -7,8 +7,10 @@ def funcgaussian(p, x, baseline=False):
     if baseline:
         return p[0] * np.exp(-((x-p[1])/(np.sqrt(2)*p[2]))**2) + p[3]
     return p[0] * np.exp(-((x-p[1])/(np.sqrt(2)*p[2]))**2)
+
 def errgaussian(p, x, y, baseline=False):
     return funcgaussian(p, x, baseline=baseline) - y
+
 def gaussianfit(x, y, baseline=False):
     x = np.array(x)
     y = np.array(y)
@@ -24,7 +26,6 @@ def gaussianfit(x, y, baseline=False):
     #Return values are the coefficients, the residuals
     return p1, errgaussian(p1, x, y, baseline)
 
-
 #area = np.sum(binwidths*hist)
 def funcsimpleDISSpdf(p, x, area=None):
     if area is None:
@@ -36,8 +37,10 @@ def funcsimpleDISSpdf(p, x, area=None):
     return area*((g*niss)**niss / (g * special.gamma(niss))) * np.exp(-g*niss) /S0
     #return area*((g*niss)**niss / (g * special.gamma(niss))) * np.exp(-g*niss) /S0
     #return scale*((g*niss)**niss / (g * special.gamma(niss))) * np.exp(-g*niss) /S0
+
 def errsimpleDISSpdf(p, x, y, area=None):
     return funcsimpleDISSpdf(p, x, area=area) - y
+
 def simpleDISSpdffit(x, y):
     x = np.array(x)
     y = np.array(y)
@@ -45,8 +48,6 @@ def simpleDISSpdffit(x, y):
     p1, success = optimize.leastsq(errsimpleDISSpdf, p0[:], args=(x, y))
     #Return values are the coefficients, the residuals
     return p1, errsimpleDISSpdf(p1, x, y)
-
-
 
 #2d Gaussian fitting
 #Modification of scipy cookbook to include rotation http://wiki.scipy.org/Cookbook/FittingData

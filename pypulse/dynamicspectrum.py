@@ -75,7 +75,6 @@ class DynamicSpectrum(object):
         self.ssconjT = None
         self.ssconjF = None
 
-
     def getValue(self, f, t, df=1, dt=1, err=False, index=False):
         '''
         Returns value of dynamic spectrum
@@ -101,7 +100,6 @@ class DynamicSpectrum(object):
                     total += data[indF, indT]
                     N += 1
             return total/float(N)
-
 
     def remove_baseline(self, function="gaussian", redo=False):
         """
@@ -151,8 +149,6 @@ class DynamicSpectrum(object):
         for i in range(self.shape()[1]): #iterate over each subintegration
             retval[:, i] = np.interp(x, f2, data[:, i])
 
-
-
         fout = np.interp(x, f2, F) #stretched axis (interpolated)
         if save:
             self.data = retval
@@ -167,9 +163,6 @@ class DynamicSpectrum(object):
             self.dF = np.mean(d)
 
         return retval, nuref, fout
-
-
-
 
     def acf2d(self, remove_baseline=True, speed='fast', mode='full', full_output=False):
         """
@@ -198,9 +191,6 @@ class DynamicSpectrum(object):
         if full_output:
             return self.acfT, self.acfF, acf
         return acf
-
-
-
 
         #return u.acf2d(self.data, speed=speed, mode=mode) #do more here
 
@@ -235,7 +225,6 @@ class DynamicSpectrum(object):
         else:
             dF = self.dF
 
-
         acfshape = np.shape(self.acf)
         centerrind = acfshape[0]//2
         centercind = acfshape[1]//2
@@ -245,9 +234,6 @@ class DynamicSpectrum(object):
             Faxis = (np.arange(-(NF-1), NF, dtype=np.float)*np.abs(dF)) #why abs?
             NT = len(self.T)
             Taxis = (np.arange(-(NT-1), NT, dtype=np.float)*np.abs(dT))[1:-1] #???
-
-
-
 
             #try:
             pout, errs = ffit.gaussianfit(Taxis[NT//2:3*NT//2], self.acf[centerrind, NT//2:3*NT//2], baseline=True)
@@ -292,9 +278,6 @@ class DynamicSpectrum(object):
             if full_output:
                 return delta_t_d, err_t_d, delta_nu_d, err_nu_d
             return delta_t_d, delta_nu_d
-
-
-
 
         # Look for the central peak in the ACF
         MIN = np.min(self.acf)
@@ -373,7 +356,6 @@ class DynamicSpectrum(object):
         else:
             err_nu_d = None
 
-
         err_rot = paramerrors[5]
 
         #finite-scintle errors
@@ -394,8 +376,6 @@ class DynamicSpectrum(object):
             err_nu_d = np.sqrt(err_nu_d**2 + fse_nu_d**2)
             err_t_d = np.sqrt(err_t_d**2 + fse_t_d**2)
             err_rot = np.sqrt(err_rot **2 + fse_rot**2)
-
-
 
         if self.verbose:
             f = (dF/dT)*np.tan(rotation)
@@ -425,8 +405,6 @@ class DynamicSpectrum(object):
         if full_output:
             return delta_t_d, err_t_d, delta_nu_d, err_nu_d, rotation, err_rot
         return delta_t_d, delta_nu_d, rotation
-
-
 
     def imshow(self, err=False, cbar=False, ax=None, show=True, border=False,
                zorder=0, cmap=cm.binary, alpha=True, cdf=True, savefig=None,
@@ -467,7 +445,6 @@ class DynamicSpectrum(object):
         if log and not ss:
             data = np.log10(data)
 
-
         if alpha and not (acf or ss): #or just ignore?
             cmap.set_bad(alpha=0.0)
 
@@ -499,7 +476,6 @@ class DynamicSpectrum(object):
         if ax is None:
             fig = plt.figure()
             ax = fig.add_subplot(111)
-
 
         cax = u.imshow(data, ax=ax, extent=extent, cmap=cmap, zorder=zorder)
 
@@ -533,9 +509,7 @@ class DynamicSpectrum(object):
         if show:
             plt.show()
 
-
         return ax
-
 
     def load(self, filename):
         """
@@ -573,13 +547,6 @@ class DynamicSpectrum(object):
             if not hasattr(self, elem):
                 exec("self.%s = \"arb.\""%elem)
 
-
-
-
-
-
-
-
         x.close()
         return
 
@@ -610,8 +577,6 @@ class DynamicSpectrum(object):
         else:
             u.write2Dtxt(filename, self.ds, self.T, self.F)
 
-
-
     # Must be in time order!
     def add(self, ds, axis='T'):
         """
@@ -627,7 +592,6 @@ class DynamicSpectrum(object):
                     ds.errdata = np.reshape(ds.errdata, [len(ds.errdata), 1])
                 if ds.mask is not None:
                     ds.mask = np.reshape(ds.mask, [len(ds.mask), 1])
-
 
             self.data = np.hstack((self.data, ds.data))
             #if statements
@@ -659,7 +623,6 @@ class DynamicSpectrum(object):
             #Regenerate Tcenter?
             #Add extras together?
 
-
     def shape(self):
         """Return the current shape of the data array"""
         return np.shape(self.data)
@@ -680,9 +643,9 @@ class DynamicSpectrum(object):
             return self.secondary_spectrum(remove_baseline=remove_baseline, log=log)
         return np.copy(self.ss)
 
-
     def getBandwidth(self):
         return np.abs(self.F[-1]-self.F[0])
+
     def getTspan(self):
         return np.abs(self.T[-1]-self.T[0])
 

@@ -1,4 +1,3 @@
-
 import sys
 import numpy as np
 if sys.version_info.major == 2:
@@ -7,12 +6,9 @@ elif sys.version_info.major == 3:
     fmap = lambda x, *args: list(map(x, *args))
     xrange = range
 
-
-
 class RFIMitigator(object):
     def __init__(self, archive):
         self.archive = archive
-
 
     def can_mitigate(self, flag='F'):
         '''
@@ -27,19 +23,18 @@ class RFIMitigator(object):
                 return False
             return True
 
-
     def zap(self, val=0.0, t=None, f=None):
         '''
         Passes straight to archive's setWeights()
         '''
         self.archive.setWeights(val=val, t=t, f=f)
+
     def unzap(self):
         '''
         Gets rid of all weighting
         '''
         MAX = np.max(self.archive.getWeights())
         self.archive.setWeights(MAX)
-
 
     def zap_frequency_range(self, nulow, nuhigh):
         '''
@@ -53,7 +48,6 @@ class RFIMitigator(object):
         for ind in inds:
             self.zap(f=ind)
 
-
     def zap_channels(self, index):
         '''
         Mitigate an individual channel
@@ -66,9 +60,6 @@ class RFIMitigator(object):
             for elem in index:
                 self.zap(f=elem)
 
-
-
-
     def zap_minmax(self, windowsize=20, threshold=4):
         '''
         Run NANOGrav algorithm, median zapping. Run per subintegration
@@ -77,7 +68,6 @@ class RFIMitigator(object):
         '''
         if not self.can_mitigate():
             return
-
 
         nsubint = self.archive.getNsubint()
         nchan = self.archive.getNchan()
@@ -97,12 +87,10 @@ class RFIMitigator(object):
                     for k in xrange(windowsize):
                         ptps[k] = np.ptp(subdata[k, :])
 
-
                     med = np.median(ptps)
                     if compptp > threshold*med:
                         self.zap(f=j)
             return
-
 
         for i in xrange(nsubint):
             for j in xrange(nchan):
