@@ -181,10 +181,14 @@ class Tim(object):
 
     def comment(self, func, cut=None):
         """ Apply boolean function to comment TOAs """
-        for i, toa in enumerate(self.toas):
+        for index, toa in enumerate(self.toas):
             if func(toa):
-                self.toas[i].comment(cut=cut)
+                self.comment_line(index, cut=cut)
 
+    def comment_line(self, index, cut=None):
+        """ Comment out a single TOA, syntactic sugar """
+        self.toas[index].comment(cut=cut)
+                
     def any(self, func):
         """ Apply boolean function and see if any TOA meets said condition """
         for toa in self.toas:
