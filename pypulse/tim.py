@@ -210,7 +210,7 @@ class Tim(object):
         ntoa = 0
         for i in range(self.numlines):
             if i in self.comment_dict.keys():
-                output += self.comment_dict[i]
+                output += (self.comment_dict[i]+"\n")
             elif i in self.command_dict.keys():
                 output += (" ".join(self.command_dict[i])+"\n")
             else:
