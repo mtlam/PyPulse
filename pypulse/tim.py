@@ -228,14 +228,16 @@ class Tim(object):
     def getFreqs(self):
         """ Return frequencies of all TOAs """
         return np.array(fmap(lambda x: x.getFreq(), self.toas))
+    getFrequencies = getFreqs
 
     def getMJDs(self):
         """ Return MJDs of all TOAs """
         return np.array(fmap(lambda x: x.getMJD(), self.toas))
 
-    def getErrors(self):
+    def getErrs(self):
         """ Return uncertainties of all TOAs """
-        return np.array(fmap(lambda x: x.getError(), self.toas)) 
+        return np.array(fmap(lambda x: x.getError(), self.toas))
+    getErrors = getErrs
 
     def get(self, value, numwrap=None):
         """ Return value of flag """
