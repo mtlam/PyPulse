@@ -4,6 +4,7 @@ Loads a dmxparse DMX file (tempo output)
 '''
 import sys
 import numpy as np
+import matplotlib.pyplot as plt
 
 if sys.version_info.major == 2:
     fmap = map
@@ -132,6 +133,21 @@ class DMX(object):
 
     def __repr__(self):
         return "DMX(%s)"%self.filename
+
+
+    def plot(self, filename=None, show=True):
+        """ Simple plotter """
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.errorbar(self.getMJDs(), self.getDMs(), yerr=self.getErrs(), fmt='k.')
+
+        ax.set_xlabel("MJD")
+        ax.set_ylabel("DMX (pc cm^-3)")
+        if filename is not None:
+            plt.savefig(filename)
+        if show:
+            plt.show()
+    
 
     def save(self, filename=None):
         """ Save DMX file """
