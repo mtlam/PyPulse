@@ -223,7 +223,7 @@ class Tim(object):
 
     def getFilenames(self):
         """ Return filenames of all TOAs """
-        return np.array(fmap(lambda x: x.getFilenames(), self.toas))
+        return np.array(fmap(lambda x: x.getFilename(), self.toas))
             
     def getFreqs(self):
         """ Return frequencies of all TOAs """
