@@ -236,7 +236,7 @@ class Tim(object):
 
     def getErrs(self):
         """ Return uncertainties of all TOAs """
-        return np.array(fmap(lambda x: x.getError(), self.toas))
+        return np.array(fmap(lambda x: x.getErr(), self.toas))
     getErrors = getErrs
 
     def get(self, value, numwrap=None):
