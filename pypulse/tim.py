@@ -221,6 +221,10 @@ class Tim(object):
         with open(filename, 'w') as FILE:
             FILE.write(output)
 
+    def getFilenames(self):
+        """ Return filenames of all TOAs """
+        return np.array(fmap(lambda x: x.getFilenames(), self.toas))
+            
     def getFreqs(self):
         """ Return frequencies of all TOAs """
         return np.array(fmap(lambda x: x.getFreq(), self.toas))
