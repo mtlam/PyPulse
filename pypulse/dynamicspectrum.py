@@ -213,7 +213,7 @@ class DynamicSpectrum(object):
     def scintillation_parameters(self, plotbound=1.0, maxr=None, maxc=None,
                                  savefig=None, show=True, full_output=False,
                                  simple=False, eta=0.2, cmap=cm.binary,
-                                 finitescintleerrors=True,diagnostic=False):
+                                 finitescintleerrors=True, diagnostic=False):
         if self.acf is None:
             self.acf2d()
         if self.dT is None:
@@ -235,29 +235,21 @@ class DynamicSpectrum(object):
             NT = len(self.T)
             Taxis = (np.arange(-(NT-1), NT, dtype=np.float)*np.abs(dT))[1:-1] #???
 
-            #try:
+            
             pout, errs = ffit.gaussianfit(Taxis[NT//2:3*NT//2], self.acf[centerrind, NT//2:3*NT//2], baseline=True)
-            f = interpolate.interp1d(Taxis, ffit.funcgaussian(pout, Taxis, baseline=True)-(pout[3]+pout[0]/np.e))
-            delta_t_d = optimize.brentq(f, 0, Taxis[-1])
-            #except:
-            #    delta_t_d = 0.0
-            #    print "dtd", pout
-            #    plt.plot(Taxis, self.acf[centerrind, :])
-            #    plt.plot(Taxis, f(Taxis))
-            #    plt.show()
+            ft = interpolate.interp1d(Taxis, ffit.funcgaussian(pout, Taxis, baseline=True)-(pout[3]+pout[0]/np.e))
+            try:
+                delta_t_d = optimize.brentq(ft, 0, Taxis[-1])
+            except ValueError:
+                delta_t_d = np.nan
 
-            #try:
             pout, errs = ffit.gaussianfit(Faxis[NF//2:3*NF//2], self.acf[NF//2:3*NF//2, centercind], baseline=True)
-            f = interpolate.interp1d(Faxis, ffit.funcgaussian(pout, Faxis, baseline=True)-(pout[3]+pout[0]/2))
-            delta_nu_d = optimize.brentq(f, 0, Faxis[-1])
-            #except:
-            #    delta_nu_d = 0
-            #print "dnud", pout, Faxis[-1], dF
-            #print Faxis
-            #raise SystemExit
-            #plt.plot(Faxis, self.acf[:, centercind])
-            #plt.plot(Faxis, f(Faxis))
-            #plt.show()
+            fnu = interpolate.interp1d(Faxis, ffit.funcgaussian(pout, Faxis, baseline=True)-(pout[3]+pout[0]/2))
+            try:
+                delta_nu_d = optimize.brentq(fnu, 0, Faxis[-1])
+            except ValueError:
+                delta_nu_d = np.nan
+
 
             #following Glenn's code and Cordes 1986 (Space Velocities...)
             # Errors from finite scintle effect:
@@ -275,6 +267,21 @@ class DynamicSpectrum(object):
             err_nu_d = fse_nu_d
             err_t_d = fse_t_d #need to add in fitting errors
 
+            if show or savefig is not None:
+                fig = plt.figure()
+                ax = fig.add_subplot(211)
+                ax.plot(Taxis, self.acf[centerrind, :])
+                ax.plot(Taxis, ft(Taxis))
+
+                ax = fig.add_subplot(212)
+                ax.plot(Faxis, self.acf[:, centercind])
+                ax.plot(Faxis, fnu(Faxis))
+
+                if savefig is not None:
+                    plt.savefig(savefig)
+                if show:
+                    plt.show()
+            
             if full_output:
                 return delta_t_d, err_t_d, delta_nu_d, err_nu_d
             return delta_t_d, delta_nu_d
