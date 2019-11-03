@@ -79,15 +79,15 @@ for fname in args:
 
     if opt.tscrunch:
         if opt.verbose:
-            print "tscrunching"
+            print("tscrunching")
         ar.tscrunch()
     if opt.pscrunch:
         if opt.verbose:
-            print "pscrunching"
+            print("pscrunching")
         ar.pscrunch()
     if opt.fscrunch:
         if opt.verbose:
-            print "fscrunching"
+            print("fscrunching")
         ar.fscrunch()
 
     if opt.ext == "default":
