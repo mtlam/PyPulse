@@ -105,7 +105,8 @@ for fname in args:
 
 
     ar.saveData(ext=ext,ascii=opt.ascii,outdir=outdir)
-    ar.gc()
+    #ar.gc()
+    del ar
 
 
 # Error: if already pscrunched and do not select pscrunch, saveData will fail

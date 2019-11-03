@@ -504,6 +504,7 @@ class Archive(object):
 
     def gc(self):
         """Manually clear the data cube for python garbage collection"""
+        """ This is broken with the weights change """
         if self.verbose:
             t0 = time.time()
         self._data = None
