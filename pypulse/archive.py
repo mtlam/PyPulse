@@ -1250,7 +1250,7 @@ class Archive(object):
                 else:
                     for i in I:
                         if verbose:
-                            print("i,%i"%(i, I[-1]))
+                            print("%i,%i"%(i, I[-1]))
                         for j in J:
                             sp = SP.SinglePulse(data[i, j], opw=sptemp.opw, align=align)
                             baseline = sp.getOffpulseNoise(mean=True) #get mean value of offpulse
