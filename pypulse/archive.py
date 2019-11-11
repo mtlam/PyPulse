@@ -1255,11 +1255,11 @@ class Archive(object):
                             sp = SP.SinglePulse(data[i, j], opw=sptemp.opw, align=align)
                             baseline = sp.getOffpulseNoise(mean=True) #get mean value of offpulse
                             spfit = sp.fitPulse(sptemp.data)
-    #                        if spfit==None:
-    #                            print i,j
-    #                            plot(self.data[i,j])
-    #                            show()
-    #                            raise SystemExit
+                            #if spfit is None:
+                            #    print i,j, np.shape(data)
+                            #    plt.plot(data[i,j])
+                            #    plt.show()
+                            #    raise SystemExit
                             if spfit is not None:
                                 gs[i, j] = spfit[ind] #bhat
                                 offs[i, j] = baseline
