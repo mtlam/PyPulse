@@ -524,7 +524,7 @@ class DynamicSpectrum(object):
         """
         if self.verbose:
             print("Dynamic Spectrum: Loading from file: %s" % filename)
-        x = np.load(filename)
+        x = np.load(filename, allow_pickle=True)
         for key in x.keys():
             val = eval("x['%s']"%key)
             if np.ndim(val) == 0 and isinstance(val, np.ndarray): #loading of non-array values (e.g.,  a None) needs to be handled this way
