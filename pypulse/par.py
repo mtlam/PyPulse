@@ -77,7 +77,10 @@ class Parameter(object):
                         self.error = int(splitstring[-1])
                     else:
                         self.error = splitstring[-1]
+                    # Fit flag
                     if len(splitstring) == 3 and not numre.match(splitstring[2]) and splitstring[2] != "NaN":
+                        self.fit = int(splitstring[2])
+                    elif len(splitstring) == 4:
                         self.fit = int(splitstring[2])
 
     def getName(self):
