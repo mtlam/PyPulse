@@ -485,7 +485,7 @@ class SinglePulse(object):
         ytemp /= np.max(ytemp)
 
         return ytemp
-    splienSmoothing = spline_smoothing
+    splineSmoothing = spline_smoothing
 
     def component_fitting(self, mode='gaussian', nmax=10, full=False,
                           minamp=None, alpha=0.05, allownegative=False,
