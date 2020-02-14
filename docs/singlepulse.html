@@ -458,7 +458,7 @@
 
 <dl class="function">
 <dt id="component_fitting">
-<code class="descname">component_fitting</code><span class="sig-paren">(</span><span class="optional">[</span><em>mode='gaussian'</em>, <em>nmax=10</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#component_fitting" title="Permalink to this definition">¶</a></dt>
+<code class="descname">component_fitting</code><span class="sig-paren">(</span><span class="optional">[</span><em>mode='gaussian'</em>, <em>nmax=10</em>, <em>full=False</em>, <em>minamp=None</em>, <em>alpha=0.05</em>, <em>allownegative=False</em>, <em>verbose=False</em>, <em>save=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#component_fitting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iteratively fits a total of nmax components to a pulse profile. The iteration will end when the <span class="math notranslate nohighlight">\(\chi_r^2\)</span> is minimized.</p>
 <p>If mode == ‘gaussian’, will fit components of the form</p>
 <div class="math notranslate nohighlight">
@@ -473,12 +473,18 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The function to fit, can choose: ‘gaussian’, .vonmises’.</li>
+<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The function to fit, can choose: ‘gaussian’, ‘vonmises’.</li>
 <li><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Maximum number of components to test.</li>
+<li><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Return both the off-pulse mean and RMS.</li>
+<li><strong>minamp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – If all of the profile residuals are less than the fraction of the maximum set by minamp, then return.</li>
+<li><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the maximum to return if minamp is True. For example, if alpha is 0.05, once all profile residuals are less than 5% of the maximum, return.</li>
+<li><strong>allownegative</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, allow negative-amplitude components in the fitting</li>
+<li><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Print when each component is fit</li>
+<li><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, replace the data array with the smoothed profile.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">template, <em>numpy.ndarray</em></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">template, <em>numpy.ndarray</em> (if <code class="docutils literal notranslate"><span class="pre">full</span></code> is True then the template, the fit of the parameters, and the number of parameters)</p>
 </td>
 </tr>
 </tbody>
