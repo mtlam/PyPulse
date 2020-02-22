@@ -56,7 +56,7 @@ class DynamicSpectrum(object):
             if T is not None:
                 d = np.diff(self.T)
                 self.Tcenter = d/2.0 + self.T[:-1]
-                self.dT = np.mean(d)
+                self.dT = np.median(d)
             else:
                 self.T = np.arange(self.shape()[1])
             self.Funit = Funit
