@@ -1,7 +1,7 @@
 PyPulse
 =======
 
-A python package for handling and analyzing PSRFITS files.
+A pure-Python package for handling and analyzing PSRFITS files.
 
 Read the documentation [here](https://mtlam.github.io/PyPulse/).
 
