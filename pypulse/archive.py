@@ -776,11 +776,15 @@ class Archive(object):
         else:
             self.average_profile = self.average_profile[0, :]
         self.calculateOffpulseWindow()
+        # Remove baseline. A bit organizationally strange
+        self.spavg.remove_baseline()
+        self.average_profile = self.spavg.data
         return self.average_profile
 
     def calculateOffpulseWindow(self):
         """
         Automatically calculates the off-pulse window
+        for the average SP
         """
         self.spavg = SP.SinglePulse(self.average_profile, windowsize=int(self.getNbin()//8))
         self.opw = self.spavg.opw
