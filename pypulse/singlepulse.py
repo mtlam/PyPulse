@@ -489,7 +489,8 @@ class SinglePulse(object):
 
     def component_fitting(self, mode='gaussian', nmax=10, full=False,
                           minamp=None, alpha=0.05, allownegative=False,
-                          verbose=False, save=False):
+                          verbose=False, plot=False, save=False,
+                          filename=None):
         '''
         Fitting to phases is much more numerically stable for von mises function
         '''
@@ -507,7 +508,19 @@ class SinglePulse(object):
         residsA = self.data - fitfunc(pfit, self.phases)
         RSS_funcA = np.sum(residsA**2)
 
-        def doreturn(save=False):
+        def doreturn(plot=False, filename=None, save=False):
+            if plot:
+                plt.plot(self.phases, self.data)
+                for i in range(0, len(pfit), 3):
+                    plt.plot(self.phases, u.vonmises(self.phases, pfit[i], pfit[i+1], pfit[i+2]), '--', color='0.50', alpha=0.5)
+                plt.plot(self.phases, fitfunc(pfit, self.phases), 'k')
+                plt.xlabel('Phase')
+                plt.ylabel('Intensity')
+                plt.tight_layout()
+                if filename is not None:
+                    plt.savefig(filename)
+                plt.show()
+                
             if save:
                 self.data = fitfunc(pfit, self.phases)
             if full:
@@ -523,7 +536,7 @@ class SinglePulse(object):
             RSS_funcB = np.sum(residsB**2)
 
             if minamp is not None and np.all(residsB < MAX):
-                return doreturn(save=save)
+                return doreturn(plot=plot, filename=filename, save=save)
 
             # F-test
             F = ((RSS_funcA-RSS_funcB)/(nparamB-nparamA))/(RSS_funcB/(N-nparamB-1))
@@ -532,11 +545,11 @@ class SinglePulse(object):
             #print F, RSS_funcA, RSS_funcB, nparamA, nparamB, p_value
             if p_value > alpha: # if p_value < alpha,  then B is significant, so keep going
             # Replace old values
-                return doreturn(save=save)
+                return doreturn(plot=plot, filenae=filename, save=save)
             nparamA = nparamB
             residsA = residsB
             RSS_funcA = RSS_funcB
-        return doreturn(save=save)
+        return doreturn(plot=plot, filename=filename, save=save)
 
         '''
         n = 1
