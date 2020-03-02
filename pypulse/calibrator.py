@@ -79,8 +79,8 @@ class Calibrator(object):
         plt.errorbar(self.freqs, self.Q, yerr=self.Qerr, fmt='r.')
         plt.errorbar(self.freqs, self.U, yerr=self.Uerr, fmt='g.')
         plt.errorbar(self.freqs, self.V, yerr=self.Verr, fmt='b.')
-        plt.xlabel('Frequency')
-        plt.ylabel('Calibrator Stokes')
+        plt.xlabel('Frequency (MHz)')
+        plt.ylabel('Calibrator Stokes (arb.)')
         plt.show()
 
     def applyFluxcal(self, fluxcalonar, fluxcaloffar=None):
