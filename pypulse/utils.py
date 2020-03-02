@@ -501,6 +501,8 @@ def fit_components(xdata, ydata, mode='gaussian', N=1, allownegative=False):
         def fitfunc(p, x):
             retval = np.zeros(len(x))
             for i in range(n):
+                if not allownegative and p[3*i] <= 0:
+                    return 1e12 # large value
                 retval += fitter(x, p[3*i], p[3*i+1], p[3*i+2])
             return retval
         def errfunc(p, x, y):
