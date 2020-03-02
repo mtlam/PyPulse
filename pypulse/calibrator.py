@@ -70,17 +70,21 @@ class Calibrator(object):
         #plot(np.sqrt(self.U**2+self.V**2)/U_0, 'k.')
         plt.show()
 
-    def pacv_csu(self):
+    def pacv_csu(self, filename=None):
         '''
         Emulates pacv -n csu <archive>
         '''
 
-        plt.errorbar(self.freqs, self.I, yerr=self.Ierr, fmt='k.')
-        plt.errorbar(self.freqs, self.Q, yerr=self.Qerr, fmt='r.')
-        plt.errorbar(self.freqs, self.U, yerr=self.Uerr, fmt='g.')
-        plt.errorbar(self.freqs, self.V, yerr=self.Verr, fmt='b.')
+        plt.errorbar(self.freqs, self.I, yerr=self.Ierr, fmt='k.', label="I")
+        plt.errorbar(self.freqs, self.Q, yerr=self.Qerr, fmt='r.', label="Q")
+        plt.errorbar(self.freqs, self.U, yerr=self.Uerr, fmt='g.', label="U")
+        plt.errorbar(self.freqs, self.V, yerr=self.Verr, fmt='b.', label="V")
         plt.xlabel('Frequency (MHz)')
         plt.ylabel('Calibrator Stokes (arb.)')
+        plt.legend()
+        plt.tight_layout()
+        if filename is not None:
+            plt.savefig(filename)
         plt.show()
 
     def applyFluxcal(self, fluxcalonar, fluxcaloffar=None):
