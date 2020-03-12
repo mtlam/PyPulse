@@ -139,7 +139,7 @@ class Archive(object):
         else:
             self.history = None
             nsubint = hdulist['SUBINT'].header['NAXIS2']
-            nbin, nchan, npol, nsblk = fmap(int, hdulist['SUBINT'].columns[-1].dim[1:-1].split(","))
+            nbin, nchan, npol, nsblk = fmap(int, hdulist['SUBINT'].columns['DATA'].dim[1:-1].split(","))
 
         if 'PSRPARAM' in self.keys:
             tablenames.remove('PSRPARAM')
