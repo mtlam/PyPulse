@@ -728,6 +728,8 @@ class Archive(object):
         nsubint, npol, nchan, nbin = self.shape(squeeze=False)
         if DM is None:
             DM = self.getDM()
+        if DM is None: #for some ill-defined PSRFITS files
+            return
         cfreq = self.getCenterFrequency(weighted=wcfreq)
 
         K = 4.149e3
@@ -868,8 +870,10 @@ class Archive(object):
 
         self.data = np.roll(self.data, diff, axis=-1)
         self.average_profile = np.roll(self.average_profile, diff)
-        #print "diff", diff, diff*self.getTbin()
-        self.channel_delays += Decimal(str(-1*diff*self.getTbin())) #this is unnecessary? FIX THIS
+        tbin = self.getTbin()
+        if tbin is None: #error catching
+            return 
+        self.channel_delays += Decimal(str(-1*diff*tbin)) #this is unnecessary? FIX THIS
         self.calculateOffpulseWindow()
         return self
 
@@ -1592,13 +1596,14 @@ class Archive(object):
         """Returns period of the pulsar"""
         if self.isCalibrator():
             return 1.0/self.header['CAL_FREQ']
-        #if self.params is None:FOO
-        #    return None
-        if header or self.polyco is None:
+
+        if header or self.polyco is None and self.params is not None:
             return self.params.getPeriod()
         else:
-            P0 = self.polyco.calculatePeriod()
-            return P0
+            if self.polyco is not None:
+                P0 = self.polyco.calculatePeriod()
+                return P0
+            return
         
             #print P0,self.params.getPeriod()
             if np.abs(P0) < 1e-5: #Problem with large DT POLYCO values?
@@ -1640,7 +1645,10 @@ class Archive(object):
 
     def getTbin(self, numwrap=float):
         """Returns the time per bin"""
-        return numwrap(self.getPeriod()) / numwrap(self.getNbin())
+        P = self.getPeriod()
+        if P is None: #error catching
+            return
+        return numwrap(P) / numwrap(self.getNbin())
 
     def getDM(self, numwrap=float):
         """Returns the data header DM"""
