@@ -177,7 +177,12 @@ class Archive(object):
             isFluxcal = True
         self.tables = list()
         for tablename in tablenames: #remaining table names to store
-            self.tables.append(hdulist[tablename].copy())
+            try:
+                self.tables.append(hdulist[tablename].copy())
+            except ValueError:
+                # Some other data formats break the above
+                # with unknown tables, so just ignore them
+                continue
 
         #if self.header['OBS_MODE'] == 'PCM':
         if isFluxcal:
