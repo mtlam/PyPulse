@@ -17,21 +17,22 @@ get_toa = u.get_toa3 #try this one
 
 #ACF=lambda p: np.correlate(p, p, "full") #no longer used
 
-'''
-data : data array
-mpw : Main pulse window
-ipw : Interpulse window
-opw : off pulse window
-prepare : Process data according to some metrics (deprecated)
-align : Roll pulse by this amount
-period : Set pulse period
-windowsize: Override mpw, ipw, opw, define an offpulse window about the minimum of this size
-'''
+
 
 
 class SinglePulse(object):
     def __init__(self, data, mpw=None, ipw=None, opw=None, prepare=False,
                  align=None, period=None, windowsize=None):
+        '''
+        data : data array
+        mpw : Main pulse window
+        ipw : Interpulse window
+        opw : off pulse window
+        prepare : Process data according to some metrics (deprecated)
+        align : Roll pulse by this amount
+        period : Set pulse period
+        windowsize: Override mpw, ipw, opw, define an offpulse window about the minimum of this size
+        '''
         if len(np.shape(data)) != 1:
             raise IndexError("SinglePulse received incorrect data shape")
 
@@ -49,7 +50,9 @@ class SinglePulse(object):
         self.bins = np.arange(self.nbins)
         self.phases = np.arange(self.nbins, dtype=np.float)/self.nbins
 
-        if windowsize is not None:
+        if windowsize is not None or (mpw is None and opw is None and windowsize is None):
+            # if either windowsize is set or nothing is set,
+            # automatically calculate
             self.calcOffpulseWindow(windowsize)
 
         elif opw is None:
@@ -179,14 +182,14 @@ class SinglePulse(object):
     def calcOffpulseWindow(self, windowsize=None):
         # Find minimum in the area
         if windowsize is None:
-            windowsize = self.nbins/8
+            windowsize = self.nbins//8
 
         integral = np.zeros_like(self.data)
         for i in self.bins:
             win = np.arange(i-windowsize//2, i+windowsize//2) % self.nbins
             integral[i] = np.trapz(self.data[win])
         minind = np.argmin(integral)
-        self.opw = np.arange(minind-windowsize//2, minind+windowsize//2+1)
+        self.opw = np.arange(minind-windowsize//2, minind+windowsize//2)
         self.opw = self.opw % self.nbins
         self.mpw = self.bins[np.logical_not(np.in1d(self.bins, self.opw))]
         return self.opw
