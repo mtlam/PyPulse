@@ -101,6 +101,11 @@ class Parameter(object):
     def getFlagValue(self):
         return self.flagvalue
 
+    def hasFlag(self):
+        if self.flagvalue is not None:
+            return True
+        return False
+
 
 class Par(object):
     def __init__(self, filename, numwrap=float, usedecimal=False):
@@ -169,6 +174,20 @@ class Par(object):
                 return retval[0]
             return np.array(retval)
         return None
+
+    """
+    def getParameterFlags(self, tag):
+        #If a parameter has flags, return all of the possible values as a list
+        if tag in self.paramnames:
+            ind = self.getInd(tag)
+            retval = []
+            for i in ind:
+                retval.append(self.paramlist[i].getFlagValue())
+            if len(retval) == 1:
+                return retval[0]
+            return np.array(retval)
+        return None
+    """
 
     def getPeriod(self):
         if 'P0' in self.paramnames:
