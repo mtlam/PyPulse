@@ -801,12 +801,19 @@ def shiftit_old(y, shift):
 def shiftit(y, shift):
     '''
     Speed-ups via Paul Baker, Ross Jennings
+
+    y : the array to shift
+    shift: the amount to shift
     '''
-    if isinstance(shift,np.ndarray):
-        shift = shift[...,np.newaxis]
-    N = y.shape[-1]
-    yfft = np.fft.rfft(y)
-    fs = np.fft.rfftfreq(N)#, d=dt)
+    if isinstance(shift, np.ndarray):
+        shift = shift[..., np.newaxis]
+    if isinstance(y, SinglePulse) and y.yfft is not None:
+        yfft = y.yfft
+        fs = y.fs
+    else:
+        N = y.shape[-1]
+        yfft = np.fft.rfft(y)
+        fs = np.fft.rfftfreq(N)#, d=dt)
     phase = 1j*2*np.pi*fs*shift  #reversed from Paul's code so that this matches the previous convention
     yfft_sh = yfft * np.exp(phase)
     return np.fft.irfft(yfft_sh)
@@ -867,6 +874,106 @@ def tfresids(params, tfft, pfft):
     #resids = abs(pfft[1:Nsum] - b*tfft[1:Nsum]*phasevec[1:Nsum])
     resids = np.abs(pfft[1:Nsum] - b*tfft[1:Nsum]*phasevec[1:Nsum])
     return resids
+
+
+
+def get_toa(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, norder=2):
+    """
+    Calculates TOA and its error in samples (bins).
+    Uses least-squares method in frequency domain, minimizing chi^2.
+    Also calculates scale factor for template matching.
+    Input: template = template file; if normalized to unity max,
+                      the scale factor divided by the input sigma_t is
+                      the peak to rms S/N.
+           profile = average profile to process
+           sigma_t = off pulse rms in same units as profile.
+    
+    Output:
+    tauccf = TOA (bins) based on parabloic interpolation of CCF.
+    tauhat = TOA (bins) using Fourier-domain fitting.,
+    bhat = best-fit amplitude of pulse.
+    sigma_tau = error on tauhat.
+    sigma_b = error on bhat.
+    snr = bhat/sigma_t.
+    rho = cross correlation coefficient between template and centered profile.
+    """
+    # Some initial values:
+    snr_coarse = np.max(profile)/sigma_t
+    tauhat = 0.
+    bhat = 0.
+    sigma_tau = -1.
+    sigma_b = -1.
+    rho = -2.
+
+    # find coarse estimates for scale factor and tau from CCF maximum
+    #  (quadratically interpolated)
+    ccf = np.correlate(template, profile, 'full')
+    lags = np.arange(-np.size(profile)+1., np.size(profile), 1.)
+    ccfmaxloc = ccf.argmax()
+    ccffit = ccf[ccfmaxloc-(nlagsfit-1)//2:ccfmaxloc+(nlagsfit-1)//2+1]
+    lagfit = lags[ccfmaxloc-(nlagsfit-1)//2:ccfmaxloc+(nlagsfit-1)//2+1]
+
+    p = np.polyfit(lagfit, ccffit, norder)
+    ccfhat = p[0] + p[1]*lagfit + p[2]*lagfit**2
+    tauccf = p[1]/(2.*p[2])
+
+    # roughly center the pulse to line up with the template:
+    ishift = int(-tauccf)
+    profile = np.roll(profile, ishift)
+
+    bccf = sum(template*profile)/sum(template**2)
+
+    # Search range for TOA using Fourier-domain method:
+    # expect -fwhm/2 < tauhat < fwhm/2  since pulse has been centered
+
+    # fwhm, taumin, taumax currently not used.  But should we do a
+    # windowed TOA calculation?
+    fwhm = find_fwhm(template)		# fwhm in samples (bins)
+    taumin = -fwhm/2.
+    taumax = fwhm/2.
+
+    if isinstance(template, SinglePulse) and template.yfft is not None:
+        istemplate = True
+        template_data = template.data
+        tfft = template.yfft #uses rfft, not tfft
+    else:
+        istemplate = False
+        template_data = template
+        tfft = np.fft.fft(template_data)
+        
+    pfft = np.fft.fft(profile)
+    bhat0 = bccf
+    tauhat0 = tauccf+ishift
+    paramvec0 = np.array((bhat0, tauhat0))
+
+    paramvec = optimize.minpack.leastsq(tfresids, paramvec0, args=(tfft, pfft))
+    bhat = paramvec[0][0]
+    tauhat = paramvec[0][1]
+
+    sigma_tau, sigma_b = toa_errors_additive(tfft, bhat, sigma_t)
+    # snr = scale factor / sigma_t:
+    snr = (bhat*np.max(template_data))/sigma_t
+
+    if not istemplate:
+        # rho = correlation coefficient of template and shifted profile:
+        profile_shifted = shiftit(profile, +tauhat)	# checked sign: this is correct
+
+        # TBA: correct rho for off-pulse noise.
+        # Two possibilities:
+        #     1. subtract noise variance term  from sum(profile_shifted**2)
+        #  or 2. calculate ACF of profile_shifted with a one or two sample lag.
+        rho = np.sum(template*profile_shifted) / np.sqrt(np.sum(template**2)*np.sum(profile_shifted**2))
+    else:
+        # Reverse method
+        template_shifted = shiftit(template, -tauhat)
+        rho = np.sum(template_shifted*profile) / np.sqrt(np.sum(template_shifted**2)*np.sum(profile**2))
+
+    tauhat = tauhat - ishift	# account for initial shift
+    return tauccf, tauhat, bhat, sigma_tau, sigma_b, snr, rho
+
+
+
+
 
 def get_toa3(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, norder=2):
     """
@@ -937,7 +1044,7 @@ def get_toa3(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, 
     snr = (bhat*np.max(template))/sigma_t
 
     # rho = correlation coefficient of template and shifted profile:
-    profile_shifted = shiftit(profile, +tauhat)	# checked sign: this is correct
+    profile_shifted = shiftit(profile, +tauhat)	# checked sign: this is corr ct
 
     # TBA: correct rho for off-pulse noise.
     # Two possibilities:

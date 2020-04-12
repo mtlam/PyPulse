@@ -13,7 +13,7 @@ import scipy.stats as stats
 import scipy.signal as signal
 import pypulse.utils as u
 
-get_toa = u.get_toa3 #try this one
+#get_toa = u.get_toa3 #try this one
 
 #ACF=lambda p: np.correlate(p, p, "full") #no longer used
 
@@ -22,7 +22,7 @@ get_toa = u.get_toa3 #try this one
 
 class SinglePulse(object):
     def __init__(self, data, mpw=None, ipw=None, opw=None, prepare=False,
-                 align=None, period=None, windowsize=None):
+                 align=None, period=None, windowsize=None, istemplate=False):
         '''
         data : data array
         mpw : Main pulse window
@@ -88,6 +88,13 @@ class SinglePulse(object):
         if np.all(self.data == self.data[0]) or np.all(np.isnan(self.data)):
             self.null = True
 
+        if istemplate:
+            # precalculate Fourier Transform
+            self.calcFT()
+        else:
+            self.yfft = None
+            self.fs = None
+
     def interpulse_align(self):
         """
         Align the pulse such that the main pulse is at phase=0.25
@@ -95,6 +102,10 @@ class SinglePulse(object):
         """
         self.data = np.roll(u.center_max(self.data), -len(self.data)//4)
         return self
+
+
+    def __len__(self):
+        return self.nbins
 
     def center_align(self):
         """
@@ -194,6 +205,15 @@ class SinglePulse(object):
         self.mpw = self.bins[np.logical_not(np.in1d(self.bins, self.opw))]
         return self.opw
 
+    def calcFT(self):
+        """ 
+        Calculate the Fourier transform and frequencies 
+        Useful for pre-calculating a template FT
+        """
+        self.yfft = np.fft.rfft(self.data)
+        self.fs = np.fft.rfftfreq(self.nbins)
+        return self.fs, self.yfft
+
     ### Get each of the pulse components, if they exist
     def getMainpulse(self):
         if self.mpw is None:
@@ -266,14 +286,14 @@ class SinglePulse(object):
     def fitPulse(self, template, fixedphase=False, rms_baseline=None):
         """
         Returns tauccf, tauhat, bhat, sigma_Tau, sigma_b, snr, rho
-        """
-        if isinstance(template, SinglePulse):
-            template = template.data
+        """                
         if self.null or len(template) != self.getNbins():
             return None
         if rms_baseline is None:
             self.remove_baseline()
-        if fixedphase: #just return S/N
+        if fixedphase: #just return S/N, this should be deprecated
+            if isinstance(template, SinglePulse):
+                template = template.data
             p0 = [np.max(self.data)]
             #conversion to np.float64 fixes bug with Jacobian inversion
             p1, cov, infodict, mesg, ier = \
