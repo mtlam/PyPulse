@@ -85,7 +85,7 @@
 <p>The <em>SinglePulse</em> class handles an individual pulse data array.</p>
 <dl class="class">
 <dt id="SinglePulse">
-<em class="property">class </em><code class="descname">SinglePulse</code><span class="sig-paren">(</span><em>data</em><span class="optional">[</span>, <em>mpw=None</em>, <em>ipw=None</em>, <em>opw=None</em>, <em>prepare=False</em>, <em>align=None</em>, <em>period=None</em>, <em>windowsize=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SinglePulse" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">SinglePulse</code><span class="sig-paren">(</span><em>data</em><span class="optional">[</span>, <em>mpw=None</em>, <em>ipw=None</em>, <em>opw=None</em>, <em>prepare=False</em>, <em>align=None</em>, <em>period=None</em>, <em>windowsize=None</em>, <em>istemplate=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SinglePulse" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -99,6 +99,7 @@
 <li><strong>align</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Rotate the pulse by this amount in phase bin units.</li>
 <li><strong>period</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Provide pulse period.</li>
 <li><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Overrides mpw, ipw, opw. Defines an off-pulse window of a given size about the minimum-integral region.</li>
+<li><strong>istemplate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, run <a class="reference internal" href="#calcFT" title="calcFT"><code class="xref py py-func docutils literal notranslate"><span class="pre">calcFT()</span></code></a> to precalculate the Fourier Transform of the data. This is useful for speed-ups elsewhere throughout the code.</li>
 </ul>
 </td>
 </tr>
@@ -231,6 +232,22 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Window size (<span class="math notranslate nohighlight">\(N\)</span>) in bin units. The default is the length of the data array divided by 8.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">opw, <em>numpy.ndarray</em></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="calcFT">
+<code class="descname">calcFT</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#calcFT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Fourier Transform and related frequencies
+Returns the Fourier frequencies, Fourier Transform
+Uses a real FFT</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">fs, <em>np.ndarray</em>, yfft, <em>np.ndarray</em></td>
 </tr>
 </tbody>
 </table>
