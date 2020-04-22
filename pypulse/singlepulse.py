@@ -284,13 +284,14 @@ class SinglePulse(object):
         return u.zct(self.getOffpulse(), full=True, meansub=True)
 
     # todo: include a goodness-of-fit flag (gof) as a measure of the residuals.
-    def fitPulse(self, template, fixedphase=False, rms_baseline=None):
+    def fitPulse(self, template, fixedphase=False, rms_baseline=None, remove_baseline=True):
         """
         Returns tauccf, tauhat, bhat, sigma_Tau, sigma_b, snr, rho
         """                
         if self.null or len(template) != self.getNbins():
             return None
-        if rms_baseline is None:
+        #if rms_baseline is None:
+        if remove_baseline:
             self.remove_baseline()
         if fixedphase: #just return S/N, this should be deprecated
             if isinstance(template, SinglePulse):
