@@ -14,6 +14,7 @@ import scipy.signal as signal
 import pypulse.utils as u
 
 #get_toa = u.get_toa3 #try this one
+get_toa = u.get_toa
 
 #ACF=lambda p: np.correlate(p, p, "full") #no longer used
 

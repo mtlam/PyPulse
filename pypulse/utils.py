@@ -807,7 +807,7 @@ def shiftit(y, shift):
     '''
     if isinstance(shift, np.ndarray):
         shift = shift[..., np.newaxis]
-    if isinstance(y, SinglePulse) and y.yfft is not None:
+    if y.__class__.__name__ == "SinglePulse" and y.yfft is not None:
         yfft = y.yfft
         fs = y.fs
     else:
@@ -897,6 +897,23 @@ def get_toa(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, n
     snr = bhat/sigma_t.
     rho = cross correlation coefficient between template and centered profile.
     """
+    classname = template.__class__.__name__
+
+
+    if classname == "SinglePulse" and template.yfft is not None:
+        istemplate = True
+        template_data = template.data
+        tfft = template.yfft #uses rfft, not tfft
+    elif classname == "SinglePulse":
+        istemplate = False
+        template_data = template.data
+        tfft = np.fft.fft(template_data)
+    else:
+        istemplate = False
+        template_data = template
+        tfft = np.fft.fft(template_data)
+
+
     # Some initial values:
     snr_coarse = np.max(profile)/sigma_t
     tauhat = 0.
@@ -907,7 +924,7 @@ def get_toa(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, n
 
     # find coarse estimates for scale factor and tau from CCF maximum
     #  (quadratically interpolated)
-    ccf = np.correlate(template, profile, 'full')
+    ccf = np.correlate(template_data, profile, 'full')
     lags = np.arange(-np.size(profile)+1., np.size(profile), 1.)
     ccfmaxloc = ccf.argmax()
     ccffit = ccf[ccfmaxloc-(nlagsfit-1)//2:ccfmaxloc+(nlagsfit-1)//2+1]
@@ -921,26 +938,18 @@ def get_toa(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, n
     ishift = int(-tauccf)
     profile = np.roll(profile, ishift)
 
-    bccf = sum(template*profile)/sum(template**2)
+    bccf = sum(template_data*profile)/sum(template_data**2)
 
     # Search range for TOA using Fourier-domain method:
     # expect -fwhm/2 < tauhat < fwhm/2  since pulse has been centered
 
     # fwhm, taumin, taumax currently not used.  But should we do a
     # windowed TOA calculation?
-    fwhm = find_fwhm(template)		# fwhm in samples (bins)
+    fwhm = find_fwhm(template_data)		# fwhm in samples (bins)
     taumin = -fwhm/2.
     taumax = fwhm/2.
 
-    if isinstance(template, SinglePulse) and template.yfft is not None:
-        istemplate = True
-        template_data = template.data
-        tfft = template.yfft #uses rfft, not tfft
-    else:
-        istemplate = False
-        template_data = template
-        tfft = np.fft.fft(template_data)
-        
+
     pfft = np.fft.fft(profile)
     bhat0 = bccf
     tauhat0 = tauccf+ishift
@@ -962,10 +971,10 @@ def get_toa(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, n
         # Two possibilities:
         #     1. subtract noise variance term  from sum(profile_shifted**2)
         #  or 2. calculate ACF of profile_shifted with a one or two sample lag.
-        rho = np.sum(template*profile_shifted) / np.sqrt(np.sum(template**2)*np.sum(profile_shifted**2))
+        rho = np.sum(template_data*profile_shifted) / np.sqrt(np.sum(template_data**2)*np.sum(profile_shifted**2))
     else:
         # Reverse method
-        template_shifted = shiftit(template, -tauhat)
+        template_shifted = shiftit(template_data, -tauhat)
         rho = np.sum(template_shifted*profile) / np.sqrt(np.sum(template_shifted**2)*np.sum(profile**2))
 
     tauhat = tauhat - ishift	# account for initial shift
