@@ -535,9 +535,10 @@ class SinglePulse(object):
 
         def doreturn(plot=False, filename=None, save=False):
             if plot:
+                componentfunc = eval("u.%s"%mode)
                 plt.plot(self.phases, self.data)
                 for i in range(0, len(pfit), 3):
-                    plt.plot(self.phases, u.vonmises(self.phases, pfit[i], pfit[i+1], pfit[i+2]), '--', color='0.50', alpha=0.5)
+                    plt.plot(self.phases, componentfunc(self.phases, pfit[i], pfit[i+1], pfit[i+2]), '--', color='0.50', alpha=0.5)
                 plt.plot(self.phases, fitfunc(pfit, self.phases), 'k')
                 plt.xlabel('Phase')
                 plt.ylabel('Intensity')
