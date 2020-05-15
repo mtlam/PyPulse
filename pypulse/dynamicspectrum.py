@@ -384,10 +384,10 @@ class DynamicSpectrum(object):
             err_t_d = np.sqrt(err_t_d**2 + fse_t_d**2)
             err_rot = np.sqrt(err_rot **2 + fse_rot**2)
 
+        dnu_dt = (dF/dT)*np.tan(rotation)
+        err_dnu_dt = (dF/dT)*np.cos(rotation)**2 * err_rot
         if self.verbose:
-            f = (dF/dT)*np.tan(rotation)
-            df = (dF/dT)*np.cos(rotation)**2 * err_rot
-            print("dnu/dt %0.3e+/-%0.3e %s/%s" % (f, df, self.Funit, self.Tunit))
+            print("dnu/dt %0.3e+/-%0.3e %s/%s" % (dnu_dt, err_dnu_dt, self.Funit, self.Tunit))
             #((dF/dT)*np.tan(rotation))
 
         if show or savefig is not None:
@@ -410,8 +410,8 @@ class DynamicSpectrum(object):
             if show:
                 plt.show()
         if full_output:
-            return delta_t_d, err_t_d, delta_nu_d, err_nu_d, rotation, err_rot
-        return delta_t_d, delta_nu_d, rotation
+            return delta_t_d, err_t_d, delta_nu_d, err_nu_d, dnu_dt, err_dnu_dt
+        return delta_t_d, delta_nu_d, dnu_dt
 
     def imshow(self, err=False, cbar=False, ax=None, show=True, border=False,
                zorder=0, cmap=cm.binary, alpha=True, cdf=True, savefig=None,
