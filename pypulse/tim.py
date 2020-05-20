@@ -4,6 +4,7 @@ Loads a tim file
 '''
 import sys
 import decimal
+import warnings
 import numpy as np
 #import re
 if sys.version_info.major == 2:
@@ -205,6 +206,9 @@ class Tim(object):
 
     def save(self, filename=None):
         """ Save tim file """
+        if self.numwrap != DECIMAL:
+            warnings.warn("Numbers are not wrapped in the Decimal() class. Output MJDs may be improperly truncated!")
+
         output = ""
 
         ntoa = 0
