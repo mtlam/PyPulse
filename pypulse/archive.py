@@ -1647,7 +1647,12 @@ class Archive(object):
         """Returns the time per bin"""
         P = self.getPeriod()
         if P is None: #error catching
-            return
+            # try to grab out of HISTORY
+            dt = self.history.getLatest("TBIN")
+            if dt is None:
+                warnings.warn("Unable to obtain bin times")
+                return
+            return dt
         return numwrap(P) / numwrap(self.getNbin())
 
     def getDM(self, numwrap=float):
