@@ -571,7 +571,7 @@ class SinglePulse(object):
             #print F, RSS_funcA, RSS_funcB, nparamA, nparamB, p_value
             if p_value > alpha: # if p_value < alpha,  then B is significant, so keep going
             # Replace old values
-                return doreturn(plot=plot, filenae=filename, save=save)
+                return doreturn(plot=plot, filename=filename, save=save)
             nparamA = nparamB
             residsA = residsB
             RSS_funcA = RSS_funcB
