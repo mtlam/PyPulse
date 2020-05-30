@@ -891,8 +891,7 @@ class Archive(object):
     def getLevels(self, differences=False):
         """ Returns calibration levels if this is a calibrator"""
         if not self.isCalibrator():
-            print("Not a calibration file")
-            return
+            raise TypeError("Not a calibration file")
         # Ensure data are scrunched in time,
         # or ignore this and simply calculate the weighted time average?
         self.tscrunch()
@@ -1304,7 +1303,7 @@ class Archive(object):
             if show:
                 plt.show()
         else:
-            print("Invalid dimensions")
+            raise IndexError("Invalid dimensions for plot()")
             
     def imshow(self, ax=None, cbar=False, mask=None, show=True,
                filename=None, setnan=0.0, cmap=None, **kwargs):
@@ -1500,7 +1499,7 @@ class Archive(object):
             if show:
                 plt.show()
         else:
-            print("Invalid dimensions")
+            raise IndexError("Invalid dimensions for waterfall()")
 
     ### NOTE: THIS NEEDS TO BE CHECKED WITH THE NEW CHANGES ###
 
