@@ -1107,7 +1107,8 @@ class Archive(object):
     def getFrequencies(self, **kwargs):
         """Convenience function for getAxis"""
         return getAxis('F', **kwargs)
-
+    getFreqs = getFrequencies
+    
     def getTimes(self, **kwargs):
         """Convenience function for getAxis"""
         return getAxis('T', **kwargs)
@@ -1790,13 +1791,15 @@ class Archive(object):
             return self.history.getLatest('CTR_FREQ')
         else:
             return self.header['OBSFREQ'] #perhaps do an unweighted version from DAT_FREQ?
-
+    getCenterFreq = getCenterFrequency
+        
     def getFrequencyUnit(self):
         for key in self.subintheader.keys():
             if "TTYPE" in key:
                 if self.subintheader[key] == "DAT_FREQ":
                     return self.subintheader[key.replace("TYPE", "UNIT")]
         return None
+    getFreqUnit = getFrequencyUnit
 
     def getTimeUnit(self):
         if "INT_UNIT" in self.subintheader:
