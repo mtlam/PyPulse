@@ -1292,70 +1292,146 @@ class Archive(object):
         data = self.getData()
         if len(np.shape(data)) == 1:
             if ax is None:
-                plt.plot(data, 'k')
-                plt.xlim(0, len(data))
-            else:
-                ax.plot(data, 'k')
-                ax.set_xlim(0, len(data))
+                fig = plt.figure()
+                ax = fig.add_subplot(111)
+            ax.plot(data, 'k')
+            ax.set_xlim(0, 1)
+            ax.set_xlabel("Pulse Phase")
+            ax.set_ylabel("Intensity")
+            #if "SCALE" in self.subintheader:
+            #    ax.set_ylabel(self.subintheader["SCALE"]) #this is still off
             if show:
                 plt.show()
         else:
             print("Invalid dimensions")
+            
     def imshow(self, ax=None, cbar=False, mask=None, show=True,
-               filename=None, setnan=0.0, **kwargs):
-        """Basic imshow of data"""
+               filename=None, setnan=0.0, cmap=None, **kwargs):
+        """ 
+        Basic imshow of data
+
+        Parameters
+        ----------
+        ax : matplotlib.axes._subplots.AxesSubplot
+            matplotlib Axes to draw on. If None, makes a new figure
+        cbar : bool
+            Draw a color bar
+        mask : float
+            If set to a value, use a masked array and set the mask 
+            to that value
+        show : bool
+            If true, plot the image
+        filename : str
+            Filename to save the figure to
+        setnan : float
+            Value to set NaNs to in the plot
+        cmap : str or matplotlib.colors.Colormap
+            Either a matplotlib colormap object or a string of the 
+            name of the colormap. Default is cividis if available,
+            otherwise viridis
+
+        Returns
+        -------
+        ax : matplotlib.axes._subplots.AxesSubplot
+            Returns the matplotlib Axes object.
+        """
         data = self.getData(setnan=setnan)
+        shape = self.shape(squeeze=False)
         if len(np.shape(data)) == 2:
-            if mask is not None:
-                u.imshow(ma.masked_array(data, mask=mask), ax=ax, **kwargs)
+
+            extent = None
+            if shape[0] == 1 and shape[1] == 1:
+                mode = "freq-phase"
+                Fedges = self.getAxis('F', edges=True) #is this true?
+                extent = [0, 1, Fedges[0], Fedges[-1]]
+            elif shape[1] == 1 and shape[2] == 1:
+                mode = "time-phase"
+                Tedges = self.getAxis('T', edges=True) #is this true?
+                extent = [0, 1, Tedges[0], Tedges[-1]]
+            elif shape[1] == 1 and shape[3] == 1:
+                mode = "freq-time"
+                Fedges = self.getAxis('F', edges=True)
+                Tedges = self.getAxis('T', edges=True)
+                extent = [Tedges[0], Tedges[-1], Fedges[0], Fedges[-1]]
+                data = np.transpose(data) #flip to freq on y axis
             else:
-                u.imshow(data, ax=ax, **kwargs)
+                raise IndexError("Unimplemented shape for imshow()")
+
+            if ax is None:
+                fig = plt.figure()
+                ax = fig.add_subplot(111)
+
+            # If cmap is a string, try to get the colormap,
+            # otherwise use default
+            if isinstance(cmap, str):
+                if cmap in plt.colormaps():
+                    cmap = plt.get_cmap(cmap)
+                else:
+                    cmap = None
+            # Try to use cividis as default colormap, otherwise viridis
+            if cmap is None: 
+                if "cividis" in plt.colormaps():
+                    cmap = plt.cm.cividis
+                else:
+                    cmap = plt.cm.viridis
+            #cmap.set_bad(color='k', alpha=1.0)
+                
+            if mask is not None:
+                u.imshow(ma.masked_array(data, mask=mask), ax=ax, extent=extent, cmap=cmap, **kwargs)
+            else:
+                u.imshow(data, ax=ax, extent=extent, cmap=cmap, **kwargs)
+
+
+            if mode == "freq-phase":
+                ax.set_xlabel("Pulse Phase")
+                unit = u.unitchanger(self.getFrequencyUnit())
+                ax.set_ylabel("Frequency (%s)"%unit)
+                ax2 = ax.twinx()
+                ax2.set_ylim(0, self.getNchan())
+                ax2.set_ylabel("Channel Number")
+            elif mode == "time-phase":
+                ax.set_xlabel("Pulse Phase")
+                unit = u.unitchanger(self.getTimeUnit())
+                ax.set_ylabel("Time (%s)"%unit)
+                ax2 = ax.twinx()
+                ax2.set_ylim(0, self.getNsubint())
+                ax2.set_ylabel("Subintegration Numer")
+            elif mode == "freq-time":
+                unit = u.unitchanger(self.getTimeUnit())
+                ax.set_xlabel("Time (%s)"%unit)
+                unit = u.unitchanger(self.getFrequencyUnit())
+                ax.set_ylabel("Frequency (%s)"%unit)
+                ax_freq = ax.twinx()
+                ax_freq.set_ylim(0, self.getNchan())
+                ax_freq.set_ylabel("Channel Number")
+                ax_time = ax.twiny()
+                ax_time.set_xlim(0, self.getNsubint())
+                ax_time.set_xlabel("Subintegration Number")
+
+                
             if cbar:
                 plt.colorbar()
             if filename is not None:
                 plt.savefig(filename)
             if show:
                 plt.show()
-            else:
-                plt.close()
+
         else:
             raise IndexError("Invalid dimensions for plotting")
         return ax
 
     def pavplot(self, ax=None, mode="GTpd", show=True, wcfreq=True):
-        """Produces a pav-like plot for comparison"""
-        data = self.getData(setnan=0.0)
-        if len(np.shape(data)) == 2:
-            shape = self.shape(squeeze=False)
-            if ax is None:
-                fig = plt.figure()
-                ax = fig.add_subplot(111)
-            cmap = plt.cm.afmhot
-            cmap.set_bad(color='k', alpha=1.0)
-            if shape[0] == 1 and shape[1] == 1: #fix this to match mode
-                Fedges = self.getAxis('F', edges=True) #is this true?
-                u.imshow(self.getData(), ax=ax, extent=[0, 1, Fedges[0], Fedges[-1]], cmap=cmap)
-                ax.set_xlabel("Pulse Phase")
-                ax.set_ylabel("Frequency (MHz)")
-                ax.set_title("%s %s\nFreq %0.3f MHz BW: %0.3f Length %0.3f S/N %0.3f"%(self.getName(), self.filename, self.getCenterFrequency(weighted=wcfreq), self.getBandwidth(), self.getDuration(), self.getSN()))#get the basename?
-                ax2 = ax.twinx()
-                ax2.set_ylim(0, self.getNchan())
-                ax2.set_ylabel("Index")
-                if show:
-                    plt.show()
-            if shape[2] == 1 and shape[1] == 1: #fix this to match mode
-                Tedges = self.getAxis('T', edges=True) #is this true?
-                u.imshow(self.getData(), ax=ax, extent=[0, 1, Tedges[0], Tedges[-1]], cmap=cmap)
-                ax.set_xlabel("Pulse Phase")
-                ax.set_ylabel("Time") #units
-                #ax.set_title("%s %s\nFreq %0.3f MHz BW: %0.3f Length %0.3f S/N %0.3f"%(self.getName(),self.filename,self.getCenterFrequency(weighted=wcfreq),self.getBandwidth(),self.getDuration(),self.getSN()))#get the basename?
-                ax2 = ax.twinx()
-                ax2.set_ylim(0, self.getNchan())
-                ax2.set_ylabel("Index")
-                if show:
-                    plt.show()
-        else:
-            print("Invalid dimensions")
+        """
+        Produces a pav-like plot for comparison
+        Built on top of imshow()
+        """
+        cmap = plt.cm.afmhot
+        cmap.set_bad(color='k', alpha=1.0)
+        ax = self.imshow(ax=ax, show=False, cmap=cmap)
+        ax.set_title("%s %s\nFreq %0.3f MHz BW: %0.3f Length %0.3f S/N %0.3f"%(self.getName(), self.filename, self.getCenterFrequency(weighted=wcfreq), self.getBandwidth(), self.getDuration(), self.getSN()))#get the basename?
+
+        if show:
+            plt.show()
         return ax
 
     def joyDivision(self, border=0.1, labels=False, album=True, **kwargs):
@@ -1715,6 +1791,34 @@ class Archive(object):
         else:
             return self.header['OBSFREQ'] #perhaps do an unweighted version from DAT_FREQ?
 
+    def getFrequencyUnit(self):
+        for key in self.subintheader.keys():
+            if "TTYPE" in key:
+                if self.subintheader[key] == "DAT_FREQ":
+                    return self.subintheader[key.replace("TYPE", "UNIT")]
+        return None
+
+    def getTimeUnit(self):
+        if "INT_UNIT" in self.subintheader:
+            return self.subintheader["INT_UNIT"]
+        return None
+
+    def getDataUnit(self):
+        """ Returns the `intensity' unit of the data 
+        Should also try to look at the 
+        """
+        for key in self.subintheader.keys():
+            if "TTYPE" in key:
+                if self.subintheader[key] == "DATA":
+                    return self.subintheader[key.replace("TYPE", "UNIT")]
+        if "SCALE" in self.subintheader:
+            return self.subintheader["SCALE"]
+        return None
+    getScaleUnit = getDataUnit
+    getIntensityUnit = getDataUnit
+    getFluxDensityUnit = getDataUnit
+    getFluxUnit = getDataUnit
+        
     def getTelescope(self):
         """Returns the telescope name"""
         return self.header['TELESCOP']

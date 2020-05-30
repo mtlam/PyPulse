@@ -1062,3 +1062,21 @@ def get_toa3(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, 
     rho = np.sum(template*profile_shifted) / np.sqrt(np.sum(template**2)*np.sum(profile_shifted**2))
     tauhat = tauhat - ishift	# account for initial shift
     return tauccf, tauhat, bhat, sigma_tau, sigma_b, snr, rho
+
+
+
+
+unitdict = {
+    "jansky" : "Jy",
+    "sec" : "s"
+}
+
+def unitchanger(unit):
+    """ 
+    If unit is in unitdict, convert
+    otherwise, return the old unit
+    """
+    lowerunit = unit.lower()
+    if lowerunit in unitdict:
+        return unitdict[lowerunit]
+    return unit
