@@ -916,24 +916,17 @@ class Archive(object):
         # Calculate calibrations
         freqs = self.getAxis('F')
         if differences:
-            caldata = np.zeros((npol, nchan))
-            calerrs = np.zeros((npol, nchan))
-            for i in xrange(npol):
-                for j in xrange(nchan):
-                    caldata[i, j] = np.mean(data[i, j, highinds]) - np.mean(data[i, j, lowinds])
-                    calerrs[i, j] = np.sqrt(np.std(data[i, j, highinds])**2 /
-                                            len(highinds) + np.std(data[i, j, lowinds])**2 / len(lowinds))
+            # Use numpy for speed-ups. Has dimensions of npol x nchan
+            caldata = np.mean(data[:, :, highinds], axis=-1) - np.mean(data[:, :, lowinds], axis=-1)
+            calerrs = np.sqrt(np.std(data[:, :, highinds], axis=-1)**2 / len(highinds) +
+                              np.std(data[:, :, lowinds], axis=-1)**2 / len(lowinds))
+
         else:
-            caldatalow = np.zeros((npol, nchan))
-            caldatahigh = np.zeros((npol, nchan))
-            calerrslow = np.zeros((npol, nchan))
-            calerrshigh = np.zeros((npol, nchan))
-            for i in xrange(npol):
-                for j in xrange(nchan):
-                    caldatalow[i, j] = np.mean(data[i, j, lowinds])
-                    caldatahigh[i, j] = np.mean(data[i, j, highinds])
-                    calerrslow[i, j] = np.std(data[i, j, lowinds]) / np.sqrt(len(lowinds))
-                    calerrshigh[i, j] = np.std(data[i, j, highinds]) / np.sqrt(len(highinds))
+            caldatalow = np.mean(data[:, :, lowinds], axis=-1)
+            caldatahigh = np.mean(data[:, :, highinds], axis=-1)
+            calerrslow = np.std(data[:, :, lowinds], axis=-1) / np.sqrt(len(lowinds))
+            calerrshigh = np.std(data[:, :, highinds], axis=-1) / np.sqrt(len(highinds))
+
 
         if differences:
             return freqs, caldata, calerrs
