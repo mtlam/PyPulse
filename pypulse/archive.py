@@ -122,8 +122,8 @@ class Archive(object):
                 hdulist = pyfits.open(filename, ignore_missing_end=True, memmap=True)
             else:
                 hdulist = pyfits.open(filename, ignore_missing_end=True)
-        except IOError:
-            print("Filename not found")
+        except IOError as err:
+            print("IOError: Filename not found")
             raise SystemExit
         self.header = hdulist[0].header
         self.keys = fmap(lambda x: x.name, hdulist)
@@ -304,7 +304,7 @@ class Archive(object):
                     autoinit = import_module('pycuda.autoinit')
                     cudasuccess = True
                 except ImportError:
-                    print("PyCUDA not imported")
+                    warnings.warn("PyCUDA not imported", ImportWarning)
                     #                __global__ void combine(float *retval, float *DAT_SCL, float *DATA, float *DAT_OFFS, int nbin)
                 mod = compiler.SourceModule("""
                 __global__ void combine(int16_t *retval, float *DAT_SCL, int16_t *DATA, float *DAT_OFFS, int nbin, int size)
@@ -1895,7 +1895,7 @@ class History(object):
             try:
                 return self.dictionary[field][-1][num]
             except IndexError:
-                print("Entry out of range")
+                warnings.warn("History getValue(): Entry out of range")
                 return None
     def getLatest(self, field):
         """Returns the latest key value"""
