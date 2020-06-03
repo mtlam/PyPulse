@@ -904,14 +904,14 @@ class Archive(object):
 
         # Check header info CAL_DCYC, CAL_NPHS, etc, to determine on-diode
         # or take an absolute value?
-        first = np.mean(data[0, :, :nbin/2])
-        second = np.mean(data[0, :, nbin/2:])
+        first = np.mean(data[0, :, :nbin//2])
+        second = np.mean(data[0, :, nbin//2:])
         if first > second:
-            highinds = np.arange(0, nbin/2)
-            lowinds = np.arange(nbin/2, nbin)
+            highinds = np.arange(0, nbin//2)
+            lowinds = np.arange(nbin//2, nbin)
         else:
-            lowinds = np.arange(0, nbin/2)
-            highinds = np.arange(nbin/2, nbin)
+            lowinds = np.arange(0, nbin//2)
+            highinds = np.arange(nbin//2, nbin)
 
         # Calculate calibrations
         freqs = self.getAxis('F')
