@@ -1,5 +1,5 @@
 '''
-
+PyPulse Calibrator 
 '''
 import os
 import sys
@@ -19,9 +19,34 @@ OFF = "OFF"
 
 class Calibrator(object):
     def __init__(self, freqs, S, Serr=None, pol_type='Coherence', fd_poln='LIN', verbose=True):
+        """
+        Calibrator class. Takes in polarization parameters
+        (with optional errors) as a function of frequency
+        and stores as Stokes.
+
+        Parameters
+        ----------
+        freqs : np.ndarray, list
+            frequencies
+        S : np.ndarray, list
+            Polarization data array
+        Serr : np.ndarray, list
+            Error array
+        pol_type : str
+            Determines what the data array contents quantify
+            Allows for either Coherence/AABBCRCI or Stokes/IQUV
+        fd_poln : str
+            Polarization state (LIN = linear, CIRC = circular)
+        verbose : bool
+            Set verbosity
+        """
         self.pol_type = pol_type
+        self.fd_poln = fd_poln #should also look at fd_hand/fd_sang?
         self.freqs = np.array(freqs)
         self.S = np.array(S)
+        if np.shape(self.S)[0] != 4:
+            raise IndexError("Data vector must contain four polarizations")
+        
         if Serr is None:
             Serr = np.zeros(4, dtype=np.float32)
         self.Serr = np.array(Serr)
@@ -39,6 +64,8 @@ class Calibrator(object):
                 S1err = S0err
                 S2err = 2*Cerr
                 S3err = 2*Derr
+            elif fd_poln == 'CIRC':
+                pass
         elif self.pol_type == 'Stokes' or self.pol_type == 'IQUV':
             S0, S1, S2, S3 = S
             S0err, S1err, S2err, S3err = Serr
