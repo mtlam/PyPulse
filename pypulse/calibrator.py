@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import astropy.coordinates as coordinates
 import astropy.units as units
+import pypulse.utils as u
 
 if sys.version_info.major == 2:
     fmap = map
@@ -16,9 +17,11 @@ elif sys.version_info.major == 3:
 
 ON = "ON"
 OFF = "OFF"
+LIN = "LIN"
+CIRC = "CIRC"
 
 class Calibrator(object):
-    def __init__(self, freqs, S, Serr=None, pol_type='Coherence', fd_poln='LIN', verbose=True):
+    def __init__(self, freqs, S, Serr=None, pol_type='Coherence', fd_poln=LIN, Funit=None, Sunit=None, verbose=True, **kwargs):
         """
         Calibrator class. Takes in polarization parameters
         (with optional errors) as a function of frequency
@@ -37,6 +40,10 @@ class Calibrator(object):
             Allows for either Coherence/AABBCRCI or Stokes/IQUV
         fd_poln : str
             Polarization state (LIN = linear, CIRC = circular)
+        Funit : str
+           Unit for frequencies
+        Sunit : str
+           Unit for polarization data
         verbose : bool
             Set verbosity
         """
@@ -50,12 +57,14 @@ class Calibrator(object):
         if Serr is None:
             Serr = np.zeros(4, dtype=np.float32)
         self.Serr = np.array(Serr)
+        self.Funit = Funit
+        self.Sunit = Sunit
         self.verbose = verbose
 
         if self.pol_type == 'Coherence' or self.pol_type == 'AABBCRCI':
             A, B, C, D = S
             Aerr, Berr, Cerr, Derr = Serr
-            if fd_poln == 'LIN':
+            if fd_poln == LIN:
                 S0 = A+B #I
                 S1 = A-B #Q
                 S2 = 2*C #U
@@ -64,12 +73,22 @@ class Calibrator(object):
                 S1err = S0err
                 S2err = 2*Cerr
                 S3err = 2*Derr
-            elif fd_poln == 'CIRC':
-                pass
+            elif fd_poln == CIRC:
+                S0 = A+B #I
+                S1 = 2*C #Q
+                S2 = 2*D #U
+                S3 = A-B #V
+                S0err = np.sqrt(Aerr**2 + Berr**2)
+                S1err = 2*Cerr
+                S2err = 2*Derr
+                S3err = S0err
+            else:
+                raise TypeError("fd_poln '%s' invalid"%fd_poln)
         elif self.pol_type == 'Stokes' or self.pol_type == 'IQUV':
             S0, S1, S2, S3 = S
             S0err, S1err, S2err, S3err = Serr
         else:
+            print("pol_type '%s' invalid"%pol_type)
             raise SystemExit
         self.I = S0
         self.Q = S1
@@ -113,6 +132,66 @@ class Calibrator(object):
         if filename is not None:
             plt.savefig(filename)
         plt.show()
+
+
+    def plot(self, mode="I", ax=None, show=True, filename=None):
+        """
+        Basic plotter
+
+
+        Parameters
+        ----------
+        mode : str
+            Polarization parameter or parameters to plot
+        ax : matplotlib.axes._subplots.AxesSubplot
+            matplotlib Axes to draw on. If None, makes a new figure
+        show : bool
+            If true, plot the image
+        filename : str
+            Filename to save the figure to
+
+        Returns
+        -------
+        ax : matplotlib.axes._subplots.AxesSubplot
+            Returns the matplotlib Axes object.        
+        """
+        if ax is None:
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+
+        for m in mode:
+            if m in "IQUV":
+                data = eval("self.%s"%mode)
+            elif m == "A":
+                data = self.getA()
+            elif m == "B":
+                data = self.getB()
+            else:
+                raise ValueError("Unknown mode for imshow: %s"%mode)
+            ax.plot(self.freqs, data, label=m)
+
+
+        ax.set_xlabel("Frequency (%s)"%u.unitchanger(self.Funit))
+        ax.set_ylabel("Amplitude (%s)"%u.unitchanger(self.Sunit))
+        ax.legend()
+        plt.tight_layout()
+        if filename is not None:
+            plt.savefig(filename)
+        if show:
+            plt.show()
+        return ax
+
+    def getA(self):
+        if self.fd_poln == LIN:
+            return (self.I + self.Q)/2
+        elif self.fd_poln == CIRC:
+            return (self.I + self.V)/2
+    def getB(self):
+        if self.fd_poln == LIN:
+            return (self.I - self.Q)/2
+        elif self.fd_poln == CIRC:
+            return (self.I - self.V)/2
+        
 
     def applyFluxcal(self, fluxcalonar, fluxcaloffar=None):
         if fluxcaloffar is None: #The fluxcalon file contains both ON and OFF observations
@@ -240,7 +319,6 @@ class Calibrator(object):
         elif intype == "IQUV" and outtype == "AABBCRCI": # Stokes -> Coherence
             I, Q, U, V = S
             if linear:
-                pass
                 A = (I+Q)/2.0
                 B = (I-Q)/2.0
                 C = U/2.0
