@@ -211,7 +211,21 @@ def decimate(x, window_len, error=False):#, mean=True, remainder=False):
             retval += x[i:length:window_len]
         return retval/window_len
 
-def imshow(x, ax=None, origin='lower', interpolation='nearest', aspect='auto', **kwargs):
+def imshow(x, ax=None, origin='lower', interpolation='nearest', aspect='auto', cmap=None, **kwargs):
+    # If cmap is a string, try to get the colormap,
+    # otherwise use default
+    if isinstance(cmap, str):
+        if cmap in plt.colormaps():
+            cmap = plt.get_cmap(cmap)
+        else:
+            cmap = None
+    # Try to use cividis as default colormap, otherwise viridis
+    if cmap is None: 
+        if "cividis" in plt.colormaps():
+            cmap = plt.cm.cividis
+        else:
+            cmap = plt.cm.viridis
+    
     if ax is not None:
         im = ax.imshow(x, origin=origin, interpolation=interpolation, aspect=aspect, **kwargs)
     else:

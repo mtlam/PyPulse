@@ -938,7 +938,7 @@ class Archive(object):
         freqs, caldata, calerrs = self.getLevels(differences=True)
         pol_type = self.subintheader['POL_TYPE']
         fd_poln = self.header['FD_POLN']
-        return Calibrator(freqs, caldata, calerrs, pol_type=pol_type, fd_poln=fd_poln, verbose=self.verbose)
+        return Calibrator(freqs, caldata, calerrs, pol_type=pol_type, fd_poln=fd_poln, Funit=self.getFrequencyUnit(), Sunit=self.getDataUnit(), verbose=self.verbose)
 
     
     def calibrate(self, psrcalar, fluxcalonar=None, fluxcaloffar=None):
@@ -1363,19 +1363,6 @@ class Archive(object):
                 fig = plt.figure()
                 ax = fig.add_subplot(111)
 
-            # If cmap is a string, try to get the colormap,
-            # otherwise use default
-            if isinstance(cmap, str):
-                if cmap in plt.colormaps():
-                    cmap = plt.get_cmap(cmap)
-                else:
-                    cmap = None
-            # Try to use cividis as default colormap, otherwise viridis
-            if cmap is None: 
-                if "cividis" in plt.colormaps():
-                    cmap = plt.cm.cividis
-                else:
-                    cmap = plt.cm.viridis
             #cmap.set_bad(color='k', alpha=1.0)
                 
             if mask is not None:
