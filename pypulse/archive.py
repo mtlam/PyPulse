@@ -932,6 +932,15 @@ class Archive(object):
             return freqs, caldata, calerrs
         return freqs, caldatalow, caldatahigh, calerrslow, calerrshigh
 
+
+    def getPulsarCalibrator(self):
+        """ Gets a Calibrator() object for a basic pulsar scan calibration """
+        freqs, caldata, calerrs = self.getLevels(differences=True)
+        pol_type = self.subintheader['POL_TYPE']
+        fd_poln = self.header['FD_POLN']
+        return Calibrator(freqs, caldata, calerrs, pol_type=pol_type, fd_poln=fd_poln, verbose=self.verbose)
+
+    
     def calibrate(self, psrcalar, fluxcalonar=None, fluxcaloffar=None):
         """Calibrates using another archive"""
         self.record(inspect.currentframe())
