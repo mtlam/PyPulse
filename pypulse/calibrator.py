@@ -99,7 +99,7 @@ class Calibrator(object):
         self.Uerr = S2err
         self.Verr = S3err
 
-    def pacv(self):
+    def pacv(self, filename=None):
         '''
         Emulates pacv <archive>
         See More/Polarimetry/SingleAxisSolver.C
@@ -114,6 +114,8 @@ class Calibrator(object):
         U_0 = self.U/np.cos(dpsi)
         #plot(self.I)
         #plot(np.sqrt(self.U**2+self.V**2)/U_0, 'k.')
+        if filename is not None:
+            plt.savefig(filename)
         plt.show()
 
     def pacv_csu(self, filename=None):
@@ -180,17 +182,6 @@ class Calibrator(object):
         if show:
             plt.show()
         return ax
-
-    def getA(self):
-        if self.fd_poln == LIN:
-            return (self.I + self.Q)/2
-        elif self.fd_poln == CIRC:
-            return (self.I + self.V)/2
-    def getB(self):
-        if self.fd_poln == LIN:
-            return (self.I - self.Q)/2
-        elif self.fd_poln == CIRC:
-            return (self.I - self.V)/2
         
 
     def applyFluxcal(self, fluxcalonar, fluxcaloffar=None):
@@ -303,7 +294,7 @@ class Calibrator(object):
     def convertPolarization(self, S, intype, outtype, linear=True):
         if intype == outtype:
             return S
-        elif intype == "AABBCRCI" and outtype == "IQUV": # Coherence -> Stokes
+        elif (intype == "AABBCRCI" or intype == "Coherence") and (outtype == "IQUV" or outtype == "Stokes"): # Coherence -> Stokes
             A, B, C, D = S
             if linear:
                 I = A+B
@@ -316,7 +307,7 @@ class Calibrator(object):
                 U = 2*D
                 V = A-B
             outS = [I, Q, U, V]
-        elif intype == "IQUV" and outtype == "AABBCRCI": # Stokes -> Coherence
+        elif (intype == "IQUV" or intype == "Stokes") and (outtype == "AABBCRCI" or outtype == "Coherence"): # Stokes -> Coherence
             I, Q, U, V = S
             if linear:
                 A = (I+Q)/2.0
@@ -386,6 +377,29 @@ class Calibrator(object):
         return np.arctan2(np.sin(HA)*np.cos(lat),
                           np.sin(lat)*np.cos(dec) - np.cos(lat)*np.sin(dec)*np.cos(HA))
 
+
+
+    def getI(self):
+        return self.I
+    def getQ(self):
+        return self.Q
+    def getU(self):
+        return self.U
+    def getV(self):
+        return self.V
+    def getA(self):
+        if self.fd_poln == LIN:
+            return (self.I + self.Q)/2
+        elif self.fd_poln == CIRC:
+            return (self.I + self.V)/2
+    def getB(self):
+        if self.fd_poln == LIN:
+            return (self.I - self.Q)/2
+        elif self.fd_poln == CIRC:
+            return (self.I - self.V)/2
+
+
+    
 ### ==================================================
 ### Helper functions
 ### ==================================================
