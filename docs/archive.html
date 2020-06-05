@@ -94,8 +94,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="tim.html#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a></li>
-<li><strong>baseline_removal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="tim.html#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li><strong>baseline_removal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a></li>
 </ul>
 </td>
 </tr>
@@ -158,12 +158,12 @@
 
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last"><a class="reference internal" href="tim.html#save" title="save"><code class="xref py py-func docutils literal notranslate"><span class="pre">save()</span></code></a> will output a PSRFITS file but the output data arrays vary slightly from the input data arrays. More</p>
+<p class="last"><a class="reference internal" href="#save" title="save"><code class="xref py py-func docutils literal notranslate"><span class="pre">save()</span></code></a> will output a PSRFITS file but the output data arrays vary slightly from the input data arrays. More</p>
 </div>
 <dl class="function">
 <dt id="unload">
 <code class="descname">unload</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#unload" title="Permalink to this definition">¶</a></dt>
-<dd><p>Same as <a class="reference internal" href="tim.html#save" title="save"><code class="xref py py-func docutils literal notranslate"><span class="pre">save()</span></code></a>. Follows PSRCHIVE convention.</p>
+<dd><p>Same as <a class="reference internal" href="#save" title="save"><code class="xref py py-func docutils literal notranslate"><span class="pre">save()</span></code></a>. Follows PSRCHIVE convention.</p>
 </dd></dl>
 
 <dl class="function">
@@ -196,7 +196,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="tim.html#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
@@ -366,7 +366,7 @@
 <dl class="function">
 <dt id="removeBaseline">
 <code class="descname">removeBaseline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#removeBaseline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes the baseline of the pulses given the off-pulse window of the average pulse profile pre=-calculated by <a class="reference internal" href="#calculateAverageProfile" title="calculateAverageProfile"><code class="xref py py-func docutils literal notranslate"><span class="pre">calculateAverageProfile()</span></code></a>
+<dd><p>Removes the baseline of the pulses given the off-pulse window of the average pulse profile pre-calculated by <a class="reference internal" href="#calculateAverageProfile" title="calculateAverageProfile"><code class="xref py py-func docutils literal notranslate"><span class="pre">calculateAverageProfile()</span></code></a>
 :return: self</p>
 </dd></dl>
 
@@ -374,6 +374,34 @@
 <dt id="remove_baseline">
 <code class="descname">remove_baseline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#remove_baseline" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#removeBaseline" title="removeBaseline"><code class="xref py py-func docutils literal notranslate"><span class="pre">removeBaseline()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="getLevels">
+<code class="descname">getLevels</code><span class="sig-paren">(</span><span class="optional">[</span><em>differences=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getLevels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns calibration levels if the Archive is a calibrator in the form of a square wave signal. If <cite>differences</cite> is set to True, then this function will return the frequencies, the amplitude differences in the height of the square wave as a function of polarization/frequency, and the associated errors. If False, then it will return the frequencies, the mean values of the low and high portions of the square wave and the associated errors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>differences</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getPulsarCalibrator">
+<code class="descname">getPulsarCalibrator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getPulsarCalibrator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses <a class="reference internal" href="#getLevels" title="getLevels"><code class="xref py py-func docutils literal notranslate"><span class="pre">getLevels()</span></code></a> to get a <a class="reference internal" href="calibrator.html#Calibrator" title="Calibrator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Calibrator</span></code></a> object with associated metadata</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="calibrator.html#Calibrator" title="Calibrator">Calibrator</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -526,6 +554,24 @@
 <p class="first admonition-title">Todo</p>
 <p class="last">Let flag be both “T” and “F”.</p>
 </div>
+<dl class="function">
+<dt id="getFrequencies">
+<code class="descname">getFrequencies</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrequencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for <code class="xref py py-func docutils literal notranslate"><span class="pre">getAxis('F')()</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFreqs">
+<code class="descname">getFreqs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFreqs" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#getFrequencies" title="getFrequencies"><code class="xref py py-func docutils literal notranslate"><span class="pre">getFrequencies()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="getTimes">
+<code class="descname">getTimes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getTimes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for <code class="xref py py-func docutils literal notranslate"><span class="pre">getAxis('T')()</span></code></p>
+</dd></dl>
+
 <dl class="function">
 <dt id="getPulse">
 <code class="descname">getPulse</code><span class="sig-paren">(</span><em>t</em><span class="optional">[</span>, <em>f=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPulse" title="Permalink to this definition">¶</a></dt>
@@ -864,7 +910,7 @@
 <dl class="function">
 <dt id="getSubintinfo">
 <code class="descname">getSubintinfo</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#getSubintinfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Looks for a key in the subintegration header, a subset of the functionality of <a class="reference internal" href="par.html#getValue" title="getValue"><code class="xref py py-func docutils literal notranslate"><span class="pre">getValue()</span></code></a></p>
+<dd><p>Looks for a key in the subintegration header, a subset of the functionality of <a class="reference internal" href="#getValue" title="getValue"><code class="xref py py-func docutils literal notranslate"><span class="pre">getValue()</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1034,6 +1080,78 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="getFrequencyUnit">
+<code class="descname">getFrequencyUnit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrequencyUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the unit associated with the frequency axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFreqUnit">
+<code class="descname">getFreqUnit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFreqUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#getFrequencyUnit" title="getFrequencyUnit"><code class="xref py py-func docutils literal notranslate"><span class="pre">getFrequencyUnit()</span></code></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="getTimeUnit">
+<code class="descname">getTimeUnit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getTimeUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the unit associated with the time axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getDataUnit">
+<code class="descname">getDataUnit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getDataUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the unit associated with the data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getScaleUnit">
+<code class="descname">getScaleUnit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getScaleUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#getDataUnit" title="getDataUnit"><code class="xref py py-func docutils literal notranslate"><span class="pre">getDataUnit()</span></code></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="getIntensityUnit">
+<code class="descname">getIntensityUnit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getIntensityUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#getDataUnit" title="getDataUnit"><code class="xref py py-func docutils literal notranslate"><span class="pre">getDataUnit()</span></code></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFluxDensityUnit">
+<code class="descname">getFluxDensityUnit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFluxDensityUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#getDataUnit" title="getDataUnit"><code class="xref py py-func docutils literal notranslate"><span class="pre">getDataUnit()</span></code></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFluxUnit">
+<code class="descname">getFluxUnit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFluxUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#getDataUnit" title="getDataUnit"><code class="xref py py-func docutils literal notranslate"><span class="pre">getDataUnit()</span></code></a></p>
+</dd></dl>
+
+<dl class="function">
 <dt id="getTelescope">
 <code class="descname">getTelescope</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getTelescope" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the header TELESCOP value.</p>
@@ -1159,7 +1277,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>field</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A column name, see <a class="reference internal" href="par.html#getValue" title="getValue"><code class="xref py py-func docutils literal notranslate"><span class="pre">getValue()</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>field</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A column name, see <a class="reference internal" href="#getValue" title="getValue"><code class="xref py py-func docutils literal notranslate"><span class="pre">getValue()</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1218,7 +1336,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>field</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A column name, see <a class="reference internal" href="par.html#getValue" title="getValue"><code class="xref py py-func docutils literal notranslate"><span class="pre">getValue()</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>field</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A column name, see <a class="reference internal" href="#getValue" title="getValue"><code class="xref py py-func docutils literal notranslate"><span class="pre">getValue()</span></code></a></td>
 </tr>
 </tbody>
 </table>
