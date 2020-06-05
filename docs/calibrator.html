@@ -85,56 +85,223 @@
 <p>The <em>Calibrator</em> class handles flux and polarization calibration of profile data.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">This class is under heavy construction.</p>
+<p class="last">This class is under construction.</p>
 </div>
 <dl class="class">
 <dt id="Calibrator">
-<em class="property">class </em><code class="descname">Calibrator</code><span class="sig-paren">(</span><em>freqs</em>, <em>S</em><span class="optional">[</span>, <em>Serr=None</em>, <em>pol_type='Coherence'</em>, <em>fd_poln='LIN'</em>, <em>verbose=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Calibrator" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">class </em><code class="descname">Calibrator</code><span class="sig-paren">(</span><em>freqs</em>, <em>S</em><span class="optional">[</span>, <em>Serr=None</em>, <em>pol_type='Coherence'</em>, <em>fd_poln='LIN'</em>, <em>Funit=None</em>, <em>Sunit=None</em>, <em>verbose=True</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Calibrator" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>freqs</strong> (<em>list/numpy.ndarray</em>) – Frequency array</li>
+<li><strong>S</strong> (<em>list/numpy.ndarray</em>) – Array of polarization data, a 4xN shaped array</li>
+<li><strong>Serr</strong> (<em>list/numpy.ndarray</em>) – Optional errors on the polarization data</li>
+<li><strong>pol_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Form of polarization data: “Coherence” or “Stokes”</li>
+<li><strong>fd_poln</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Feed design polarization: “LIN” for linear or “CIRC” for circular</li>
+<li><strong>Funit</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Unit for frequencies</li>
+<li><strong>Sunit</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Unit for polarization data</li>
+<li><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Set <cite>True</cite> for verbose printing</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <div class="section" id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="pacv">
-<code class="descname">pacv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pacv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Emulates PSRCHIVE’s pacv &lt;filename&gt;.</p>
+<code class="descname">pacv</code><span class="sig-paren">(</span><span class="optional">[</span><em>filename=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pacv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Emulates PSRCHIVE’s pacv &lt;file&gt;.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename to save image to.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="pacv_csu">
-<code class="descname">pacv_csu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pacv_csu" title="Permalink to this definition">¶</a></dt>
-<dd><p>Emulates PSRCHIVE’s pacv -n csu &lt;filename&gt;.</p>
+<code class="descname">pacv_csu</code><span class="sig-paren">(</span><span class="optional">[</span><em>filename=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#pacv_csu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Emulates PSRCHIVE’s pacv -n csu &lt;file&gt;.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename to save image to.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
-<dt id="apply_calibration">
-<code class="descname">apply_calibration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#apply_calibration" title="Permalink to this definition">¶</a></dt>
+<dt id="plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><span class="optional">[</span><em>mode=&quot;I&quot;</em>, <em>ax=None</em>, <em>show=True</em>, <em>filename=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic plotter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Polarization parameter or parameters to plot. Options include “I”, “Q”, “U”, and “V” for the various Stokes parameters, and “A” and “B” for the feed polarizations. Can contain multiple of these modes to plot simultaneously.</li>
+<li><strong>ax</strong> (<em>matplotlib.axes._subplots.AxesSubplot</em>) – matplotlib Axes to draw on</li>
+<li><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True, show the figure</li>
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename to save image to.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ax, matplotlib.axes._subplots.AxesSubplot</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="applyFluxcal">
+<code class="descname">applyFluxcal</code><span class="sig-paren">(</span><em>fluxcalonar</em><span class="optional">[</span>, <em>fluxcaloffar=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#applyFluxcal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="build_mueller_matrix_PA">
-<code class="descname">build_mueller_matrix_PA</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#build_mueller_matrix_PA" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="applyCalibration">
+<code class="descname">applyCalibration</code><span class="sig-paren">(</span><em>ar</em><span class="sig-paren">)</span><a class="headerlink" href="#applyCalibration" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ar</strong> (<a class="reference internal" href="archive.html#Archive" title="Archive"><em>Archive</em></a>) – Archive to apply calibration to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
-<dt id="build_mueller_matrix_differential">
-<code class="descname">build_mueller_matrix_differential</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#build_mueller_matrix_differential" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="buildMuellerMatrixPA">
+<code class="descname">buildMuellerMatrixPA</code><span class="sig-paren">(</span><em>PA</em><span class="sig-paren">)</span><a class="headerlink" href="#buildMuellerMatrixPA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the parallactic angle Mueller matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>PA</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Parallactic angle</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
-<dt id="convert_polarization">
-<code class="descname">convert_polarization</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#convert_polarization" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="buildMuellerMatrixDifferential">
+<code class="descname">buildMuellerMatrixDifferential</code><span class="sig-paren">(</span><em>differential</em><span class="sig-paren">)</span><a class="headerlink" href="#buildMuellerMatrixDifferential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the differential gain Mueller matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>differential</strong> (<em>list/tuple/numpy.ndarray</em>) – The input is a two-element list/array that gives <span class="math notranslate nohighlight">\(\Delta G\)</span> and <span class="math notranslate nohighlight">\(\Delta \psi\)</span>, the differential gain and phase.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
-<dt id="build_mueller_matrix">
-<code class="descname">build_mueller_matrix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#build_mueller_matrix" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="convertPolarization">
+<code class="descname">convertPolarization</code><span class="sig-paren">(</span><em>S</em>, <em>intype</em>, <em>outtype</em><span class="optional">[</span>, <em>linear=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#convertPolarization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function to convert a polarization vector between Stokes and Coherence mode</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>S</strong> (<em>array</em>) – Polarization vector</li>
+<li><strong>intype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Input vector type, “Coherence”/”AABBCRCI” or “Stokes”/”IQUV”</li>
+<li><strong>outtype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Output vector type. For now, since only two modes are implemented, this is redundant.</li>
+<li><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Linear versus circular input polarization</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
-<dt id="calculate_PA">
-<code class="descname">calculate_PA</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#calculate_PA" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="buildMuellerMatrix">
+<code class="descname">buildMuellerMatrix</code><span class="sig-paren">(</span><span class="optional">[</span><em>PA=None</em>, <em>feed=None</em>, <em>CC=None</em>, <em>differential=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#buildMuellerMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cross coupling (CC) is not implemented</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>PA</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – parallactic angle</li>
+<li><strong>feed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – feed type</li>
+<li><strong>differential</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="calculatePA">
+<code class="descname">calculatePA</code><span class="sig-paren">(</span><em>lat</em>, <em>dec</em>, <em>HA</em><span class="sig-paren">)</span><a class="headerlink" href="#calculatePA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to calculate the parallactic angle</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>lat</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – latitude of source</li>
+<li><strong>dec</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – declination of source</li>
+<li><strong>HA</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – hour angle</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getI">
+<code class="descname">getI</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Stokes I</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="getQ">
+<code class="descname">getQ</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getQ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Stokes Q</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="getU">
+<code class="descname">getU</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Stokes U</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="getV">
+<code class="descname">getV</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Stokes V</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="getA">
+<code class="descname">getA</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get A polarization</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="getB">
+<code class="descname">getB</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get B polarization</p>
+</dd></dl>
 
 </div>
 </div>
