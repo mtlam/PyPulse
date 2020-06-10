@@ -1,6 +1,9 @@
 PyPulse
 =======
 
+[![License](https://img.shields.io/badge/license-3--clause_BSD-blue.svg)](LICENSE)
+[![Code of Conduct](https://img.shields.io/badge/code_of_conduct-Contributor_Covenant-blue.svg)](CODE_OF_CONDUCT.md)
+
 A pure-Python package for handling and analyzing PSRFITS files.
 
 Read the documentation [here](https://mtlam.github.io/PyPulse/).
