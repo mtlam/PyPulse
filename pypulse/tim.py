@@ -204,6 +204,11 @@ class Tim(object):
                 return False
         return True
 
+    def where(self, func):
+        """ Apply boolean function and see which indices are True for when TOAs meet said condition """
+        return np.where(np.array(fmap(func, self.toas)))
+        
+
     def save(self, filename=None):
         """ Save tim file """
         if self.numwrap != DECIMAL:
@@ -242,6 +247,10 @@ class Tim(object):
         """ Return uncertainties of all TOAs """
         return np.array(fmap(lambda x: x.getErr(), self.toas))
     getErrors = getErrs
+
+    def getSiteIDs(self):
+        """ Return Site IDs of all TOAs """
+        return np.array(fmap(lambda x: x.getSiteID(), self.toas))
 
     def get(self, value, numwrap=None):
         """ Return value of flag """
