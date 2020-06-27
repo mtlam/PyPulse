@@ -1296,7 +1296,7 @@ class Archive(object):
             if ax is None:
                 fig = plt.figure()
                 ax = fig.add_subplot(111)
-            ax.plot(data, 'k')
+            ax.plot(np.arange(len(data), dtype=np.float)/len(data), data, 'k')
             ax.set_xlim(0, 1)
             ax.set_xlabel("Pulse Phase")
             ax.set_ylabel("Intensity")
