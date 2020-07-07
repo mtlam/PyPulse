@@ -5,6 +5,8 @@ Loads a parameter file
 import decimal
 import re
 import numpy as np
+from astropy.coordinates import SkyCoord
+import astropy.units as unit
 
 numre = re.compile('(\d+[.]\d+D[+]\d+)|(-?\d+[.]\d+)')
 flagre = re.compile('-[a-zA-Z]')
@@ -294,6 +296,30 @@ class Par(object):
         else:
             return retval
 
+
+    def getCoord(self):
+        '''
+        Return an Astropy SkyCoord object based on the coordinates
+        '''
+        keys = self.paramnames
+        if "RAJ" in keys: #return Equatorial coordinates
+            RAJ = self.get("RAJ")
+            DECJ = self.get("DECJ")
+            if DECJ[0].isdigit(): #is positive
+                DECJ = "+" + DECJ
+            coord = SkyCoord(ra=RAJ, dec=DECJ, frame="icrs", unit=(unit.hourangle, unit.deg))
+        elif "LAMBDA" in keys: #return Ecliptic coordinates
+            LAMBDA = self.get("LAMBDA")
+            BETA = self.get("BETA")
+            coord = SkyCoord(lon=LAMBDA, lat=BETA, frame="barycentrictrueecliptic", unit=unit.deg)
+        elif "ELAT" in keys: #return Ecliptic coordinates
+            LAMBDA = self.get("ELONG")
+            BETA = self.get("ELAT")
+            coord = SkyCoord(lon=LAMBDA, lat=BETA, frame="barycentrictrueecliptic", unit=unit.deg)
+        return coord
+    getCoords = getCoord
+
+        
     def getDM(self):
         return self.get('DM')
 
