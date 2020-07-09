@@ -798,7 +798,7 @@ class Archive(object):
         return self.opw
 
     def calculateTemplate(self, mode='vonmises', sigma=None, lam=None,
-                          window_length=11, polyorder=5, **kwargs):
+                          window_length=11, polyorder=5, normalize=True, **kwargs):
         """
         Calculate a template shape
         """
@@ -813,9 +813,12 @@ class Archive(object):
         else:
             template = None
             self.template = None
+
         if template is not None:
             self.template = SP.SinglePulse(template, windowsize=int(self.getNbin()//8))
             self.opw = self.template.opw
+            self.template.normalize()
+            
         return self.template
 
     def superprep(self):
