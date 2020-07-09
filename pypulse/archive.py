@@ -1218,6 +1218,8 @@ class Archive(object):
 
             Fedges = self.getAxis('F', edges=True)
             Tedges = self.getAxis('T', edges=True)
+            Funit = u.unitchanger(self.getFrequencyUnit())
+            Tunit = u.unitchanger(self.getTimeUnit())
 
             if template is not None:
                 if isinstance(template, SP.SinglePulse):
@@ -1284,13 +1286,13 @@ class Archive(object):
                                 sig_gs[i, j] = spfit[4]
                     gs, offs, sig_gs = wrapfunc(gs), wrapfunc(offs), wrapfunc(sig_gs)
                 #return wrapfunc(gs), wrapfunc(offs), wrapfunc(sig_gs)
-                return DS.DynamicSpectrum(gs, offs, sig_gs, F=Fedges, T=Tedges)
+                return DS.DynamicSpectrum(gs, offs, sig_gs, F=Fedges, T=Tedges, Funit=Funit, Tunit=Tunit)
 
             #kind of hard wired
             if window is None:
-                return DS.DynamicSpectrum(wrapfunc(np.mean(data, axis=2)), F=Fedges, T=Tedges)
+                return DS.DynamicSpectrum(wrapfunc(np.mean(data, axis=2)), F=Fedges, T=Tedges, Funit=Funit, Tunit=Tunit)
             else:
-                return DS.DynamicSpectrum(wrapfunc(np.mean(data[:, :, window], axis=2)), F=Fedges, T=Tedges)
+                return DS.DynamicSpectrum(wrapfunc(np.mean(data[:, :, window], axis=2)), F=Fedges, T=Tedges, Funit=Funit, Tunit=Tunit)
 
     def plot(self, ax=None, show=True):
         """Basic plotter of data"""
