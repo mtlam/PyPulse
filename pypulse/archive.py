@@ -1191,7 +1191,8 @@ class Archive(object):
     #just bscrunch this?
     def getDynamicSpectrum(self, window=None, template=None, mpw=None,
                            align=None, windowsize=None, weight=True,
-                           verbose=False, snr=False, maketemplate=False):
+                           verbose=False, snr=False, maketemplate=False,
+                           debug=False):
         """
         Return the dynamic spectrum
         window: return the dynamic spectrum using only a certain phase bins
@@ -1241,7 +1242,7 @@ class Archive(object):
                     if windowsize >= len(sptemp.data):
                         raise IndexError("Improper window size")
                     sptemp = SP.SinglePulse(sptemp.data, windowsize=windowsize)
-
+                    
                 gs = np.zeros((fullshape[0], fullshape[2]))
                 offs = np.zeros((fullshape[0], fullshape[2]))
                 sig_gs = np.zeros((fullshape[0], fullshape[2]))
@@ -1275,11 +1276,11 @@ class Archive(object):
                             sp = SP.SinglePulse(data[i, j], opw=sptemp.opw, align=align)
                             baseline = sp.getOffpulseNoise(mean=True) #get mean value of offpulse
                             spfit = sp.fitPulse(sptemp.data)
-                            #if spfit is None:
-                            #    print i,j, np.shape(data)
-                            #    plt.plot(data[i,j])
-                            #    plt.show()
-                            #    raise SystemExit
+                            if spfit is None and debug:
+                                print i,j, np.shape(data)
+                                plt.plot(data[i,j])
+                                plt.show()
+                                #raise SystemExit
                             if spfit is not None:
                                 gs[i, j] = spfit[ind] #bhat
                                 offs[i, j] = baseline
