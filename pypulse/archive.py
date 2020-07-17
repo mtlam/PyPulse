@@ -1277,7 +1277,7 @@ class Archive(object):
                             baseline = sp.getOffpulseNoise(mean=True) #get mean value of offpulse
                             spfit = sp.fitPulse(sptemp.data)
                             if spfit is None and debug:
-                                print i,j, np.shape(data)
+                                print(i,j, np.shape(data))
                                 plt.plot(data[i,j])
                                 plt.show()
                                 #raise SystemExit
