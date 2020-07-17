@@ -959,9 +959,9 @@ def get_toa(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, n
 
     # fwhm, taumin, taumax currently not used.  But should we do a
     # windowed TOA calculation?
-    fwhm = find_fwhm(template_data)		# fwhm in samples (bins)
-    taumin = -fwhm/2.
-    taumax = fwhm/2.
+    #fwhm = FWHM(template_data) # fwhm in samples (bins), switched to MTL code
+    #taumin = -fwhm/2.
+    #taumax = fwhm/2.
 
 
     pfft = np.fft.fft(profile)
@@ -1090,6 +1090,8 @@ def unitchanger(unit):
     If unit is in unitdict, convert
     otherwise, return the old unit
     """
+    if unit is None:
+        return None
     lowerunit = unit.lower()
     if lowerunit in unitdict:
         return unitdict[lowerunit]
