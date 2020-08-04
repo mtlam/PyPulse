@@ -220,11 +220,11 @@ def imshow(x, ax=None, origin='lower', interpolation='nearest', aspect='auto', c
         else:
             cmap = None
     # Try to use cividis as default colormap, otherwise viridis
-    if cmap is None: 
-        if "cividis" in plt.colormaps():
-            cmap = plt.cm.cividis
-        else:
-            cmap = plt.cm.viridis
+    #if cmap is None: 
+    #    if "cividis" in plt.colormaps():
+    #        cmap = plt.cm.cividis
+    #    else:
+    #        cmap = plt.cm.viridis
     
     if ax is not None:
         im = ax.imshow(x, origin=origin, interpolation=interpolation, aspect=aspect, cmap=cmap, **kwargs)
