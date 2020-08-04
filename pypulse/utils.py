@@ -227,9 +227,9 @@ def imshow(x, ax=None, origin='lower', interpolation='nearest', aspect='auto', c
             cmap = plt.cm.viridis
     
     if ax is not None:
-        im = ax.imshow(x, origin=origin, interpolation=interpolation, aspect=aspect, **kwargs)
+        im = ax.imshow(x, origin=origin, interpolation=interpolation, aspect=aspect, cmap=cmap, **kwargs)
     else:
-        im = plt.imshow(x, origin=origin, interpolation=interpolation, aspect=aspect, **kwargs)
+        im = plt.imshow(x, origin=origin, interpolation=interpolation, aspect=aspect, cmap=cmap, **kwargs)
     return im
 
 '''
