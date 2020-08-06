@@ -5,6 +5,7 @@ Loads a dmxparse DMX file (tempo output)
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+import pypulse.utils as u
 
 if sys.version_info.major == 2:
     fmap = map
@@ -135,11 +136,12 @@ class DMX(object):
         return "DMX(%s)"%self.filename
 
 
-    def plot(self, filename=None, show=True):
+    def plot(self, filename=None, ax=None, show=True, fmt='k.', **kwargs):
         """ Simple plotter """
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        ax.errorbar(self.getMJDs(), self.getDMs(), yerr=self.getErrs(), fmt='k.')
+        if ax is None:
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+        ax.errorbar(self.getMJDs(), self.getDMs(), yerr=self.getErrs(), fmt=fmt, **kwargs)
 
         ax.set_xlabel("MJD")
         ax.set_ylabel("DMX (pc cm^-3)")
@@ -147,6 +149,7 @@ class DMX(object):
             plt.savefig(filename)
         if show:
             plt.show()
+        return ax
     
 
     def save(self, filename=None):
@@ -218,3 +221,17 @@ class DMX(object):
         if years:
             return np.ptp(mjds)/365.25
         return np.ptp(mjds)
+
+    def subtractMean(self, save=True):
+        """ subtract the weighted mean from the timeseries """
+        dmxs = self.getValues()
+        errs = self.getErrs()
+        wmean = u.weighted_moments(dmxs, 1.0/errs**2)
+
+        if save:
+            for dm in self.DMs:
+                dm.setValue(dm.getValue()-wmean)
+            return self.getValues()
+        else:
+            return dmxs - wmean
+
