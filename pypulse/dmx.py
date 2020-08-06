@@ -226,7 +226,7 @@ class DMX(object):
         """ subtract the weighted mean from the timeseries """
         dmxs = self.getValues()
         errs = self.getErrs()
-        wmean = u.weighted_moments(dmxs, 1.0/errs**2)
+        wmean, wstd = u.weighted_moments(dmxs, 1.0/errs**2)
 
         if save:
             for dm in self.DMs:
