@@ -76,14 +76,18 @@ class Archive(object):
         self.wcfreq = wcfreq
         self.thread = thread
         self.cuda = cuda
+        self.onlyheader = onlyheader
 
         if verbose:
-            print("Loading: %s" % self.filename)
+            if onlyheader:
+                print("Loading (header only): %s" % self.filename)
+            else:
+                print("Loading: %s" % self.filename)
             t0 = time.time()
 
         self.load(self.filename, prepare=prepare, center_pulse=center_pulse,
                   baseline_removal=baseline_removal, weight=weight,
-                  wcfreq=wcfreq, onlyheader=False)
+                  wcfreq=wcfreq, onlyheader=onlyheader)
         if not self.lowmem:
             self.data_orig = np.copy(self.data)
             self.weights_orig = np.copy(self.weights)
@@ -201,6 +205,8 @@ class Archive(object):
             self.subintheader[key] = hdulist['SUBINT'].header[key]
 
         if onlyheader:
+            self.weights = None
+            self._data = None
             return
             
         DATA = hdulist['SUBINT'].data['DATA']
