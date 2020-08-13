@@ -63,7 +63,7 @@ SEARCH = "SEARCH"
 class Archive(object):
     def __init__(self, filename, prepare=True, lowmem=False, verbose=True,
                  weight=True, center_pulse=True, baseline_removal=True,
-                 wcfreq=True, thread=False, cuda=False):
+                 wcfreq=True, thread=False, cuda=False, onlyheader=False):
         ## Parse filename here
         self.pypulse_history = []
         self.record(inspect.currentframe())
@@ -83,7 +83,7 @@ class Archive(object):
 
         self.load(self.filename, prepare=prepare, center_pulse=center_pulse,
                   baseline_removal=baseline_removal, weight=weight,
-                  wcfreq=wcfreq)
+                  wcfreq=wcfreq, onlyheader=False)
         if not self.lowmem:
             self.data_orig = np.copy(self.data)
             self.weights_orig = np.copy(self.weights)
@@ -110,7 +110,8 @@ class Archive(object):
         return self.filename
 
     def load(self, filename, prepare=True, center_pulse=True,
-             baseline_removal=True, weight=True, wcfreq=False):
+             baseline_removal=True, weight=True, wcfreq=False,
+             onlyheader=False):
         """
         Loads a PSRFITS file and processes
         http://www.atnf.csiro.au/people/pulsar/index.html?n=PsrfitsDocumentation.Txt
@@ -199,6 +200,9 @@ class Archive(object):
         for i, key in enumerate(hdulist['SUBINT'].header):
             self.subintheader[key] = hdulist['SUBINT'].header[key]
 
+        if onlyheader:
+            return
+            
         DATA = hdulist['SUBINT'].data['DATA']
         if np.ndim(DATA) == 5:
             DATA = DATA[:, 0, :, :, :] #remove the nsblk column
