@@ -114,7 +114,7 @@ class Archive(object):
         return self.filename
 
     def load(self, filename, prepare=True, center_pulse=True,
-             baseline_removal=True, weight=True, wcfreq=False,
+             baseline_removal=True, weight=True, wcfreq=True,
              onlyheader=False):
         """
         Loads a PSRFITS file and processes

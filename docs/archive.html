@@ -88,14 +88,21 @@
 <p>The <em>Archive</em> class is the primary mechanism for opening PSRFITS files.</p>
 <dl class="class">
 <dt id="Archive">
-<em class="property">class </em><code class="descname">Archive</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>prepare=True</em>, <em>baseline_removal=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Archive" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">Archive</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>prepare=True</em>, <em>lowmem=False</em>, <em>verbose=True</em>, <em>weight=True</em>, <em>center_pulse=True</em>, <em>baseline_removal=True</em>, <em>wcfreq=True</em>, <em>thread=False</em>, <em>onlyheader=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Archive" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a></li>
-<li><strong>baseline_removal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>. If <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the file will be automatically polarization averaged with <a class="reference internal" href="#pscrunch" title="pscrunch"><code class="xref py py-func docutils literal notranslate"><span class="pre">pscrunch()</span></code></a>, dedispersed with <a class="reference internal" href="#dedisperse" title="dedisperse"><code class="xref py py-func docutils literal notranslate"><span class="pre">dedisperse()</span></code></a> and using the weighted center frequency if the parameter <code class="docutils literal notranslate"><span class="pre">wcfreq</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, and centered with <a class="reference internal" href="#center" title="center"><code class="xref py py-func docutils literal notranslate"><span class="pre">center()</span></code></a> if <code class="docutils literal notranslate"><span class="pre">center_pulse</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+<li><strong>lowmem</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>. If <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the PSRFITS file is opened in memmap mode and the data arrays are also replaced with memmaps.</li>
+<li><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Print extra information on loading and processing.</li>
+<li><strong>weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>. Use the stored data weights, which is the typical mode.</li>
+<li><strong>center_pulse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>. If <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the peak of the pulse is centered in the middle of the data arrays. This is preferred for plotting purposes but the resulting arrival-time shifts are computed and stored internally.</li>
+<li><strong>baseline_removal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>. Subtracts the baseline intensity of the average profile off-pulse region from all individual data profiles using <a class="reference internal" href="#remove_baseline" title="remove_baseline"><code class="xref py py-func docutils literal notranslate"><span class="pre">remove_baseline()</span></code></a>.</li>
+<li><strong>wcfreq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>. If <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the weighted center frequency is used in <a class="reference internal" href="#dedisperse" title="dedisperse"><code class="xref py py-func docutils literal notranslate"><span class="pre">dedisperse()</span></code></a> if <code class="docutils literal notranslate"><span class="pre">prepare=True</span></code>.</li>
+<li><strong>thread</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>. If <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the calculation of the data array will be parallelized, which can lead to some speed-up for large data files but will take longer for small data files given the extra overhead required to start the process.</li>
+<li><strong>onlyheader</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Argument passed to <a class="reference internal" href="#load" title="load"><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code></a>. If <code class="docutils literal notranslate"><span class="pre">True</span></code>, then only the primary and table headers are processed, without the data array. This is much faster if you only need access to metadata.</li>
 </ul>
 </td>
 </tr>
@@ -122,8 +129,8 @@
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="load">
-<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>prepare=True</em>, <em>baseline_removal=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a PSRFITS file, process the metadata, and form the data arrays.</p>
+<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>prepare=True</em>, <em>center_pulse=True</em>, <em>baseline_removal=True</em>, <em>weight=True</em>, <em>wcfreq=True</em>, <em>onlyheader=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a PSRFITS file, process the metadata, and form the data arrays. This is called internally by <code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -131,7 +138,11 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Path to load file from.</li>
 <li><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – This performs three tasks. It will polarization average the data via <a class="reference internal" href="#pscrunch" title="pscrunch"><code class="xref py py-func docutils literal notranslate"><span class="pre">pscrunch()</span></code></a>, dedisperse the data with <a class="reference internal" href="#dedisperse" title="dedisperse"><code class="xref py py-func docutils literal notranslate"><span class="pre">dedisperse()</span></code></a>, and rotate the pulse so that the peak is in the center of phase with <a class="reference internal" href="#center" title="center"><code class="xref py py-func docutils literal notranslate"><span class="pre">center()</span></code></a>. For centering, this will store the relevant time delays associated with the rotation.</li>
+<li><strong>center_pulse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – The peak of the pulse is centered in the middle of the data arrays. This is preferred for plotting purposes but the resulting arrival-time shifts are computed and stored internally.</li>
 <li><strong>baseline_removal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Subtract the baseline intensity of the average profile off-pulse region from all individual data profiles.</li>
+<li><strong>weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Use the stored data weights, which is the typical mode.</li>
+<li><strong>wcfreq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – The weighted center frequency is used in <a class="reference internal" href="#dedisperse" title="dedisperse"><code class="xref py py-func docutils literal notranslate"><span class="pre">dedisperse()</span></code></a> if <code class="docutils literal notranslate"><span class="pre">prepare=True</span></code>.</li>
+<li><strong>onlyheader</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Ohe primary and table headers are processed, without the data array. This is much faster if you only need access to metadata.</li>
 </ul>
 </td>
 </tr>
@@ -504,7 +515,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename to save the data to. If none, save to the archive’s original filename after replacing the extension with <a href="#id1"><span class="problematic" id="id2">:param:`ext`</span></a>.</li>
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename to save the data to. If none, save to the archive’s original filename after replacing the extension with <code class="docutils literal notranslate"><span class="pre">ext</span></code>.</li>
 <li><strong>ext</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename extension</li>
 <li><strong>ascii</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Save the data to to a text file. If all four dimensions have length greater than 1, the data are saved in time, polarization, frequency, and phase order, with intensity as the fifth column. Otherwise, use numpy’s <code class="xref py py-func docutils literal notranslate"><span class="pre">savetxt()</span></code> to output the array.</li>
 </ul>
@@ -650,8 +661,7 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>func</strong> (<em>function</em>) – Arbitrary function to map onto the data array.</li>
 <li><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Parameter passed to <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal notranslate"><span class="pre">SinglePulse</span></code></a> that describes the off-pulse window length</li>
-<li><strong>**kwargs</strong> – <p>Additional parameters passed to <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal notranslate"><span class="pre">SinglePulse</span></code></a></p>
-</li>
+<li><strong>**kwargs</strong> – Additional parameters passed to <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal notranslate"><span class="pre">SinglePulse</span></code></a></li>
 </ul>
 </td>
 </tr>
@@ -676,8 +686,7 @@
 <li><strong>flatten</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flatten the data array.</li>
 <li><strong>func</strong> (<em>function</em>) – Arbitrary function to map onto the data array.</li>
 <li><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Parameter passed to <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal notranslate"><span class="pre">SinglePulse</span></code></a> that describes the off-pulse window length</li>
-<li><strong>**kwargs</strong> – <p>Additional parameters passed to <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal notranslate"><span class="pre">SinglePulse</span></code></a></p>
-</li>
+<li><strong>**kwargs</strong> – Additional parameters passed to <a class="reference internal" href="singlepulse.html#SinglePulse" title="SinglePulse"><code class="xref py py-class docutils literal notranslate"><span class="pre">SinglePulse</span></code></a></li>
 </ul>
 </td>
 </tr>
@@ -744,8 +753,7 @@
 <li><strong>cbar</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Include a matplotlib colorbar.</li>
 <li><strong>mask</strong> (<em>numpy.ndarray</em>) – Apply a mask array using the conventions of a numpy masked array (numpy.ma.core.MaskedArray)</li>
 <li><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Generate a matplotlib plot display.</li>
-<li><strong>**kwargs</strong> – <p>Additional arguments to pass to imshow.</p>
-</li>
+<li><strong>**kwargs</strong> – Additional arguments to pass to imshow.</li>
 </ul>
 </td>
 </tr>
@@ -1233,6 +1241,12 @@
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="function">
+<dt id="print_pypulse_history">
+<code class="descname">print_pypulse_history</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#print_pypulse_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints all elements in the PyPulse history list.</p>
 </dd></dl>
 
 </div>
