@@ -3,6 +3,7 @@ PyPulse
 
 [![License](https://img.shields.io/badge/license-3--clause_BSD-blue.svg)](LICENSE)
 [![Code of Conduct](https://img.shields.io/badge/code_of_conduct-Contributor_Covenant-blue.svg)](CODE_OF_CONDUCT.md)
+[![ASCL](https://img.shields.io/badge/ascl-1706.011-blue.svg?colorB=262255)](https://ascl.net/1706.011)
 
 A pure-Python package for handling and analyzing PSRFITS files.
 
