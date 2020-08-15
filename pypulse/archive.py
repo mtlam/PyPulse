@@ -1313,7 +1313,11 @@ class Archive(object):
             ax.plot(np.arange(len(data), dtype=np.float)/len(data), data, 'k')
             ax.set_xlim(0, 1)
             ax.set_xlabel("Pulse Phase")
-            ax.set_ylabel("Intensity")
+            unit = self.getDataUnit()
+            if unit == "Janksy":
+                ax.set_ylabel("Flux Density (%s)"%u.unitchanger(unit))
+            else:
+                ax.set_ylabel("Intensity")
             #if "SCALE" in self.subintheader:
             #    ax.set_ylabel(self.subintheader["SCALE"]) #this is still off
             if show:
