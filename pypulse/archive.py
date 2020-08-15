@@ -593,22 +593,21 @@ class Archive(object):
         retval = np.zeros((len(np.r_[0:nsubint:factor]), npol, nchan, nbin))
         newdurations = np.zeros(np.shape(retval)[0])
 
-        weightsum = np.sum(self.weights)
         weightretval = np.zeros((len(np.r_[0:nsubint:factor]), nchan))
 
         newnsubint = nsubint//factor
         for i in xrange(newnsubint):
-            weightretval[i, :] = np.sum(self.weights[i*factor:(i+1)*factor, :], axis=0)
+            weightretval[i, :] = np.mean(self.weights[i*factor:(i+1)*factor, :], axis=0)
 
         for i in xrange(newnsubint):
             newdurations[i] += np.sum(self.durations[i*factor:(i+1)*factor])
             for j in xrange(npol):
                 for k in xrange(nchan):
                     for l in xrange(nbin):
-                        retval[i, j, k, l] = np.sum(self.data[i*factor:(i+1)*factor, j, k, l] * self.weights[i*factor:(i+1)*factor, k])
+                        retval[i, j, k, l] = np.sum(self.data[i*factor:(i+1)*factor, j, k, l] * self.weights[i*factor:(i+1)*factor, k]) / np.sum(self.weights[i*factor:(i+1)*factor, k])
 
         self.weights = weightretval
-        self.data = retval/weightsum
+        self.data = retval
         self.durations = newdurations
 
         return self
@@ -666,7 +665,6 @@ class Archive(object):
         
         retval = np.zeros((nsubint, npol, len(np.r_[0:nchan:factor]), nbin))
 
-        weightsum = np.sum(self.weights)
         weightretval = np.zeros((nsubint, len(np.r_[0:nchan:factor])))
 
 
@@ -680,7 +678,7 @@ class Archive(object):
         newfreq = np.zeros(newnchan) #this will only be 1D
 
         for k in xrange(newnchan):
-            weightretval[:, k] = np.sum(self.weights[:, k*factor:(k+1)*factor], axis=1)
+            weightretval[:, k] = np.mean(self.weights[:, k*factor:(k+1)*factor], axis=1)
             newfreq[k] = np.sum(freq[k*factor:(k+1)*factor])/float(factor) #unweighted!
 
         for i in xrange(nsubint):
@@ -688,11 +686,11 @@ class Archive(object):
                 for k in xrange(newnchan):
                     for l in xrange(nbin):
                         retval[i, j, k, l] = \
-                        np.sum(self.data[i, j, k*factor:(k+1)*factor, l] * self.weights[i, k*factor:(k+1)*factor])
+                        np.sum(self.data[i, j, k*factor:(k+1)*factor, l] * self.weights[i, k*factor:(k+1)*factor]) / np.sum(self.weights[i, k*factor:(k+1)*factor])
 
 
         self.weights = weightretval
-        self.data = retval/weightsum
+        self.data = retval
         self.freq = newfreq
         return self
 
@@ -996,7 +994,7 @@ class Archive(object):
     @data.setter
     def data(self, value):
         self._data = value
-        self.weighted_data = value*self.weights[:,None,:,None]
+        self.weighted_data = value*self.weights[:,None,:,None]/np.sum(self.weights)
 
     def getData(self, squeeze=True, setnan=None, weight=True):
         """Returns the data array,  fully squeezed"""
