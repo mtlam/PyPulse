@@ -16,7 +16,7 @@ python 2.7 or 3.X<br>
 numpy<br>
 scipy<br>
 matplotlib<br>
-astropy or pyfits
+astropy
 
 
 Archive
