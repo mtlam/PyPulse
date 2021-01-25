@@ -735,6 +735,9 @@ class SinglePulse(object):
         """ Return the time unit of one phase bin """
         if self.getPeriod() is not None:
             return self.getPeriod()/self.getNbins()
+        else:
+            raise ValueError("Cannot get bin time; period is not set")
+
 
     def plot(self, show=True):
         """
