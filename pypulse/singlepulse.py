@@ -148,12 +148,12 @@ class SinglePulse(object):
             factor = self.getPeriod()/self.getNbins()
         return factor*dbin
 
-    def getWeff(self, fourier=False, sumonly=False, timeunits=True):
+    def getWeff(self, fourier=False, sumonly=False):
         """
         Calculate the effective width of the pulse
         """
-        if not timeunits or self.getPeriod() is None:
-            return None
+        if self.getPeriod() is None:
+            raise ValueError("Cannot calculate Weff; period is not set")
         P = self.getPeriod()
         N = self.getNbins()
         U = u.normalize(self.data, simple=True) #remove baseline?
