@@ -220,12 +220,12 @@ def imshow(x, ax=None, origin='lower', interpolation='nearest', aspect='auto', c
         else:
             cmap = None
     # Try to use cividis as default colormap, otherwise viridis
-    #if cmap is None: 
+    #if cmap is None:
     #    if "cividis" in plt.colormaps():
     #        cmap = plt.cm.cividis
     #    else:
     #        cmap = plt.cm.viridis
-    
+
     if ax is not None:
         im = ax.imshow(x, origin=origin, interpolation=interpolation, aspect=aspect, cmap=cmap, **kwargs)
     else:
@@ -380,7 +380,7 @@ def write2Dtxt(filename, array, x=None, y=None, info=True, **kwargs):
 
 '''
 Normalize an array to unit height
-Below: normalize 
+Below: normalize
 '''
 def normalize(array, simple=False, minimum=None):
     if simple:
@@ -505,9 +505,9 @@ def fit_components(xdata, ydata, mode='gaussian', N=1, allownegative=False):
     else:
         imax = np.argmax(ydata)
     if mode == 'gaussian':
-        pinit = np.array([ydata[imax], xdata[imax], 0.02*nbins]) #2% duty cycle
+        pinit = np.array([ydata[imax], xdata[imax], 0.02]) #2% duty cycle
     elif mode == 'vonmises':
-        pinit = np.array([ydata[imax], xdata[imax], nbins])
+        pinit = np.array([ydata[imax], xdata[imax], 1.0/0.002])
     fitter = eval(mode)
 
     # perform this fit iteratively
@@ -534,9 +534,9 @@ def fit_components(xdata, ydata, mode='gaussian', N=1, allownegative=False):
         else:
             imax = np.argmax(resids)
         if mode == 'gaussian':
-            pinitprime = np.array([resids[imax], xdata[imax], 0.02*nbins]) #2% duty cycle
+            pinitprime = np.array([resids[imax], xdata[imax], 0.02]) #2% duty cycle
         elif mode == 'vonmises':
-            pinitprime = np.array([resids[imax], xdata[imax], nbins])#1.0/(0.02*nbins)])#need sqrt?
+            pinitprime = np.array([resids[imax], xdata[imax], 1.0/0.002])#1.0/(0.02*nbins)])#need sqrt?
         pinit = np.concatenate((pfit, pinitprime))
 
     s_sq = (errfunc(out[0], xdata, ydata)**2).sum()/(len(ydata)-len(pinit)-1) #-1 included here!
@@ -901,7 +901,7 @@ def get_toa(template, profile, sigma_t, dphi_in=0.1, snrthresh=0., nlagsfit=5, n
                       the peak to rms S/N.
            profile = average profile to process
            sigma_t = off pulse rms in same units as profile.
-    
+
     Output:
     tauccf = TOA (bins) based on parabloic interpolation of CCF.
     tauhat = TOA (bins) using Fourier-domain fitting.,
@@ -1086,7 +1086,7 @@ unitdict = {
 }
 
 def unitchanger(unit):
-    """ 
+    """
     If unit is in unitdict, convert
     otherwise, return the old unit
     """
