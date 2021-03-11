@@ -333,7 +333,7 @@ class SinglePulse(object):
             return self
         return x
 
-    def spline_smoothing(self, sigma=None, lam=None, **kwargs):
+    def spline_smoothing(self, sigma=None, lam=None, save=False, **kwargs):
         """ Cubic Spline Interplation
         sigma: phase bin error bars
         lam: (0, 1], 1 = maximize fitting through control points (knots),
@@ -509,8 +509,11 @@ class SinglePulse(object):
         ytemp = np.roll(ytemp, -shift)
         ytemp /= np.max(ytemp)
 
+        if save:
+            self.data = ytemp
         return ytemp
     splineSmoothing = spline_smoothing
+
 
     def component_fitting(self, mode='gaussian', nmax=10, full=False,
                           minamp=None, alpha=0.05, allownegative=False,
@@ -611,11 +614,14 @@ class SinglePulse(object):
         return self.component_fitting(mode='vonmises', **kwargs)
     vonMises_smoothing = vonmises_smoothing
 
-    def savgol_smoothing(self, window_length=11, polyorder=5):
+    def savgol_smoothing(self, window_length=11, polyorder=5, save=False):
         """
         Savitzky-Golay filter smoothing
         """
-        return signal.savgol_filter(self.data, window_length, polyorder)
+        retval = signal.savgol_filter(self.data, window_length, polyorder)
+        if save:
+            self.data = retval
+        return retval
 
     def smooth(self, mode='vonmises', sigma=None, lam=None,
                window_length=11, polyorder=5, **kwargs):
@@ -721,6 +727,24 @@ class SinglePulse(object):
         else:
             plt.savefig("cleanimages/%s_clean.png"%name)
             plt.close()
+
+
+    def addNoise(self, sn, save=False):
+        """ 
+        Add noise to the pulse such that it will roughly 
+        have an S/N given by sn 
+        """
+        
+        minimum = np.mean(self.getOffpulse())
+        maximum = np.max(self.data)
+        amplitude = maximum - minimum
+        sigma = amplitude/sn
+        
+        retval = self.data + np.random.normal(0, sigma, self.nbins)
+        if save:
+            self.data = retval
+        return retval
+        
 
     def getPeriod(self):
         """ Return the pulse period """
