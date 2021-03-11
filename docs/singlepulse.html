@@ -95,11 +95,11 @@
 <li><strong>mpw</strong> (<em>list/numpy.ndarray</em>) – Indices of the main-pulse window</li>
 <li><strong>ipw</strong> (<em>list/numpy.ndarray</em>) – Indices of the inter-pulse window</li>
 <li><strong>opw</strong> (<em>list/numpy.ndarray</em>) – Indices of the off-pulse window</li>
-<li><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Run <a class="reference internal" href="#interpulse_align" title="interpulse_align"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpulse_align()</span></code></a></li>
-<li><strong>align</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Rotate the pulse by this amount in phase bin units.</li>
-<li><strong>period</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Provide pulse period.</li>
-<li><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Overrides mpw, ipw, opw. Defines an off-pulse window of a given size about the minimum-integral region.</li>
-<li><strong>istemplate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, run <a class="reference internal" href="#calcFT" title="calcFT"><code class="xref py py-func docutils literal notranslate"><span class="pre">calcFT()</span></code></a> to precalculate the Fourier Transform of the data. This is useful for speed-ups elsewhere throughout the code.</li>
+<li><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Run <a class="reference internal" href="#interpulse_align" title="interpulse_align"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpulse_align()</span></code></a></li>
+<li><strong>align</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Rotate the pulse by this amount in phase bin units.</li>
+<li><strong>period</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Provide pulse period.</li>
+<li><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Overrides mpw, ipw, opw. Defines an off-pulse window of a given size about the minimum-integral region.</li>
+<li><strong>istemplate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, run <a class="reference internal" href="#calcFT" title="calcFT"><code class="xref py py-func docutils literal notranslate"><span class="pre">calcFT()</span></code></a> to precalculate the Fourier Transform of the data. This is useful for speed-ups elsewhere throughout the code.</li>
 </ul>
 </td>
 </tr>
@@ -152,7 +152,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>area</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Normalize the pulse so that the area has a value of 1.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>area</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Normalize the pulse so that the area has a value of 1.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -210,7 +210,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Replace the data array with the rotated versions.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Replace the data array with the rotated versions.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">subtracted_array, <em>numpy.ndarray</em></td>
 </tr>
@@ -229,7 +229,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Window size (<span class="math notranslate nohighlight">\(N\)</span>) in bin units. The default is the length of the data array divided by 8.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Window size (<span class="math notranslate nohighlight">\(N\)</span>) in bin units. The default is the length of the data array divided by 8.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">opw, <em>numpy.ndarray</em></td>
 </tr>
@@ -374,8 +374,8 @@ Uses a real FFT</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>mean</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Calculate the mean value of the off-pulse intensities instead of the roo-mean-square.</li>
-<li><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Return both the off-pulse mean and RMS.</li>
+<li><strong>mean</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Calculate the mean value of the off-pulse intensities instead of the root-mean-square.</li>
+<li><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return both the off-pulse mean and RMS.</li>
 </ul>
 </td>
 </tr>
@@ -413,8 +413,8 @@ Uses a real FFT</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>template</strong> (<em>list/numpy.ndarray/SinglePulse</em>) – Template shape to fit to the data array.</li>
-<li><strong>fixedphase</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Return only the signal-to-noise with the template shape fixed in its phase.</li>
-<li><strong>rms_baseline</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Provide a different value of the off-pulse root-mean-square noise.</li>
+<li><strong>fixedphase</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return only the signal-to-noise with the template shape fixed in its phase.</li>
+<li><strong>rms_baseline</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Provide a different value of the off-pulse root-mean-square noise.</li>
 </ul>
 </td>
 </tr>
@@ -438,8 +438,8 @@ Uses a real FFT</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>shift</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Rotate the pulse in bin units.</li>
-<li><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Replace the data array with the rotated versions.</li>
+<li><strong>shift</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Rotate the pulse in bin units.</li>
+<li><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Replace the data array with the rotated versions.</li>
 </ul>
 </td>
 </tr>
@@ -460,7 +460,7 @@ Uses a real FFT</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>lam</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The lambda parameter that determines the relative weight of fitting through the knots and minimizing the curvature of the spline. Can take values from (0,1], where 1 = fit exactly through the knots and 0 = minimized curvature of the spline. If not provided, it is calculated as 1-(off-pulse rms)^2.</li>
+<li><strong>lam</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – The lambda parameter that determines the relative weight of fitting through the knots and minimizing the curvature of the spline. Can take values from (0,1], where 1 = fit exactly through the knots and 0 = minimized curvature of the spline. If not provided, it is calculated as 1-(off-pulse rms)^2.</li>
 <li><strong>**kwargs</strong> – <p>Additional arguments to pass to <code class="xref py py-func docutils literal notranslate"><span class="pre">utils.subdivide()</span></code>.</p>
 </li>
 </ul>
@@ -490,16 +490,16 @@ Uses a real FFT</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The function to fit, can choose: ‘gaussian’, ‘vonmises’.</li>
-<li><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Maximum number of components to test.</li>
-<li><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Return both the off-pulse mean and RMS.</li>
-<li><strong>minamp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – If all of the profile residuals are less than the fraction of the maximum set by minamp, then return. For example, if minamp is 0.05, once all profile residuals are less than 5% of the maximum, return.</li>
-<li><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – F-test significance value. For example, if alpha is 0.05, then new components are kept if 1 - 0.05 = 95% significant.</li>
-<li><strong>allownegative</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, allow negative-amplitude components in the fitting</li>
-<li><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Print when each component is fit</li>
-<li><strong>plot</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, show a plot of the fit, with the components</li>
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – If provided, save the plot above to the filename.</li>
-<li><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, replace the data array with the smoothed profile.</li>
+<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The function to fit, can choose: ‘gaussian’, ‘vonmises’.</li>
+<li><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Maximum number of components to test.</li>
+<li><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return both the off-pulse mean and RMS.</li>
+<li><strong>minamp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – If all of the profile residuals are less than the fraction of the maximum set by minamp, then return. For example, if minamp is 0.05, once all profile residuals are less than 5% of the maximum, return.</li>
+<li><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – F-test significance value. For example, if alpha is 0.05, then new components are kept if 1 - 0.05 = 95% significant.</li>
+<li><strong>allownegative</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, allow negative-amplitude components in the fitting</li>
+<li><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Print when each component is fit</li>
+<li><strong>plot</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, show a plot of the fit, with the components</li>
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – If provided, save the plot above to the filename.</li>
+<li><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, replace the data array with the smoothed profile.</li>
 </ul>
 </td>
 </tr>
@@ -518,7 +518,7 @@ Uses a real FFT</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Maximum number of components to test.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Maximum number of components to test.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">template, <em>numpy.ndarray</em></td>
 </tr>
@@ -534,7 +534,7 @@ Uses a real FFT</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Maximum number of components to test.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Maximum number of components to test.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">template, <em>numpy.ndarray</em></td>
 </tr>
@@ -592,7 +592,7 @@ Uses a real FFT</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Show the plot.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Show the plot.</td>
 </tr>
 </tbody>
 </table>
@@ -606,7 +606,7 @@ Uses a real FFT</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Show the plot.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Show the plot.</td>
 </tr>
 </tbody>
 </table>
