@@ -479,11 +479,11 @@ Uses a real FFT</p>
 <dd><p>Iteratively fits a total of nmax components to a pulse profile. The iteration will end when the <span class="math notranslate nohighlight">\(\chi_r^2\)</span> is minimized.</p>
 <p>If mode == ‘gaussian’, will fit components of the form</p>
 <div class="math notranslate nohighlight">
-\[f(\phi) = A \exp\left[-\frac{1}{2}\left(\frac{\phi-\mu}{\sigma}\right)\right]\]</div>
+\[f(\phi|A, \mu, \sigma) = A \exp\left[-\frac{1}{2}\left(\frac{\phi-\mu}{\sigma}\right)\right]\]</div>
 <p>where <span class="math notranslate nohighlight">\(\phi\)</span> is the pulse phase, <span class="math notranslate nohighlight">\(A\)</span> is the component amplitude, <span class="math notranslate nohighlight">\(\mu\)</span> is the mean pulse phase, and <span class="math notranslate nohighlight">\(\sigma\)</span> is the component width.</p>
 <p>If mode == ‘vonmises’, will fit components of the form</p>
 <div class="math notranslate nohighlight">
-\[f(\phi) = A \frac{\exp\left[\kappa \cos(\phi-\mu)\right]}{2\pi I_0(\kappa)}\]</div>
+\[f(\phi|A, \mu, \kappa) = A \frac{\exp\left[\kappa \cos(\phi-\mu)\right]}{2\pi I_0(\kappa)}\]</div>
 <p>where again <span class="math notranslate nohighlight">\(\phi\)</span> is the pulse phase and <span class="math notranslate nohighlight">\(A\)</span> is the component amplitude, <span class="math notranslate nohighlight">\(\mu\)</span> is the mean pulse phase, and <span class="math notranslate nohighlight">\(1/\kappa\)</span> is the analogous to the component width (squared) of a Gaussian, <span class="math notranslate nohighlight">\(\sigma^2\)</span>. The function <span class="math notranslate nohighlight">\(I_0\)</span> is the modified Bessel function of order 0.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -492,7 +492,7 @@ Uses a real FFT</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The function to fit, can choose: ‘gaussian’, ‘vonmises’.</li>
 <li><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Maximum number of components to test.</li>
-<li><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return both the off-pulse mean and RMS.</li>
+<li><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return the template shape as well as the array of the best-fit parameters and the number of parameters.</li>
 <li><strong>minamp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – If all of the profile residuals are less than the fraction of the maximum set by minamp, then return. For example, if minamp is 0.05, once all profile residuals are less than 5% of the maximum, return.</li>
 <li><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – F-test significance value. For example, if alpha is 0.05, then new components are kept if 1 - 0.05 = 95% significant.</li>
 <li><strong>allownegative</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, allow negative-amplitude components in the fitting</li>
