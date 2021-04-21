@@ -28,6 +28,7 @@ Decimal = d.Decimal
 import time
 import warnings
 from importlib import import_module
+import copy
 import inspect
 import tempfile
 import numpy as np
@@ -1448,7 +1449,7 @@ class Archive(object):
         Produces a pav-like plot for comparison
         Built on top of imshow()
         """
-        cmap = plt.cm.afmhot
+        cmap = copy.copy(plt.cm.afmhot)
         cmap.set_bad(color='k', alpha=1.0)
         ax = self.imshow(ax=ax, show=False, cmap=cmap)
         ax.set_title("%s %s\nFreq %0.3f MHz BW: %0.3f Length %0.3f S/N %0.3f"%(self.getName(), self.filename, self.getCenterFrequency(weighted=wcfreq), self.getBandwidth(), self.getDuration(), self.getSN()))#get the basename?
