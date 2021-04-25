@@ -4,6 +4,7 @@ Michael Lam 2015
 Useful mathematical commands
 '''
 import sys
+import copy
 import numpy as np
 import scipy.fftpack as fft
 import scipy.optimize as optimize
@@ -216,7 +217,7 @@ def imshow(x, ax=None, origin='lower', interpolation='nearest', aspect='auto', c
     # otherwise use default
     if isinstance(cmap, str):
         if cmap in plt.colormaps():
-            cmap = plt.get_cmap(cmap)
+            cmap = copy.copy(plt.get_cmap(cmap))
         else:
             cmap = None
     # Try to use cividis as default colormap, otherwise viridis
