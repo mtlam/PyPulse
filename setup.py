@@ -24,7 +24,7 @@ setup(
     author='Michael Lam',
     author_email='michael.lam@nanograv.org',
     url='https://github.com/mtlam/PyPulse',
-    download_url = 'https://github.com/mtlam/PyPulse/archive/v0.0.1.tar.gz',
+    download_url = 'https://github.com/mtlam/PyPulse/archive/v0.1.0.tar.gz',
     packages=['pypulse'],
     package_dir = {'pypulse': 'pypulse'},
     zip_safe=False,
