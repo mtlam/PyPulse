@@ -83,11 +83,13 @@
 </li>
       <li><a href="dynamicspectrum.html#acf2d">acf2d() (built-in function)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dynamicspectrum.html#add">add() (built-in function)</a>, <a href="tim.html#add">[1]</a>
 </li>
-      <li><a href="calibrator.html#apply_calibration">apply_calibration() (built-in function)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="calibrator.html#applyCalibration">applyCalibration() (built-in function)</a>
+</li>
+      <li><a href="calibrator.html#applyFluxcal">applyFluxcal() (built-in function)</a>
 </li>
       <li><a href="archive.html#Archive">Archive (built-in class)</a>
 </li>
@@ -99,13 +101,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="archive.html#bscrunch">bscrunch() (built-in function)</a>
 </li>
-      <li><a href="calibrator.html#build_mueller_matrix">build_mueller_matrix() (built-in function)</a>
+      <li><a href="calibrator.html#buildMuellerMatrix">buildMuellerMatrix() (built-in function)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="calibrator.html#build_mueller_matrix_differential">build_mueller_matrix_differential() (built-in function)</a>
+      <li><a href="calibrator.html#buildMuellerMatrixDifferential">buildMuellerMatrixDifferential() (built-in function)</a>
 </li>
-      <li><a href="calibrator.html#build_mueller_matrix_PA">build_mueller_matrix_PA() (built-in function)</a>
+      <li><a href="calibrator.html#buildMuellerMatrixPA">buildMuellerMatrixPA() (built-in function)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -113,15 +115,17 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="singlepulse.html#calcFT">calcFT() (built-in function)</a>
+</li>
       <li><a href="singlepulse.html#calcOffpulseWindow">calcOffpulseWindow() (built-in function)</a>
 </li>
       <li><a href="archive.html#calculate">calculate() (built-in function)</a>
 </li>
-      <li><a href="calibrator.html#calculate_PA">calculate_PA() (built-in function)</a>
-</li>
       <li><a href="archive.html#calculateAverageProfile">calculateAverageProfile() (built-in function)</a>
 </li>
       <li><a href="archive.html#calculateOffpulseWindow">calculateOffpulseWindow() (built-in function)</a>
+</li>
+      <li><a href="calibrator.html#calculatePA">calculatePA() (built-in function)</a>
 </li>
       <li><a href="archive.html#calculatePeriod">calculatePeriod() (built-in function)</a>
 </li>
@@ -139,7 +143,7 @@
 </li>
       <li><a href="singlepulse.html#component_fitting">component_fitting() (built-in function)</a>
 </li>
-      <li><a href="calibrator.html#convert_polarization">convert_polarization() (built-in function)</a>
+      <li><a href="calibrator.html#convertPolarization">convertPolarization() (built-in function)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -185,6 +189,8 @@
 </li>
       <li><a href="par.html#get">get() (built-in function)</a>, <a href="tim.html#get">[1]</a>, <a href="tim.html#get">[2]</a>
 </li>
+      <li><a href="calibrator.html#getA">getA() (built-in function)</a>
+</li>
       <li><a href="dynamicspectrum.html#getACF">getACF() (built-in function)</a>
 </li>
       <li><a href="singlepulse.html#getAllpulse">getAllpulse() (built-in function)</a>
@@ -192,6 +198,8 @@
       <li><a href="singlepulse.html#getAllpulseACF">getAllpulseACF() (built-in function)</a>
 </li>
       <li><a href="archive.html#getAxis">getAxis() (built-in function)</a>
+</li>
+      <li><a href="calibrator.html#getB">getB() (built-in function)</a>
 </li>
       <li><a href="archive.html#getBackend">getBackend() (built-in function)</a>
 </li>
@@ -204,6 +212,8 @@
       <li><a href="archive.html#getCoords">getCoords() (built-in function)</a>
 </li>
       <li><a href="archive.html#getData">getData() (built-in function)</a>, <a href="dynamicspectrum.html#getData">[1]</a>
+</li>
+      <li><a href="archive.html#getDataUnit">getDataUnit() (built-in function)</a>
 </li>
       <li><a href="par.html#getDIST">getDIST() (built-in function)</a>
 </li>
@@ -253,27 +263,43 @@
 </li>
       <li><a href="par.html#getFlagValue">getFlagValue() (built-in function)</a>
 </li>
+      <li><a href="archive.html#getFluxDensityUnit">getFluxDensityUnit() (built-in function)</a>
+</li>
+      <li><a href="archive.html#getFluxUnit">getFluxUnit() (built-in function)</a>
+</li>
       <li><a href="tim.html#getFreq">getFreq() (built-in function)</a>
 </li>
-      <li><a href="tim.html#getFreqs">getFreqs() (built-in function)</a>
+      <li><a href="archive.html#getFreqs">getFreqs() (built-in function)</a>, <a href="tim.html#getFreqs">[1]</a>
+</li>
+      <li><a href="archive.html#getFrequencies">getFrequencies() (built-in function)</a>
 </li>
       <li><a href="par.html#getFrequency">getFrequency() (built-in function)</a>, <a href="tim.html#getFrequency">[1]</a>
 </li>
       <li><a href="par.html#getFrequencyDot">getFrequencyDot() (built-in function)</a>
 </li>
+      <li><a href="archive.html#getFrequencyUnit">getFrequencyUnit() (built-in function)</a>
+</li>
+      <li><a href="archive.html#getFreqUnit">getFreqUnit() (built-in function)</a>
+</li>
       <li><a href="archive.html#getFrontend">getFrontend() (built-in function)</a>
 </li>
       <li><a href="singlepulse.html#getFWHM">getFWHM() (built-in function)</a>
 </li>
+      <li><a href="calibrator.html#getI">getI() (built-in function)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="archive.html#getIntegratedFlux">getIntegratedFlux() (built-in function)</a>
+</li>
+      <li><a href="archive.html#getIntensityUnit">getIntensityUnit() (built-in function)</a>
 </li>
       <li><a href="singlepulse.html#getInterpulse">getInterpulse() (built-in function)</a>
 </li>
       <li><a href="singlepulse.html#getInterpulseACF">getInterpulseACF() (built-in function)</a>
 </li>
       <li><a href="archive.html#getLatest">getLatest() (built-in function)</a>, <a href="archive.html#getLatest">[1]</a>
+</li>
+      <li><a href="archive.html#getLevels">getLevels() (built-in function)</a>
 </li>
       <li><a href="singlepulse.html#getMainpulse">getMainpulse() (built-in function)</a>
 </li>
@@ -309,11 +335,15 @@
 </li>
       <li><a href="par.html#getPM">getPM() (built-in function)</a>
 </li>
+      <li><a href="archive.html#getPulsarCalibrator">getPulsarCalibrator() (built-in function)</a>
+</li>
       <li><a href="archive.html#getPulsarCoords">getPulsarCoords() (built-in function)</a>
 </li>
       <li><a href="archive.html#getPulse">getPulse() (built-in function)</a>
 </li>
       <li><a href="par.html#getPX">getPX() (built-in function)</a>
+</li>
+      <li><a href="calibrator.html#getQ">getQ() (built-in function)</a>
 </li>
       <li><a href="dmx.html#getR1">getR1() (built-in function)</a>
 </li>
@@ -324,6 +354,8 @@
       <li><a href="dmx.html#getR2s">getR2s() (built-in function)</a>
 </li>
       <li><a href="archive.html#getRM">getRM() (built-in function)</a>
+</li>
+      <li><a href="archive.html#getScaleUnit">getScaleUnit() (built-in function)</a>
 </li>
       <li><a href="archive.html#getSinglePulses">getSinglePulses() (built-in function)</a>
 </li>
@@ -341,7 +373,15 @@
 </li>
       <li><a href="dmx.html#getter">getter() (built-in function)</a>
 </li>
+      <li><a href="archive.html#getTimes">getTimes() (built-in function)</a>
+</li>
+      <li><a href="archive.html#getTimeUnit">getTimeUnit() (built-in function)</a>
+</li>
       <li><a href="dmx.html#getTspan">getTspan() (built-in function)</a>, <a href="par.html#getTspan">[1]</a>, <a href="tim.html#getTspan">[2]</a>
+</li>
+      <li><a href="calibrator.html#getU">getU() (built-in function)</a>
+</li>
+      <li><a href="calibrator.html#getV">getV() (built-in function)</a>
 </li>
       <li><a href="archive.html#getValue">getValue() (built-in function)</a>, <a href="archive.html#getValue">[1]</a>, <a href="archive.html#getValue">[2]</a>, <a href="dmx.html#getValue">[3]</a>, <a href="dynamicspectrum.html#getValue">[4]</a>, <a href="par.html#getValue">[5]</a>
 </li>
@@ -427,11 +467,13 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="archive.html#plot">plot() (built-in function)</a>, <a href="singlepulse.html#plot">[1]</a>
+      <li><a href="archive.html#plot">plot() (built-in function)</a>, <a href="calibrator.html#plot">[1]</a>, <a href="singlepulse.html#plot">[2]</a>
 </li>
       <li><a href="singlepulse.html#plot_windows">plot_windows() (built-in function)</a>
 </li>
       <li><a href="archive.html#Polyco">Polyco (built-in class)</a>
+</li>
+      <li><a href="archive.html#print_pypulse_history">print_pypulse_history() (built-in function)</a>
 </li>
       <li><a href="archive.html#printEntry">printEntry() (built-in function)</a>
 </li>
@@ -571,7 +613,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="rfimitigator.html#zap_frequence_range">zap_frequence_range() (built-in function)</a>
+      <li><a href="rfimitigator.html#zap_frequency_range">zap_frequency_range() (built-in function)</a>
 </li>
       <li><a href="rfimitigator.html#zap_minmax">zap_minmax() (built-in function)</a>
 </li>

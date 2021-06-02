@@ -14,13 +14,13 @@ The *SinglePulse* class handles an individual pulse data array.
 
 .. py:class:: SinglePulse(data[,mpw=None,ipw=None,opw=None,prepare=False,align=None,period=None,windowsize=None])
 
-   :param list/numpy.array data: Data array.
-   :param list/numpy.array mpw: Indices of the main-pulse window
-   :param list/numpy.array ipw: Indices of the inter-pulse window
-   :param list/numpy.array opw: Indices of the off-pulse window
+   :param list/numpy.ndarray data: Data array.
+   :param list/numpy.ndarray mpw: Indices of the main-pulse window
+   :param list/numpy.ndarray ipw: Indices of the inter-pulse window
+   :param list/numpy.ndarray opw: Indices of the off-pulse window
    :param bool prepare: Run :func:`interpulse_align`
    :param float align: Rotate the pulse by this amount in phase bin units.
-   :param period float: Provide pulse period.
+   :param float period: Provide pulse period.
    :param int windowsize: Overrides mpw, ipw, opw. Defines an off-pulse window of a given size about the minimum-integral region.
 
 Usage:
@@ -78,31 +78,44 @@ Methods
    Subtract the baseline of the pulse so that it will be set to zero mean.
 
    :param bool save: Replace the data array with the rotated versions.
-   :return: subtracted_array, *numpy.array*
+   :return: subtracted_array, *numpy.ndarray*
+
+.. py:function:: calcOffpulseWindow([windowsize=None])
+
+   Calculate an offpulse window automatically by finding where the area under the curve is minimized, i.e., where
+
+   .. math:: \min \sum_{i=i_0}^{i_0+N} U(\phi_i)
+
+   is satisfied. The template (or profile) shape as a function of phase is :math:`U(\phi)`, :math:`i_0` is the initial index and :math:`N` is the length of the window. Returns the offpulse window indices.
+
+   :param int windowsize: Window size (:math:`N`) in bin units. The default is the length of the data array divided by 8.
+   :return: opw, *numpy.ndarray*
+
+	
 
 .. py:function:: getMainpulse()
    
    Return the main-pulse intensities.
 
-   :return: mpw, *numpy.array*
+   :return: mpw, *numpy.ndarray*
 
 .. py:function:: getInterpulse()
 
    Return the inter-pulse intensities.
 
-   :return: mpw, *numpy.array*
+   :return: mpw, *numpy.ndarray*
 
 .. py:function:: getOffpulse()
 
    Return the off-pulse intensities.
 
-   :return: mpw, *numpy.array*
+   :return: mpw, *numpy.ndarray*
 
 .. py:function:: getAllpulse()
 
    Return the main-pulse, inter-pulse, and off-pulse intensities.
 
-   :return: mpw, *numpy.array*, ipw, *numpy.array*, opw, *numpy.array*
+   :return: mpw, *numpy.ndarray*, ipw, *numpy.ndarray*, opw, *numpy.ndarray*
 
 .. py:function:: getMainpulseACF()
 
@@ -126,7 +139,7 @@ Methods
 
    Return the main-pulse, inter-pulse, and off-pulse autocorrelation functions.
 
-   :return: mpacf, *numpy.array*, ipacf, *numpy.array*, opacf, *numpy.array*
+   :return: mpacf, *numpy.ndarray*, ipacf, *numpy.ndarray*, opacf, *numpy.ndarray*
 
 
 .. py:function:: getOffpulseNoise([mean=False,full=False])
@@ -140,7 +153,7 @@ Methods
 
 .. py:function:: getOffpulseZCT()
 
-   Perform a zero-crossing test of the offpulse noise.
+   Perform a zero-crossing test of the offpulse noise. The expected number of zero crossings for :math:`N` samples of white noise is :math:`(N-1)/2 \pm \sqrt{(N-1)/2}`. If the number is within :math:`3\sigma` of the expectation, return True, otherwise, return False.
 
    :return: success, test_statistic, count
 
@@ -148,10 +161,14 @@ Methods
 
 .. py:function:: fitPulse(template[,fixedphase=False,rms_baseline=None])
  
-   Perform the template-matching procedure of Taylor 1992.
+   Perform the template-matching procedure of Taylor 1992 in the Fourier domain. Matched filtering assumes that the data profile :math:`I(t)` is a scaled and shifted version of a template profile :math:`U(t)`, plus additive noise, i.e.,
 
-   :param list/numpy.array/SinglePulse template: Template shape to fit to the data array.
-   :param book fixedphase: Return only the signal-to-noise with the template shape fixed in its phase.
+   .. math:: I(t) = b U(t - \tau) + n(t)
+
+   where :math:`t` is time (in pulse phase units), :math:`n(t)` is the additive noise, and :math:`b` and :math:`\tau` are the scale factor and shift, respectively. PyPulse performs this fit in terms of phase but these numbers can be translated into absolute arrival times.
+
+   :param list/numpy.ndarray/SinglePulse template: Template shape to fit to the data array.
+   :param bool fixedphase: Return only the signal-to-noise with the template shape fixed in its phase.
    :param float rms_baseline: Provide a different value of the off-pulse root-mean-square noise.
    :return: TOA from cross-correlation function (tauccf), TOA from template matching procedure (tauhat), scale factor (bhat), error on TOA (sigma_Tau), error on scale factor (sigma_b), signal-to-noise ratio (snr), cross-correlation coefficient (rho)
 
@@ -164,29 +181,85 @@ Methods
    :param float shift: Rotate the pulse in bin units.
    :param bool save: Replace the data array with the rotated versions.
 
+.. py:function:: spline_smoothing([lam=None,**kwargs])
+   
+   Iterative cubic spline interpolation for smooth template generation. The spline-generation algorithm is defined by D.S.G. Pollock 1999 (Smoothing with Cubic Splines), in which the cubic spline preserves slope and curvature through each of the control points, i.e., it minimizes the function:
+
+   .. math:: L = \lambda \chi^2 + (1-\lambda) \int \left[S^{''}(\phi)\right]^2 d\phi
+
+   where :math:`\chi^2` is the sum of the residuals ("chi-squared"), the integral is the curvature of the spline over all of pulse phase :math:`\phi`, and :math:`\lambda` represents the paramter ("lam") that weights the importance of the two components.
+
+   Control points (knots) are generated iteratively. Polynomials up to quartic order are fit over the data array. If a quadratic well fits the data, then return without adding a knot, else subdivide the data in half and return the midpoint as a knot. The data array is continuously divided into two halves up to some minimum separation (default=16). In locations :math:`\phi_i` where a knot is decided to be placed, the phase bins closest to that knot location are fit by a cubic :math:`f(\phi` and the knot is placed at :math:`(\phi_i,f(\phi))`. After the initial knots locations are chosen, run the cubic spline interpolation as described before. If there is a location where a new knot will help the fit (the residuals must be greater than 4 times the RMS and the location in phase must be 3 times the off-pulse RMS, i.e., the current spline model fails there and it must be a location where actual pulse intensity is present), include that knot and re-run the cubic spline interpolation until the residuals RMS is low.
+
+   :param float lam: The lambda parameter that determines the relative weight of fitting through the knots and minimizing the curvature of the spline. Can take values from (0,1], where 1 = fit exactly through the knots and 0 = minimized curvature of the spline. If not provided, it is calculated as 1-(off-pulse rms)^2.
+   :param **kwargs: Additional arguments to pass to :func:`utils.subdivide`.
+   :return: template, *numpy.ndarray*
+
+
+.. py:function:: component_fitting([mode='gaussian',nmax=10])
+   
+   Iteratively fits a total of nmax components to a pulse profile. The iteration will end when the :math:`\chi_r^2` is minimized.
+   
+   If mode == 'gaussian', will fit components of the form
+
+   .. math:: f(\phi) = A \exp\left[-\frac{1}{2}\left(\frac{\phi-\mu}{\sigma}\right)\right]
+
+   where :math:`\phi` is the pulse phase, :math:`A` is the component amplitude, :math:`\mu` is the mean pulse phase, and :math:`\sigma` is the component width.
+
+   If mode == 'vonmises', will fit components of the form
+
+   .. math:: f(\phi) = A \frac{\exp\left[\kappa \cos(\phi-\mu)\right]}{2\pi I_0(\kappa)}
+
+   where again :math:`\phi` is the pulse phase and :math:`A` is the component amplitude, :math:`\mu` is the mean pulse phase, and :math:`1/\kappa` is the analogous to the component width (squared) of a Gaussian, :math:`\sigma^2`. The function :math:`I_0` is the modified Bessel function of order 0.
+
+   :param str mode: The function to fit, can choose: 'gaussian', .vonmises'.
+   :param int nmax: Maximum number of components to test.
+   :return: template, *numpy.ndarray*
+
+
+.. py:function:: gaussian_smoothing([nmax=10])
+
+   Runs :func:`component_fitting` with mode = 'gaussian'
+
+   :param int nmax: Maximum number of components to test.
+   :return: template, *numpy.ndarray*
+
+
+.. py:function:: vonmises_smoothing([nmax=10])
+
+   Runs :func:`component_fitting` with mode = 'vonmises'
+
+   :param int nmax: Maximum number of components to test.
+   :return: template, *numpy.ndarray*
+
+
+
 .. py:function:: getPeriod()
 
    Return the pulse period.
 
    :return: period, *float*
 
-.. py:function:: getNBins()
+.. py:function:: getNbin()
 
    Return the number of phase bins.
 
    :return: nbins, *int*
 
+.. py:function:: getTbin()
+
+   Return the time per phase bin
+
+   :return: t, *float*
+
 .. py:function:: plot([show=True])
 
    Simple plot of the pulse.
 
-   :param bool show: Show the plot.
-   :return: None
-   
+   :param bool show: Show the plot.   
 
 .. py:function:: plot_windows([show=True])
 
    Diagnostic plot of the main-, inter-, and off-pulse regions.
 
    :param bool show: Show the plot.
-   :return: None

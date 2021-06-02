@@ -49,7 +49,7 @@ Methods
    Load a PSRFITS file, process the metadata, and form the data arrays.
 
    :param str filename: Path to load file from.
-   :param bool prepare: Rotate the pulse so that the peak is in the center of phase. Stores relevant time delays associated with the rotation.
+   :param bool prepare: This performs three tasks. It will polarization average the data via :func:`pscrunch`, dedisperse the data with :func:`dedisperse`, and rotate the pulse so that the peak is in the center of phase with :func:`center`. For centering, this will store the relevant time delays associated with the rotation.
    :param bool baseline_removal: Subtract the baseline intensity of the average profile off-pulse region from all individual data profiles.
    :return: None
 
@@ -498,6 +498,18 @@ Methods
    Returns if the file is a calibration observation or not, given by the OBS_MODE flag in the header.
 
    :rtype: bool
+
+.. py:function:: record(frame)
+
+   Internal function that runs within state-changing functions to record those state changes to a history variable that can be written out if the archive if saved.
+
+   :param frame frame: Frame object returned by python's inspect module.
+
+.. py.function:: print_pypulse_history()
+
+   Prints all elements in the PyPulse history list.
+
+
 
 
 History class

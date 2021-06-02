@@ -12,11 +12,12 @@ Par Class
 
 The *Par* class handles pulsar parameter files.
 
-.. py:class:: Par(filename[,numwrap=Decimal])
+.. py:class:: Par(filename[,numwrap=float,usedecimal=False])
 
    :param str filename: Path to a .par file
-   :param type numwrap: Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.
-
+   :param type numwrap: Type to wrap numeric values by. Float is used by default for ease but Decimal can be is used to keep numeric precision if needed, e.g., for spin period/frequency. Can set numwrap=DECIMAL or usedecimal=True.
+   :param bool usedecimal: See above.
+			
 Usage:
 
 .. code-block:: python
@@ -67,12 +68,35 @@ Methods
    :rtype: float
 
 
-.. py:function:: getPM()
+.. py:function:: getPM([error=False])
 
    Calculate the proper motion in mas/yr. If only one of the two basis parameters is provided, return that value.
 
+   :param bool error: If true, return the error on the proper motion.
    :rtype: float
 
+.. py:function:: getPX([error=False])
+
+   Return the parallax in mas. 
+
+   :param bool error: If true, return the error on the parallax.
+   :rtype: float
+
+.. py:function:: getDIST([error=False])
+
+   Return the distance in kpc.
+
+   :param bool error: If true, return the error on the distance.
+   :rtype: float
+
+.. py:function:: getVpperp()
+
+   Calculate the transverse velocity in km/s.
+
+   :rtype: float
+	
+
+	   
 .. py:function:: getDM()
 
    Return the DM parameter.
@@ -86,6 +110,14 @@ Methods
    :param bool full_output: Return a tuple of the times, DMXs, DMX errors, DMXR1s, DMXR2s, DMXF1s, DMXF2s
    :return: times (*numpy.ndarray*), DM (*numpy.ndarray*), DM errors (*numpy.ndarray*), unless full_output=True.
 
+.. py:function:: getXMX()
+ 
+   Return a tuple of the XMX values.
+
+   :return: xmxs (*numpy.ndarray*), errs (*numpy.ndarray*), R1s (*numpy.ndarray*), R2s (*numpy.ndarray*), EXPs (*numpy.ndarray*), 
+
+.. warning:: This function is under construction.
+	    
 .. py:function:: getDMseries()
 
    Return a tuple of the DM time series (times, DMs, DM errors). DMs are calculated as the DMX model plus the DM parameter (the fiducial value).
@@ -116,3 +148,64 @@ Methods
 
    :param bool years: Divide the timespan by 365.25.
    :rtype: float
+
+
+
+
+Parameter Class
+=========
+
+The *Parameter* class handles individual pulsar parameters.
+
+.. py:class:: Parameter(name[,value=None,fit=None,error=None,flag=None,flagvalue=None,numwrap=d.Decimal])
+
+   Stores the basic values of a Parameter in a par file.
+
+   :param str name: If only the name parameter is specified, then this is the entire parameter string and will be parsed. Otherwise, this is the parameter name (e.g. PSR, P0/F0, etc.)
+   :param str value: Parameter value. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.
+   :param str fit: Parameter fit value, i.e. whether or not the parameter is to be fit in the timing model. Can be supplied a numeric value that will be wrapped with an int
+   :param str error: Parameter error. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.
+   :param str flag: If there is a flag associated with the parameter
+   :param str flagvalue: The vale the flag is set to.
+   :param type numwrap: Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.
+
+Methods
+-------
+
+.. py:function:: getName()
+
+   Return the name of the parameter.
+
+   :rtype: str
+
+.. py:function:: getValue()
+   
+   Return the value of the parameter.
+
+   :rtype: numwrap
+
+.. py:function:: getError()
+   
+   Return the value of the parameter error.
+
+   :rtype: numwrap
+
+
+.. py:function:: getFit()
+
+   Return the value of the fit flag.
+
+   :rtype: int
+
+.. py:function:: getFlag()
+
+   Return the value of the flag.
+
+   :rtype: str
+
+.. py:function:: getFlagValue()
+
+   Return the value of the flag value
+
+   :rtype: str
+

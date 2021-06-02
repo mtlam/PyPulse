@@ -13,11 +13,12 @@ Tim Class
 
 The *Tim* class handles pulsar times-of-arrival (TOAs) files
 
-.. py:class:: Tim(filename[,numwrap=Decimal])
+.. py:class:: Tim(filename[,numwrap=float,usedecimal=False])
 
    :param str filename: Path to a .tim file
-   :param type numwrap: Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.
-
+   :param type numwrap: Type to wrap numeric values by. Float is used by default for ease but Decimal can be is used to keep numeric precision if needed, e.g., for spin period/frequency. Can set numwrap=DECIMAL or usedecimal=True.
+   :param bool usedecimal: See above.
+			
 Usage:
 
 .. code-block:: python
@@ -42,6 +43,31 @@ Methods
 
    :param str filename: Path to .tim file
 
+.. py:function:: getFreqs()
+   
+   Return the frequencies of each pulse profile the TOAs were generated from. Loops over :func:`getFreq` in :class:`TOA`.
+
+   :rtype: numpy.ndarray
+
+.. py:function:: getMJDs()
+   
+   Return the MJD of each pulse profile the TOAs were generated from. Loops over :func:`getMJD` in :class:`TOA`.
+
+   :rtype: numpy.ndarray
+
+
+.. py:function:: getErrors()
+   
+   Return the TOA uncertainties of each pulse profile the TOAs were generated from. Loops over :func:`getError` in :class:`TOA`.
+
+   :rtype: numpy.ndarray	   
+
+.. py:function:: get()
+   
+   Return the value of a flag in each TOA line. Loops over :func:`get` in :class:`TOA`.
+
+   :rtype: numpy.ndarray
+	   
 .. py:function:: getTspan([years=False])
 
    Return the total time span covered by the TOAs.
@@ -98,7 +124,7 @@ Methods
 
    Return the TOA error in microseconds.
 
-   :rtype: floar
+   :rtype: float
 
 .. py:function:: getSiteID()
  

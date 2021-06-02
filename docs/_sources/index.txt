@@ -29,9 +29,13 @@ Contents:
    archive 
    singlepulse
    calibrator
+   rfimitigator
    dynamicspectrum
    par
-   tim	    
+   tim
+   dmx
+   utils
+   license
 
 .. Classes
 .. =======
@@ -39,14 +43,32 @@ Contents:
 * :doc:`archive`
 * :doc:`singlepulse`
 * :doc:`calibrator`
+* :doc:`rfimitigator`
 * :doc:`dynamicspectrum`
 * :doc:`par`
 * :doc:`tim`
-
+* :doc:`dmx`
 
 
 Misc
 ====
 
+* :doc:`examples`
+* :doc:`scripts`
+* :doc:`utils`
 * :ref:`search`
+* :doc:`license`
 
+
+
+Citations
+=========
+
+See `ASCL <http://ascl.net/1706.011>`_. You can cite as:
+
+`Lam, M. T., 2017, PyPulse, Astrophysics Source Code Library, record ascl:1706.011 <http://adsabs.harvard.edu/abs/2017ascl.soft06011L>`_
+
+Contact
+=========
+
+Please contact michael-dot-lam-at-nanograv-dot-org.

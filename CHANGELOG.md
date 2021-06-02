@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Offsets in waterfall plots for y-axis stretching now ignore NaNs. Duplicate calls to set axis limits have been removed.
+
 ## [0.1.0] - 2021-05-03
 
 ### Added

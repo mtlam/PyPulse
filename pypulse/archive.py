@@ -110,7 +110,7 @@ class Archive(object):
     def __repr__(self):
         return "Archive(%r, prepare=%r, lowmem=%r, verbose=%r)" % \
                 (self.filename, self.prepare, self.lowmem, self.verbose)
-    
+
     def __str__(self):
         return self.filename
 
@@ -209,7 +209,7 @@ class Archive(object):
             self.weights = None
             self._data = None
             return
-            
+
         DATA = hdulist['SUBINT'].data['DATA']
         if np.ndim(DATA) == 5:
             DATA = DATA[:, 0, :, :, :] #remove the nsblk column
@@ -298,7 +298,7 @@ class Archive(object):
         elif nsubint == 1 and npol == 1:
             for k in K:
                 self._data[0, 0, k, :] = (DAT_SCL[0, k]*DATA[0, 0, k, :]+DAT_OFFS[0, k])#*DAT_WTS[0, k] #dat WTS[0]?
-        elif nsubint == 1 and nchan == 1:              
+        elif nsubint == 1 and nchan == 1:
             for j in J:
                 self._data[0, j, 0, :] = (DAT_SCL[0, j]*DATA[0, j, 0, :]+DAT_OFFS[0, j])#*DAT_WTS[0]
         elif npol == 1 and nchan == 1:
@@ -482,7 +482,7 @@ class Archive(object):
         cols.append(pyfits.Column(name='DAT_WTS', format='%iE'%np.shape(self.weights)[1], array=self.weights)) #call getWeights()
 
         nsubint, npol, nchan, nbin = self.shape(squeeze=False)
-        
+
         DAT_OFFS = np.zeros((nsubint, npol*nchan), dtype=np.float32)
         DAT_SCL = np.zeros((nsubint, npol*nchan), dtype=np.float32)
         DATA = self.getData(squeeze=False, weight=False)
@@ -663,7 +663,7 @@ class Archive(object):
         self.record(inspect.currentframe())
 
         nsubint, npol, nchan, nbin = self.shape(squeeze=False)
-        
+
         retval = np.zeros((nsubint, npol, len(np.r_[0:nchan:factor]), nbin))
 
         weightretval = np.zeros((nsubint, len(np.r_[0:nchan:factor])))
@@ -708,7 +708,7 @@ class Archive(object):
         else:
             self.record(inspect.currentframe())
             nsubint, npol, nchan, nbin = self.shape(squeeze=False)
-            
+
             retval = np.zeros((nsubint, npol, nchan, len(np.r_[0:nbin:factor])))
             counts = np.zeros_like(retval)
             for i in xrange(factor):
@@ -827,7 +827,7 @@ class Archive(object):
             self.template = SP.SinglePulse(template, windowsize=int(self.getNbin()//8))
             self.opw = self.template.opw
             self.template.normalize()
-            
+
         return self.template
 
     def superprep(self):
@@ -884,7 +884,7 @@ class Archive(object):
         self.average_profile = np.roll(self.average_profile, diff)
         tbin = self.getTbin()
         if tbin is None: #error catching
-            return 
+            return
         self.channel_delays += Decimal(str(-1*diff*tbin)) #this is unnecessary? FIX THIS
         self.calculateOffpulseWindow()
         return self
@@ -952,7 +952,7 @@ class Archive(object):
         fd_poln = self.header['FD_POLN']
         return Calibrator(freqs, caldata, calerrs, pol_type=pol_type, fd_poln=fd_poln, Funit=self.getFrequencyUnit(), Sunit=self.getDataUnit(), verbose=self.verbose)
 
-    
+
     def calibrate(self, psrcalar, fluxcalonar=None, fluxcaloffar=None):
         """Calibrates using another archive"""
         self.record(inspect.currentframe())
@@ -1009,10 +1009,10 @@ class Archive(object):
 
         if setnan is not None:
             data = np.where(data == setnan, np.nan, data)
-        
+
         #return np.copy(data) #removes pointer to data
         return data
-    
+
     def setData(self, newdata):
         """Sets the data,  very dangerous!"""
         self.record(inspect.currentframe())
@@ -1121,7 +1121,7 @@ class Archive(object):
         """Convenience function for getAxis"""
         return self.getAxis('F', **kwargs)
     getFreqs = getFrequencies
-    
+
     def getTimes(self, **kwargs):
         """Convenience function for getAxis"""
         return self.getAxis('T', **kwargs)
@@ -1251,7 +1251,7 @@ class Archive(object):
                     if windowsize >= len(sptemp.data):
                         raise IndexError("Improper window size")
                     sptemp = SP.SinglePulse(sptemp.data, windowsize=windowsize)
-                    
+
                 gs = np.zeros((fullshape[0], fullshape[2]))
                 offs = np.zeros((fullshape[0], fullshape[2]))
                 sig_gs = np.zeros((fullshape[0], fullshape[2]))
@@ -1325,10 +1325,10 @@ class Archive(object):
                 plt.show()
         else:
             raise IndexError("Invalid dimensions for plot()")
-            
+
     def imshow(self, ax=None, cbar=False, mask=None, show=True,
                filename=None, setnan=0.0, cmap=None, **kwargs):
-        """ 
+        """
         Basic imshow of data
 
         Parameters
@@ -1338,7 +1338,7 @@ class Archive(object):
         cbar : bool
             Draw a color bar
         mask : float
-            If set to a value, use a masked array and set the mask 
+            If set to a value, use a masked array and set the mask
             to that value
         show : bool
             If true, plot the image
@@ -1347,7 +1347,7 @@ class Archive(object):
         setnan : float
             Value to set NaNs to in the plot
         cmap : str or matplotlib.colors.Colormap
-            Either a matplotlib colormap object or a string of the 
+            Either a matplotlib colormap object or a string of the
             name of the colormap. Default is cividis if available,
             otherwise viridis
 
@@ -1362,7 +1362,7 @@ class Archive(object):
         if ax is None:
             fig = plt.figure()
             ax = fig.add_subplot(111)
-        
+
         if len(np.shape(data)) == 2:
             extent = None
             if shape[0] == 1 and shape[1] == 1:
@@ -1384,7 +1384,7 @@ class Archive(object):
 
 
             #cmap.set_bad(color='k', alpha=1.0)
-                
+
             if mask is not None:
                 u.imshow(ma.masked_array(data, mask=mask), ax=ax, extent=extent, cmap=cmap, **kwargs)
             else:
@@ -1416,11 +1416,11 @@ class Archive(object):
                 ax_time = ax.twiny()
                 ax_time.set_xlim(0, self.getNsubint())
                 ax_time.set_xlabel("Subintegration Number")
-                
+
         elif len(np.shape(data)) == 1:
             # Trust that this is a single subintegration in time?
             Tedges = self.getAxis('T', edges=True) #is this true?
-            extent = [0, 1, Tedges[0], Tedges[-1]]       
+            extent = [0, 1, Tedges[0], Tedges[-1]]
 
             u.imshow(data[np.newaxis, ...], ax=ax, extent=extent, cmap=cmap, **kwargs)
 
@@ -1429,8 +1429,8 @@ class Archive(object):
             ax.set_ylabel("Time (%s)"%unit)
             ax2 = ax.twinx()
             ax2.set_ylim(0, self.getNsubint())
-            ax2.set_ylabel("Subintegration Number")                
-                
+            ax2.set_ylabel("Subintegration Number")
+
         else:
             raise IndexError("Invalid dimensions for plotting")
 
@@ -1470,7 +1470,7 @@ class Archive(object):
         data = self.getData(squeeze=True)
         if len(np.shape(data)) == 2:
             if offset is None:
-                offset = np.max(np.average(data, axis=0))#*0.5# * 2.10 #?
+                offset = np.max(np.nanmean(data, axis=0))#*0.5# * 2.10 #?
 
             fig = plt.figure(figsize=(6, 6))
             if album:
@@ -1505,9 +1505,6 @@ class Archive(object):
                     #y = np.roll(y, 100*i) # for testing
 
                     ax.plot(y, color, zorder=z)
-
-                    ax.set_xlim(XLOW, XHIGH)
-                    ax.set_ylim(YLOW, YHIGH)
                     ax.fill_between(x, y, where=(y >= YLOW), color=bgcolor, zorder=z) #testing
 
             else:
@@ -1704,7 +1701,7 @@ class Archive(object):
                 P0 = self.polyco.calculatePeriod()
                 return P0
             return
-        
+
             #print P0,self.params.getPeriod()
             if np.abs(P0) < 1e-5: #Problem with large DT POLYCO values?
                 return self.params.getPeriod()
@@ -1815,7 +1812,7 @@ class Archive(object):
         else:
             return self.header['OBSFREQ'] #perhaps do an unweighted version from DAT_FREQ?
     getCenterFreq = getCenterFrequency
-        
+
     def getFrequencyUnit(self):
         for key in self.subintheader.keys():
             if "TTYPE" in key:
@@ -1830,8 +1827,8 @@ class Archive(object):
         return None
 
     def getDataUnit(self):
-        """ Returns the `intensity' unit of the data 
-        Should also try to look at the 
+        """ Returns the `intensity' unit of the data
+        Should also try to look at the
         """
         for key in self.subintheader.keys():
             if "TTYPE" in key:
@@ -1844,7 +1841,7 @@ class Archive(object):
     getIntensityUnit = getDataUnit
     getFluxDensityUnit = getDataUnit
     getFluxUnit = getDataUnit
-        
+
     def getTelescope(self):
         """Returns the telescope name"""
         return self.header['TELESCOP']
