@@ -598,14 +598,14 @@ class Archive(object):
 
         newnsubint = nsubint//factor
         for i in xrange(newnsubint):
-            weightretval[i, :] = np.mean(self.weights[i*factor:(i+1)*factor, :], axis=0)
+            weightretval[i, :] = np.nanmean(self.weights[i*factor:(i+1)*factor, :], axis=0)
 
         for i in xrange(newnsubint):
-            newdurations[i] += np.sum(self.durations[i*factor:(i+1)*factor])
+            newdurations[i] += np.nansum(self.durations[i*factor:(i+1)*factor])
             for j in xrange(npol):
                 for k in xrange(nchan):
                     for l in xrange(nbin):
-                        retval[i, j, k, l] = np.sum(self.data[i*factor:(i+1)*factor, j, k, l] * self.weights[i*factor:(i+1)*factor, k]) / np.sum(self.weights[i*factor:(i+1)*factor, k])
+                        retval[i, j, k, l] = np.nansum(self.data[i*factor:(i+1)*factor, j, k, l] * self.weights[i*factor:(i+1)*factor, k]) / np.nansum(self.weights[i*factor:(i+1)*factor, k])
 
         self.weights = weightretval
         self.data = retval
@@ -679,15 +679,15 @@ class Archive(object):
         newfreq = np.zeros(newnchan) #this will only be 1D
 
         for k in xrange(newnchan):
-            weightretval[:, k] = np.mean(self.weights[:, k*factor:(k+1)*factor], axis=1)
-            newfreq[k] = np.sum(freq[k*factor:(k+1)*factor])/float(factor) #unweighted!
+            weightretval[:, k] = np.nanmean(self.weights[:, k*factor:(k+1)*factor], axis=1)
+            newfreq[k] = np.nansum(freq[k*factor:(k+1)*factor])/float(factor) #unweighted!
 
         for i in xrange(nsubint):
             for j in xrange(npol):
                 for k in xrange(newnchan):
                     for l in xrange(nbin):
                         retval[i, j, k, l] = \
-                        np.sum(self.data[i, j, k*factor:(k+1)*factor, l] * self.weights[i, k*factor:(k+1)*factor]) / np.sum(self.weights[i, k*factor:(k+1)*factor])
+                        np.nansum(self.data[i, j, k*factor:(k+1)*factor, l] * self.weights[i, k*factor:(k+1)*factor]) / np.nansum(self.weights[i, k*factor:(k+1)*factor])
 
 
         self.weights = weightretval
@@ -995,7 +995,7 @@ class Archive(object):
     @data.setter
     def data(self, value):
         self._data = value
-        self.weighted_data = value*self.weights[:,None,:,None]/np.sum(self.weights)
+        self.weighted_data = value*self.weights[:,None,:,None]/np.nansum(self.weights)
 
     def getData(self, squeeze=True, setnan=None, weight=True):
         """Returns the data array,  fully squeezed"""
@@ -1806,7 +1806,7 @@ class Archive(object):
     def getCenterFrequency(self, weighted=False):
         """Returns the center frequency"""
         if weighted:
-            return np.sum(self.freq*self.weights)/np.sum(self.weights)
+            return np.nansum(self.freq*self.weights)/np.nansum(self.weights)
         if "HISTORY" in self.keys:
             return self.history.getLatest('CTR_FREQ')
         else:
