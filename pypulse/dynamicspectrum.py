@@ -4,6 +4,7 @@ Michael Lam 2015
 To do: grid: set clim such that 0 is white, not blue,mask data,add zorder
 '''
 
+import copy
 import sys
 import numpy as np
 import numpy.ma as ma
@@ -393,6 +394,7 @@ class DynamicSpectrum(object):
         if show or savefig is not None:
             fig = plt.figure()
             ax = fig.add_subplot(211)
+            cmap = copy.copy(cmap) # Extra copy just in case
             u.imshow(self.data, cmap=cmap)
             ax = fig.add_subplot(212)
 
@@ -451,7 +453,7 @@ class DynamicSpectrum(object):
 
         if log and not ss:
             data = np.log10(data)
-
+        cmap = copy.copy(cmap) # Extra copy just in case
         if alpha and not (acf or ss): #or just ignore?
             cmap.set_bad(alpha=0.0)
 
