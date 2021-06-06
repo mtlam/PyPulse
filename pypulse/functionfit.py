@@ -21,10 +21,17 @@ def gaussianfit(x, y, baseline=False):
         p0 = [height, mu, sigma, 0.0]
     else:
         p0 = [height, mu, sigma]
-    p1, success = optimize.leastsq(errgaussian, p0[:], args=(x, y, baseline))
+    out = optimize.leastsq(errgaussian, p0[:], args=(x, y, baseline), full_output=1)
+    p1 = out[0] # output parameters
     p1[2] = np.abs(p1[2]) #enforces positive sigma
-    #Return values are the coefficients, the residuals
-    return p1, errgaussian(p1, x, y, baseline)
+
+    s_sq = (errgaussian(p1, x, y, baseline)**2).sum() / (len(x) - 4)
+    perrs = np.zeros_like(p1)
+    for i in range(len(perrs)):
+        perrs[i] = np.sqrt(out[1][i, i]*s_sq)
+    
+    #Return values are the coefficients and the errors
+    return p1, perrs
 
 #area = np.sum(binwidths*hist)
 def funcsimpleDISSpdf(p, x, area=None):

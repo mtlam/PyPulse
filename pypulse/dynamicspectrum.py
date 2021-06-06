@@ -237,20 +237,23 @@ class DynamicSpectrum(object):
             Taxis = (np.arange(-(NT-1), NT, dtype=np.float)*np.abs(dT))[1:-1] #???
 
             
-            pout, errs = ffit.gaussianfit(Taxis[NT//2:3*NT//2], self.acf[centerrind, NT//2:3*NT//2], baseline=True)
+            pout, perrs = ffit.gaussianfit(Taxis[NT//2:3*NT//2], self.acf[centerrind, NT//2:3*NT//2], baseline=True)
             ft = interpolate.interp1d(Taxis, ffit.funcgaussian(pout, Taxis, baseline=True)-(pout[3]+pout[0]/np.e))
             try:
                 delta_t_d = optimize.brentq(ft, 0, Taxis[-1])
+                err_t_d = perrs[2]
             except ValueError:
                 delta_t_d = np.nan
+                err_t_d = 0.0
 
-            pout, errs = ffit.gaussianfit(Faxis[NF//2:3*NF//2], self.acf[NF//2:3*NF//2, centercind], baseline=True)
+            pout, perrs = ffit.gaussianfit(Faxis[NF//2:3*NF//2], self.acf[NF//2:3*NF//2, centercind], baseline=True)
             fnu = interpolate.interp1d(Faxis, ffit.funcgaussian(pout, Faxis, baseline=True)-(pout[3]+pout[0]/2))
             try:
                 delta_nu_d = optimize.brentq(fnu, 0, Faxis[-1])
+                err_nu_d = perrs[2]
             except ValueError:
                 delta_nu_d = np.nan
-
+                err_t_d = 0.0
 
             #following Glenn's code and Cordes 1986 (Space Velocities...)
             # Errors from finite scintle effect:
@@ -265,8 +268,8 @@ class DynamicSpectrum(object):
             fse_nu_d = delta_nu_d/(2*np.log(2)*np.sqrt(N_d)) #log because of FWHM?
             fse_t_d = delta_t_d/(2*np.sqrt(N_d))
 
-            err_nu_d = fse_nu_d
-            err_t_d = fse_t_d #need to add in fitting errors
+            err_nu_d = np.sqrt(fse_nu_d**2 + err_nu_d**2)
+            err_t_d = np.sqrt(fse_t_d**2 + err_t_d**2)
 
             if show or savefig is not None:
                 fig = plt.figure()

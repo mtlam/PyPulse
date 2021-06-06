@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- `DynamicSpectrum` now copies colormaps to remove `MatplotlibDeprecationWarning`
+### Added
+
+- Fitting errors on the 1D scintillation parameters are now added. This changes the underlying `functionfit` output but this is not part of the public API.
+
+### Changed
+
+- `DynamicSpectrum` now copies colormaps with `copy.copy` to remove `MatplotlibDeprecationWarning`
 - Fixed scrunching and waterfall plot limits due to updates in numpy in the handling of NaNs. In waterfall plot, duplicate calls to set axis limits have been removed.
 
 ## [0.1.0] - 2021-05-03
