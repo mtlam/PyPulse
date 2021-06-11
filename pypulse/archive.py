@@ -132,7 +132,7 @@ class Archive(object):
             print("IOError: Filename not found")
             raise SystemExit
         self.header = hdulist[0].header
-        self.keys = fmap(lambda x: x.name, hdulist)
+        self.keys = [hdu.name for hdu in hdulist]
         tablenames = self.keys[:] #temporary list for checking other tables
 
         if 'HISTORY' in self.keys:
@@ -153,10 +153,10 @@ class Archive(object):
             self.paramheader = dict()
             for key in self.paramheaderlist:
                 self.paramheader[key] = hdulist['PSRPARAM'].header[key]
-            self.params = Par(fmap(lambda x: x[0], hdulist['PSRPARAM'].data), numwrap=float)
+            self.params = Par([elem[0] for elem in hdulist['PSRPARAM'].data], numwrap=float)
         elif 'PSREPHEM' in self.keys:
             tablenames.remove('PSREPHEM')
-            paramkeys = fmap(lambda x: x.name, hdulist['PSREPHEM'].columns)
+            paramkeys = [col.name for col in hdulist['PSREPHEM'].columns]
             paramvals = hdulist['PSREPHEM'].data[0]
             paramstrs = fmap(lambda x, y: "%s %s"%(x, y), paramkeys, paramvals)
             #self.paramheaderlist = hdulist['PSREPHEM'].header.keys()
@@ -195,7 +195,7 @@ class Archive(object):
             raise ValueError("This is a fluxcal file: currently not implemented")
 
         self.subintinfo = dict()
-        self.subintinfolist = fmap(lambda x: x.name, hdulist['SUBINT'].columns[:-5])
+        self.subintinfolist = [elem.name for elem in hdulist['SUBINT'].columns[:-5]]
         for i, column in enumerate(hdulist['SUBINT'].columns[:-5]):
             self.subintinfo[column.name] = (column.format,
                                             column.unit,
@@ -1600,8 +1600,7 @@ class Archive(object):
             #print tauhatdec,np.dtype(tauhatdec)
 
             # .item() allows for numpy.int to be cast in Python 3
-            tauhatdec = np.array(fmap(lambda x: x+Decimal(rollval.item()),
-                                      tauhatdec))
+            tauhatdec = np.array([t + Decimal(rollval.item()) for t in tauhatdec])
 
             #print tauhatdec
             tauhat = tauhatdec * Decimal(dt)/Decimal(86400) #day units

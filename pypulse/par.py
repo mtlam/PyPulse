@@ -114,7 +114,7 @@ class Par(object):
         self.filename = filename
         if isinstance(filename, (list, np.ndarray)):
             lines = filename
-        elif isinstance(filename, (str, np.str)):
+        elif isinstance(filename, (str, np.str_)):
             FILE = open(filename, 'r')
             lines = FILE.readlines()
         else:
@@ -133,7 +133,7 @@ class Par(object):
             p = Parameter(line, numwrap=self.numwrap)
             self.paramlist.append(p)
             self.paramnames.append(p.getName())
-        self.paramnames = np.array(self.paramnames, dtype=np.str)
+        self.paramnames = np.array(self.paramnames, dtype=np.str_)
         if isinstance(filename, str):
             FILE.close()
 
@@ -319,7 +319,7 @@ class Par(object):
         return coord
     getCoords = getCoord
 
-        
+
     def getDM(self):
         return self.get('DM')
 
@@ -355,7 +355,7 @@ class Par(object):
                     ts[i] = (R1s[i]+R2s[i])/2.0
         if full_output:
             return ts, dmxs, errs, R1s, R2s, F1s, F2s
-        return ts, dmxs, errs  
+        return ts, dmxs, errs
 
     def getXMX(self):#, full_output=False):
         keys = self.paramnames

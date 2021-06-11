@@ -1,20 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Tim Class &#8212; PyPulse 0.0.1 documentation</title>
-    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="DMX Class" href="dmx.html" />
@@ -32,9 +30,330 @@
         <li class="right" >
           <a href="par.html" title="Par Class"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tim Class</a></li> 
       </ul>
-    </div>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="toctree-wrapper compound">
+</div>
+<section id="tim-class">
+<h1>Tim Class<a class="headerlink" href="#tim-class" title="Permalink to this headline">¶</a></h1>
+<p>The <em>Tim</em> class handles pulsar times-of-arrival (TOAs) files</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="Tim">
+<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">Tim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filename</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">numwrap=float</span></em>, <em class="sig-param"><span class="pre">usedecimal=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Tim" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to a .tim file</p></li>
+<li><p><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><em>type</em></a>) – Type to wrap numeric values by. Float is used by default for ease but Decimal can be is used to keep numeric precision if needed, e.g., for spin period/frequency. Can set numwrap=DECIMAL or usedecimal=True.</p></li>
+<li><p><strong>usedecimal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – See above.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">Tim</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">)</span> <span class="c1">#automatically parses each TOA with the TOA() class</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">toas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getMJD</span><span class="p">()</span> <span class="c1">#prints the MJD of the first TOA as a python Decimal</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">toas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;snr&#39;</span><span class="p">)</span> <span class="c1">#prints the value of the -snr flag of the TOA if it is available</span>
+</pre></div>
+</div>
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a .tim file.</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param str filename</dt>
+<dd class="field-odd"><p>Path to .tim file</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a .tim file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to .tim file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getFreqs">
+<span class="sig-name descname"><span class="pre">getFreqs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFreqs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the frequencies of each pulse profile the TOAs were generated from. Loops over <a class="reference internal" href="#getFreq" title="getFreq"><code class="xref py py-func docutils literal notranslate"><span class="pre">getFreq()</span></code></a> in <a class="reference internal" href="#TOA" title="TOA"><code class="xref py py-class docutils literal notranslate"><span class="pre">TOA</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getMJDs">
+<span class="sig-name descname"><span class="pre">getMJDs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getMJDs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the MJD of each pulse profile the TOAs were generated from. Loops over <a class="reference internal" href="#getMJD" title="getMJD"><code class="xref py py-func docutils literal notranslate"><span class="pre">getMJD()</span></code></a> in <a class="reference internal" href="#TOA" title="TOA"><code class="xref py py-class docutils literal notranslate"><span class="pre">TOA</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getErrors">
+<span class="sig-name descname"><span class="pre">getErrors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getErrors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the TOA uncertainties of each pulse profile the TOAs were generated from. Loops over <a class="reference internal" href="#getError" title="getError"><code class="xref py py-func docutils literal notranslate"><span class="pre">getError()</span></code></a> in <a class="reference internal" href="#TOA" title="TOA"><code class="xref py py-class docutils literal notranslate"><span class="pre">TOA</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value of a flag in each TOA line. Loops over <a class="reference internal" href="#id0" title="get"><code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code></a> in <a class="reference internal" href="#TOA" title="TOA"><code class="xref py py-class docutils literal notranslate"><span class="pre">TOA</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getTspan">
+<span class="sig-name descname"><span class="pre">getTspan</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">years=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getTspan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total time span covered by the TOAs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>years</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Divide the total time span in days by 365.25.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+<section id="toa-class">
+<h1>TOA Class<a class="headerlink" href="#toa-class" title="Permalink to this headline">¶</a></h1>
+<p>The <em>TOA</em> class handles individual pulsar times-of-arrival (TOAs).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="TOA">
+<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">TOA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filename</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">freq=None</span></em>, <em class="sig-param"><span class="pre">MJD=None</span></em>, <em class="sig-param"><span class="pre">err=None</span></em>, <em class="sig-param"><span class="pre">siteID=None</span></em>, <em class="sig-param"><span class="pre">numwrap=Decimal</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#TOA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores the five basic values of a TOA and any additional flags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – If only the filename parameter is specified, then the parameter is the entire TOA string and will be parsed.</p></li>
+<li><p><strong>freq</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – TOA frequency. Can be supplied a numeric value that will be wrapped as a float.</p></li>
+<li><p><strong>MJD</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – TOA MJD. Can be supplied a numeric value that will be wrapped with the type numwrap.</p></li>
+<li><p><strong>err</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – TOA error in microseconds. Can be supplied a numeric value that will be wrapped as a float.</p></li>
+<li><p><strong>siteID</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – TOA observatory site ID.</p></li>
+<li><p><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><em>type</em></a>) – Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Additional flags. If the five base parameters are provided, each argument is a tuple of the form (flag, value). Otherwise, this is a string of all of the flags and values that must be parsed.</p>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<section id="id3">
+<h2>Methods<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="getFilename">
+<span class="sig-name descname"><span class="pre">getFilename</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the filename the TOA was generated from.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getFrequency">
+<span class="sig-name descname"><span class="pre">getFrequency</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the frequency of the pulse profile the TOA was generated from.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getFreq">
+<span class="sig-name descname"><span class="pre">getFreq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFreq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#getFrequency" title="getFrequency"><code class="xref py py-func docutils literal notranslate"><span class="pre">getFrequency()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getMJD">
+<span class="sig-name descname"><span class="pre">getMJD</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getMJD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the MJD of the TOA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getError">
+<span class="sig-name descname"><span class="pre">getError</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the TOA error in microseconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getSiteID">
+<span class="sig-name descname"><span class="pre">getSiteID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getSiteID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the observatory site ID of the pulse profiles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>For any flags stored with the TOA, return the value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the flag.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="comment">
+<span class="sig-name descname"><span class="pre">comment</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Comment out the TOA (the TOA string is appended to “C “). Useful when saving out a .tim file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="setFilename">
+<span class="sig-name descname"><span class="pre">setFilename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#setFilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the filename of the TOA to a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Filename to set in the TOA.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="setFrequency">
+<span class="sig-name descname"><span class="pre">setFrequency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#setFrequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the frequency of the TOA to a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>freq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Frequency to set in the TOA.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="setFreq">
+<span class="sig-name descname"><span class="pre">setFreq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#setFreq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#setFrequency" title="setFrequency"><code class="xref py py-func docutils literal notranslate"><span class="pre">setFrequency()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="setMJD">
+<span class="sig-name descname"><span class="pre">setMJD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MJD</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#setMJD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the MJD of the TOA to a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>MJD</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – MJD to set in the TOA.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="setError">
+<span class="sig-name descname"><span class="pre">setError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">err</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#setError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the error of the TOA to a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>err</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Error to set in the TOA.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="setSiteID">
+<span class="sig-name descname"><span class="pre">setSiteID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">siteID</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#setSiteID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the observatory site ID of the TOA to a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>siteID</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Site ID to set in the TOA.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#set" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the flag exists, set the value of an associated flag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the flag.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Value to set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#add" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the flag does not exist, add the flag with associated value to the TOA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the flag.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Value to set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table of Contents</a></h3>
@@ -63,405 +382,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <div class="toctree-wrapper compound">
-</div>
-<div class="section" id="tim-class">
-<h1>Tim Class<a class="headerlink" href="#tim-class" title="Permalink to this headline">¶</a></h1>
-<p>The <em>Tim</em> class handles pulsar times-of-arrival (TOAs) files</p>
-<dl class="class">
-<dt id="Tim">
-<em class="property">class </em><code class="descname">Tim</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>numwrap=float</em>, <em>usedecimal=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Tim" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Path to a .tim file</li>
-<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.8)"><em>type</em></a>) – Type to wrap numeric values by. Float is used by default for ease but Decimal can be is used to keep numeric precision if needed, e.g., for spin period/frequency. Can set numwrap=DECIMAL or usedecimal=True.</li>
-<li><strong>usedecimal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – See above.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<p>Usage:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">Tim</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">)</span> <span class="c1">#automatically parses each TOA with the TOA() class</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">toas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getMJD</span><span class="p">()</span> <span class="c1">#prints the MJD of the first TOA as a python Decimal</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">toas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;snr&#39;</span><span class="p">)</span> <span class="c1">#prints the value of the -snr flag of the TOA if it is available</span>
-</pre></div>
-</div>
-<div class="section" id="methods">
-<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="load">
-<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads a .tim file.</p>
-<blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">param str filename:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">Path to .tim file</td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
-</dd></dl>
-
-<dl class="function">
-<dt id="save">
-<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save a .tim file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Path to .tim file</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getFreqs">
-<code class="descname">getFreqs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFreqs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the frequencies of each pulse profile the TOAs were generated from. Loops over <a class="reference internal" href="#getFreq" title="getFreq"><code class="xref py py-func docutils literal notranslate"><span class="pre">getFreq()</span></code></a> in <a class="reference internal" href="#TOA" title="TOA"><code class="xref py py-class docutils literal notranslate"><span class="pre">TOA</span></code></a>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getMJDs">
-<code class="descname">getMJDs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getMJDs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the MJD of each pulse profile the TOAs were generated from. Loops over <a class="reference internal" href="#getMJD" title="getMJD"><code class="xref py py-func docutils literal notranslate"><span class="pre">getMJD()</span></code></a> in <a class="reference internal" href="#TOA" title="TOA"><code class="xref py py-class docutils literal notranslate"><span class="pre">TOA</span></code></a>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getErrors">
-<code class="descname">getErrors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getErrors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the TOA uncertainties of each pulse profile the TOAs were generated from. Loops over <a class="reference internal" href="#getError" title="getError"><code class="xref py py-func docutils literal notranslate"><span class="pre">getError()</span></code></a> in <a class="reference internal" href="#TOA" title="TOA"><code class="xref py py-class docutils literal notranslate"><span class="pre">TOA</span></code></a>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="get">
-<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the value of a flag in each TOA line. Loops over <a class="reference internal" href="#get" title="get"><code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code></a> in <a class="reference internal" href="#TOA" title="TOA"><code class="xref py py-class docutils literal notranslate"><span class="pre">TOA</span></code></a>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getTspan">
-<code class="descname">getTspan</code><span class="sig-paren">(</span><span class="optional">[</span><em>years=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getTspan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the total time span covered by the TOAs.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>years</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Divide the total time span in days by 365.25.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-</div>
-<div class="section" id="toa-class">
-<h1>TOA Class<a class="headerlink" href="#toa-class" title="Permalink to this headline">¶</a></h1>
-<p>The <em>TOA</em> class handles individual pulsar times-of-arrival (TOAs).</p>
-<dl class="class">
-<dt id="TOA">
-<em class="property">class </em><code class="descname">TOA</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>freq=None</em>, <em>MJD=None</em>, <em>err=None</em>, <em>siteID=None</em>, <em>numwrap=Decimal</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#TOA" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stores the five basic values of a TOA and any additional flags.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – If only the filename parameter is specified, then the parameter is the entire TOA string and will be parsed.</li>
-<li><strong>freq</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – TOA frequency. Can be supplied a numeric value that will be wrapped as a float.</li>
-<li><strong>MJD</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – TOA MJD. Can be supplied a numeric value that will be wrapped with the type numwrap.</li>
-<li><strong>err</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – TOA error in microseconds. Can be supplied a numeric value that will be wrapped as a float.</li>
-<li><strong>siteID</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – TOA observatory site ID.</li>
-<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.8)"><em>type</em></a>) – Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</li>
-<li><strong>**kwargs</strong> – <p>Additional flags. If the five base parameters are provided, each argument is a tuple of the form (flag, value). Otherwise, this is a string of all of the flags and values that must be parsed.</p>
-</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<div class="section" id="id3">
-<h2>Methods<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="getFilename">
-<code class="descname">getFilename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFilename" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the filename the TOA was generated from.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getFrequency">
-<code class="descname">getFrequency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the frequency of the pulse profile the TOA was generated from.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getFreq">
-<code class="descname">getFreq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFreq" title="Permalink to this definition">¶</a></dt>
-<dd><p>Same as <a class="reference internal" href="#getFrequency" title="getFrequency"><code class="xref py py-func docutils literal notranslate"><span class="pre">getFrequency()</span></code></a>.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="getMJD">
-<code class="descname">getMJD</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getMJD" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the MJD of the TOA.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getError">
-<code class="descname">getError</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the TOA error in microseconds.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getSiteID">
-<code class="descname">getSiteID</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getSiteID" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the observatory site ID of the pulse profiles.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="descname">get</code><span class="sig-paren">(</span><em>flag</em><span class="sig-paren">)</span></dt>
-<dd><p>For any flags stored with the TOA, return the value.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the flag.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="comment">
-<code class="descname">comment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#comment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Comment out the TOA (the TOA string is appended to “C “). Useful when saving out a .tim file.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="setFilename">
-<code class="descname">setFilename</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#setFilename" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the filename of the TOA to a value.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename to set in the TOA.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="setFrequency">
-<code class="descname">setFrequency</code><span class="sig-paren">(</span><em>freq</em><span class="sig-paren">)</span><a class="headerlink" href="#setFrequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the frequency of the TOA to a value.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>freq</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Frequency to set in the TOA.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="setFreq">
-<code class="descname">setFreq</code><span class="sig-paren">(</span><em>freq</em><span class="sig-paren">)</span><a class="headerlink" href="#setFreq" title="Permalink to this definition">¶</a></dt>
-<dd><p>Same as <a class="reference internal" href="#setFrequency" title="setFrequency"><code class="xref py py-func docutils literal notranslate"><span class="pre">setFrequency()</span></code></a>.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="setMJD">
-<code class="descname">setMJD</code><span class="sig-paren">(</span><em>MJD</em><span class="sig-paren">)</span><a class="headerlink" href="#setMJD" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the MJD of the TOA to a value.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>MJD</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – MJD to set in the TOA.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="setError">
-<code class="descname">setError</code><span class="sig-paren">(</span><em>err</em><span class="sig-paren">)</span><a class="headerlink" href="#setError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the error of the TOA to a value.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>err</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Error to set in the TOA.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="setSiteID">
-<code class="descname">setSiteID</code><span class="sig-paren">(</span><em>siteID</em><span class="sig-paren">)</span><a class="headerlink" href="#setSiteID" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the observatory site ID of the TOA to a value.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>siteID</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Site ID to set in the TOA.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="set">
-<code class="descname">set</code><span class="sig-paren">(</span><em>flag</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#set" title="Permalink to this definition">¶</a></dt>
-<dd><p>If the flag exists, set the value of an associated flag.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the flag.</li>
-<li><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Value to set.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="add">
-<code class="descname">add</code><span class="sig-paren">(</span><em>flag</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#add" title="Permalink to this definition">¶</a></dt>
-<dd><p>If the flag does not exist, add the flag with associated value to the TOA.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the flag.</li>
-<li><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Value to set.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-</div>
-
-
-          </div>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -478,12 +407,13 @@
         <li class="right" >
           <a href="par.html" title="Par Class"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tim Class</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Michael T. Lam.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

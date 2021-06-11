@@ -151,14 +151,14 @@ class Tim(object):
 
         if isinstance(filename, (list, np.ndarray)):
             lines = filename
-        elif isinstance(filename, (str, np.str)):
+        elif isinstance(filename, (str, np.str_)):
             with open(filename, 'r') as FILE:#this assumes the file exists
                 lines = FILE.readlines()
         else:
             return None
 
         self.comment_dict = dict() #store these for saving later
-        self.command_dict = dict() 
+        self.command_dict = dict()
         self.numlines = len(lines)
 
         self.toas = list()
@@ -189,7 +189,7 @@ class Tim(object):
     def comment_line(self, index, cut=None):
         """ Comment out a single TOA, syntactic sugar """
         self.toas[index].comment(cut=cut)
-                
+
     def any(self, func):
         """ Apply boolean function and see if any TOA meets said condition """
         for toa in self.toas:
@@ -207,7 +207,7 @@ class Tim(object):
     def where(self, func):
         """ Apply boolean function and see which indices are True for when TOAs meet said condition """
         return np.where(np.array(fmap(func, self.toas)))
-        
+
 
     def save(self, filename=None):
         """ Save tim file """
@@ -232,32 +232,32 @@ class Tim(object):
 
     def getFilenames(self):
         """ Return filenames of all TOAs """
-        return np.array(fmap(lambda x: x.getFilename(), self.toas))
-            
+        return np.array([toa.getFilename() for toa in self.toas])
+
     def getFreqs(self):
         """ Return frequencies of all TOAs """
-        return np.array(fmap(lambda x: x.getFreq(), self.toas))
+        return np.array([toa.getFreq() for toa in self.toas])
     getFrequencies = getFreqs
 
     def getMJDs(self):
         """ Return MJDs of all TOAs """
-        return np.array(fmap(lambda x: x.getMJD(), self.toas))
+        return np.array([toa.getMJD() for toa in self.toas])
 
     def getErrs(self):
         """ Return uncertainties of all TOAs """
-        return np.array(fmap(lambda x: x.getErr(), self.toas))
+        return np.array([toa.getErr() for toa in self.toas])
     getErrors = getErrs
 
     def getSiteIDs(self):
         """ Return Site IDs of all TOAs """
-        return np.array(fmap(lambda x: x.getSiteID(), self.toas))
+        return np.array([toa.getSiteID() for toa in self.toas])
 
     def get(self, value, numwrap=None):
         """ Return value of flag """
         if numwrap is None:
-            retval = np.array(fmap(lambda x: x.get(value), self.toas))
+            retval = np.array([toa.get(value) for toa in self.toas])
         else:
-            retval = np.array(fmap(lambda x: numwrap(x.get(value)), self.toas))
+            retval = np.array([numwrap(toa.get(value)) for toa in self.toas])
         return retval
 
     def getTspan(self, years=False):
