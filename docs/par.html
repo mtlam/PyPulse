@@ -1,18 +1,20 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Par Class &#8212; PyPulse 0.0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Par Class &#8212; PyPulse 0.1.1 documentation</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Tim Class" href="tim.html" />
@@ -30,363 +32,9 @@
         <li class="right" >
           <a href="dynamicspectrum.html" title="DynamicSpectrum Class"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Par Class</a></li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.1.1 documentation</a> &#187;</li> 
       </ul>
-    </div>  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <div class="toctree-wrapper compound">
-</div>
-<section id="par-class">
-<h1>Par Class<a class="headerlink" href="#par-class" title="Permalink to this headline">¶</a></h1>
-<p>The <em>Par</em> class handles pulsar parameter files.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="Par">
-<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">Par</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filename</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">numwrap=float</span></em>, <em class="sig-param"><span class="pre">usedecimal=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Par" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to a .par file</p></li>
-<li><p><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><em>type</em></a>) – Type to wrap numeric values by. Float is used by default for ease but Decimal can be is used to keep numeric precision if needed, e.g., for spin period/frequency. Can set numwrap=DECIMAL or usedecimal=True.</p></li>
-<li><p><strong>usedecimal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – See above.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<p>Usage:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">Par</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">)</span>
-<span class="nb">print</span> <span class="n">p</span><span class="o">.</span><span class="n">getPeriod</span><span class="p">()</span> <span class="c1">#prints the period in the par file (does not calculate for a specific MJD for now)</span>
-<span class="n">t</span><span class="p">,</span><span class="n">dmx</span><span class="p">,</span><span class="n">dmxerr</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getDMseries</span><span class="p">()</span> <span class="c1">#returns the DM parameters in a nice time-series. Note that errors are those given in the par file, which may not be the &quot;correct&quot; ones (more info to be provided later)</span>
-<span class="nb">print</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PX&quot;</span><span class="p">)</span> <span class="c1">#prints the parallax</span>
-<span class="nb">print</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PX&quot;</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#prints the error on the parallax</span>
-</pre></div>
-</div>
-<section id="methods">
-<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">tag</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">flag=None</span></em>, <em class="sig-param"><span class="pre">error=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the value of a given parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Return the value of a parameter with a flag provided. For example, noise parameters can be given a backend as a flag, e.g., for parameter “JUMP -fe L-wide 0.0 1 0.0”, the flag would be “L-wide”.</p></li>
-<li><p><strong>error</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return the value of the error associated with a parameter.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>value</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getPeriod">
-<span class="sig-name descname"><span class="pre">getPeriod</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeriod" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the pulsar spin period.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getPeriodDot">
-<span class="sig-name descname"><span class="pre">getPeriodDot</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">shklovskii=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeriodDot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the pulsar spin period derivative.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>shklovskii</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Attempt to correct for the Shklovskii effect if proper motion and parallax information is provided.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getFrequency">
-<span class="sig-name descname"><span class="pre">getFrequency</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the pulsar spin frequency.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getFrequencyDot">
-<span class="sig-name descname"><span class="pre">getFrequencyDot</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">shklovskii=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrequencyDot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the pulsar spin frequency derivative.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>shklovskii</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Attempt to correct for the Shklovskii effect if proper motion and parallax information is provided.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getPM">
-<span class="sig-name descname"><span class="pre">getPM</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">error=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the proper motion in mas/yr. If only one of the two basis parameters is provided, return that value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>error</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, return the error on the proper motion.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getPX">
-<span class="sig-name descname"><span class="pre">getPX</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">error=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPX" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the parallax in mas.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>error</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, return the error on the parallax.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getDIST">
-<span class="sig-name descname"><span class="pre">getDIST</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">error=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getDIST" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the distance in kpc.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>error</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, return the error on the distance.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getVpperp">
-<span class="sig-name descname"><span class="pre">getVpperp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getVpperp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the transverse velocity in km/s.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getDM">
-<span class="sig-name descname"><span class="pre">getDM</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getDM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the DM parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getDMX">
-<span class="sig-name descname"><span class="pre">getDMX</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">full_output=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getDMX" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a tuple of the DMX time series (times, DMXs, DMX errors).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>full_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return a tuple of the times, DMXs, DMX errors, DMXR1s, DMXR2s, DMXF1s, DMXF2s</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>times (<em>numpy.ndarray</em>), DM (<em>numpy.ndarray</em>), DM errors (<em>numpy.ndarray</em>), unless full_output=True.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getXMX">
-<span class="sig-name descname"><span class="pre">getXMX</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getXMX" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a tuple of the XMX values.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>xmxs (<em>numpy.ndarray</em>), errs (<em>numpy.ndarray</em>), R1s (<em>numpy.ndarray</em>), R2s (<em>numpy.ndarray</em>), EXPs (<em>numpy.ndarray</em>),</p>
-</dd>
-</dl>
-</dd></dl>
-
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This function is under construction.</p>
-</div>
-<dl class="py function">
-<dt class="sig sig-object py" id="getDMseries">
-<span class="sig-name descname"><span class="pre">getDMseries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getDMseries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a tuple of the DM time series (times, DMs, DM errors). DMs are calculated as the DMX model plus the DM parameter (the fiducial value).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>times (<em>numpy.ndarray</em>), DM (<em>numpy.ndarray</em>), DM errors (<em>numpy.ndarray</em>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getFD">
-<span class="sig-name descname"><span class="pre">getFD</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFD" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the coefficients associated with the FD parameters, in order (i.e., FD1, FD2, …).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getFDfunc">
-<span class="sig-name descname"><span class="pre">getFDfunc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFDfunc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Python function (lambda) that provides the timing delays as a function of observing frequency. The function takes one parameter, the observing frequency (in GHz), and returns timing delays in microseconds.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>function</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getName">
-<span class="sig-name descname"><span class="pre">getName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getName" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the pulsar name given by either PSR or PSRJ.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getTspan">
-<span class="sig-name descname"><span class="pre">getTspan</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">years=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getTspan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the timespan given by the START and FINISH flags in days.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>years</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Divide the timespan by 365.25.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-</section>
-<section id="parameter-class">
-<h1>Parameter Class<a class="headerlink" href="#parameter-class" title="Permalink to this headline">¶</a></h1>
-<p>The <em>Parameter</em> class handles individual pulsar parameters.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="Parameter">
-<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">Parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">name</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">value=None</span></em>, <em class="sig-param"><span class="pre">fit=None</span></em>, <em class="sig-param"><span class="pre">error=None</span></em>, <em class="sig-param"><span class="pre">flag=None</span></em>, <em class="sig-param"><span class="pre">flagvalue=None</span></em>, <em class="sig-param"><span class="pre">numwrap=d.Decimal</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Parameter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stores the basic values of a Parameter in a par file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – If only the name parameter is specified, then this is the entire parameter string and will be parsed. Otherwise, this is the parameter name (e.g. PSR, P0/F0, etc.)</p></li>
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Parameter value. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.</p></li>
-<li><p><strong>fit</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Parameter fit value, i.e. whether or not the parameter is to be fit in the timing model. Can be supplied a numeric value that will be wrapped with an int</p></li>
-<li><p><strong>error</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Parameter error. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.</p></li>
-<li><p><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – If there is a flag associated with the parameter</p></li>
-<li><p><strong>flagvalue</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The vale the flag is set to.</p></li>
-<li><p><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><em>type</em></a>) – Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<section id="id1">
-<h2>Methods<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">getName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the name of the parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getValue">
-<span class="sig-name descname"><span class="pre">getValue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the value of the parameter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numwrap</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getError">
-<span class="sig-name descname"><span class="pre">getError</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the value of the parameter error.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numwrap</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getFit">
-<span class="sig-name descname"><span class="pre">getFit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the value of the fit flag.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getFlag">
-<span class="sig-name descname"><span class="pre">getFlag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFlag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the value of the flag.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="getFlagValue">
-<span class="sig-name descname"><span class="pre">getFlagValue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFlagValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the value of the flag value</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-</section>
-
-
-            <div class="clearer"></div>
-          </div>
-        </div>
-      </div>
+    </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table of Contents</a></h3>
@@ -415,15 +63,440 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
+  <h3>Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="toctree-wrapper compound">
+</div>
+<div class="section" id="par-class">
+<h1>Par Class<a class="headerlink" href="#par-class" title="Permalink to this headline">¶</a></h1>
+<p>The <em>Par</em> class handles pulsar parameter files.</p>
+<dl class="class">
+<dt id="Par">
+<em class="property">class </em><code class="descname">Par</code><span class="sig-paren">(</span><em>filename</em><span class="optional">[</span>, <em>numwrap=float</em>, <em>usedecimal=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Par" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Path to a .par file</li>
+<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><em>type</em></a>) – Type to wrap numeric values by. Float is used by default for ease but Decimal can be is used to keep numeric precision if needed, e.g., for spin period/frequency. Can set numwrap=DECIMAL or usedecimal=True.</li>
+<li><strong>usedecimal</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – See above.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">Par</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">p</span><span class="o">.</span><span class="n">getPeriod</span><span class="p">()</span> <span class="c1">#prints the period in the par file (does not calculate for a specific MJD for now)</span>
+<span class="n">t</span><span class="p">,</span><span class="n">dmx</span><span class="p">,</span><span class="n">dmxerr</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getDMseries</span><span class="p">()</span> <span class="c1">#returns the DM parameters in a nice time-series. Note that errors are those given in the par file, which may not be the &quot;correct&quot; ones (more info to be provided later)</span>
+<span class="k">print</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PX&quot;</span><span class="p">)</span> <span class="c1">#prints the parallax</span>
+<span class="k">print</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PX&quot;</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="c1">#prints the error on the parallax</span>
+</pre></div>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>tag</em><span class="optional">[</span>, <em>flag=None</em>, <em>error=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value of a given parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Return the value of a parameter with a flag provided. For example, noise parameters can be given a backend as a flag, e.g., for parameter “JUMP -fe L-wide 0.0 1 0.0”, the flag would be “L-wide”.</li>
+<li><strong>error</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return the value of the error associated with a parameter.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">value</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getPeriod">
+<code class="descname">getPeriod</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeriod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the pulsar spin period.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getPeriodDot">
+<code class="descname">getPeriodDot</code><span class="sig-paren">(</span><span class="optional">[</span><em>shklovskii=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeriodDot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the pulsar spin period derivative.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shklovskii</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Attempt to correct for the Shklovskii effect if proper motion and parallax information is provided.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFrequency">
+<code class="descname">getFrequency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the pulsar spin frequency.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFrequencyDot">
+<code class="descname">getFrequencyDot</code><span class="sig-paren">(</span><span class="optional">[</span><em>shklovskii=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getFrequencyDot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the pulsar spin frequency derivative.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shklovskii</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Attempt to correct for the Shklovskii effect if proper motion and parallax information is provided.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getPM">
+<code class="descname">getPM</code><span class="sig-paren">(</span><span class="optional">[</span><em>error=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the proper motion in mas/yr. If only one of the two basis parameters is provided, return that value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>error</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, return the error on the proper motion.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getPX">
+<code class="descname">getPX</code><span class="sig-paren">(</span><span class="optional">[</span><em>error=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getPX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the parallax in mas.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>error</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, return the error on the parallax.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getDIST">
+<code class="descname">getDIST</code><span class="sig-paren">(</span><span class="optional">[</span><em>error=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getDIST" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the distance in kpc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>error</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, return the error on the distance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getVpperp">
+<code class="descname">getVpperp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getVpperp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the transverse velocity in km/s.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getDM">
+<code class="descname">getDM</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getDM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the DM parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getDMX">
+<code class="descname">getDMX</code><span class="sig-paren">(</span><span class="optional">[</span><em>full_output=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getDMX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a tuple of the DMX time series (times, DMXs, DMX errors).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>full_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return a tuple of the times, DMXs, DMX errors, DMXR1s, DMXR2s, DMXF1s, DMXF2s</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">times (<em>numpy.ndarray</em>), DM (<em>numpy.ndarray</em>), DM errors (<em>numpy.ndarray</em>), unless full_output=True.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getXMX">
+<code class="descname">getXMX</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getXMX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a tuple of the XMX values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">xmxs (<em>numpy.ndarray</em>), errs (<em>numpy.ndarray</em>), R1s (<em>numpy.ndarray</em>), R2s (<em>numpy.ndarray</em>), EXPs (<em>numpy.ndarray</em>),</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This function is under construction.</p>
+</div>
+<dl class="function">
+<dt id="getDMseries">
+<code class="descname">getDMseries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getDMseries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a tuple of the DM time series (times, DMs, DM errors). DMs are calculated as the DMX model plus the DM parameter (the fiducial value).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">times (<em>numpy.ndarray</em>), DM (<em>numpy.ndarray</em>), DM errors (<em>numpy.ndarray</em>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFD">
+<code class="descname">getFD</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the coefficients associated with the FD parameters, in order (i.e., FD1, FD2, …).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFDfunc">
+<code class="descname">getFDfunc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFDfunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Python function (lambda) that provides the timing delays as a function of observing frequency. The function takes one parameter, the observing frequency (in GHz), and returns timing delays in microseconds.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">function</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getName">
+<code class="descname">getName</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the pulsar name given by either PSR or PSRJ.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getTspan">
+<code class="descname">getTspan</code><span class="sig-paren">(</span><span class="optional">[</span><em>years=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getTspan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the timespan given by the START and FINISH flags in days.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>years</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Divide the timespan by 365.25.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="parameter-class">
+<h1>Parameter Class<a class="headerlink" href="#parameter-class" title="Permalink to this headline">¶</a></h1>
+<p>The <em>Parameter</em> class handles individual pulsar parameters.</p>
+<dl class="class">
+<dt id="Parameter">
+<em class="property">class </em><code class="descname">Parameter</code><span class="sig-paren">(</span><em>name</em><span class="optional">[</span>, <em>value=None</em>, <em>fit=None</em>, <em>error=None</em>, <em>flag=None</em>, <em>flagvalue=None</em>, <em>numwrap=d.Decimal</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores the basic values of a Parameter in a par file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – If only the name parameter is specified, then this is the entire parameter string and will be parsed. Otherwise, this is the parameter name (e.g. PSR, P0/F0, etc.)</li>
+<li><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Parameter value. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.</li>
+<li><strong>fit</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Parameter fit value, i.e. whether or not the parameter is to be fit in the timing model. Can be supplied a numeric value that will be wrapped with an int</li>
+<li><strong>error</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Parameter error. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.</li>
+<li><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – If there is a flag associated with the parameter</li>
+<li><strong>flagvalue</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The vale the flag is set to.</li>
+<li><strong>numwrap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><em>type</em></a>) – Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="section" id="id1">
+<h2>Methods<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt>
+<code class="descname">getName</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Return the name of the parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getValue">
+<code class="descname">getValue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value of the parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numwrap</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getError">
+<code class="descname">getError</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value of the parameter error.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numwrap</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFit">
+<code class="descname">getFit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value of the fit flag.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFlag">
+<code class="descname">getFlag</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFlag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value of the flag.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="getFlagValue">
+<code class="descname">getFlagValue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getFlagValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value of the flag value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
         </div>
       </div>
       <div class="clearer"></div>
@@ -440,13 +513,12 @@
         <li class="right" >
           <a href="dynamicspectrum.html" title="DynamicSpectrum Class"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.0.1 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Par Class</a></li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.1.1 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2016, Michael T. Lam.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+        &#169; Copyright 2016-2021, Michael T. Lam.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>
