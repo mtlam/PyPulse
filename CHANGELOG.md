@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2021-06-15
+
 ### Added
 
 - Fitting errors on the 1D scintillation parameters are now added. This changes the underlying `functionfit` output but this is not part of the public API.
@@ -30,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/mtlam/pypulse/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/mtlam/pypulse/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/mtlam/pypulse/compare/v0.0.1...v0.1.0
 [0.0.1]: https://github.com/mtlam/pypulse/releases/tag/v0.0.1
