@@ -543,6 +543,28 @@ Uses a real FFT</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="savgol_smoothing">
+<code class="descname">savgol_smoothing</code><span class="sig-paren">(</span><span class="optional">[</span><em>window_length=11</em>, <em>polyorder=5</em>, <em>save=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#savgol_smoothing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs scipy’s <code class="xref py py-func docutils literal notranslate"><span class="pre">signal.savgol_filter()</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>window_length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Averaging length to fit the polynomial of order polyorder</li>
+<li><strong>polyorder</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Polynomial order to fit local data segments.</li>
+<li><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, replace the data array with the smoothed profile.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">template, <em>numpy.ndarray</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="getPeriod">
 <code class="descname">getPeriod</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeriod" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the pulse period.</p>
