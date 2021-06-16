@@ -1163,7 +1163,7 @@ class Archive(object):
         return retval
 
     #Given a list of numbers corresponding to the arguments returned
-    def fitPulses(self, template, nums, flatten=False, func=None, windowsize=None, **kwargs):
+    def fitPulses(self, template, nums=[0, 1, 2, 3, 4, 5, 6], flatten=False, func=None, windowsize=None, **kwargs):
         """Fit all of the pulses with a given template"""
         if len(template) != self.getNbin():
             raise IndexError("Improper template size")
