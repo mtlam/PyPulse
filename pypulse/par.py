@@ -81,7 +81,11 @@ class Parameter(object):
                         self.error = splitstring[-1]
                     # Fit flag
                     if len(splitstring) == 3 and not numre.match(splitstring[2]) and splitstring[2] != "NaN":
-                        self.fit = int(splitstring[2])
+                        if splitstring[2].isdigit():
+                            self.fit = int(splitstring[2])
+                        else: #this is actually NAME VAL ERROR rather than NAME VAL FLAG
+                            self.fit = 0
+                            self.error = float(splitstring[2])
                     elif len(splitstring) == 4:
                         self.fit = int(splitstring[2])
 
