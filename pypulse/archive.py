@@ -1329,7 +1329,7 @@ class Archive(object):
             raise IndexError("Invalid dimensions for plot()")
 
     def imshow(self, ax=None, cbar=False, mask=None, show=True,
-               filename=None, setnan=0.0, cmap=None, **kwargs):
+               filename=None, setnan=0.0, cmap=None, flip=False, **kwargs):
         """
         Basic imshow of data
 
@@ -1352,6 +1352,9 @@ class Archive(object):
             Either a matplotlib colormap object or a string of the
             name of the colormap. Default is cividis if available,
             otherwise viridis
+        flip: bool
+            If true, flip the Y axis and data, useful for correcting
+            the frequency direction
 
         Returns
         -------
@@ -1371,21 +1374,31 @@ class Archive(object):
                 mode = "freq-phase"
                 Fedges = self.getAxis('F', edges=True) #is this true?
                 extent = [0, 1, Fedges[0], Fedges[-1]]
+                y2min, y2max = 0, self.getNchan()
             elif shape[1] == 1 and shape[2] == 1:
                 mode = "time-phase"
                 Tedges = self.getAxis('T', edges=True) #is this true?
                 extent = [0, 1, Tedges[0], Tedges[-1]]
+                y2min, y2max = 0, self.getNsubint()
             elif shape[1] == 1 and shape[3] == 1:
                 mode = "freq-time"
                 Fedges = self.getAxis('F', edges=True)
                 Tedges = self.getAxis('T', edges=True)
                 extent = [Tedges[0], Tedges[-1], Fedges[0], Fedges[-1]]
                 data = np.transpose(data) #flip to freq on y axis
+                y2min, y2max = 0, self.getNchan()
+                x2min, x2max = 0, self.getNsubint()
             else:
                 raise IndexError("Unimplemented shape for imshow()")
 
 
             #cmap.set_bad(color='k', alpha=1.0)
+
+            if flip:
+                extent[2], extent[3] = extent[3], extent[2]
+                y2min, y2max = y2max, y2min
+                data = np.flipud(data)
+
 
             if mask is not None:
                 u.imshow(ma.masked_array(data, mask=mask), ax=ax, extent=extent, cmap=cmap, **kwargs)
@@ -1398,14 +1411,14 @@ class Archive(object):
                 unit = u.unitchanger(self.getFrequencyUnit())
                 ax.set_ylabel("Frequency (%s)"%unit)
                 ax2 = ax.twinx()
-                ax2.set_ylim(0, self.getNchan())
+                ax2.set_ylim(y2min, y2max)
                 ax2.set_ylabel("Channel Number")
             elif mode == "time-phase":
                 ax.set_xlabel("Pulse Phase")
                 unit = u.unitchanger(self.getTimeUnit())
                 ax.set_ylabel("Time (%s)"%unit)
                 ax2 = ax.twinx()
-                ax2.set_ylim(0, self.getNsubint())
+                ax2.set_ylim(y2min, y2max)
                 ax2.set_ylabel("Subintegration Number")
             elif mode == "freq-time":
                 unit = u.unitchanger(self.getTimeUnit())
@@ -1413,14 +1426,15 @@ class Archive(object):
                 unit = u.unitchanger(self.getFrequencyUnit())
                 ax.set_ylabel("Frequency (%s)"%unit)
                 ax_freq = ax.twinx()
-                ax_freq.set_ylim(0, self.getNchan())
+                ax_freq.set_ylim(y2min, y2max)
                 ax_freq.set_ylabel("Channel Number")
                 ax_time = ax.twiny()
-                ax_time.set_xlim(0, self.getNsubint())
+                ax_time.set_xlim(x2min, x2max)
                 ax_time.set_xlabel("Subintegration Number")
 
         elif len(np.shape(data)) == 1:
             # Trust that this is a single subintegration in time?
+            # flip is not defined for use here
             Tedges = self.getAxis('T', edges=True) #is this true?
             extent = [0, 1, Tedges[0], Tedges[-1]]
 

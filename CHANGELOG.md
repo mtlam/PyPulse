@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow parsing of par file values in "NAME VALUE ERROR" format rather than "NAME VALUE FIT" format for some fold ephemerides inside the PSRFITS files.
 - Default behavior of `Archive`'s `fitPulses()` now returns all values from `SinglePulse`'s `fitPulse()` command. Users can still supply specific indices with the `num` argument to `fitPulses()`
 
+### Added
+
+- In `Archive`'s `imshow()`, the y-axis can now be flipped with the `flip=True` argument. This allows inverted frequency axes to be turned right-side up.
+
 ## [0.1.1] - 2021-06-15
 
 ### Added
