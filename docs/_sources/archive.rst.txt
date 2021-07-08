@@ -1,0 +1,657 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. toctree::
+   :maxdepth: 2
+
+
+Archive Class
+=============
+
+The *Archive* class is the primary mechanism for opening PSRFITS files.
+
+.. py:class:: Archive(filename[,prepare=True,lowmem=False,verbose=True,weight=True,center_pulse=True,baseline_removal=True,wcfreq=True,thread=False,onlyheader=False])
+
+   :param bool prepare: Argument passed to :func:`load`. If ``True``, then the file will be automatically polarization averaged with :func:`pscrunch`, dedispersed with :func:`dedisperse` and using the weighted center frequency if the parameter ``wcfreq`` is set to ``True``, and centered with :func:`center` if ``center_pulse`` is set to ``True``.
+   :param bool lowmem: Argument passed to :func:`load`. If ``True``, then the PSRFITS file is opened in memmap mode and the data arrays are also replaced with memmaps.
+   :param bool verbose: Print extra information on loading and processing.
+   :param bool weight: Argument passed to :func:`load`. Use the stored data weights, which is the typical mode.
+   :param bool center_pulse: Argument passed to :func:`load`. If ``True``, then the peak of the pulse is centered in the middle of the data arrays. This is preferred for plotting purposes but the resulting arrival-time shifts are computed and stored internally.
+   :param bool baseline_removal: Argument passed to :func:`load`. Subtracts the baseline intensity of the average profile off-pulse region from all individual data profiles using :func:`remove_baseline`.
+   :param bool wcfreq: Argument passed to :func:`load`. If ``True``, then the weighted center frequency is used in :func:`dedisperse` if ``prepare=True``.
+   :param bool thread: Argument passed to :func:`load`. If ``True``, then the calculation of the data array will be parallelized, which can lead to some speed-up for large data files but will take longer for small data files given the extra overhead required to start the process.
+   :param bool onlyheader: Argument passed to :func:`load`. If ``True``, then only the primary and table headers are processed, without the data array. This is much faster if you only need access to metadata.
+
+Usage:
+
+.. code-block:: python
+
+   ar = Archive(FILENAME) #loads archive, dedispersed and polarization averaged by default
+   ar.tscrunch() #averages the pulse in time
+   data = ar.getData() #returns the numpy data array for use by you
+   ar.imshow() #plots frequency vs phase for the pulses
+
+Description of Data
+-------------------
+
+From Appendix A.1 of the thesis Lam 2016:
+
+The primary data array of profiles in a PSRFITS file is given by :math:`\mathcal{I}(t,\mathrm{pol},\nu,\phi)`, the pulse intensity as a function of time :math:`t`, polarization :math:`\mathrm{pol}`, frequency :math:`\nu`, phase :math:`\phi`, where the arguments are in the order of the array dimensions. To save memory, intensity data are stored in multiple arrays. The raw data array (DATA) :math:`d` is the largest in dimensionality but for folded pulse data is typically stored as an array of 16-bit integers. To retrieve the raw data value for each pulse profile, the data array is then multiplied by a scale array (DAT_SCL) :math:`s` and an offset array (DAT_OFFS) :math:`o` is added. An array of weights (DAT_WTS) :math:`w` is also stored internally and typically modifies the raw data, e.g., when excising radio frequency interference. The three modifier arrays are of much smaller size than the data array and are typically stored as in 32-bit single-precision float format. Mathematically, the resultant array of pulse intensities can be written as
+
+.. math::
+   \mathcal{I}(t,\mathrm{pol},\nu,\phi) = \left[s(t,\mathrm{pol},\nu)\times d(t,\mathrm{pol},\nu,\phi)+o(t,\mathrm{pol},\nu)\right] w(t,\nu).
+
+PSRFITS files also contain a wide range of additional information stored internally, including a history of all PSRCHIVE modifications to the file, a folding ephemeris, and a large global header of useful metadata. Besides the data array, PyPulse will unpack and store all extra information for retrieval via **get()** methods as desired.
+
+
+
+Methods
+-------
+
+
+.. py:method:: load(filename[,prepare=True,center_pulse=True,baseline_removal=True,weight=True,wcfreq=True,onlyheader=False])
+
+   Load a PSRFITS file, process the metadata, and form the data arrays. This is called internally by :func:`__init__`.
+
+   :param str filename: Path to load file from.
+   :param bool prepare: This performs three tasks. It will polarization average the data via :func:`pscrunch`, dedisperse the data with :func:`dedisperse`, and rotate the pulse so that the peak is in the center of phase with :func:`center`. For centering, this will store the relevant time delays associated with the rotation.
+   :param bool center_pulse: The peak of the pulse is centered in the middle of the data arrays. This is preferred for plotting purposes but the resulting arrival-time shifts are computed and stored internally.
+   :param bool baseline_removal: Subtract the baseline intensity of the average profile off-pulse region from all individual data profiles.
+   :param bool weight: Use the stored data weights, which is the typical mode.
+   :param bool wcfreq: The weighted center frequency is used in :func:`dedisperse` if ``prepare=True``.
+   :param bool onlyheader: Ohe primary and table headers are processed, without the data array. This is much faster if you only need access to metadata.
+   :return: None
+
+
+.. py:method:: save(filename)
+
+   Save the data to a new PSRFITS file.
+
+   :param str filename: Path to save file to.
+
+.. warning:: :func:`save` will output a PSRFITS file but the output data arrays vary slightly from the input data arrays. More
+
+.. py:method:: unload(filename)
+
+   Same as :func:`save`. Follows PSRCHIVE convention.
+
+.. py:method:: gc()
+
+   Manually clear the data cube and weights for Python garbage collection
+
+.. py:method:: shape([squeeze=True])
+
+   Return the shape of the data array.
+
+   :param bool squeeze: Return the shape of the data array when dimension of length 1 are removed.
+   :return: shape, tuple of integers
+
+.. py:method:: reset([prepare=True])
+
+   Replace the data with the original clone, preventing full reloading. Useful for larger files but only if the lowmem flag is set to True.
+
+   :param bool prepare: Argument passed to :func:`load`.
+
+.. py:method:: scrunch([arg='Dp',**kwargs])
+
+   Average the data cube along different axes.
+
+   :param str arg: Can be T for :func:`tscrunch`, p for :func:`pscrunch`, F for :func:`fscrunch`, B for :func:`bscrunch`, and D for :func:`dedisperse`, following the PSRCHIVE conventions.
+
+   :return: self
+
+.. py:method:: tscrunch([nsubint=None,factor=None])
+
+   Perform a weighted average the data cube along the time dimension.
+
+   :param int nsubint: Time average to this may subintegrations
+   :param int factor: Time average by this factor
+   :return: self
+
+.. py:method:: pscrunch()
+
+   Perform an average the data cube along the polarization dimension. Can handle data in Coherence (AABBCRCI) or Stokes (IQUV) format.
+
+   :return: self
+
+.. todo:: Perform a weighted average of the data cube
+
+.. py:method:: fscrunch([nchan=None,factor=None])
+
+   Perform a weighted average the data cube along the frequency dimension
+
+   :param int nchan: Frequency average to this may channels
+   :param int factor: Frequency average by this factor
+   :return: self
+
+.. py:method:: bscrunch([nbins=None,factor=None])
+
+   Perform an average the data cube along the phase (bin) dimension.
+
+   :param int nbins: Phase average to this may bins
+   :param int factor: Phase average by this factor
+   :return: self
+
+.. todo:: Perform a weighted average of the data cube
+
+
+.. py:method:: dedisperse([DM=None,reverse=False,wcfreq=False])
+
+   Dedisperse the pulses by introducing the appropriate time delays and rotating in phase.
+
+   :param float DM: Phase average to this may bins.
+   :param bool reverse: Perform dispersion of the pulse profiles.
+   :param bool wcfreq: Use the weighted center frequency.
+   :return: self
+
+.. py:method:: dededisperse([DM=None,wcfreq=False])
+
+   Runs :func:`dedisperse` with reverse=False flag. See that function for parameter notation.
+
+
+.. py:method:: calculateAverageProfile()
+
+   Calculate the average profile by performing an unweighted average along each dimension  Automatically calls :func:`calculateOffpulseWindow`.
+
+.. todo:: Perform a weigthed average.
+
+.. py:method:: calculateOffpulseWindow()
+
+   Calculate an off-pulse window using the :class:`SinglePulse`, with the windowsize parameter equal to one-eighth the number of phase bins.
+
+.. py:method:: center([phase_offset=0.5])
+
+   Center the peak of the pulse in the middle of the data arrays.
+
+   :param float phase_offset: Determine the phase offset (in [0,1]) of the peak, i.e., impose an arbitrary rotation to where the center of the peak should fall.
+   :return: self
+
+
+.. py:method:: removeBaseline()
+
+   Removes the baseline of the pulses given the off-pulse window of the average pulse profile pre-calculated by :func:`calculateAverageProfile`
+   :return: self
+
+.. py:method:: remove_baseline()
+
+   See :func:`removeBaseline`.
+
+.. py:method:: getLevels([differences=False])
+
+   Returns calibration levels if the Archive is a calibrator in the form of a square wave signal. If `differences` is set to True, then this function will return the frequencies, the amplitude differences in the height of the square wave as a function of polarization/frequency, and the associated errors. If False, then it will return the frequencies, the mean values of the low and high portions of the square wave and the associated errors.
+
+   :param bool differences:
+
+.. py:method:: getPulsarCalibrator()
+
+   Uses :func:`getLevels` to get a :class:`Calibrator` object with associated metadata
+
+   :rtype: Calibrator
+
+
+.. py:method:: calibrate(psrcal[, fluxcal=None])
+
+   Polarization calibrates the data using another archive file. Flux calibration optional.
+
+   :param Archive psrcal: Pulsar calibrator Archive.
+   :param Archive fluxcal: Flux calibrator Archive.
+
+.. warning:: This function is under construction.
+
+.. py:method:: getData([squeeze=True,setnan=None,weight=True])
+
+   Return the data array.
+
+   :param bool squeeze: All dimensions of length 1 are removed.
+   :param float setnan: Replace all np.nan with value.
+   :param bool weight: Return the data array with weights applied.
+   :return: self
+
+.. py:method:: setData(newdata)
+
+   Replaces the data array with new data. Must be the same shape.
+
+   :param numpy.ndarray newdata: New data array.
+
+.. py:method:: getWeights([squeeze=True])
+
+   Return a copy of the weights array.
+
+   :param bool squeeze: All dimensions of length 1 are removed.
+
+.. py:method:: setWeights(val[,t=None,f=None])
+
+   Set weights to a certain value. Can be used for RFI-excision routines.
+
+   :param float val: Value to set the weights to.
+   :param int t: Time index
+   :param int f: Frequency index
+
+
+.. py:method:: saveData([filename=None,ext='npy',ascii=False])
+
+   Save the data array to a different format. Default is to save to a numpy binary file (.npy).
+
+   :param str filename: Filename to save the data to. If none, save to the archive's original filename after replacing the extension with ``ext``.
+   :param str ext: Filename extension
+   :param bool ascii: Save the data to to a text file. If all four dimensions have length greater than 1, the data are saved in time, polarization, frequency, and phase order, with intensity as the fifth column. Otherwise, use numpy's :func:`savetxt` to output the array.
+
+
+.. py:method:: outputPulses(filename)
+
+   Write out a standard .npy file by calling :func:`saveData`.
+
+   :param str filename: Filename to save the data to.
+
+.. py:method:: getAxis([flag=None,edges=False,wcfreq=False])
+
+   Get the time or frequency axes for plotting.
+
+   :param str flag: "T" for the time axis, "F" for the frequency axis.
+   :param bool edges: Do not return the centers for each subintegration/channel but rather return the edges. Better for imshow plotting because of the extents parameter.
+   :param bool wcfreq: Use the weighted center frequency.
+
+   :rtype: numpy.ndarray
+
+.. todo:: Let flag be both "T" and "F".
+
+
+.. py:method:: getFrequencies()
+
+   Convenience function for :func:`getAxis('F')`
+
+.. py:method:: getFreqs()
+
+   See :func:`getFrequencies`.
+
+.. py:method:: getTimes()
+
+   Convenience function for :func:`getAxis('T')`
+
+.. py:method:: getPulse(t[,f=None])
+
+   Get the pulse shape as a function of time and potentially frequency if provided. Assumes the shape of the data is polarization averaged.
+
+   :param int t: Time index
+   :param int f: Frequency index
+   :rtype: numpy.ndarray
+
+.. todo:: Do not assume polarization averaging.
+
+.. py:method:: getPeakFlux(t[,f=None])
+
+   Return the maximum value of the pulses, with parameters passed to :func:`getPulse`
+
+   :param int t: Time index
+   :param int f: Frequency index
+   :rtype: float
+
+.. py:method:: getIntegratedFlux(t[,f=None])
+
+   Return the integrated value of the pulses, with parameters passed to :func:`getPulse`
+
+   :param int t: Time index
+   :param int f: Frequency index
+   :rtype: float
+
+.. py:method:: getSinglePulses([func=None,windowsize=None,**kwargs])
+
+   Efficiently wrap the data array with :class:`SinglePulse`.
+
+   :param function func: Arbitrary function to map onto the data array.
+   :param int windowsize: Parameter passed to :class:`SinglePulse` that describes the off-pulse window length
+   :param \**kwargs: Additional parameters passed to :class:`SinglePulse`
+
+   :rtype: numpy.ndarray of type np.object
+
+.. py:method:: fitPulses(template,[nums=[0,1,2,3,4,5,6],flatten=False,func=None,windowsize=None,**kwargs])
+
+   Fit all of the pulses with a given template shape.
+
+   :param list/numpy.ndarray template: Template shape
+   :param list/numpy.ndarray nums: Numbers that denote which return values from :func:`fitPulse` from :class:`SinglePulse`. Example: to return only TOA values, use nums=[1]. For TOA values and scale factors, use nums=[1,3]. Defaults to all values.
+   :param bool flatten: Flatten the data array.
+   :param function func: Arbitrary function to map onto the data array.
+   :param int windowsize: Parameter passed to :class:`SinglePulse` that describes the off-pulse window length
+   :param \**kwargs: Additional parameters passed to :class:`SinglePulse`
+
+
+.. py:method:: getDynamicSpectrum([window=None,template=None,mpw=None,align=None,windowsize=None,verbose=False,snr=False,maketemplate=True])
+
+   Return the dynamic spectrum.
+
+   :param numpy.ndarray window: Return the dynamic spectrum using only certain phase bins.
+   :param list/numpy.ndarray template: Generate the dynamic spectrum using the scale factor from template matching. Otherwise simply sum along the phase axis.
+   :param list/numpy.ndarray mpw: Main-pulse window if calculating the dynamic spectrum using a template. Required if a template is provided.
+   :param float align: Parameter passed to :class:`SinglePulse` that describe a rotation of the pulse.
+   :param int windowsize: Parameter passed to :class:`SinglePulse` that describes the off-pulse window length
+   :param bool verbose: Print the time index as each template is fit.
+   :param bool snr: Instead of the scale factors, return the signal-to-noise ratios.
+   :param bool maketemplate: Instead of supplying a template, make a basic smoothed one from the average pulse for matched filtering.
+
+.. warning:: return values are not well-defined. Can either return the dynamic spectra, or will return a tuple of the scale factors, offsets, and errors of the template fit.
+
+
+.. py:method:: plot([ax=None,show=True])
+
+   Basic plotter of the data, if the data array can be reduced to one dimension.
+
+   :param matplotlib.axes._subplots.AxesSubplot ax: Provide a matplotlib axis to plot to.
+   :param bool show: Generate a matplotlib plot display.
+
+.. py:method:: imshow([ax=None,cbar=False,mask=None,show=True,**kwargs])
+
+   Basic plotter of the data, if the data array can be reduced to two dimensions. The origin is set to the lower left.
+
+   :param matplotlib.axes._subplots.AxesSubplot ax: Provide a matplotlib axis to plot to.
+   :param bool cbar: Include a matplotlib colorbar.
+   :param numpy.ndarray mask: Apply a mask array using the conventions of a numpy masked array (numpy.ma.core.MaskedArray)
+   :param bool show: Generate a matplotlib plot display.
+   :param \**kwargs: Additional arguments to pass to imshow.
+
+.. py:method:: pavplot([ax=None,mode='GTpd',show=True,wcfreq=True])
+
+   Produces a PSRCHIVE pav-like plot for comparison
+
+   :param matplotlib.axes._subplots.AxesSubplot ax: Provide a matplotlib axis to plot to.
+..   :param str mode: Can be "GTpd
+   :param bool show: Generate a matplotlib plot display.
+   :param bool wcfreq: Use the weighted center frequency.
+
+.. py:method:: waterfall([offset=None,border=0,labels=True,album=False,bins=None,show=True])
+
+   Produce a waterfall plot if the data array can be reduced to two dimensions.
+
+   :param float offset: Y offset of the data
+   :param float border: Fractional border around pulses.
+   :param bool labels: Plot tick labels.
+   :param bool album: Plot white on black background instead of black on white background.
+   :param numpy.ndarray bins: Selection of phase bins to plot
+
+.. py:method:: joyDivision([border=0.1,labels=False,album=True,**kwargs])
+
+   Calls :func:`waterfall` in the style of the Joy Division album cover. All parameters are passed to the function.
+
+.. py:method:: time(template,filename[,MJD=False,wcfreq=False,**kwargs])
+
+   Calculate times-of-arrival (TOAs).
+
+   :param list/numpy.ndarray/Archive template: Template shape to fit to the pulses.
+   :param str filename: Path to save text to. If filename=None, print the text.
+   :param bool MJD: Calculate absolute TOAs in MJD units instead of relative TOAs in bin (time) units.
+   :param bool simple:
+   :param bool wcfreq: Use the weighted center frequency.
+
+.. warning:: MJD=True is currently under testing and comparisons with PSRCHIVE.
+
+.. py:method:: getNsubint()
+
+   Returns the current number of subintegrations.
+
+   :rtype: int
+
+.. py:method:: getNpol()
+
+   Returns the current number of polarization states.
+
+   :rtype: int
+
+.. py:method:: getNchan()
+
+   Returns the current number of frequency channels.
+
+   :rtype: int
+
+.. py:method:: getNbin()
+
+   Returns the current number of phase bins.
+
+   :rtype: int
+
+.. py:method:: getPeriod([header=False])
+
+   Returns the period of the pulsar. By default returns the Polyco-calculated period. Otherwise, returns the period as calculated by the pulsar parameter table. If a calibrator file, returns 1 divided by the header CAL_FREQ value.
+
+   :param bool header: Enforce a return of the pulsar parameter table value.
+   :rtype: float
+
+.. py:method:: getValue(value)
+
+   Looks for a key in one of the headers and returns the value. First looks in the primary header, then the subintegration header, then the pulsar parameter table if it exists.
+
+   :param str value: Value to look for.
+   :rtype: str
+
+.. py:method:: getSubintinfo(value)
+
+   Looks for a key in the subintegration header, a subset of the functionality of :meth:`getValue`
+
+   :param str value: Value to look for.
+   :rtype: str
+
+
+.. py:method:: getName()
+
+   Returns the header SRC_NAME value.
+
+   :rtype: str
+
+.. py:method:: getMJD([full=False,numwrap=float])
+
+..   Return the MJD of an observation.
+
+.. py:method:: getTbin([numwrap=float])
+
+   Returns the time per phase bin.
+
+   :param type numwrap: Cast the return value into a type.
+   :rtype: Value given by numwrap
+
+
+.. py:method:: getDM()
+
+   Returns the subintegration header DM value.
+
+   :rtype: float
+
+.. py:method:: getRM()
+
+   Returns the subintegration header RM value.
+
+   :rtype: float
+
+.. py:method:: getCoords([parse=True])
+
+   Returns the header coordinate (RA, DEC) values.
+
+   :param bool parse: Return each value as a tuple of floats
+   :return: RA,dec, either each as strings or tuples .
+
+.. py:method:: getPulsarCoords([parse=True])
+
+   See :func:`getCoords`.
+
+.. py:method:: getTelescopeCoords()
+
+   Returns the header ANT_X, ANT_Y, ANTZ values.
+
+   :rtype: tuple
+
+
+.. py:method:: getBandwidth([header=False])
+
+   Returns the observation bandwidth as the product of the channel bandwidth (subintegration header CHAN_BW) and the number of channels (subintegration header NCHAN) values.
+
+   :param bool header: Returns the header OBSBW value
+   :rtype: float
+
+.. py:method:: getDuration()
+
+   Returns the sum of the subintegration header TSUBINT values.
+
+   :rtype: float
+
+.. py:method:: getDurations()
+
+   Return the subintegration durations array.
+   :rtype: numpy.ndarray
+
+.. todo:: Check for completeness of inputs into the durations array
+
+
+.. py:method:: getCenterFrequency([weighted=False])
+
+   Returns the center frequency. If a HISTORY table is provided in the PSRFITS file, return the latest CTR_FREQ value. Otherwise, return the header OBSFREQ value.
+
+   :param bool weighted: Return the center frequency weighted by the weights array :math:`(\sum_i w_i \nu_i / \sum w_i` for frequency :math:`i)`.
+   :rtype: float
+
+.. py:method:: getFrequencyUnit()
+
+   Returns the unit associated with the frequency axis.
+
+   :rtype: str
+
+.. py:method:: getFreqUnit()
+
+   See :func:`getFrequencyUnit`
+
+.. py:method:: getTimeUnit()
+
+   Returns the unit associated with the time axis.
+
+   :rtype: str
+
+.. py:method:: getDataUnit()
+
+   Returns the unit associated with the data.
+
+   :rtype: str
+
+.. py:method:: getScaleUnit()
+
+   See :func:`getDataUnit`
+.. py:method:: getIntensityUnit()
+
+   See :func:`getDataUnit`
+.. py:method:: getFluxDensityUnit()
+
+   See :func:`getDataUnit`
+.. py:method:: getFluxUnit()
+
+   See :func:`getDataUnit`
+
+.. py:method:: getTelescope()
+
+   Returns the header TELESCOP value.
+
+   :rtype: str
+
+.. py:method:: getFrontend()
+
+   Returns the header FRONTEND value.
+
+   :rtype: str
+
+.. py:method:: getBackend()
+
+   Returns the header BACKEND value.
+
+   :rtype: str
+
+.. py:method:: getSN()
+
+   Returns the average pulse signal-to-noise ratio.
+
+   :rtype: float
+
+.. py:method:: isCalibrator()
+
+   Returns if the file is a calibration observation or not, given by the OBS_MODE flag in the header.
+
+   :rtype: bool
+
+.. py:method:: record(frame)
+
+   Internal function that runs within state-changing functions to record those state changes to a history variable that can be written out if the archive if saved.
+
+   :param frame frame: Frame object returned by python's inspect module.
+
+.. py:method:: print_pypulse_history()
+
+   Prints all elements in the PyPulse history list.
+
+
+
+
+History class
+=============
+
+The *History* class stores the History table in the PSRFITS file. Typical users should not need to worry about using this class directly. It can be accessed in an Archive ar using ar.history (no function call).
+
+.. py:class:: History(history)
+
+   :param pyfits.hdu.table.BinTableHDU history: The binary table header data unit (HDU).
+
+.. py:method:: getValue(field[,num=None])
+   :noindex:
+
+   Returns a dictionary array value.
+
+   :param str field: A column name (i.e., as provided by hdulist['HISTORY'].columns)
+
+   :Example: getValue('NCHAN') will return a list of the frequency channelization history of the file.
+
+.. py:method:: getLatest(field)
+   :noindex:
+
+   Returns the latest key value for a given field.
+
+   :param str field: A column name (i.e., as provided by hdulist['HISTORY'].columns)
+
+.. py:method:: printEntry(i)
+
+   Prints the *i*-th history entry.
+
+   :param int i: Index of entry to print.
+
+
+Polyco Class
+============
+
+The *Polyco* class stores the Polyco table in the PSRFITS file. Typical users should not need to worry about using this class directly. It can be accessed in an Archive ar using ar.polyco (no function call).
+
+.. py:class:: Polyco(polyco[,MJD=None])
+
+   :param float MJD: A default MJD to calculate the Polyco on.
+
+.. py:method:: getValue(field[,num=None])
+   :noindex:
+
+   Returns a dictionary array value.
+
+   :param str field: A column name (i.e., as provided by hdulist['POLYCO'].columns)
+
+.. py:method:: getLatest(field)
+   :noindex:
+   
+   Returns the latest key value for a given field.
+
+   :param str field: A column name (i.e., as provided by hdulist['POLYCO'].columns)
+
+.. py:method:: calculate([MJD=None])
+
+   Calculates the phase and frequency at a given MJD.
+
+   :param float MJD: MJD to calculate the Polyco on. If not provided, then the default MJD must be set in the constructor.
+   :return: phase (*float*), frequency (*float*)
+
+.. py:method:: calculatePeriod([MJD=None])
+
+
+   Calculates the pulse period at a given MJD.
+
+   :param float MJD: MJD to calculate the Polyco on. If not provided, then the default MJD must be set in the constructor.
+   :return: period (*float*)

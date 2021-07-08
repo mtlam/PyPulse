@@ -1,0 +1,196 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. toctree::
+   :maxdepth: 2
+
+
+
+Tim Class
+=========
+
+The *Tim* class handles pulsar times-of-arrival (TOAs) files
+
+.. py:class:: Tim(filename[,numwrap=float,usedecimal=False])
+
+   :param str filename: Path to a .tim file
+   :param type numwrap: Type to wrap numeric values by. Float is used by default for ease but Decimal can be is used to keep numeric precision if needed, e.g., for spin period/frequency. Can set numwrap=DECIMAL or usedecimal=True.
+   :param bool usedecimal: See above.
+			
+Usage:
+
+.. code-block:: python
+
+   t = Tim(FILENAME) #automatically parses each TOA with the TOA() class
+   print t.toas[0].getMJD() #prints the MJD of the first TOA as a python Decimal
+   print t.toas[0].get('snr') #prints the value of the -snr flag of the TOA if it is available
+
+Methods
+-------
+
+
+.. py:function:: load(filename)
+
+  Loads a .tim file.
+
+   :param str filename: Path to .tim file
+
+.. py:function:: save(filename)
+
+   Save a .tim file.
+
+   :param str filename: Path to .tim file
+
+.. py:function:: getFreqs()
+   
+   Return the frequencies of each pulse profile the TOAs were generated from. Loops over :func:`getFreq` in :class:`TOA`.
+
+   :rtype: numpy.ndarray
+
+.. py:function:: getMJDs()
+   
+   Return the MJD of each pulse profile the TOAs were generated from. Loops over :func:`getMJD` in :class:`TOA`.
+
+   :rtype: numpy.ndarray
+
+
+.. py:function:: getErrors()
+   
+   Return the TOA uncertainties of each pulse profile the TOAs were generated from. Loops over :func:`getError` in :class:`TOA`.
+
+   :rtype: numpy.ndarray	   
+
+.. py:function:: get()
+   
+   Return the value of a flag in each TOA line. Loops over :func:`get` in :class:`TOA`.
+
+   :rtype: numpy.ndarray
+	   
+.. py:function:: getTspan([years=False])
+
+   Return the total time span covered by the TOAs.
+
+   :param bool years: Divide the total time span in days by 365.25.
+   :rtype: float
+
+
+TOA Class
+=========
+
+The *TOA* class handles individual pulsar times-of-arrival (TOAs).
+
+.. py:class:: TOA(filename[,freq=None,MJD=None,err=None,siteID=None,numwrap=Decimal,**kwargs])
+
+   Stores the five basic values of a TOA and any additional flags.
+
+   :param str filename: If only the filename parameter is specified, then the parameter is the entire TOA string and will be parsed.
+   :param str freq: TOA frequency. Can be supplied a numeric value that will be wrapped as a float.
+   :param str MJD: TOA MJD. Can be supplied a numeric value that will be wrapped with the type numwrap.
+   :param str err: TOA error in microseconds. Can be supplied a numeric value that will be wrapped as a float.
+   :param str siteID: TOA observatory site ID.
+   :param type numwrap: Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.
+   :param **kwargs: Additional flags. If the five base parameters are provided, each argument is a tuple of the form (flag, value). Otherwise, this is a string of all of the flags and values that must be parsed.
+
+Methods
+-------
+
+.. py:function:: getFilename()
+
+   Return the filename the TOA was generated from.
+
+   :rtype: str
+
+.. py:function:: getFrequency()
+   
+   Return the frequency of the pulse profile the TOA was generated from.
+
+   :rtype: float
+
+
+.. py:function:: getFreq()
+
+   Same as :func:`getFrequency`.
+
+
+.. py:function:: getMJD()
+
+   Return the MJD of the TOA.
+ 
+   :rtype: float
+
+.. py:function:: getError()
+
+   Return the TOA error in microseconds.
+
+   :rtype: float
+
+.. py:function:: getSiteID()
+ 
+   Return the observatory site ID of the pulse profiles.
+
+   :rtype: str
+
+.. py:function:: get(flag)
+
+   For any flags stored with the TOA, return the value.
+
+   :param str flag: Name of the flag.
+   :rtype: str
+
+.. py:function:: comment()
+ 
+   Comment out the TOA (the TOA string is appended to "C "). Useful when saving out a .tim file.
+
+.. py:function:: setFilename(filename)
+
+   Set the filename of the TOA to a value.
+
+   :param str filename: Filename to set in the TOA.
+
+
+.. py:function:: setFrequency(freq)
+
+   Set the frequency of the TOA to a value.
+
+   :param float freq: Frequency to set in the TOA.
+
+.. py:function:: setFreq(freq)
+
+   Same as :func:`setFrequency`.
+
+.. py:function:: setMJD(MJD)
+
+   Set the MJD of the TOA to a value.
+
+   :param float MJD: MJD to set in the TOA.
+
+.. py:function:: setError(err)
+
+   Set the error of the TOA to a value.
+
+   :param float err: Error to set in the TOA.
+
+.. py:function:: setSiteID(siteID)
+
+   Set the observatory site ID of the TOA to a value.
+
+   :param str siteID: Site ID to set in the TOA.
+
+.. py:function:: set(flag,value)
+
+   If the flag exists, set the value of an associated flag.
+
+   :param str flag: Name of the flag.
+   :param str value: Value to set.
+
+.. py:function:: add(flag,value)
+
+   If the flag does not exist, add the flag with associated value to the TOA.
+
+   :param str flag: Name of the flag.
+   :param str value: Value to set.
+
+
+

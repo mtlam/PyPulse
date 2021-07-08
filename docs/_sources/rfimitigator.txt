@@ -1,0 +1,48 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. toctree::
+   :maxdepth: 2
+
+
+
+
+RFIMitigator Class
+==================
+
+The *RFIMitigator* class handles zapping via changing the data weights.
+
+.. warning:: This class is under heavy construction. 
+
+.. py:class:: RFIMitigator(archive)
+
+Usage:
+
+.. code-block:: python
+
+   rm = RFIMitigator(ar) # provide an Archive object
+   rm.zap_frequency_range(900,1300) # zap between 900 and 1300 MHz
+	      
+
+	      
+Methods
+-------
+
+.. py:function:: zap()
+
+.. py:function:: zap_frequence_range(nulow,nuhigh)
+
+   Mitigate channels within a given frequency range.
+
+.. py:function:: zap_channels(index)
+
+   Mitigate individual channel(s)
+
+.. py:function:: zap_minmax([windowsize=20,threshold=4])
+
+
+
+
+

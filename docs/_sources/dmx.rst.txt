@@ -1,0 +1,300 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. toctree::
+   :maxdepth: 2
+
+
+
+DMX Class
+=========
+
+The *DMX* class handles pulsar DMX files as output by `tempo` and `dmxparse.py`.
+
+.. py:class:: DMX(filename)
+
+   :param str filename: Path to a .dmx file
+			
+Usage:
+
+.. code-block:: python
+
+   d = DMX(FILENAME) #automatically parses each DM line with the DM() class
+   print d.DMs[0].getMJD() #prints the MJD of the first DM value.
+   print d.getMJDs() #prints the values of all of the epochs.
+
+Methods
+-------
+
+
+.. py:function:: save(filename)
+
+   Save a .dmx file.
+
+   :param str filename: Path to .dmx file
+
+.. warning:: :func:`save` is currently not fully implemented
+
+
+.. py:function:: getMJDs()
+   
+   Return the MJD of each DM value. Loops over :func:`getEpoch` in :class:`DM`.
+
+   :rtype: numpy.ndarray
+
+.. py:function:: getEpochs()
+   
+   Return the MJD of each DM value. Loops over :func:`getEpoch` in :class:`DM`.
+
+   :rtype: numpy.ndarray	 
+
+.. py:function:: getValues()
+   
+   Return each DM value. Loops over :func:`getValue` in :class:`DM`.
+
+   :rtype: numpy.ndarray	 
+
+	   
+.. py:function:: getErrs()
+   
+   Return the DM uncertainties for each measurement. Loops over :func:`getError` in :class:`DM`.
+
+   :rtype: numpy.ndarray	   
+
+	   
+.. py:function:: getErrors()
+   
+   Return the DM uncertainties for each measurement. Loops over :func:`getError` in :class:`DM`.
+
+   :rtype: numpy.ndarray	   
+
+
+
+.. py:function:: getR1s()
+   
+   Return the R1 values for each measurement, the starting MJD for the bin. Loops over :func:`getR1` in :class:`DM`.
+
+   :rtype: numpy.ndarray
+
+
+.. py:function:: getR2s()
+   
+   Return the R2 values for each measurement, the ending MJD for the bin. Loops over :func:`getR2` in :class:`DM`.
+
+   :rtype: numpy.ndarray
+
+.. py:function:: getF1s()
+   
+   Return the F1 values for each measurement, the lowest frequency for the bin. Loops over :func:`getF1` in :class:`DM`.
+
+   :rtype: numpy.ndarray
+
+.. py:function:: getF2s()
+   
+   Return the F2 values for each measurement, the highest frequency for the bin. Loops over :func:`getF2` in :class:`DM`.
+
+   :rtype: numpy.ndarray
+
+.. py:function:: getBin()
+   
+   Return the bin string label. Loops over :func:`getDMXbin` in :class:`DM`.
+
+   :rtype: numpy.ndarray
+			 
+.. py:function:: getDMXbin()
+   
+   Return the bin string label. Loops over :func:`getDMXbin` in :class:`DM`.
+
+   :rtype: numpy.ndarray
+
+	   
+.. py:function:: getter(func)
+   
+   Generic helper function to loop over each DM value. Used internally, though hypothetically one could apply additional operations on each DM value
+
+   :param function func: Function to call on each DM value
+
+   :rtype: nump.ndarray
+
+.. py:function:: getDMseries()
+   
+   Return a tuple of the DM time series (times, DMs, DM errors). DMs are calculated as the DMX model plus the DM parameter (the fiducial value).
+
+   :return: times (*numpy.ndarray*), DM (*numpy.ndarray*), DM errors (*numpy.ndarray*)
+	   
+.. py:function:: getTspan([years=False])
+
+   Return the total time span covered by the DM epochs.
+
+   :param bool years: Divide the total time span in days by 365.25.
+   :rtype: float
+
+
+DM Class
+=========
+
+The *DM* class handles individual pulsar DMX measurements.
+
+.. py:class:: DM(epoch[,value=None,err=None,R1=None,R2=None,F1=None,F2=None,dmxbin=None])
+
+   Stores the entries of a DM line.
+
+   :param float/str epoch: If only the epoch parameter is specified, then the parameter is the entire DM string and will be parsed.
+   :param float value: DM value.
+   :param float err: DM error
+   :param float R1: R1, starting MJD for the bin
+   :param float R2: R2, ending MJD for the bin		 
+   :param float F1: F1, lowest frequency for the bin
+   :param float F2: F2, highest frequency for the bin		 
+   :param str dmxbin: bin label
+
+
+Methods
+-------
+
+.. py:function:: getMJD()
+
+   Return the value of the epoch.
+
+   :rtype: float
+
+.. py:function:: getEpoch()
+
+   Return the value of the epoch.
+
+   :rtype: float
+
+.. py:function:: getDM()
+
+   Return the value of the DM.
+
+   :rtype: float		
+
+.. py:function:: getValue()
+
+   Return the value of the DM.
+
+   :rtype: float
+
+.. py:function:: getErr()
+
+   Return the error of the DM.
+
+   :rtype: float
+	  
+.. py:function:: getError()
+
+   Return the error of the DM.
+
+   :rtype: float
+
+.. py:function:: getR1()
+ 
+   Return the R1 of the DM, the starting epoch of the bin.
+
+   :rtype: float
+
+.. py:function:: getR2()
+ 
+   Return the R2 of the DM, the ending epoch of the bin.
+
+   :rtype: float
+
+.. py:function:: getF1()
+ 
+   Return the F1 of the DM, the lowest frequency.
+
+   :rtype: float
+
+.. py:function:: getF2()
+ 
+   Return the F2 of the DM, the highest frequency.
+
+   :rtype: float
+
+.. py:function:: getBin()
+ 
+   Return the label of the bin.
+
+   :rtype: str
+			 
+.. py:function:: getDMXbin()
+ 
+   Return the label of the bin.
+
+   :rtype: str
+
+.. py:function:: setMJD(epoch)
+
+   Set the epoch of the DM to a value.
+
+   :param float epoch: Value to set the DM epoch to.
+
+.. py:function:: setEpoch(epoch)
+
+   Set the epoch of the DM to a value.
+
+   :param float epoch: Value to set the DM epoch to.
+
+.. py:function:: setDM(value)
+
+   Set the epoch of the DM to a value.
+
+   :param float value: Value to set the DM to.
+
+.. py:function:: setValue(value)
+
+   Set the epoch of the DM to a value.
+
+   :param float value: Value to set the DM to.
+
+.. py:function:: setErr(err)
+
+   Set the error of the DM to a value.
+
+   :param float err: Value to set the error to.
+		       
+.. py:function:: setError(err)
+
+   Set the error of the DM to a value.
+
+   :param float err: Value to set the error to.
+
+.. py:function:: setR1(R1)
+
+   Set the R1 of the DM to a value.
+
+   :param float R1: Value to set the R1 to.
+
+.. py:function:: setR2(R2)
+
+   Set the R2 of the DM to a value.
+
+   :param float R2: Value to set the R2 to.
+
+.. py:function:: setF1(F1)
+
+   Set the F1 of the DM to a value.
+
+   :param float F1: Value to set the F1 to.
+
+.. py:function:: setF2(F2)
+
+   Set the F2 of the DM to a value.
+
+   :param float F2: Value to set the F2 to.
+  
+.. py:function:: setBin(dmxbin)
+
+   Set the label of the DM to a value.
+
+   :param str dmxbin: Value to set the bin label to.
+
+.. py:function:: setDMXbin(dmxbin)
+
+   Set the label of the DM to a value.
+
+   :param str dmxbin: Value to set the bin label to.
+

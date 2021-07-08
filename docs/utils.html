@@ -1,20 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Utils &#8212; PyPulse 0.1.1 documentation</title>
-    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Examples" href="examples.html" />
@@ -32,9 +31,93 @@
         <li class="right" >
           <a href="dmx.html" title="DMX Class"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.1.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Utils</a></li> 
       </ul>
-    </div>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="toctree-wrapper compound">
+</div>
+<section id="utils">
+<h1>Utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h1>
+<p>The utils.py file contains many useful functions called by other classes in PyPulse.</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="acf">
+<span class="sig-name descname"><span class="pre">acf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">array</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">var=False</span></em>, <em class="sig-param"><span class="pre">norm_by_tau=True</span></em>, <em class="sig-param"><span class="pre">lagaxis=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#acf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses numpy’s correlate function to calculate the autocorrelation function of an array <span class="math notranslate nohighlight">\(x\)</span>, defined as</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{N} \sum_{i\le j} x_i x_j\]</div>
+<p>where</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>list/numpy.ndarray</em>) – Data array.</p></li>
+<li><p><strong>var</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Divide by the variance (using numpy.var) of the time series</p></li>
+<li><p><strong>norm_by_tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Normalize using the number of bins going into each lag bin’s computation (thus making each bin an average value). Otherwise just divide by the length of the input array.</p></li>
+<li><p><strong>lagaxis</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return the axis of lags and the autocorrelation function rather than just the autocorrelation function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>autocorrelation function, <em>numpy.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="imshow">
+<span class="sig-name descname"><span class="pre">imshow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">x</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">ax=None</span></em>, <em class="sig-param"><span class="pre">origin='lower'</span></em>, <em class="sig-param"><span class="pre">interpolation='nearest'</span></em>, <em class="sig-param"><span class="pre">aspect='auto'</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#imshow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for calling matplotlib’s imshow().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>list/numpy.ndarray</em>) – 2D data array.</p></li>
+<li><p><strong>ax</strong> (<em>axis</em>) – Uses a matplotlib axis to draw to. If None, then just run open a new figure.</p></li>
+<li><p><strong>origin</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Explicitly pass origin argument to imshow()</p></li>
+<li><p><strong>interpolation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Explicitly pass interpolation argument to imshow()</p></li>
+<li><p><strong>aspect</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Explicitly pass aspect argument to imshow()</p></li>
+<li><p><strong>**kwargs</strong> – <p>Additional arguments to pass to imshow()</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>im, the return value of either ax.imshow() or plt.imshow()</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">array</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">simple=False</span></em>, <em class="sig-param"><span class="pre">minimum=None</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize an array to unit height.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>numpy.ndarray</em>) – Data array</p></li>
+<li><p><strong>simple</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If simple, divide by the maximum of the array. Otherwise, normalize according to <span class="math notranslate nohighlight">\(\mathrm{(array-minimum)}/\mathrm{(maximum-minimum)}\)</span>, where the minimum is the minimum of the array.</p></li>
+<li><p><strong>minimum</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Provide the minimum value to normalize in the above equation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>array, <em>numpy.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table of Contents</a></h3>
@@ -59,111 +142,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <div class="toctree-wrapper compound">
-</div>
-<div class="section" id="utils">
-<h1>Utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h1>
-<p>The utils.py file contains many useful functions called by other classes in PyPulse.</p>
-<div class="section" id="functions">
-<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="acf">
-<code class="descname">acf</code><span class="sig-paren">(</span><em>array</em><span class="optional">[</span>, <em>var=False</em>, <em>norm_by_tau=True</em>, <em>lagaxis=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#acf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses numpy’s correlate function to calculate the autocorrelation function of an array <span class="math notranslate nohighlight">\(x\)</span>, defined as</p>
-<div class="math notranslate nohighlight">
-\[\frac{1}{N} \sum_{i\le j} x_i x_j\]</div>
-<p>where</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>array</strong> (<em>list/numpy.ndarray</em>) – Data array.</li>
-<li><strong>var</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Divide by the variance (using numpy.var) of the time series</li>
-<li><strong>norm_by_tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Normalize using the number of bins going into each lag bin’s computation (thus making each bin an average value). Otherwise just divide by the length of the input array.</li>
-<li><strong>lagaxis</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return the axis of lags and the autocorrelation function rather than just the autocorrelation function.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">autocorrelation function, <em>numpy.ndarray</em></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="imshow">
-<code class="descname">imshow</code><span class="sig-paren">(</span><em>x</em><span class="optional">[</span>, <em>ax=None</em>, <em>origin='lower'</em>, <em>interpolation='nearest'</em>, <em>aspect='auto'</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#imshow" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convenience function for calling matplotlib’s imshow().</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> (<em>list/numpy.ndarray</em>) – 2D data array.</li>
-<li><strong>ax</strong> (<em>axis</em>) – Uses a matplotlib axis to draw to. If None, then just run open a new figure.</li>
-<li><strong>origin</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Explicitly pass origin argument to imshow()</li>
-<li><strong>interpolation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Explicitly pass interpolation argument to imshow()</li>
-<li><strong>aspect</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Explicitly pass aspect argument to imshow()</li>
-<li><strong>**kwargs</strong> – <p>Additional arguments to pass to imshow()</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">im, the return value of either ax.imshow() or plt.imshow()</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="normalize">
-<code class="descname">normalize</code><span class="sig-paren">(</span><em>array</em><span class="optional">[</span>, <em>simple=False</em>, <em>minimum=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#normalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normalize an array to unit height.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>array</strong> (<em>numpy.ndarray</em>) – Data array</li>
-<li><strong>simple</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If simple, divide by the maximum of the array. Otherwise, normalize according to <span class="math notranslate nohighlight">\(\mathrm{(array-minimum)}/\mathrm{(maximum-minimum)}\)</span>, where the minimum is the minimum of the array.</li>
-<li><strong>minimum</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Provide the minimum value to normalize in the above equation.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">array, <em>numpy.ndarray</em></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-</div>
-
-
-          </div>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -180,12 +167,13 @@
         <li class="right" >
           <a href="dmx.html" title="DMX Class"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.1.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Utils</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016-2021, Michael T. Lam.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

@@ -1,0 +1,40 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. toctree::
+   :maxdepth: 2
+
+
+
+
+Scripts
+=====================
+
+There are a number of command-line scripts that come with PyPulse for convenience. More to come!
+
+
+
+
+fitsheader_to_txt
+-----------------
+
+Prints out the PSRFITS file header information
+
+fits_to_npy
+-----------
+
+Converts the data within a PSRFITS file into a .npy file. No metadata are stored with the file.
+
+
+pypav
+-----
+
+Like PSRCHIVE's `pav` routine, this will provide plots of a PSRFITS file.
+
+
+partytricks
+-----------
+
+This will take a Par file and calculate the number of pulses from a given time. It can also calculate the eccentricity errors if available

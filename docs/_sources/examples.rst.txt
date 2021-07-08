@@ -1,0 +1,75 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. toctree::
+   :maxdepth: 2
+
+
+Examples
+========
+
+Below are some examples of tasks you may wish to perform. If you would like to see more examples, please submit an issue on github or e-mail me at michael-dot-lam-at-nanograv-dot-org.
+
+
+
+Calculating scintillation parameters
+------------------------------------
+
+Below is the very simplest way to get scintillation parameters.
+
+.. code-block:: python
+
+   ar = Archive(FILENAME) #loads archive, dedispersed and polarization averaged by default
+   ds = ar.getDynamicSpectrum() #without a template shape, this will average the data across the phase axis. One can set maketemplate=True to take the average pulse shape and make an underlying template
+   print(ds.scintillation_parameters()) #will return the scintillation timescale, scintillation bandwidth, and drift rate (rotation) using a 2D Gaussian fit
+
+Make a Joy Division plot
+------------------------
+
+.. code-block:: python
+
+   ar = Archive(FILENAME) #loads archive, dedispersed and polarization averaged by default
+   ar.fscrunch() #frequency-average the data, if applicable.
+   ar.joyDivision() #makes the Joy-Division-style plot for pulses in time and phase
+
+
+Make a template shape
+------------------------
+
+If you are starting from a PSRFITS file, the easiest thing to do is probably the following:
+
+.. code-block:: python
+
+   ar = Archive(FILENAME) #loads archive, dedispersed and polarization averaged by default
+   ar.tscrunch() #time-average the data, if applicable.
+   template = ar.calculateTemplate() #By default, will use von Mises functions
+
+If you already have the data array extracted, then you can go straight to the underlying functionality:
+
+.. code-block:: python
+
+   sp = SinglePulse(data,windowsize=len(data)//8) #windowsize will auto-calculate an off-pulse region 
+   template = sp.smooth() # By default, will use von Mises functions
+   
+
+Comment out TOAs in a .tim file with a given condition
+------------------------------------------------------
+
+Let's say we wish to comment out TOAs with a flag representing a specific backend: "-be legacy"
+
+.. code-block:: python
+
+   t = Tim(FILENAME) #load tim file
+
+   def boolean_func(toa): #define a boolean function that takes in a TOA instance.
+       be = toa.get("be")
+       if be == "legacy":
+           return True
+       return False
+
+   t.comment(boolean_func,cut="cut_legacy") #add a flag that says why the data were cut
+   t.save(filename="new.tim") #saves a new tim file rather than rewrite the old one
+
+

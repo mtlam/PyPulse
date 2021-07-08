@@ -1,20 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>SinglePulse Class &#8212; PyPulse 0.1.1 documentation</title>
-    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Calibrator Class" href="calibrator.html" />
@@ -32,9 +31,482 @@
         <li class="right" >
           <a href="archive.html" title="Archive Class"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.1.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">SinglePulse Class</a></li> 
       </ul>
-    </div>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="toctree-wrapper compound">
+</div>
+<section id="singlepulse-class">
+<h1>SinglePulse Class<a class="headerlink" href="#singlepulse-class" title="Permalink to this headline">¶</a></h1>
+<p>The <em>SinglePulse</em> class handles an individual pulse data array.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="SinglePulse">
+<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">SinglePulse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">data</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">mpw=None</span></em>, <em class="sig-param"><span class="pre">ipw=None</span></em>, <em class="sig-param"><span class="pre">opw=None</span></em>, <em class="sig-param"><span class="pre">prepare=False</span></em>, <em class="sig-param"><span class="pre">align=None</span></em>, <em class="sig-param"><span class="pre">period=None</span></em>, <em class="sig-param"><span class="pre">windowsize=None</span></em>, <em class="sig-param"><span class="pre">istemplate=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SinglePulse" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list/numpy.ndarray</em>) – Data array.</p></li>
+<li><p><strong>mpw</strong> (<em>list/numpy.ndarray</em>) – Indices of the main-pulse window</p></li>
+<li><p><strong>ipw</strong> (<em>list/numpy.ndarray</em>) – Indices of the inter-pulse window</p></li>
+<li><p><strong>opw</strong> (<em>list/numpy.ndarray</em>) – Indices of the off-pulse window</p></li>
+<li><p><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Run <a class="reference internal" href="#interpulse_align" title="interpulse_align"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpulse_align()</span></code></a></p></li>
+<li><p><strong>align</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Rotate the pulse by this amount in phase bin units.</p></li>
+<li><p><strong>period</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Provide pulse period.</p></li>
+<li><p><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Overrides mpw, ipw, opw. Defines an off-pulse window of a given size about the minimum-integral region.</p></li>
+<li><p><strong>istemplate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, run <a class="reference internal" href="#calcFT" title="calcFT"><code class="xref py py-func docutils literal notranslate"><span class="pre">calcFT()</span></code></a> to precalculate the Fourier Transform of the data. This is useful for speed-ups elsewhere throughout the code.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sp</span> <span class="o">=</span> <span class="n">SinglePulse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">windowsize</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span> <span class="c1">#will auto-calculate an offpulse region of length 256 bins</span>
+<span class="nb">print</span> <span class="n">sp</span><span class="o">.</span><span class="n">getFWHM</span><span class="p">()</span> <span class="c1">#prints the FWHM of the pulse</span>
+<span class="nb">print</span> <span class="n">sp</span><span class="o">.</span><span class="n">getSN</span><span class="p">()</span> <span class="c1">#prints a crude S/N of the pulse</span>
+<span class="nb">print</span> <span class="n">sp</span><span class="o">.</span><span class="n">fitPulse</span><span class="p">(</span><span class="n">template_array</span><span class="p">)[</span><span class="mi">5</span><span class="p">]</span> <span class="c1">#prints a better S/N of the pulse using a template array</span>
+</pre></div>
+</div>
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="interpulse_align">
+<span class="sig-name descname"><span class="pre">interpulse_align</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#interpulse_align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotate the pulse such that the main pulse is at phase=0.25 and the interpulse is at phase = 0.75.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="center_align">
+<span class="sig-name descname"><span class="pre">center_align</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#center_align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotate the pulse such that the peak is in the center.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">area=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the pulse so that the peak has a value of 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>area</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Normalize the pulse so that the area has a value of 1.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getFWHM">
+<span class="sig-name descname"><span class="pre">getFWHM</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">simple=False</span></em>, <em class="sig-param"><span class="pre">timeunits=True</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getFWHM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the full width at half maximum of the main component of the pulse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>FWHM, <em>float</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getWeff">
+<span class="sig-name descname"><span class="pre">getWeff</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">sumonly=False</span></em>, <em class="sig-param"><span class="pre">timeunits=True</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getWeff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the effective width of the pulse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>W_eff, <em>float</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getSN">
+<span class="sig-name descname"><span class="pre">getSN</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getSN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate a crude signal-to-noise ratio as the maximum of the data array divided by the off-pulse RMS noise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>S/N, <em>float</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="remove_baseline">
+<span class="sig-name descname"><span class="pre">remove_baseline</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">save=True</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#remove_baseline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtract the baseline of the pulse so that it will be set to zero mean.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Replace the data array with the rotated versions.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>subtracted_array, <em>numpy.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calcOffpulseWindow">
+<span class="sig-name descname"><span class="pre">calcOffpulseWindow</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">windowsize=None</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#calcOffpulseWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate an offpulse window automatically by finding where the area under the curve is minimized, i.e., where</p>
+<div class="math notranslate nohighlight">
+\[\min \sum_{i=i_0}^{i_0+N} U(\phi_i)\]</div>
+<p>is satisfied. The template (or profile) shape as a function of phase is <span class="math notranslate nohighlight">\(U(\phi)\)</span>, <span class="math notranslate nohighlight">\(i_0\)</span> is the initial index and <span class="math notranslate nohighlight">\(N\)</span> is the length of the window. Returns the offpulse window indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Window size (<span class="math notranslate nohighlight">\(N\)</span>) in bin units. The default is the length of the data array divided by 8.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>opw, <em>numpy.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calcFT">
+<span class="sig-name descname"><span class="pre">calcFT</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#calcFT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Fourier Transform and related frequencies
+Returns the Fourier frequencies, Fourier Transform
+Uses a real FFT</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>fs, <em>np.ndarray</em>, yfft, <em>np.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getMainpulse">
+<span class="sig-name descname"><span class="pre">getMainpulse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getMainpulse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the main-pulse intensities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>mpw, <em>numpy.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getInterpulse">
+<span class="sig-name descname"><span class="pre">getInterpulse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getInterpulse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the inter-pulse intensities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>mpw, <em>numpy.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getOffpulse">
+<span class="sig-name descname"><span class="pre">getOffpulse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getOffpulse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the off-pulse intensities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>mpw, <em>numpy.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getAllpulse">
+<span class="sig-name descname"><span class="pre">getAllpulse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getAllpulse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the main-pulse, inter-pulse, and off-pulse intensities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>mpw, <em>numpy.ndarray</em>, ipw, <em>numpy.ndarray</em>, opw, <em>numpy.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getMainpulseACF">
+<span class="sig-name descname"><span class="pre">getMainpulseACF</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getMainpulseACF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the autocorrelation function of the main-pulse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>mpacf, <em>nump.array</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getInterpulseACF">
+<span class="sig-name descname"><span class="pre">getInterpulseACF</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getInterpulseACF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the autocorrelation function of the inter-pulse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>ipacf, <em>nump.array</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getOffpulseACF">
+<span class="sig-name descname"><span class="pre">getOffpulseACF</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getOffpulseACF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the autocorrelation function of the off-pulse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>opacf, <em>nump.array</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getAllpulseACF">
+<span class="sig-name descname"><span class="pre">getAllpulseACF</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getAllpulseACF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the main-pulse, inter-pulse, and off-pulse autocorrelation functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>mpacf, <em>numpy.ndarray</em>, ipacf, <em>numpy.ndarray</em>, opacf, <em>numpy.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getOffpulseNoise">
+<span class="sig-name descname"><span class="pre">getOffpulseNoise</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">mean=False</span></em>, <em class="sig-param"><span class="pre">full=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getOffpulseNoise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the root-mean-square (RMS) of the off-pulse intensities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mean</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Calculate the mean value of the off-pulse intensities instead of the root-mean-square.</p></li>
+<li><p><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return both the off-pulse mean and RMS.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>noise, <em>float</em> (if <code class="docutils literal notranslate"><span class="pre">full</span></code> is True then return two floats, the mean and the RMS)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getOffpulseZCT">
+<span class="sig-name descname"><span class="pre">getOffpulseZCT</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getOffpulseZCT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a zero-crossing test of the offpulse noise. The expected number of zero crossings for <span class="math notranslate nohighlight">\(N\)</span> samples of white noise is <span class="math notranslate nohighlight">\((N-1)/2 \pm \sqrt{(N-1)/2}\)</span>. If the number is within <span class="math notranslate nohighlight">\(3\sigma\)</span> of the expectation, return True, otherwise, return False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>success, test_statistic, count</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fitPulse">
+<span class="sig-name descname"><span class="pre">fitPulse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">template</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">fixedphase=False</span></em>, <em class="sig-param"><span class="pre">rms_baseline=None</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#fitPulse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the template-matching procedure of Taylor 1992 in the Fourier domain. Matched filtering assumes that the data profile <span class="math notranslate nohighlight">\(I(t)\)</span> is a scaled and shifted version of a template profile <span class="math notranslate nohighlight">\(U(t)\)</span>, plus additive noise, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[I(t) = b U(t - \tau) + n(t)\]</div>
+<p>where <span class="math notranslate nohighlight">\(t\)</span> is time (in pulse phase bin units), <span class="math notranslate nohighlight">\(n(t)\)</span> is the additive noise, and <span class="math notranslate nohighlight">\(b\)</span> and <span class="math notranslate nohighlight">\(\tau\)</span> are the scale factor and shift, respectively. PyPulse performs this fit in terms of phase bins but these numbers can be translated into absolute arrival times.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> (<em>list/numpy.ndarray/SinglePulse</em>) – Template shape to fit to the data array.</p></li>
+<li><p><strong>fixedphase</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return only the signal-to-noise with the template shape fixed in its phase.</p></li>
+<li><p><strong>rms_baseline</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Provide a different value of the off-pulse root-mean-square noise.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>TOA from cross-correlation function (tauccf), TOA from template matching procedure (tauhat), scale factor (bhat), error on TOA (sigma_Tau), error on scale factor (sigma_b), signal-to-noise ratio (snr), cross-correlation coefficient (rho)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>include a goodness-of-fit flag as a measure of the residuals</p>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="shiftit">
+<span class="sig-name descname"><span class="pre">shiftit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">shift</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">save=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#shiftit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shift the pulse by some number of phase bins</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shift</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Rotate the pulse in bin units.</p></li>
+<li><p><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Replace the data array with the rotated versions.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spline_smoothing">
+<span class="sig-name descname"><span class="pre">spline_smoothing</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">lam=None</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#spline_smoothing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterative cubic spline interpolation for smooth template generation. The spline-generation algorithm is defined by D.S.G. Pollock 1999 (Smoothing with Cubic Splines), in which the cubic spline preserves slope and curvature through each of the control points, i.e., it minimizes the function:</p>
+<div class="math notranslate nohighlight">
+\[L = \lambda \chi^2 + (1-\lambda) \int \left[S^{''}(\phi)\right]^2 d\phi\]</div>
+<p>where <span class="math notranslate nohighlight">\(\chi^2\)</span> is the sum of the residuals (“chi-squared”), the integral is the curvature of the spline over all of pulse phase <span class="math notranslate nohighlight">\(\phi\)</span>, and <span class="math notranslate nohighlight">\(\lambda\)</span> represents the paramter (“lam”) that weights the importance of the two components.</p>
+<p>Control points (knots) are generated iteratively. Polynomials up to quartic order are fit over the data array. If a quadratic well fits the data, then return without adding a knot, else subdivide the data in half and return the midpoint as a knot. The data array is continuously divided into two halves up to some minimum separation (default=16). In locations <span class="math notranslate nohighlight">\(\phi_i\)</span> where a knot is decided to be placed, the phase bins closest to that knot location are fit by a cubic <span class="math notranslate nohighlight">\(f(\phi\)</span> and the knot is placed at <span class="math notranslate nohighlight">\((\phi_i,f(\phi))\)</span>. After the initial knots locations are chosen, run the cubic spline interpolation as described before. If there is a location where a new knot will help the fit (the residuals must be greater than 4 times the RMS and the location in phase must be 3 times the off-pulse RMS, i.e., the current spline model fails there and it must be a location where actual pulse intensity is present), include that knot and re-run the cubic spline interpolation until the residuals RMS is low.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lam</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – The lambda parameter that determines the relative weight of fitting through the knots and minimizing the curvature of the spline. Can take values from (0,1], where 1 = fit exactly through the knots and 0 = minimized curvature of the spline. If not provided, it is calculated as 1-(off-pulse rms)^2.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Additional arguments to pass to <code class="xref py py-func docutils literal notranslate"><span class="pre">utils.subdivide()</span></code>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>template, <em>numpy.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="component_fitting">
+<span class="sig-name descname"><span class="pre">component_fitting</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">mode='gaussian'</span></em>, <em class="sig-param"><span class="pre">nmax=10</span></em>, <em class="sig-param"><span class="pre">full=False</span></em>, <em class="sig-param"><span class="pre">minamp=None</span></em>, <em class="sig-param"><span class="pre">alpha=0.05</span></em>, <em class="sig-param"><span class="pre">allownegative=False</span></em>, <em class="sig-param"><span class="pre">verbose=False</span></em>, <em class="sig-param"><span class="pre">save=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#component_fitting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iteratively fits a total of nmax components to a pulse profile. The iteration will end when the <span class="math notranslate nohighlight">\(\chi_r^2\)</span> is minimized.</p>
+<p>If mode == ‘gaussian’, will fit components of the form</p>
+<div class="math notranslate nohighlight">
+\[f(\phi|A, \mu, \sigma) = A \exp\left[-\frac{1}{2}\left(\frac{\phi-\mu}{\sigma}\right)\right]\]</div>
+<p>where <span class="math notranslate nohighlight">\(\phi\)</span> is the pulse phase, <span class="math notranslate nohighlight">\(A\)</span> is the component amplitude, <span class="math notranslate nohighlight">\(\mu\)</span> is the mean pulse phase, and <span class="math notranslate nohighlight">\(\sigma\)</span> is the component width.</p>
+<p>If mode == ‘vonmises’, will fit components of the form</p>
+<div class="math notranslate nohighlight">
+\[f(\phi|A, \mu, \kappa) = A \frac{\exp\left[\kappa \cos(\phi-\mu)\right]}{2\pi I_0(\kappa)}\]</div>
+<p>where again <span class="math notranslate nohighlight">\(\phi\)</span> is the pulse phase and <span class="math notranslate nohighlight">\(A\)</span> is the component amplitude, <span class="math notranslate nohighlight">\(\mu\)</span> is the mean pulse phase, and <span class="math notranslate nohighlight">\(1/\kappa\)</span> is the analogous to the component width (squared) of a Gaussian, <span class="math notranslate nohighlight">\(\sigma^2\)</span>. The function <span class="math notranslate nohighlight">\(I_0\)</span> is the modified Bessel function of order 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The function to fit, can choose: ‘gaussian’, ‘vonmises’.</p></li>
+<li><p><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Maximum number of components to test.</p></li>
+<li><p><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return the template shape as well as the array of the best-fit parameters and the number of parameters.</p></li>
+<li><p><strong>minamp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – If all of the profile residuals are less than the fraction of the maximum set by minamp, then return. For example, if minamp is 0.05, once all profile residuals are less than 5% of the maximum, return.</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – F-test significance value. For example, if alpha is 0.05, then new components are kept if 1 - 0.05 = 95% significant.</p></li>
+<li><p><strong>allownegative</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, allow negative-amplitude components in the fitting</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Print when each component is fit</p></li>
+<li><p><strong>plot</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, show a plot of the fit, with the components</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – If provided, save the plot above to the filename.</p></li>
+<li><p><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, replace the data array with the smoothed profile.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>template, <em>numpy.ndarray</em> (if <code class="docutils literal notranslate"><span class="pre">full</span></code> is True then the template, the fit of the parameters, and the number of parameters)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gaussian_smoothing">
+<span class="sig-name descname"><span class="pre">gaussian_smoothing</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">nmax=10</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#gaussian_smoothing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs <a class="reference internal" href="#component_fitting" title="component_fitting"><code class="xref py py-func docutils literal notranslate"><span class="pre">component_fitting()</span></code></a> with mode = ‘gaussian’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Maximum number of components to test.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>template, <em>numpy.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vonmises_smoothing">
+<span class="sig-name descname"><span class="pre">vonmises_smoothing</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">nmax=10</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#vonmises_smoothing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs <a class="reference internal" href="#component_fitting" title="component_fitting"><code class="xref py py-func docutils literal notranslate"><span class="pre">component_fitting()</span></code></a> with mode = ‘vonmises’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Maximum number of components to test.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>template, <em>numpy.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="savgol_smoothing">
+<span class="sig-name descname"><span class="pre">savgol_smoothing</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">window_length=11</span></em>, <em class="sig-param"><span class="pre">polyorder=5</span></em>, <em class="sig-param"><span class="pre">save=False</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#savgol_smoothing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs scipy’s <code class="xref py py-func docutils literal notranslate"><span class="pre">signal.savgol_filter()</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>window_length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Averaging length to fit the polynomial of order polyorder</p></li>
+<li><p><strong>polyorder</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Polynomial order to fit local data segments.</p></li>
+<li><p><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, replace the data array with the smoothed profile.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>template, <em>numpy.ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getPeriod">
+<span class="sig-name descname"><span class="pre">getPeriod</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeriod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the pulse period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>period, <em>float</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getNbin">
+<span class="sig-name descname"><span class="pre">getNbin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getNbin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of phase bins.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>nbins, <em>int</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="getTbin">
+<span class="sig-name descname"><span class="pre">getTbin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getTbin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the time per phase bin</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>t, <em>float</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">show=True</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple plot of the pulse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Show the plot.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plot_windows">
+<span class="sig-name descname"><span class="pre">plot_windows</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="pre">show=True</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#plot_windows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Diagnostic plot of the main-, inter-, and off-pulse regions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Show the plot.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table of Contents</a></h3>
@@ -59,586 +531,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <div class="toctree-wrapper compound">
-</div>
-<div class="section" id="singlepulse-class">
-<h1>SinglePulse Class<a class="headerlink" href="#singlepulse-class" title="Permalink to this headline">¶</a></h1>
-<p>The <em>SinglePulse</em> class handles an individual pulse data array.</p>
-<dl class="class">
-<dt id="SinglePulse">
-<em class="property">class </em><code class="descname">SinglePulse</code><span class="sig-paren">(</span><em>data</em><span class="optional">[</span>, <em>mpw=None</em>, <em>ipw=None</em>, <em>opw=None</em>, <em>prepare=False</em>, <em>align=None</em>, <em>period=None</em>, <em>windowsize=None</em>, <em>istemplate=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#SinglePulse" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>data</strong> (<em>list/numpy.ndarray</em>) – Data array.</li>
-<li><strong>mpw</strong> (<em>list/numpy.ndarray</em>) – Indices of the main-pulse window</li>
-<li><strong>ipw</strong> (<em>list/numpy.ndarray</em>) – Indices of the inter-pulse window</li>
-<li><strong>opw</strong> (<em>list/numpy.ndarray</em>) – Indices of the off-pulse window</li>
-<li><strong>prepare</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Run <a class="reference internal" href="#interpulse_align" title="interpulse_align"><code class="xref py py-func docutils literal notranslate"><span class="pre">interpulse_align()</span></code></a></li>
-<li><strong>align</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Rotate the pulse by this amount in phase bin units.</li>
-<li><strong>period</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Provide pulse period.</li>
-<li><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Overrides mpw, ipw, opw. Defines an off-pulse window of a given size about the minimum-integral region.</li>
-<li><strong>istemplate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, run <a class="reference internal" href="#calcFT" title="calcFT"><code class="xref py py-func docutils literal notranslate"><span class="pre">calcFT()</span></code></a> to precalculate the Fourier Transform of the data. This is useful for speed-ups elsewhere throughout the code.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<p>Usage:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sp</span> <span class="o">=</span> <span class="n">SinglePulse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">windowsize</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span> <span class="c1">#will auto-calculate an offpulse region of length 256 bins</span>
-<span class="k">print</span> <span class="n">sp</span><span class="o">.</span><span class="n">getFWHM</span><span class="p">()</span> <span class="c1">#prints the FWHM of the pulse</span>
-<span class="k">print</span> <span class="n">sp</span><span class="o">.</span><span class="n">getSN</span><span class="p">()</span> <span class="c1">#prints a crude S/N of the pulse</span>
-<span class="k">print</span> <span class="n">sp</span><span class="o">.</span><span class="n">fitPulse</span><span class="p">(</span><span class="n">template_array</span><span class="p">)[</span><span class="mi">5</span><span class="p">]</span> <span class="c1">#prints a better S/N of the pulse using a template array</span>
-</pre></div>
-</div>
-<div class="section" id="methods">
-<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="interpulse_align">
-<code class="descname">interpulse_align</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#interpulse_align" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rotate the pulse such that the main pulse is at phase=0.25 and the interpulse is at phase = 0.75.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="center_align">
-<code class="descname">center_align</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#center_align" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rotate the pulse such that the peak is in the center.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="normalize">
-<code class="descname">normalize</code><span class="sig-paren">(</span><span class="optional">[</span><em>area=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#normalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normalize the pulse so that the peak has a value of 1.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>area</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Normalize the pulse so that the area has a value of 1.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getFWHM">
-<code class="descname">getFWHM</code><span class="sig-paren">(</span><span class="optional">[</span><em>simple=False</em>, <em>timeunits=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getFWHM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the full width at half maximum of the main component of the pulse.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">FWHM, <em>float</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getWeff">
-<code class="descname">getWeff</code><span class="sig-paren">(</span><span class="optional">[</span><em>sumonly=False</em>, <em>timeunits=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getWeff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the effective width of the pulse.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">W_eff, <em>float</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getSN">
-<code class="descname">getSN</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getSN" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate a crude signal-to-noise ratio as the maximum of the data array divided by the off-pulse RMS noise.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">S/N, <em>float</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="remove_baseline">
-<code class="descname">remove_baseline</code><span class="sig-paren">(</span><span class="optional">[</span><em>save=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#remove_baseline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Subtract the baseline of the pulse so that it will be set to zero mean.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Replace the data array with the rotated versions.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">subtracted_array, <em>numpy.ndarray</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="calcOffpulseWindow">
-<code class="descname">calcOffpulseWindow</code><span class="sig-paren">(</span><span class="optional">[</span><em>windowsize=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#calcOffpulseWindow" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate an offpulse window automatically by finding where the area under the curve is minimized, i.e., where</p>
-<div class="math notranslate nohighlight">
-\[\min \sum_{i=i_0}^{i_0+N} U(\phi_i)\]</div>
-<p>is satisfied. The template (or profile) shape as a function of phase is <span class="math notranslate nohighlight">\(U(\phi)\)</span>, <span class="math notranslate nohighlight">\(i_0\)</span> is the initial index and <span class="math notranslate nohighlight">\(N\)</span> is the length of the window. Returns the offpulse window indices.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>windowsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Window size (<span class="math notranslate nohighlight">\(N\)</span>) in bin units. The default is the length of the data array divided by 8.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">opw, <em>numpy.ndarray</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="calcFT">
-<code class="descname">calcFT</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#calcFT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the Fourier Transform and related frequencies
-Returns the Fourier frequencies, Fourier Transform
-Uses a real FFT</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">fs, <em>np.ndarray</em>, yfft, <em>np.ndarray</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getMainpulse">
-<code class="descname">getMainpulse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getMainpulse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the main-pulse intensities.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.ndarray</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getInterpulse">
-<code class="descname">getInterpulse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getInterpulse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the inter-pulse intensities.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.ndarray</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getOffpulse">
-<code class="descname">getOffpulse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getOffpulse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the off-pulse intensities.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.ndarray</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getAllpulse">
-<code class="descname">getAllpulse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getAllpulse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the main-pulse, inter-pulse, and off-pulse intensities.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpw, <em>numpy.ndarray</em>, ipw, <em>numpy.ndarray</em>, opw, <em>numpy.ndarray</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getMainpulseACF">
-<code class="descname">getMainpulseACF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getMainpulseACF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the autocorrelation function of the main-pulse.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpacf, <em>nump.array</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getInterpulseACF">
-<code class="descname">getInterpulseACF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getInterpulseACF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the autocorrelation function of the inter-pulse.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ipacf, <em>nump.array</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getOffpulseACF">
-<code class="descname">getOffpulseACF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getOffpulseACF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the autocorrelation function of the off-pulse.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">opacf, <em>nump.array</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getAllpulseACF">
-<code class="descname">getAllpulseACF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getAllpulseACF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the main-pulse, inter-pulse, and off-pulse autocorrelation functions.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">mpacf, <em>numpy.ndarray</em>, ipacf, <em>numpy.ndarray</em>, opacf, <em>numpy.ndarray</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getOffpulseNoise">
-<code class="descname">getOffpulseNoise</code><span class="sig-paren">(</span><span class="optional">[</span><em>mean=False</em>, <em>full=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#getOffpulseNoise" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the root-mean-square (RMS) of the off-pulse intensities.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>mean</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Calculate the mean value of the off-pulse intensities instead of the root-mean-square.</li>
-<li><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return both the off-pulse mean and RMS.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">noise, <em>float</em> (if <code class="docutils literal notranslate"><span class="pre">full</span></code> is True then return two floats, the mean and the RMS)</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getOffpulseZCT">
-<code class="descname">getOffpulseZCT</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getOffpulseZCT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform a zero-crossing test of the offpulse noise. The expected number of zero crossings for <span class="math notranslate nohighlight">\(N\)</span> samples of white noise is <span class="math notranslate nohighlight">\((N-1)/2 \pm \sqrt{(N-1)/2}\)</span>. If the number is within <span class="math notranslate nohighlight">\(3\sigma\)</span> of the expectation, return True, otherwise, return False.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">success, test_statistic, count</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="fitPulse">
-<code class="descname">fitPulse</code><span class="sig-paren">(</span><em>template</em><span class="optional">[</span>, <em>fixedphase=False</em>, <em>rms_baseline=None</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#fitPulse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform the template-matching procedure of Taylor 1992 in the Fourier domain. Matched filtering assumes that the data profile <span class="math notranslate nohighlight">\(I(t)\)</span> is a scaled and shifted version of a template profile <span class="math notranslate nohighlight">\(U(t)\)</span>, plus additive noise, i.e.,</p>
-<div class="math notranslate nohighlight">
-\[I(t) = b U(t - \tau) + n(t)\]</div>
-<p>where <span class="math notranslate nohighlight">\(t\)</span> is time (in pulse phase bin units), <span class="math notranslate nohighlight">\(n(t)\)</span> is the additive noise, and <span class="math notranslate nohighlight">\(b\)</span> and <span class="math notranslate nohighlight">\(\tau\)</span> are the scale factor and shift, respectively. PyPulse performs this fit in terms of phase bins but these numbers can be translated into absolute arrival times.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>template</strong> (<em>list/numpy.ndarray/SinglePulse</em>) – Template shape to fit to the data array.</li>
-<li><strong>fixedphase</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return only the signal-to-noise with the template shape fixed in its phase.</li>
-<li><strong>rms_baseline</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Provide a different value of the off-pulse root-mean-square noise.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">TOA from cross-correlation function (tauccf), TOA from template matching procedure (tauhat), scale factor (bhat), error on TOA (sigma_Tau), error on scale factor (sigma_b), signal-to-noise ratio (snr), cross-correlation coefficient (rho)</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<div class="admonition-todo admonition" id="index-0">
-<p class="first admonition-title">Todo</p>
-<p class="last">include a goodness-of-fit flag as a measure of the residuals</p>
-</div>
-<dl class="function">
-<dt id="shiftit">
-<code class="descname">shiftit</code><span class="sig-paren">(</span><em>shift</em><span class="optional">[</span>, <em>save=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#shiftit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Shift the pulse by some number of phase bins</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>shift</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Rotate the pulse in bin units.</li>
-<li><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Replace the data array with the rotated versions.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="spline_smoothing">
-<code class="descname">spline_smoothing</code><span class="sig-paren">(</span><span class="optional">[</span><em>lam=None</em>, <em>**kwargs</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#spline_smoothing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Iterative cubic spline interpolation for smooth template generation. The spline-generation algorithm is defined by D.S.G. Pollock 1999 (Smoothing with Cubic Splines), in which the cubic spline preserves slope and curvature through each of the control points, i.e., it minimizes the function:</p>
-<div class="math notranslate nohighlight">
-\[L = \lambda \chi^2 + (1-\lambda) \int \left[S^{''}(\phi)\right]^2 d\phi\]</div>
-<p>where <span class="math notranslate nohighlight">\(\chi^2\)</span> is the sum of the residuals (“chi-squared”), the integral is the curvature of the spline over all of pulse phase <span class="math notranslate nohighlight">\(\phi\)</span>, and <span class="math notranslate nohighlight">\(\lambda\)</span> represents the paramter (“lam”) that weights the importance of the two components.</p>
-<p>Control points (knots) are generated iteratively. Polynomials up to quartic order are fit over the data array. If a quadratic well fits the data, then return without adding a knot, else subdivide the data in half and return the midpoint as a knot. The data array is continuously divided into two halves up to some minimum separation (default=16). In locations <span class="math notranslate nohighlight">\(\phi_i\)</span> where a knot is decided to be placed, the phase bins closest to that knot location are fit by a cubic <span class="math notranslate nohighlight">\(f(\phi\)</span> and the knot is placed at <span class="math notranslate nohighlight">\((\phi_i,f(\phi))\)</span>. After the initial knots locations are chosen, run the cubic spline interpolation as described before. If there is a location where a new knot will help the fit (the residuals must be greater than 4 times the RMS and the location in phase must be 3 times the off-pulse RMS, i.e., the current spline model fails there and it must be a location where actual pulse intensity is present), include that knot and re-run the cubic spline interpolation until the residuals RMS is low.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>lam</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – The lambda parameter that determines the relative weight of fitting through the knots and minimizing the curvature of the spline. Can take values from (0,1], where 1 = fit exactly through the knots and 0 = minimized curvature of the spline. If not provided, it is calculated as 1-(off-pulse rms)^2.</li>
-<li><strong>**kwargs</strong> – <p>Additional arguments to pass to <code class="xref py py-func docutils literal notranslate"><span class="pre">utils.subdivide()</span></code>.</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">template, <em>numpy.ndarray</em></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="component_fitting">
-<code class="descname">component_fitting</code><span class="sig-paren">(</span><span class="optional">[</span><em>mode='gaussian'</em>, <em>nmax=10</em>, <em>full=False</em>, <em>minamp=None</em>, <em>alpha=0.05</em>, <em>allownegative=False</em>, <em>verbose=False</em>, <em>save=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#component_fitting" title="Permalink to this definition">¶</a></dt>
-<dd><p>Iteratively fits a total of nmax components to a pulse profile. The iteration will end when the <span class="math notranslate nohighlight">\(\chi_r^2\)</span> is minimized.</p>
-<p>If mode == ‘gaussian’, will fit components of the form</p>
-<div class="math notranslate nohighlight">
-\[f(\phi|A, \mu, \sigma) = A \exp\left[-\frac{1}{2}\left(\frac{\phi-\mu}{\sigma}\right)\right]\]</div>
-<p>where <span class="math notranslate nohighlight">\(\phi\)</span> is the pulse phase, <span class="math notranslate nohighlight">\(A\)</span> is the component amplitude, <span class="math notranslate nohighlight">\(\mu\)</span> is the mean pulse phase, and <span class="math notranslate nohighlight">\(\sigma\)</span> is the component width.</p>
-<p>If mode == ‘vonmises’, will fit components of the form</p>
-<div class="math notranslate nohighlight">
-\[f(\phi|A, \mu, \kappa) = A \frac{\exp\left[\kappa \cos(\phi-\mu)\right]}{2\pi I_0(\kappa)}\]</div>
-<p>where again <span class="math notranslate nohighlight">\(\phi\)</span> is the pulse phase and <span class="math notranslate nohighlight">\(A\)</span> is the component amplitude, <span class="math notranslate nohighlight">\(\mu\)</span> is the mean pulse phase, and <span class="math notranslate nohighlight">\(1/\kappa\)</span> is the analogous to the component width (squared) of a Gaussian, <span class="math notranslate nohighlight">\(\sigma^2\)</span>. The function <span class="math notranslate nohighlight">\(I_0\)</span> is the modified Bessel function of order 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The function to fit, can choose: ‘gaussian’, ‘vonmises’.</li>
-<li><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Maximum number of components to test.</li>
-<li><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Return the template shape as well as the array of the best-fit parameters and the number of parameters.</li>
-<li><strong>minamp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – If all of the profile residuals are less than the fraction of the maximum set by minamp, then return. For example, if minamp is 0.05, once all profile residuals are less than 5% of the maximum, return.</li>
-<li><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – F-test significance value. For example, if alpha is 0.05, then new components are kept if 1 - 0.05 = 95% significant.</li>
-<li><strong>allownegative</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, allow negative-amplitude components in the fitting</li>
-<li><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Print when each component is fit</li>
-<li><strong>plot</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, show a plot of the fit, with the components</li>
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – If provided, save the plot above to the filename.</li>
-<li><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, replace the data array with the smoothed profile.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">template, <em>numpy.ndarray</em> (if <code class="docutils literal notranslate"><span class="pre">full</span></code> is True then the template, the fit of the parameters, and the number of parameters)</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="gaussian_smoothing">
-<code class="descname">gaussian_smoothing</code><span class="sig-paren">(</span><span class="optional">[</span><em>nmax=10</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#gaussian_smoothing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Runs <a class="reference internal" href="#component_fitting" title="component_fitting"><code class="xref py py-func docutils literal notranslate"><span class="pre">component_fitting()</span></code></a> with mode = ‘gaussian’</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Maximum number of components to test.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">template, <em>numpy.ndarray</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="vonmises_smoothing">
-<code class="descname">vonmises_smoothing</code><span class="sig-paren">(</span><span class="optional">[</span><em>nmax=10</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#vonmises_smoothing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Runs <a class="reference internal" href="#component_fitting" title="component_fitting"><code class="xref py py-func docutils literal notranslate"><span class="pre">component_fitting()</span></code></a> with mode = ‘vonmises’</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Maximum number of components to test.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">template, <em>numpy.ndarray</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="savgol_smoothing">
-<code class="descname">savgol_smoothing</code><span class="sig-paren">(</span><span class="optional">[</span><em>window_length=11</em>, <em>polyorder=5</em>, <em>save=False</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#savgol_smoothing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Runs scipy’s <code class="xref py py-func docutils literal notranslate"><span class="pre">signal.savgol_filter()</span></code></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>window_length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Averaging length to fit the polynomial of order polyorder</li>
-<li><strong>polyorder</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Polynomial order to fit local data segments.</li>
-<li><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, replace the data array with the smoothed profile.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">template, <em>numpy.ndarray</em></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getPeriod">
-<code class="descname">getPeriod</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getPeriod" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the pulse period.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">period, <em>float</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getNbin">
-<code class="descname">getNbin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getNbin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of phase bins.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">nbins, <em>int</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="getTbin">
-<code class="descname">getTbin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#getTbin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the time per phase bin</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">t, <em>float</em></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="plot">
-<code class="descname">plot</code><span class="sig-paren">(</span><span class="optional">[</span><em>show=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Simple plot of the pulse.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Show the plot.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="plot_windows">
-<code class="descname">plot_windows</code><span class="sig-paren">(</span><span class="optional">[</span><em>show=True</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#plot_windows" title="Permalink to this definition">¶</a></dt>
-<dd><p>Diagnostic plot of the main-, inter-, and off-pulse regions.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Show the plot.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-</div>
-
-
-          </div>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -655,12 +556,13 @@ Uses a real FFT</p>
         <li class="right" >
           <a href="archive.html" title="Archive Class"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.1.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyPulse 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">SinglePulse Class</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016-2021, Michael T. Lam.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

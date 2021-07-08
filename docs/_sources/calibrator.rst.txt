@@ -1,0 +1,129 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. toctree::
+   :maxdepth: 2
+
+
+
+
+Calibrator Class
+================
+
+The *Calibrator* class handles flux and polarization calibration of profile data.
+
+.. warning:: This class is under construction. 
+
+.. py:class:: Calibrator(freqs, S[, Serr=None, pol_type='Coherence', fd_poln='LIN', Funit=None, Sunit=None, verbose=True, **kwargs])
+
+   :param list/numpy.ndarray freqs: Frequency array
+   :param list/numpy.ndarray S: Array of polarization data, a 4xN shaped array
+   :param list/numpy.ndarray Serr: Optional errors on the polarization data
+   :param str pol_type: Form of polarization data: "Coherence" or "Stokes"
+   :param str fd_poln: Feed design polarization: "LIN" for linear or "CIRC" for circular
+   :param str Funit: Unit for frequencies
+   :param str Sunit: Unit for polarization data
+   :param bool verbose: Set `True` for verbose printing
+     
+   
+
+				   
+Methods
+-------
+
+.. py:function:: pacv([filename=None])
+
+   Emulates PSRCHIVE's pacv <file>.
+
+   :param str filename: Filename to save image to.
+
+.. py:function:: pacv_csu([filename=None])
+
+   Emulates PSRCHIVE's pacv -n csu <file>.
+
+   :param str filename: Filename to save image to.
+
+.. py:function:: plot([mode="I", ax=None, show=True, filename=None])
+
+   Basic plotter
+
+   :param str mode: Polarization parameter or parameters to plot. Options include "I", "Q", "U", and "V" for the various Stokes parameters, and "A" and "B" for the feed polarizations. Can contain multiple of these modes to plot simultaneously.
+   :param matplotlib.axes._subplots.AxesSubplot ax: matplotlib Axes to draw on
+   :param bool show: If True, show the figure
+   :param str filename: Filename to save image to.
+   :return: ax, matplotlib.axes._subplots.AxesSubplot			
+
+.. py:function:: applyFluxcal(fluxcalonar[, fluxcaloffar=None])
+
+	   
+.. py:function:: applyCalibration(ar)
+
+   :param Archive ar: Archive to apply calibration to		 
+
+.. py:function:: buildMuellerMatrixPA(PA)
+
+   Build the parallactic angle Mueller matrix
+
+   :param float PA: Parallactic angle
+		 
+.. py:function:: buildMuellerMatrixDifferential(differential)
+
+   Build the differential gain Mueller matrix. 
+
+   :param list/tuple/numpy.ndarray differential: The input is a two-element list/array that gives :math:`\Delta G` and :math:`\Delta \psi`, the differential gain and phase.
+		 
+.. py:function:: convertPolarization(S, intype, outtype[, linear=True])
+
+   Convenience function to convert a polarization vector between Stokes and Coherence mode
+
+   :param array S: Polarization vector
+   :param str intype: Input vector type, "Coherence"/"AABBCRCI" or "Stokes"/"IQUV"
+   :param str outtype: Output vector type. For now, since only two modes are implemented, this is redundant.
+   :param bool linear: Linear versus circular input polarization	    
+
+.. py:function:: buildMuellerMatrix([PA=None, feed=None, CC=None, differential=None])
+
+   Cross coupling (CC) is not implemented		 
+		 
+   :param float PA: parallactic angle
+   :param float feed: feed type
+   :param float differential: 		      
+
+		      
+		      
+.. py:function:: calculatePA(lat, dec, HA)
+
+   Helper function to calculate the parallactic angle
+
+   :param float lat: latitude of source
+   :param float dec: declination of source
+   :param float HA: hour angle		     
+
+.. py:function:: getI()
+
+   :return: Stokes I
+
+.. py:function:: getQ()
+
+   :return: Stokes Q
+
+.. py:function:: getU()
+
+   :return: Stokes U
+
+.. py:function:: getV()
+
+   :return: Stokes V
+
+.. py:function:: getA()
+
+   :return: A polarization
+
+.. py:function:: getB()
+
+   :return: B polarization
+
+
+

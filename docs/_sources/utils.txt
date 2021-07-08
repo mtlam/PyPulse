@@ -1,0 +1,58 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. toctree::
+   :maxdepth: 2
+
+
+
+
+Utils
+=====================
+
+The utils.py file contains many useful functions called by other classes in PyPulse.
+
+
+
+
+Functions
+---------
+
+
+.. py:function:: acf(array[,var=False,norm_by_tau=True,lagaxis=False])
+
+   Uses numpy's correlate function to calculate the autocorrelation function of an array :math:`x`, defined as
+
+   .. math:: \frac{1}{N} \sum_{i\le j} x_i x_j
+
+   where
+
+   :param list/numpy.ndarray array: Data array.
+   :param bool var: Divide by the variance (using numpy.var) of the time series
+   :param bool norm_by_tau: Normalize using the number of bins going into each lag bin's computation (thus making each bin an average value). Otherwise just divide by the length of the input array.
+   :param bool lagaxis: Return the axis of lags and the autocorrelation function rather than just the autocorrelation function.
+   :return: autocorrelation function, *numpy.ndarray*
+
+
+.. py:function:: imshow(x[,ax=None,origin='lower',interpolation='nearest',aspect='auto',**kwargs])
+
+   Convenience function for calling matplotlib's imshow().
+
+   :param list/numpy.ndarray x: 2D data array.
+   :param axis ax: Uses a matplotlib axis to draw to. If None, then just run open a new figure.
+   :param str origin: Explicitly pass origin argument to imshow() 
+   :param str interpolation: Explicitly pass interpolation argument to imshow()
+   :param str aspect: Explicitly pass aspect argument to imshow()
+   :param **kwargs: Additional arguments to pass to imshow()
+   :return: im, the return value of either ax.imshow() or plt.imshow()
+
+.. py:function:: normalize(array[,simple=False,minimum=None])
+
+   Normalize an array to unit height.
+
+   :param numpy.ndarray array: Data array
+   :param bool simple: If simple, divide by the maximum of the array. Otherwise, normalize according to :math:`\mathrm{(array-minimum)}/\mathrm{(maximum-minimum)}`, where the minimum is the minimum of the array.
+   :param float minimum: Provide the minimum value to normalize in the above equation.
+   :return: array, *numpy.ndarray*

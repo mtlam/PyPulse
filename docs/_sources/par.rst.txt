@@ -1,0 +1,210 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. toctree::
+   :maxdepth: 2
+
+
+Par Class
+=============
+
+The *Par* class handles pulsar parameter files.
+
+.. py:class:: Par(filename[,numwrap=float,usedecimal=False])
+
+   :param str filename: Path to a .par file
+   :param type numwrap: Type to wrap numeric values by. Float is used by default for ease but Decimal can be is used to keep numeric precision if needed, e.g., for spin period/frequency. Can set numwrap=DECIMAL or usedecimal=True.
+   :param bool usedecimal: See above.
+
+Usage:
+
+.. code-block:: python
+
+   p = Par(FILENAME)
+   print p.getPeriod() #prints the period in the par file (does not calculate for a specific MJD for now)
+   t,dmx,dmxerr = p.getDMseries() #returns the DM parameters in a nice time-series. Note that errors are those given in the par file, which may not be the "correct" ones (more info to be provided later)
+   print p.get("PX") #prints the parallax
+   print p.get("PX",error=True) #prints the error on the parallax
+
+
+Methods
+-------
+
+
+.. py:function:: get(tag[,flag=None,error=False])
+
+   Return the value of a given parameter.
+
+   :param str flag: Return the value of a parameter with a flag provided. For example, noise parameters can be given a backend as a flag, e.g., for parameter "JUMP -fe L-wide 0.0 1 0.0", the flag would be "L-wide".
+   :param bool error: Return the value of the error associated with a parameter.
+   :return: value
+
+.. py:function:: getPeriod()
+
+   Return the pulsar spin period.
+
+   :rtype: float
+
+.. py:function:: getPeriodDot([shklovskii=False])
+
+   Return the pulsar spin period derivative.
+
+   :param bool shklovskii: Attempt to correct for the Shklovskii effect if proper motion and parallax information is provided.
+   :rtype: float
+
+.. py:function:: getFrequency()
+
+   Return the pulsar spin frequency.
+
+   :rtype: float
+
+.. py:function:: getFrequencyDot([shklovskii=False])
+
+   Return the pulsar spin frequency derivative.
+
+   :param bool shklovskii: Attempt to correct for the Shklovskii effect if proper motion and parallax information is provided.
+   :rtype: float
+
+
+.. py:function:: getPM([error=False])
+
+   Calculate the proper motion in mas/yr. If only one of the two basis parameters is provided, return that value.
+
+   :param bool error: If true, return the error on the proper motion.
+   :rtype: float
+
+.. py:function:: getPX([error=False])
+
+   Return the parallax in mas.
+
+   :param bool error: If true, return the error on the parallax.
+   :rtype: float
+
+.. py:function:: getDIST([error=False])
+
+   Return the distance in kpc.
+
+   :param bool error: If true, return the error on the distance.
+   :rtype: float
+
+.. py:function:: getVpperp()
+
+   Calculate the transverse velocity in km/s.
+
+   :rtype: float
+
+
+
+.. py:function:: getDM()
+
+   Return the DM parameter.
+
+   :rtype: float
+
+.. py:function:: getDMX([full_output=False])
+
+   Return a tuple of the DMX time series (times, DMXs, DMX errors).
+
+   :param bool full_output: Return a tuple of the times, DMXs, DMX errors, DMXR1s, DMXR2s, DMXF1s, DMXF2s
+   :return: times (*numpy.ndarray*), DM (*numpy.ndarray*), DM errors (*numpy.ndarray*), unless full_output=True.
+
+.. py:function:: getXMX()
+
+   Return a tuple of the XMX values.
+
+   :return: xmxs (*numpy.ndarray*), errs (*numpy.ndarray*), R1s (*numpy.ndarray*), R2s (*numpy.ndarray*), EXPs (*numpy.ndarray*),
+
+.. warning:: This function is under construction.
+
+.. py:function:: getDMseries()
+
+   Return a tuple of the DM time series (times, DMs, DM errors). DMs are calculated as the DMX model plus the DM parameter (the fiducial value).
+
+   :return: times (*numpy.ndarray*), DM (*numpy.ndarray*), DM errors (*numpy.ndarray*)
+
+.. py:function:: getFD()
+
+   Return the coefficients associated with the FD parameters, in order (i.e., FD1, FD2, ...).
+
+   :rtype: numpy.ndarray
+
+.. py:function:: getFDfunc()
+
+   Return a Python function (lambda) that provides the timing delays as a function of observing frequency. The function takes one parameter, the observing frequency (in GHz), and returns timing delays in microseconds.
+
+   :rtype: function
+
+.. py:function:: getName()
+
+   Return the pulsar name given by either PSR or PSRJ.
+
+   :rtype: str
+
+.. py:function:: getTspan([years=False])
+
+   Return the timespan given by the START and FINISH flags in days.
+
+   :param bool years: Divide the timespan by 365.25.
+   :rtype: float
+
+
+
+
+Parameter Class
+===============
+
+The *Parameter* class handles individual pulsar parameters.
+
+.. py:class:: Parameter(name[,value=None,fit=None,error=None,flag=None,flagvalue=None,numwrap=d.Decimal])
+
+   Stores the basic values of a Parameter in a par file.
+
+   :param str name: If only the name parameter is specified, then this is the entire parameter string and will be parsed. Otherwise, this is the parameter name (e.g. PSR, P0/F0, etc.)
+   :param str value: Parameter value. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.
+   :param str fit: Parameter fit value, i.e. whether or not the parameter is to be fit in the timing model. Can be supplied a numeric value that will be wrapped with an int
+   :param str error: Parameter error. Can be supplied a numeric value that will be wrapped with the type numwrap is set to.
+   :param str flag: If there is a flag associated with the parameter
+   :param str flagvalue: The vale the flag is set to.
+   :param type numwrap: Type to wrap numeric values by. Decimal is used by default to keep numeric precision but becomes difficult to use with other packages. If precision is unneeded, set to float.
+
+Methods
+-------
+
+.. py:function:: getName()
+
+   Return the name of the parameter.
+
+   :rtype: str
+
+.. py:function:: getValue()
+
+   Return the value of the parameter.
+
+   :rtype: numwrap
+
+.. py:function:: getError()
+
+   Return the value of the parameter error.
+
+   :rtype: numwrap
+
+
+.. py:function:: getFit()
+
+   Return the value of the fit flag.
+
+   :rtype: int
+
+.. py:function:: getFlag()
+
+   Return the value of the flag.
+
+   :rtype: str
+
+.. py:function:: getFlagValue()
+
+   Return the value of the flag value
+
+   :rtype: str

@@ -1,0 +1,77 @@
+.. PyPulse documentation master file, created by
+   sphinx-quickstart on Tue Nov  1 19:46:11 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+PyPulse v0.1.1
+==============
+
+PyPulse is a package used to handle PSRFITS files and perform subsequent analyses on pulse profiles.
+
+Download:
+
+`Github <https://github.com/mtlam/PyPulse>`_
+
+Requirements:
+
+* `python <https://www.python.org/>`_ 2.7 or 3.X 
+* `numpy <http://www.numpy.org/>`_
+* `scipy <http://www.scipy.org/>`_
+* `matplotlib <http://matplotlib.org/>`_
+* `astropy <http://www.astropy.org/>`_ 
+
+
+Contents:
+
+.. toctree::
+   :hidden:
+
+   archive 
+   singlepulse
+   calibrator
+   rfimitigator
+   dynamicspectrum
+   par
+   tim
+   dmx
+   utils
+   examples
+   scripts
+   citations
+   license
+
+.. Classes
+.. =======
+
+* :doc:`archive`
+* :doc:`singlepulse`
+* :doc:`calibrator`
+* :doc:`rfimitigator`
+* :doc:`dynamicspectrum`
+* :doc:`par`
+* :doc:`tim`
+* :doc:`dmx`
+
+
+Misc
+====
+
+* :doc:`examples`
+* :doc:`scripts`
+* :doc:`utils`
+* :ref:`search`
+* :doc:`license`
+
+
+
+Citations
+=========
+
+See :doc:`citations` for more information, including how to cite PyPulse's required packages. In using PyPulse, please cite the `ASCL <http://ascl.net/1706.011>`_ via:
+
+`Lam, M. T., 2017, PyPulse, Astrophysics Source Code Library, record ascl:1706.011 <http://adsabs.harvard.edu/abs/2017ascl.soft06011L>`_
+
+Contact
+=========
+
+Please contact michael-dot-lam-at-nanograv-dot-org.
