@@ -1306,27 +1306,28 @@ class Archive(object):
             else:
                 return DS.DynamicSpectrum(wrapfunc(np.mean(data[:, :, window], axis=2)), F=Fedges, T=Tedges, Funit=Funit, Tunit=Tunit)
 
-    def plot(self, ax=None, show=True):
+    def plot(self, ax=None, show=True, subint=0, pol=0, chan=0):
         """Basic plotter of data"""
-        data = self.getData()
-        if len(np.shape(data)) == 1:
-            if ax is None:
-                fig = plt.figure()
-                ax = fig.add_subplot(111)
-            ax.plot(np.arange(len(data), dtype=np.float)/len(data), data, 'k')
-            ax.set_xlim(0, 1)
-            ax.set_xlabel("Pulse Phase")
-            unit = self.getDataUnit()
-            if unit == "Janksy":
-                ax.set_ylabel("Flux Density (%s)"%u.unitchanger(unit))
-            else:
-                ax.set_ylabel("Intensity")
-            #if "SCALE" in self.subintheader:
-            #    ax.set_ylabel(self.subintheader["SCALE"]) #this is still off
-            if show:
-                plt.show()
+        data = self.getData(squeeze=False)
+
+        plotdata = data[subint, pol, chan, :]
+
+        if ax is None:
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+        ax.plot(np.arange(len(plotdata), dtype=np.float)/len(plotdata), plotdata, 'k')
+        ax.set_xlim(0, 1)
+        ax.set_xlabel("Pulse Phase")
+        unit = self.getDataUnit()
+        if unit == "Janksy":
+            ax.set_ylabel("Flux Density (%s)"%u.unitchanger(unit))
         else:
-            raise IndexError("Invalid dimensions for plot()")
+            ax.set_ylabel("Intensity")
+        #if "SCALE" in self.subintheader:
+        #    ax.set_ylabel(self.subintheader["SCALE"]) #this is still off
+        ax.set_title("subint=%i, pol=%i, chan=%i"%(subint, pol, chan))
+        if show:
+            plt.show()
 
     def imshow(self, ax=None, cbar=False, mask=None, show=True,
                filename=None, setnan=0.0, cmap=None, flip=False, **kwargs):
