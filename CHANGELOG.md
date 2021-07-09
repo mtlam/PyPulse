@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - In `Archive`'s `imshow()`, the y-axis can now be flipped with the `flip=True` argument. This allows inverted frequency axes to be turned right-side up.
+- `Archive`'s `plot()` now takes arguments of `subint`, `pol`, and `chan` to specifically select individual profile rather than requiring the data be 1D. By default, these arguments are `0`.
 
 ## [0.1.1] - 2021-06-15
 

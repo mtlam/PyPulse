@@ -1310,6 +1310,15 @@ class Archive(object):
         """Basic plotter of data"""
         data = self.getData(squeeze=False)
 
+        shape = np.shape(data)
+        if subint >= shape[0] or subint < 0 or not isinstance(subint, int):
+            raise IndexError("Invalid subintegration index: %s, maximum index: %i"%(subint, shape[0]))
+        if pol >= shape[1] or pol < 0 or not isinstance(pol, int):
+            raise IndexError("Invalid polarization channel index: %s, maximum index: %i"%(pol, shape[1]))
+        if chan >= shape[2] or chan < 0 or not isinstance(chan, int):
+            raise IndexError("Invalid frequency channel index: %s, maximum index: %i"%(chan, shape[2]))
+        if shape[3] == 0:
+            raise IndexError("Cannot plot data when averaged along phase bins")
         plotdata = data[subint, pol, chan, :]
 
         if ax is None:
