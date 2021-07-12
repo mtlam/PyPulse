@@ -277,6 +277,12 @@ class SinglePulse(object):
             return np.mean(op), np.std(op)
         return np.std(op)
 
+    def getOffpulseRMS(self):
+        """
+        Return the off-pulse RMS value
+        """
+        return self.getOffpulseNoise()
+
     def getOffpulseZCT(self):
         """
         Perform a zero-crossing test of the offpulse noise
