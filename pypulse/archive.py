@@ -1334,7 +1334,11 @@ class Archive(object):
             ax.set_ylabel("Intensity")
         #if "SCALE" in self.subintheader:
         #    ax.set_ylabel(self.subintheader["SCALE"]) #this is still off
-        ax.set_title("subint=%i, pol=%i, chan=%i"%(subint, pol, chan))
+        shape = self.shape(squeeze=False)
+        subint_string = "integrated" if (shape[0] == 1) else str(subint)
+        pol_string = "integrated" if (shape[1] == 1) else str(pol)
+        chan_string = "integrated" if (shape[2] == 1) else str(chan)
+        ax.set_title("subint=%s, pol=%s, chan=%s"%(subint_string, pol_string, chan_string))
         if show:
             plt.show()
 
