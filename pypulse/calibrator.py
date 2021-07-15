@@ -136,6 +136,28 @@ class Calibrator(object):
         plt.show()
 
 
+    def phaseplot(self, ax=None, show=True, filename=None):
+        """
+        Plot of differential phase versus frequency
+        """
+
+        if ax is None:
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+            
+        dpsi = np.arctan2(self.V, self.U)
+        
+        ax.plot(self.freqs, dpsi, 'k.')
+        ax.set_xlabel("Frequency (%s)"%u.unitchanger(self.Funit))
+        ax.set_ylabel("Phase (radians)")
+        plt.tight_layout()
+        
+        if filename is not None:
+            plt.savefig(filename)
+        if show:
+            plt.show()
+
+
     def plot(self, mode="I", ax=None, show=True, filename=None):
         """
         Basic plotter
@@ -157,6 +179,11 @@ class Calibrator(object):
         ax : matplotlib.axes._subplots.AxesSubplot
             Returns the matplotlib Axes object.        
         """
+
+        if mode == "phase":
+            self.phaseplot(ax=ax, show=show, filename=filename)
+            return
+        
         if ax is None:
             fig = plt.figure()
             ax = fig.add_subplot(111)
@@ -172,7 +199,7 @@ class Calibrator(object):
                 raise ValueError("Unknown mode for imshow: %s"%mode)
             ax.plot(self.freqs, data, label=m)
 
-
+            
         ax.set_xlabel("Frequency (%s)"%u.unitchanger(self.Funit))
         ax.set_ylabel("Amplitude (%s)"%u.unitchanger(self.Sunit))
         ax.legend()
