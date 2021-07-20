@@ -54,6 +54,8 @@ elif sys.version_info.major == 3:
     fmap = lambda x, *args: list(map(x, *args))
     xrange = range
 
+np.seterr(divide='ignore', invalid='ignore')
+
 PSR = "PSR"
 CAL = "CAL"
 FON = "FON"

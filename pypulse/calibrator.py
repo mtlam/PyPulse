@@ -1,5 +1,5 @@
 '''
-PyPulse Calibrator 
+PyPulse Calibrator
 '''
 import os
 import sys
@@ -53,12 +53,12 @@ class Calibrator(object):
         self.S = np.array(S)
         if np.shape(self.S)[0] != 4:
             raise IndexError("Data vector must contain four polarizations")
-        
+
         if Serr is None:
             Serr = np.zeros(4, dtype=np.float32)
         self.Serr = np.array(Serr)
-        self.Funit = Funit
-        self.Sunit = Sunit
+        self.Funit = "arb." if Funit is None else Funit
+        self.Sunit = "arb." if Sunit is None else Sunit
         self.verbose = verbose
 
         if self.pol_type == 'Coherence' or self.pol_type == 'AABBCRCI':
@@ -104,18 +104,28 @@ class Calibrator(object):
         Emulates pacv <archive>
         See More/Polarimetry/SingleAxisSolver.C
         '''
+        fig = plt.figure(figsize=(8, 7))
+
         dG = 2*self.Q/self.I
         dpsi = np.arctan2(self.V, self.U)
-        plt.subplot(311)
-        plt.plot(dpsi, 'k.')
-        plt.subplot(312)
-        plt.plot(100*dG, 'k.')
-        plt.subplot(313)
+        ax1 = fig.add_subplot(311)
+        ax1.plot(self.freqs, dpsi, 'k.')
+        ax1.set_ylabel("Differential phase (radians)")
+
+        ax2 = fig.add_subplot(312)
+        ax2.plot(self.freqs, 100*dG, 'k.')
+        ax2.set_ylabel(r"Differential Gain (%)")
+
+        ax3 = fig.add_subplot(313)
         U_0 = self.U/np.cos(dpsi)
-        #plot(self.I)
-        #plot(np.sqrt(self.U**2+self.V**2)/U_0, 'k.')
+        ax3.plot(self.freqs, self.I, 'k.')
+        #ax3.plot(np.sqrt(self.U**2+self.V**2)/U_0, 'k.')
+        ax3.set_xlabel("Frequency (%s)"%u.unitchanger(self.Funit))
+        ax3.set_ylabel("Stokes I (%s)"%u.unitchanger(self.Sunit))
+
         if filename is not None:
             plt.savefig(filename)
+        plt.tight_layout()
         plt.show()
 
     def pacv_csu(self, filename=None):
@@ -127,8 +137,8 @@ class Calibrator(object):
         plt.errorbar(self.freqs, self.Q, yerr=self.Qerr, fmt='r.', label="Q")
         plt.errorbar(self.freqs, self.U, yerr=self.Uerr, fmt='g.', label="U")
         plt.errorbar(self.freqs, self.V, yerr=self.Verr, fmt='b.', label="V")
-        plt.xlabel('Frequency (MHz)')
-        plt.ylabel('Calibrator Stokes (arb.)')
+        plt.xlabel('Frequency (%s)'%u.unitchanger(self.Funit))
+        plt.ylabel('Calibrator Stokes (%s)'%u.unitchanger(self.Sunit))
         plt.legend()
         plt.tight_layout()
         if filename is not None:
@@ -144,14 +154,14 @@ class Calibrator(object):
         if ax is None:
             fig = plt.figure()
             ax = fig.add_subplot(111)
-            
+
         dpsi = np.arctan2(self.V, self.U)
-        
+
         ax.plot(self.freqs, dpsi, 'k.')
         ax.set_xlabel("Frequency (%s)"%u.unitchanger(self.Funit))
         ax.set_ylabel("Phase (radians)")
         plt.tight_layout()
-        
+
         if filename is not None:
             plt.savefig(filename)
         if show:
@@ -177,13 +187,13 @@ class Calibrator(object):
         Returns
         -------
         ax : matplotlib.axes._subplots.AxesSubplot
-            Returns the matplotlib Axes object.        
+            Returns the matplotlib Axes object.
         """
 
         if mode == "phase":
             self.phaseplot(ax=ax, show=show, filename=filename)
             return
-        
+
         if ax is None:
             fig = plt.figure()
             ax = fig.add_subplot(111)
@@ -199,7 +209,7 @@ class Calibrator(object):
                 raise ValueError("Unknown mode for imshow: %s"%mode)
             ax.plot(self.freqs, data, label=m)
 
-            
+
         ax.set_xlabel("Frequency (%s)"%u.unitchanger(self.Funit))
         ax.set_ylabel("Amplitude (%s)"%u.unitchanger(self.Sunit))
         ax.legend()
@@ -209,7 +219,7 @@ class Calibrator(object):
         if show:
             plt.show()
         return ax
-        
+
 
     def applyFluxcal(self, fluxcalonar, fluxcaloffar=None):
         if fluxcaloffar is None: #The fluxcalon file contains both ON and OFF observations
@@ -426,7 +436,7 @@ class Calibrator(object):
             return (self.I - self.V)/2
 
 
-    
+
 ### ==================================================
 ### Helper functions
 ### ==================================================
@@ -496,7 +506,7 @@ class CalibratorConfig:
         freqs = np.array(freqs)
         fluxes = np.zeros(len(freqs))
         #Format 2, Flux in Jy for a frequency in GHz is: log10(S) = a_0 + a_1*log10(f) + a_2*(log10(f))^2 + ...
-        if configline[0][0] == "&": 
+        if configline[0][0] == "&":
             logfreqs = np.log10(freqs/1000.0)
             coeffs = fmap(float, configline[3:])
             for i, coeff in enumerate(coeffs):
