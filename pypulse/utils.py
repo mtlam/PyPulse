@@ -6,7 +6,6 @@ Useful mathematical commands
 import sys
 import copy
 import numpy as np
-import scipy.fftpack as fft
 import scipy.optimize as optimize
 import scipy.stats as stats
 import scipy.interpolate as interp

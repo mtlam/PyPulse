@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default behavior of `Archive`'s `fitPulses()` now returns all values from `SinglePulse`'s `fitPulse()` command. Users can still supply specific indices with the `num` argument to `fitPulses()`
 - Filled out more of `Calibrator`'s `pacv()` plot with correct labeling and sizing.
 - Removed numpy warnings from `NaN`s in data array combination
+- Removed unnecessary reference to `scipy.fftpack`, which is in legacy.
 
 ### Added
 
