@@ -236,7 +236,7 @@ class DynamicSpectrum(object):
             NT = len(self.T)
             Taxis = (np.arange(-(NT-1), NT, dtype=np.float)*np.abs(dT))[1:-1] #???
 
-            
+
             pout, perrs = ffit.gaussianfit(Taxis[NT//2:3*NT//2], self.acf[centerrind, NT//2:3*NT//2], baseline=True)
             ft = interpolate.interp1d(Taxis, ffit.funcgaussian(pout, Taxis, baseline=True)-(pout[3]+pout[0]/np.e))
             try:
@@ -253,7 +253,7 @@ class DynamicSpectrum(object):
                 err_nu_d = perrs[2]
             except ValueError:
                 delta_nu_d = np.nan
-                err_t_d = 0.0
+                err_nu_d = 0.0
 
             #following Glenn's code and Cordes 1986 (Space Velocities...)
             # Errors from finite scintle effect:
@@ -285,7 +285,7 @@ class DynamicSpectrum(object):
                     plt.savefig(savefig)
                 if show:
                     plt.show()
-            
+
             if full_output:
                 return delta_t_d, err_t_d, delta_nu_d, err_nu_d
             return delta_t_d, delta_nu_d
@@ -308,7 +308,7 @@ class DynamicSpectrum(object):
             maxc = np.where(cslice <= MIN)[0][0]
             if maxc == 0:
                 maxc = np.shape(self.acf)[1]//2
-                
+
         plotacf = self.acf[int(centerrind-plotbound*maxr+1):int(centerrind+plotbound*maxr),
                            int(centercind-plotbound*maxc+1):int(centercind+plotbound*maxc+1)]
 
@@ -660,4 +660,3 @@ class DynamicSpectrum(object):
 
     def getTspan(self):
         return np.abs(self.T[-1]-self.T[0])
-
