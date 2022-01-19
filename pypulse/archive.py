@@ -1345,7 +1345,8 @@ class Archive(object):
             plt.show()
 
     def imshow(self, ax=None, cbar=False, mask=None, show=True,
-               filename=None, setnan=0.0, cmap=None, flip=False, **kwargs):
+               filename=None, setnan=0.0, cmap=None, flip=False,
+               title=None, **kwargs):
         """
         Basic imshow of data
 
@@ -1371,6 +1372,8 @@ class Archive(object):
         flip: bool
             If true, flip the Y axis and data, useful for correcting
             the frequency direction
+        title : str
+            Title to add to the Axes
 
         Returns
         -------
@@ -1466,7 +1469,8 @@ class Archive(object):
         else:
             raise IndexError("Invalid dimensions for plotting")
 
-
+        if title is not None:
+            ax.set_title(title)
         if cbar:
             plt.colorbar()
         if filename is not None:
