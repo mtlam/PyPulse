@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Archive`'s `plot()` now takes arguments of `subint`, `pol`, and `chan` to specifically select individual profile rather than requiring the data be 1D. By default, these arguments are `0`.
 - `SinglePulse.getOffpulseRMS()` convenience function added, which calls `SinglePulse.getOffpulseNoise()`
 - Individual phase plot implemented in Calibrator class as `phaseplot()`. This can also be called with `plot(mode="phase")`.
+- `SinglePulse.component_fitting()` now offers the ability to output to PSRCHIVE's paas text file format for von Mises components.
 
 ## [0.1.1] - 2021-06-15
 

@@ -552,21 +552,30 @@ def gaussian(x, amp, mu, sigma):
     return amp*np.exp(-0.5*((x-mu)/sigma)**2)
 
 def vonmises(x, amp, mu, kappa):
-    #return amp*np.exp(kappa*np.cos(x-mu))/(2*np.pi*special.iv(0, kappa))
     '''
-    # More numerically stable:
-    ive(v, z) = iv(v, z) * exp(-abs(z.real)), z here must be positive number here
-    therefore
-    iv(v, z) = ive(v, z) / exp(-z)
-    log(iv(v,z)) = log(ive(v, z) / exp(-z)) = log(ive(v,z)) - log(exp(-z)) = log(ive(v,z)) + z
+    von Mises component, utilizing scipy's vonmises support.
     '''
-    numer = kappa*np.cos(x-mu)
-    denom = np.log(2*np.pi) + np.log(special.ive(0, kappa)) + kappa
-    y = np.exp(numer - denom)
-    #y /= np.max(y)
-    # Allow for negatives
-    y /= np.max(np.abs(y))
+    y = stats.vonmises.pdf(2*np.pi*(x-mu), kappa)
+    y /= np.max(np.abs(y)) #force positive components
     return amp*y
+
+
+def paasnumber(num):
+    return "%.6s"% ("%0.6f"%num)
+def paasoutput(params, filename="paas.m"):
+    '''
+    Output a file that can be read in by PSRCHIVE's paas program
+    Each line is a von Mises component, with three parameters:
+        location, kappa, amplitude
+    where amplitude is multiplied by the normalized template height
+    '''
+    output = ""
+    for i in range(0, len(params), 3):
+        output += "      %s       %s       %s\n"%(paasnumber(params[i+1]), paasnumber(params[i+2]), paasnumber(params[i]))
+    with open(filename, 'w') as FILE:
+        FILE.write(output)
+
+
 
 def pbf_clean(t, y, g=None, taud=1.0, opw=None, gamma=0.05, m=1.0, x=1.5, stop=1.5):
     '''

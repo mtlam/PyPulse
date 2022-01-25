@@ -207,8 +207,8 @@ class SinglePulse(object):
         return self.opw
 
     def calcFT(self):
-        """ 
-        Calculate the Fourier transform and frequencies 
+        """
+        Calculate the Fourier transform and frequencies
         Useful for pre-calculating a template FT
         """
         self.yfft = np.fft.rfft(self.data)
@@ -293,7 +293,7 @@ class SinglePulse(object):
     def fitPulse(self, template, fixedphase=False, rms_baseline=None, remove_baseline=True):
         """
         Returns tauccf, tauhat, bhat, sigma_Tau, sigma_b, snr, rho
-        """                
+        """
         if self.null or len(template) != self.getNbins():
             return None
         #if rms_baseline is None:
@@ -524,7 +524,7 @@ class SinglePulse(object):
     def component_fitting(self, mode='gaussian', nmax=10, full=False,
                           minamp=None, alpha=0.05, allownegative=False,
                           verbose=False, plot=False, save=False,
-                          filename=None):
+                          filename=None, paasfilename=None):
         '''
         Fitting to phases is much more numerically stable for von mises function
         '''
@@ -555,7 +555,9 @@ class SinglePulse(object):
                 if filename is not None:
                     plt.savefig(filename)
                 plt.show()
-                
+
+            if paasfilename is not None and mode == 'vonmises':
+                u.paasoutput(pfit, filename=paasfilename)
             if save:
                 self.data = fitfunc(pfit, self.phases)
             if full:
@@ -736,21 +738,21 @@ class SinglePulse(object):
 
 
     def addNoise(self, sn, save=False):
-        """ 
-        Add noise to the pulse such that it will roughly 
-        have an S/N given by sn 
         """
-        
+        Add noise to the pulse such that it will roughly
+        have an S/N given by sn
+        """
+
         minimum = np.mean(self.getOffpulse())
         maximum = np.max(self.data)
         amplitude = maximum - minimum
         sigma = amplitude/sn
-        
+
         retval = self.data + np.random.normal(0, sigma, self.nbins)
         if save:
             self.data = retval
         return retval
-        
+
 
     def getPeriod(self):
         """ Return the pulse period """
