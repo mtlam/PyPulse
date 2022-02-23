@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Filled out more of `Calibrator`'s `pacv()` plot with correct labeling and sizing.
 - Removed numpy warnings from `NaN`s in data array combination
 - Removed unnecessary reference to `scipy.fftpack`, which is in legacy.
+- Default behavior of `DynamicSpectrum`'s `getData()` now has `remove_baseline=False` and the internal data array is returned as is.
 
 ### Added
 

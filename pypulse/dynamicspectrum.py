@@ -639,7 +639,7 @@ class DynamicSpectrum(object):
         """Return the current shape of the data array"""
         return np.shape(self.data)
 
-    def getData(self, remove_baseline=True):
+    def getData(self, remove_baseline=False):
         """Returns the data array"""
         if remove_baseline:
             self.remove_baseline()
