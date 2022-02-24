@@ -125,14 +125,16 @@ class Archive(object):
         """
         if filename is None: #Needed?
             filename = self.filename
+        if not os.path.exists(filename):
+            raise OSError("Filename not found")
+
         try:
             if self.lowmem:
                 hdulist = pyfits.open(filename, ignore_missing_end=True, memmap=True)
             else:
                 hdulist = pyfits.open(filename, ignore_missing_end=True)
-        except IOError as err:
-            print("IOError: Filename not found")
-            raise SystemExit
+        except OSError as err:
+            raise OSError("PyFITS cannot open this type of file")
         self.header = hdulist[0].header
         self.keys = [hdu.name for hdu in hdulist]
         tablenames = self.keys[:] #temporary list for checking other tables
