@@ -102,7 +102,7 @@ class DynamicSpectrum(object):
                     N += 1
             return total/float(N)
 
-    def remove_baseline(self, function="gaussian", redo=False):
+    def remove_baseline(self, function="gaussian", redo=False, ignorezapped=True, zapvalue=0.0):
         """
         Attempts to remove the baseline amplitude from the dynamic spectrum
         """
@@ -113,6 +113,10 @@ class DynamicSpectrum(object):
             self.data -= np.median(flatdata)
             self.baseline_removed = True
             return self
+
+        # Remove zap
+        if ignorezapped:
+            flatdata = flatdata[np.where(flatdata!=zapvalue)[0]]
         #~100 divisions, but bins to an even power of 10
         interval = np.power(10, np.floor(np.log10(np.ptp(flatdata/100))))
         center, hist = u.histogram(flatdata, interval=interval)
