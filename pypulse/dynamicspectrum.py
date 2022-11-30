@@ -425,7 +425,7 @@ class DynamicSpectrum(object):
     def imshow(self, err=False, cbar=False, ax=None, show=True, border=False,
                zorder=0, cmap=cm.binary, alpha=True, cdf=True, savefig=None,
                acf=False, ss=False, extent=None, log=False, xlim=None,
-               ylim=None):
+               ylim=None, **kwargs):
         """
         Basic plotting of the dynamic spectrum
         """
@@ -493,7 +493,7 @@ class DynamicSpectrum(object):
             fig = plt.figure()
             ax = fig.add_subplot(111)
 
-        cax = u.imshow(data, ax=ax, extent=extent, cmap=cmap, zorder=zorder)
+        cax = u.imshow(data, ax=ax, extent=extent, cmap=cmap, zorder=zorder, **kwargs)
 
         if xlim is not None:
             plt.xlim(xlim)
