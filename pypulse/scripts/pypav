@@ -25,14 +25,15 @@ parser.add_argument('-T',action='store_true',
 parser.add_argument('-p',action='store_true',
                     help='Add all polarizations together')
 
-
+parser.add_argument('-C',action='store_true',
+                    help='Center the pulse at a phase of 0.5')
 
 parser.add_argument("filename",
                     help='Filename required')
 
 
 args = parser.parse_args()
-print args
+print(args)
 
 ar = Archive(args.filename,prepare=False)
 # Pre-processing
@@ -45,6 +46,9 @@ if args.T:
 if args.F:
     ar.fscrunch()
 
+if args.C:
+    ar.center()
+
 # Plotting
 if args.D:
     ar.plot()
@@ -54,5 +58,3 @@ elif args.Y:
     ar.pavplot()
 elif args.waterfall:
     ar.waterfall()
-
-
