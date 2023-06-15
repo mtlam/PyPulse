@@ -1097,7 +1097,7 @@ class Archive(object):
             else: #centeredg
                 return csum-np.diff(edgearr)/2.0
         elif flag == 'F':
-            if np.ndim(self.freq) == 1:
+            if np.ndim(self.freq) == 1 and not edges:
                 return self.freq
             if self.getNchan() == len(self.freq[0]):
                 return self.freq[0] #return self.getSubintinfo('DATFREQ')[0]  ### This block is a temporary replacement
