@@ -269,6 +269,20 @@ class Par(object):
             retval = abs(self.get("PMLAMBDA", error=error))
         elif "PMBETA" in keys:
             retval = abs(self.get("PMBETA", error=error))
+        elif "PMELONG" in keys and "PMELAT" in keys:
+            PMELONG = self.get("PMELONG")
+            PMELAT = self.get("PMELAT")
+            PM = np.sqrt(PMELONG**2 + PMELAT**2) #mas/yr
+            if error:
+                PMELONGerr = self.get("PMELONG", error=True)
+                PMELATerr = self.get("PMELAT", error=True)
+                retval = np.sqrt((PMELONGerr*PMELONG/PM)**2 + (PMELATerr*PMELAT/PM)**2)
+            else:
+                retval = PM
+        elif "PMELONG" in keys:
+            retval = abs(self.get("PMELONG", error=error))
+        elif "PMELAT" in keys:
+            retval = abs(self.get("PMELAT", error=error))
         return retval
 
     def getPX(self, error=False):

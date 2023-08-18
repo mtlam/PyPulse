@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `SinglePulse.component_fitting()` now offers the ability to output to PSRCHIVE's paas text file format for von Mises components.
 - In `DynamicSpectrum`'s `remove_baseline()` command, two flags have been added. By default, `ignorezapped=True` and so data with a value of `zapvalue` are ignored. Such dynamic spectra can result from the less-robust generation methods, i.e., not specifying a template shape, thus resulting in a spike of 0.0 values for zapped data. This should be overhauled in the future.
 - Allow `DynamicSpectrum`'s `imshow()` to take `**kwargs` now.
+- `Par`'s `getPM()` function (also used to get the transverse velocity) parses `PMELONG` and `PMELAT`.
 
 ## [0.1.1] - 2021-06-15
 
