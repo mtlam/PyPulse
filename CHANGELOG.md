@@ -29,6 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow `DynamicSpectrum`'s `imshow()` to take `**kwargs` now.
 - `Par`'s `getPM()` function (also used to get the transverse velocity) parses `PMELONG` and `PMELAT`.
 
+### Fixed
+
+- The `DMX` class now correctly parses PINT-style `.dmx` files with no `F1` or `F2` columns.
+
 ## [0.1.1] - 2021-06-15
 
 ### Added

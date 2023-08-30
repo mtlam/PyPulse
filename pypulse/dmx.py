@@ -17,7 +17,7 @@ class DM(object):
     def __init__(self, epoch, value=None, err=None, R1=None, R2=None,
                  F1=None, F2=None, dmxbin=None):
         if (value is not None and err is not None and R1 is not None and
-                R2 is not None and F1 is not None and F2 is not None and dmxbin is not None):
+                R2 is not None and dmxbin is not None): #F1, F2 not required
             self.epoch = epoch
             self.value = value
             self.err = err
@@ -34,9 +34,12 @@ class DM(object):
             self.err = float(splitstring[2])
             self.R1 = float(splitstring[3])
             self.R2 = float(splitstring[4])
-            self.F1 = float(splitstring[5])
-            self.F2 = float(splitstring[6])
-            self.dmxbin = splitstring[7]
+            if "DMX" in splitstring[5]:
+                self.dmxbin = splitstring[5]
+            else:
+                self.F1 = float(splitstring[5])
+                self.F2 = float(splitstring[6])
+                self.dmxbin = splitstring[7]
 
     def __str__(self):
         pass
@@ -124,7 +127,7 @@ class DMX(object):
 
         self.DMs = []
         self.comment_dict = dict()
-        
+
         for i, line in enumerate(lines):
             if line[0] == "#":
                 self.comment_dict[i] = line
@@ -150,7 +153,7 @@ class DMX(object):
         if show:
             plt.show()
         return ax
-    
+
 
     def save(self, filename=None):
         """ Save DMX file """
@@ -234,4 +237,3 @@ class DMX(object):
             return self.getValues()
         else:
             return dmxs - wmean
-
