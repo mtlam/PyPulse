@@ -1160,7 +1160,7 @@ class Archive(object):
         period = self.getPeriod()
         if newshape == ():
             return SP.SinglePulse(func(data), period=period, windowsize=windowsize, **kwargs)
-        retval = np.empty(newshape, dtype=np.object)
+        retval = np.empty(newshape, dtype=object)
         for ind in np.ndindex(newshape):
             pulse = func(data[ind])
             retval[ind] = SP.SinglePulse(pulse, period=period, windowsize=windowsize, **kwargs)
@@ -1328,7 +1328,7 @@ class Archive(object):
         if ax is None:
             fig = plt.figure()
             ax = fig.add_subplot(111)
-        ax.plot(np.arange(len(plotdata), dtype=np.float)/len(plotdata), plotdata, 'k')
+        ax.plot(np.arange(len(plotdata), dtype=float)/len(plotdata), plotdata, 'k')
         ax.set_xlim(0, 1)
         ax.set_xlabel("Pulse Phase")
         unit = self.getDataUnit()
