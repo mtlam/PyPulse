@@ -39,7 +39,7 @@ def acf(array, var=False, norm_by_tau=True, lagaxis=False): #set lagaxis=True?
     elif not var:
         var = 1
 
-    lags = np.arange(-(N-1), N, dtype=np.float)
+    lags = np.arange(-(N-1), N, dtype=float)
     if norm_by_tau:
         taus = np.concatenate((np.arange(1, N+1), np.arange(N-1, 0, -1)))
         if lagaxis:
@@ -259,7 +259,7 @@ def histogram(values, interval=1.0, bottom=None, full=False, bins=None,
         center = (bins[:-1]+bins[1:])/2.0 #arithmetic mean
 
     if normalize:
-        hist = np.array(hist, dtype=np.float)/(float(interval)*np.sum(hist))
+        hist = np.array(hist, dtype=float)/(float(interval)*np.sum(hist))
 
 
     if plot:
@@ -676,7 +676,7 @@ def pbf_fourier(t, y, g=None, taud=1.0, opw=None, m=1.0, x=1.5, **kwargs):
     else:
         sigma_opw = RMS(y[opw])
 
-    t = np.array(t, dtype=np.float)
+    t = np.array(t, dtype=float)
 
     Yf = np.fft.fft(y)
     dt = np.diff(t)[0]
