@@ -49,7 +49,7 @@ class SinglePulse(object):
         #Define off pulse
         self.nbins = self.getNbins()
         self.bins = np.arange(self.nbins)
-        self.phases = np.arange(self.nbins, dtype=np.float)/self.nbins
+        self.phases = np.arange(self.nbins, dtype=float)/self.nbins
 
         if windowsize is not None or (mpw is None and opw is None and windowsize is None):
             # if either windowsize is set or nothing is set,
@@ -366,7 +366,7 @@ class SinglePulse(object):
         yshift = np.concatenate((yshift, [yshift[0]]))
 
         knots = u.subdivide(tdata, yshift, noise, **kwargs)
-        knots = np.array(np.sort(knots), dtype=np.int)
+        knots = np.array(np.sort(knots), dtype=int)
         knots = np.concatenate(([0], knots, [N])) #Add endpoints
 
         setsigma = False
@@ -377,7 +377,7 @@ class SinglePulse(object):
         while True:
             Nknots = len(knots)
             Narcs = Nknots-1
-            t = np.array(tdata[knots], dtype=np.float)
+            t = np.array(tdata[knots], dtype=float)
 
             # Determine the knot y-values.
             y = np.zeros_like(t)
@@ -393,7 +393,7 @@ class SinglePulse(object):
                 y[i] = f(tdata[knots[i]])
 
             if setsigma:
-                sigma = np.ones(len(y), dtype=np.float)
+                sigma = np.ones(len(y), dtype=float)
             Sigma = np.diag(sigma[:-1]) #matrix
 
             # Smoothing with Cubic Splines by D.S.G. Pollock 1999
@@ -657,7 +657,7 @@ class SinglePulse(object):
         else:
             tauds = np.copy(searchtauds)
 
-        bins = np.array(self.bins, dtype=np.float)
+        bins = np.array(self.bins, dtype=float)
 
         N_fs = np.zeros_like(tauds)
         sigma_offcs = np.zeros_like(tauds)

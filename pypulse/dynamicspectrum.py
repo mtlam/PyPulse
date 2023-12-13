@@ -129,7 +129,7 @@ class DynamicSpectrum(object):
             area = np.trapz(hist, x=center)
             shift = -np.min(center)+1.0
             x = center + shift
-            y = np.array(hist, dtype=np.float)/area
+            y = np.array(hist, dtype=float)/area
             p1, err = ffit.simpleDISSpdffit(x, y)
             y1 = ffit.funcsimpleDISSpdf(p1, x)*area
             peak = center[np.argmax(y1)]
@@ -236,9 +236,9 @@ class DynamicSpectrum(object):
 
         if simple: # Do 1D slices
             NF = len(self.F)
-            Faxis = (np.arange(-(NF-1), NF, dtype=np.float)*np.abs(dF)) #why abs?
+            Faxis = (np.arange(-(NF-1), NF, dtype=float)*np.abs(dF)) #why abs?
             NT = len(self.T)
-            Taxis = (np.arange(-(NT-1), NT, dtype=np.float)*np.abs(dT))[1:-1] #???
+            Taxis = (np.arange(-(NT-1), NT, dtype=float)*np.abs(dT))[1:-1] #???
 
 
             pout, perrs = ffit.gaussianfit(Taxis[NT//2:3*NT//2], self.acf[centerrind, NT//2:3*NT//2], baseline=True)
