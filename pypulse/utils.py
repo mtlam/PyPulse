@@ -478,7 +478,7 @@ def subdivide(tdata, ydata, noise, rms=True, minsep=16, maxsep=64, fac=1.25):
     #'''
 
     # Test new knot at the midpoint
-    half = N/2
+    half = N//2
     tdataL = tdata[:half]
     tdataR = tdata[half:]
     ydataL = ydata[:half]
