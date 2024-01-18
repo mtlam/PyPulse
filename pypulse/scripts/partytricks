@@ -63,7 +63,7 @@ for fname in args:
     fdot = p.getFrequencyDot()
     fdoterr = p.get('F1',error=True)
 
-    
+
     P = one/f
     Perr = P*ferr/f
     print("PEPOCH: %s"%str(pepoch.iso))
@@ -88,6 +88,8 @@ for fname in args:
     if p.get('BINARY') == 'ELL1':
         x = p.get('A1')
         xerr = p.get('A1',error=True)
+        pb = p.get('PB')
+        pberr = p.get('PB',error=True)
         eps1 = p.get('EPS1')
         eps2 = p.get('EPS2')
         eps1err = p.get('EPS1',error=True)
@@ -103,7 +105,7 @@ for fname in args:
         sinierr = p.get('SINI',error=True)
 
 
-        
+
 
         a = (x/sini)*ltsec
         aerr = a*((xerr/x)**2 + (sinierr/sini)**2).sqrt()
@@ -122,7 +124,7 @@ for fname in args:
 
 
 
-        eccsq = ecc**2 
+        eccsq = ecc**2
         eccsqerr = eccsq*(2*eccerr/ecc)
         q = 1-eccsq #1-e^2
         qerr = eccsqerr
@@ -134,11 +136,11 @@ for fname in args:
         facerr = fac*((aerr/a)**2 + (serr/s)**2).sqrt()
         print("a-b = %s"%str(fac))
         print("  +/- %s m"%str(fix(facerr)))
-        print
+        print()
 
 
-        
-        
+
+
     print("Number of rotations:")
     pepoch = Time(float(p.get('PEPOCH')),format='mjd')
     print("PEPOCH: %s"%str(pepoch.iso))
@@ -151,3 +153,9 @@ for fname in args:
     fprime = f + fdot*dt
     print("Spin Period = %s s"%str(one/fprime))
 
+
+    # Need other binary models
+    if p.get('BINARY') == 'ELL1':
+        print("Number of orbits:")
+        Norb = phi*P/86400/pb
+        print("N_orb = %s"%str(Norb))
