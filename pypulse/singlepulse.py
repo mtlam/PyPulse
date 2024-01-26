@@ -168,7 +168,8 @@ class SinglePulse(object):
         """
         Following Lam et al. 2018a Optimal Frequencies approach, equation 11.
         """
-        Uobsbar = np.mean(self.data)
+        U = u.normalize(self.data, simple=True) #remove baseline?
+        Uobsbar = np.mean(U)
         return 1.0/Uobsbar
 
     def getSN(self):

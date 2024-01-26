@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default behavior of `DynamicSpectrum`'s `getData()` now has `remove_baseline=False` and the internal data array is returned as is.
 - Improved error handling on loading a PSRFITS file. PyPulse first checks to see if the file exists, then if it fails in `pyfits.open()`, raises an exception noting the problem lies internally there.
 - `pypav` script allows for centering of the pulse in the format of `pav` with the `-C` flag.
+- `SinglePulse`'s `Uscale()` now normalizes the pulse by default, as per the definition.
 
 ### Added
 
