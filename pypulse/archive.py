@@ -594,25 +594,23 @@ class Archive(object):
         self.record(inspect.currentframe())
 
         nsubint, npol, nchan, nbin = self.shape(squeeze=False)
-
-        retval = np.zeros((len(np.r_[0:nsubint:factor]), npol, nchan, nbin))
-        newdurations = np.zeros(np.shape(retval)[0])
-
-        weightretval = np.zeros((len(np.r_[0:nsubint:factor]), nchan))
-
         newnsubint = nsubint//factor
-        for i in xrange(newnsubint):
-            weightretval[i, :] = np.nanmean(self.weights[i*factor:(i+1)*factor, :], axis=0)
 
-        for i in xrange(newnsubint):
-            newdurations[i] += np.nansum(self.durations[i*factor:(i+1)*factor])
-            for j in xrange(npol):
-                for k in xrange(nchan):
-                    for l in xrange(nbin):
-                        retval[i, j, k, l] = np.nansum(self.data[i*factor:(i+1)*factor, j, k, l] * self.weights[i*factor:(i+1)*factor, k]) / np.nansum(self.weights[i*factor:(i+1)*factor, k])
+        # set NaN values to zero so they aren't counted in sums
+        # we can just modify the arrays in place since we're going to
+        # replace them almost immediately anyway
+        self.durations[np.isnan(self.durations)] = 0.
+        self.weights[np.isnan(self.weights)] = 0.
+        self.data[np.isnan(self.data)] = 0.
 
-        self.weights = weightretval
-        self.data = retval
+        newdurations = np.add.reduceat(self.durations, np.arange(0, nsubint, factor), axis=0)
+        newweights = np.add.reduceat(self.weights, np.arange(0, nsubint, factor), axis=0)
+        weighted_data = self.data*self.weights[:, np.newaxis, :, np.newaxis]
+        newdata = np.add.reduceat(weighted_data, np.arange(0, nsubint, factor), axis=0)
+        newdata /= newweights[:, np.newaxis, :, np.newaxis]
+
+        self.weights = newweights
+        self.data = newdata
         self.durations = newdurations
 
         return self
