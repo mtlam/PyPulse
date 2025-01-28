@@ -707,20 +707,20 @@ class Archive(object):
             factor = self.getNbin()//nbins
             if self.getNbin()%nbins != 0:
                 factor += 1
-        else:
-            self.record(inspect.currentframe())
-            nsubint, npol, nchan, nbin = self.shape(squeeze=False)
 
-            retval = np.zeros((nsubint, npol, nchan, len(np.r_[0:nbin:factor])))
-            counts = np.zeros_like(retval)
-            for i in xrange(factor):
-                arr = self.data[:, :, :, i:nbin:factor]
-                count = np.ones_like(arr)
-                length = np.shape(arr)[3]
-                retval[:, :, :, :length] += arr
-                counts[:, :, :, :length] += count
-            retval = retval/counts
-            self.data = retval
+        self.record(inspect.currentframe())
+        nsubint, npol, nchan, nbin = self.shape(squeeze=False)
+
+        retval = np.zeros((nsubint, npol, nchan, len(np.r_[0:nbin:factor])))
+        counts = np.zeros_like(retval)
+        for i in xrange(factor):
+            arr = self.data[:, :, :, i:nbin:factor]
+            count = np.ones_like(arr)
+            length = np.shape(arr)[3]
+            retval[:, :, :, :length] += arr
+            counts[:, :, :, :length] += count
+        retval = retval/counts
+        self.data = retval
         return self
 
     def dedisperse(self, DM=None, barycentric=True, reverse=False, wcfreq=False):
@@ -1205,7 +1205,7 @@ class Archive(object):
     def getDynamicSpectrum(self, window=None, template=None, mpw=None,
                            align=None, windowsize=None, weight=True,
                            verbose=False, snr=False, maketemplate=False,
-                           debug=False):
+                           debug=False, nonnegative=True):
         """
         Return the dynamic spectrum
         window: return the dynamic spectrum using only a certain phase bins
@@ -1300,6 +1300,8 @@ class Archive(object):
                                 sig_gs[i, j] = spfit[4]
                     gs, offs, sig_gs = wrapfunc(gs), wrapfunc(offs), wrapfunc(sig_gs)
                 #return wrapfunc(gs), wrapfunc(offs), wrapfunc(sig_gs)
+                if nonnegative:
+                    np.clip(gs, 0, None, out=gs)
                 return DS.DynamicSpectrum(gs, offs, sig_gs, F=Fedges, T=Tedges, Funit=Funit, Tunit=Tunit)
 
             #kind of hard wired

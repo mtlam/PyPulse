@@ -29,10 +29,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In `DynamicSpectrum`'s `remove_baseline()` command, two flags have been added. By default, `ignorezapped=True` and so data with a value of `zapvalue` are ignored. Such dynamic spectra can result from the less-robust generation methods, i.e., not specifying a template shape, thus resulting in a spike of 0.0 values for zapped data. This should be overhauled in the future.
 - Allow `DynamicSpectrum`'s `imshow()` to take `**kwargs` now.
 - `Par`'s `getPM()` function (also used to get the transverse velocity) parses `PMELONG` and `PMELAT`.
+- Added a `nonnegative=True` flag to `Archive`'s `getDynamicSpectrum()`. By default, if provided a template shape to match against the data, this will enforce non-negative (flux) dynamic spectrum values
 
 ### Fixed
 
 - The `DMX` class now correctly parses PINT-style `.dmx` files with no `F1` or `F2` columns.
+- `Archive.bscrunch()`'s `nbins` argument now works.
 
 ## [0.1.1] - 2021-06-15
 
