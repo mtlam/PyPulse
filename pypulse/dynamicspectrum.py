@@ -425,7 +425,7 @@ class DynamicSpectrum(object):
     def imshow(self, err=False, cbar=False, ax=None, show=True, border=False,
                zorder=0, cmap=cm.binary, alpha=True, cdf=True, savefig=None,
                acf=False, ss=False, extent=None, log=False, xlim=None,
-               ylim=None, **kwargs):
+               ylim=None, cbarlabel=None, **kwargs):
         """
         Basic plotting of the dynamic spectrum
         """
@@ -518,7 +518,9 @@ class DynamicSpectrum(object):
             plt.ylabel('Frequency (%s)'%self.Funit)
 
         if cbar:
-            plt.colorbar(cax)
+            cb = plt.colorbar(cax)
+            if cbarlabel is not None:
+                cb.ax.set_ylabel(cbarlabel)
         #im.set_clim(0.0001, None)
         if savefig is not None:
             plt.savefig(savefig)

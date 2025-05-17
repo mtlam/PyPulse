@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow `DynamicSpectrum`'s `imshow()` to take `**kwargs` now.
 - `Par`'s `getPM()` function (also used to get the transverse velocity) parses `PMELONG` and `PMELAT`.
 - Added a `nonnegative=True` flag to `Archive`'s `getDynamicSpectrum()`. By default, if provided a template shape to match against the data, this will enforce non-negative (flux) dynamic spectrum values
+- `DynamicSpectrum`'s `imshow()` now allows a `cbarlabel` argument to provide a basic label to the colorbar.
 
 ### Fixed
 
