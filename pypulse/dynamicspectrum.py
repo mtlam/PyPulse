@@ -425,7 +425,7 @@ class DynamicSpectrum(object):
     def imshow(self, err=False, cbar=False, ax=None, show=True, border=False,
                zorder=0, cmap=cm.binary, alpha=True, cdf=True, savefig=None,
                acf=False, ss=False, extent=None, log=False, xlim=None,
-               ylim=None, cbarlabel=None, **kwargs):
+               ylim=None, cbarlabel=None, badcolor=None, **kwargs):
         """
         Basic plotting of the dynamic spectrum
         """
@@ -461,8 +461,12 @@ class DynamicSpectrum(object):
         if log and not ss:
             data = np.log10(data)
         cmap = copy.copy(cmap) # Extra copy just in case
-        if alpha and not (acf or ss): #or just ignore?
-            cmap.set_bad(alpha=0.0)
+        if (alpha or badcolor is not None) and not (acf or ss): #or just ignore?
+            if badcolor is not None:
+                cmap.set_bad(color=badcolor)
+            elif alpha:
+                cmap.set_bad(alpha=0.0)
+            
 
             for i in range(len(data)):
                 for j in range(len(data[0])):
