@@ -397,6 +397,28 @@ class Par(object):
             EXPs[i] = self.get('XMXEXP_%04i'%(i+1))
         return xmxs, errs, R1s, R2s, EXPs
 
+    def getSWX(self):
+        keys = self.paramnames
+        Ncomponents = 0
+        for key in keys:
+            if key[0:6] == 'SWXDM_':
+                Ncomponents += 1
+        if Ncomponents == 0:
+            return None
+        #DM = self.getDM()
+        swxs = np.zeros(Ncomponents)
+        errs = np.zeros(Ncomponents)
+        R1s = np.zeros(Ncomponents)
+        R2s = np.zeros(Ncomponents)
+        Ps = np.zeros(Ncomponents)
+        for i in range(Ncomponents):
+            swxs[i] = self.get('SWXDM_%04i'%(i+1))
+            errs[i] = self.get('SWXDM_%04i'%(i+1), error=True) #check to make sure this exists?
+            R1s[i] = self.get('SWXR1_%04i'%(i+1))
+            R2s[i] = self.get('SWXR2_%04i'%(i+1))
+            Ps[i] = self.get('SWXP_%04i'%(i+1))
+        return swxs, errs, R1s, R2s, Ps
+
     def getDMseries(self):
         ts, dmxs, errs = self.getDMX()
         DM = self.getDM()
