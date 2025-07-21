@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2025-07-21
+
 ### Changed
 
 - Allow parsing of par file values in "NAME VALUE ERROR" format rather than "NAME VALUE FIT" format for some fold ephemerides inside the PSRFITS files.
