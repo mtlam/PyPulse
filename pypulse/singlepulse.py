@@ -7,6 +7,7 @@ Interpulse will be roughly at 3*len/4
 Figure out way to add/average SPs.
 '''
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
 import numpy as np
 import scipy.optimize as optimize
 import scipy.stats as stats
@@ -524,8 +525,8 @@ class SinglePulse(object):
 
     def component_fitting(self, mode='gaussian', nmax=10, full=False,
                           minamp=None, alpha=0.05, allownegative=False,
-                          verbose=False, plot=False, save=False,
-                          filename=None, paasfilename=None):
+                          verbose=False, plot=False, residualsplot=False,
+                          save=False, filename=None, paasfilename=None):
         '''
         Fitting to phases is much more numerically stable for von mises function
         '''
@@ -543,18 +544,31 @@ class SinglePulse(object):
         residsA = self.data - fitfunc(pfit, self.phases)
         RSS_funcA = np.sum(residsA**2)
 
-        def doreturn(plot=False, filename=None, save=False):
+        def doreturn(plot=False, residualsplot=False, filename=None, save=False):
             if plot:
                 componentfunc = eval("u.%s"%mode)
-                plt.plot(self.phases, self.data)
+                fig = plt.figure()
+                if residualsplot:
+                    gs = GridSpec(4, 1, figure=fig)
+                    ax1 = fig.add_subplot(gs[:-1, 0])
+                    ax2 = fig.add_subplot(gs[-1, 0])
+                else:
+                    ax1 = fig.add_subplot(111)
+                ax1.plot(self.phases, self.data)
                 for i in range(0, len(pfit), 3):
-                    plt.plot(self.phases, componentfunc(self.phases, pfit[i], pfit[i+1], pfit[i+2]), '--', color='0.50', alpha=0.5)
-                plt.plot(self.phases, fitfunc(pfit, self.phases), 'k')
-                plt.xlabel('Phase')
-                plt.ylabel('Intensity')
-                plt.tight_layout()
+                    ax1.plot(self.phases, componentfunc(self.phases, pfit[i], pfit[i+1], pfit[i+2]), '--', color='0.50', alpha=0.5)
+                ax1.plot(self.phases, fitfunc(pfit, self.phases), 'k')
+                print(residualsplot)
+                if residualsplot:
+                    ax2.plot(self.phases, self.data - fitfunc(pfit, self.phases), 'k')
+                    ax2.set_xlabel('Phase')
+                    ax2.set_ylabel('Difference')
+                else:
+                    ax1.set_xlabel('Phase')
+                ax1.set_ylabel('Intensity')
+                fig.tight_layout()
                 if filename is not None:
-                    plt.savefig(filename)
+                    fig.savefig(filename)
                 plt.show()
 
             if paasfilename is not None and mode == 'vonmises':
@@ -574,7 +588,7 @@ class SinglePulse(object):
             RSS_funcB = np.sum(residsB**2)
 
             if minamp is not None and np.all(residsB < MAX):
-                return doreturn(plot=plot, filename=filename, save=save)
+                return doreturn(plot=plot, residualsplot=residualsplot, filename=filename, save=save)
 
             # F-test
             F = ((RSS_funcA-RSS_funcB)/(nparamB-nparamA))/(RSS_funcB/(N-nparamB-1))
@@ -583,11 +597,11 @@ class SinglePulse(object):
             #print F, RSS_funcA, RSS_funcB, nparamA, nparamB, p_value
             if p_value > alpha: # if p_value < alpha,  then B is significant, so keep going
             # Replace old values
-                return doreturn(plot=plot, filename=filename, save=save)
+                return doreturn(plot=plot, residualsplot=residualsplot, filename=filename, save=save)
             nparamA = nparamB
             residsA = residsB
             RSS_funcA = RSS_funcB
-        return doreturn(plot=plot, filename=filename, save=save)
+        return doreturn(plot=plot, residualsplot=residualsplot, filename=filename, save=save)
 
         '''
         n = 1

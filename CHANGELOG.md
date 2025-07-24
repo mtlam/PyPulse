@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `SinglePulse`'s `component_fitting()` now shows a difference plot between the template and the data if `residualsplot=True`. By default it is `False`.
+
 ## [0.1.2] - 2025-07-21
 
 ### Changed
