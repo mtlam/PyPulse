@@ -532,7 +532,7 @@ class DynamicSpectrum(object):
             plt.show()
 
         if cbar:
-            return ax, cb
+            return ax, cax, cb
         return ax
 
     def load(self, filename):
