@@ -241,21 +241,21 @@ class DynamicSpectrum(object):
             Taxis = (np.arange(-(NT-1), NT, dtype=float)*np.abs(dT))[1:-1] #???
 
 
-            pout, perrs = ffit.gaussianfit(Taxis[NT//2:3*NT//2], self.acf[centerrind, NT//2:3*NT//2], baseline=True)
-            ft = interpolate.interp1d(Taxis, ffit.funcgaussian(pout, Taxis, baseline=True)-(pout[3]+pout[0]/np.e))
             try:
+                pout, perrs = ffit.gaussianfit(Taxis[NT//2:3*NT//2], self.acf[centerrind, NT//2:3*NT//2], baseline=True)
+                ft = interpolate.interp1d(Taxis, ffit.funcgaussian(pout, Taxis, baseline=True)-(pout[3]+pout[0]/np.e))
                 delta_t_d = optimize.brentq(ft, 0, Taxis[-1])
                 err_t_d = perrs[2]
-            except ValueError:
+            except (ValueError, TypeError) as e:
                 delta_t_d = np.nan
                 err_t_d = 0.0
 
-            pout, perrs = ffit.gaussianfit(Faxis[NF//2:3*NF//2], self.acf[NF//2:3*NF//2, centercind], baseline=True)
-            fnu = interpolate.interp1d(Faxis, ffit.funcgaussian(pout, Faxis, baseline=True)-(pout[3]+pout[0]/2))
             try:
+                pout, perrs = ffit.gaussianfit(Faxis[NF//2:3*NF//2], self.acf[NF//2:3*NF//2, centercind], baseline=True)
+                fnu = interpolate.interp1d(Faxis, ffit.funcgaussian(pout, Faxis, baseline=True)-(pout[3]+pout[0]/2))
                 delta_nu_d = optimize.brentq(fnu, 0, Faxis[-1])
                 err_nu_d = perrs[2]
-            except ValueError:
+            except (ValueError, TypeError) as e:
                 delta_nu_d = np.nan
                 err_nu_d = 0.0
 
@@ -279,11 +279,13 @@ class DynamicSpectrum(object):
                 fig = plt.figure()
                 ax = fig.add_subplot(211)
                 ax.plot(Taxis, self.acf[centerrind, :])
-                ax.plot(Taxis, ft(Taxis))
+                if not np.isnan(delta_t_d):
+                    ax.plot(Taxis, ft(Taxis))
 
                 ax = fig.add_subplot(212)
                 ax.plot(Faxis, self.acf[:, centercind])
-                ax.plot(Faxis, fnu(Faxis))
+                if not np.isnan(delta_nu_d):
+                    ax.plot(Faxis, fnu(Faxis))
 
                 if savefig is not None:
                     plt.savefig(savefig)
