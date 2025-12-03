@@ -291,6 +291,7 @@ class DynamicSpectrum(object):
                     plt.savefig(savefig)
                 if show:
                     plt.show()
+                plt.close()
 
             if full_output:
                 return delta_t_d, err_t_d, delta_nu_d, err_nu_d
