@@ -218,7 +218,8 @@ class DynamicSpectrum(object):
     def scintillation_parameters(self, plotbound=1.0, maxr=None, maxc=None,
                                  savefig=None, show=True, full_output=False,
                                  simple=False, eta=0.2, cmap=cm.binary,
-                                 finitescintleerrors=True, diagnostic=False):
+                                 finitescintleerrors=True, diagnostic=False,
+                                 simplewindowr=None, simplewindowc=None):
         if self.acf is None:
             self.acf2d()
         if self.dT is None:
@@ -241,8 +242,14 @@ class DynamicSpectrum(object):
             Taxis = (np.arange(-(NT-1), NT, dtype=float)*np.abs(dT))[1:-1] #???
 
 
+
+
             try:
-                pout, perrs = ffit.gaussianfit(Taxis[NT//2:3*NT//2], self.acf[centerrind, NT//2:3*NT//2], baseline=True)
+                if simplewindowc is None:
+                    simplewindowc = NT//2
+                else:
+                    simplewindowc = int(simplewindowc)
+                pout, perrs = ffit.gaussianfit(Taxis[NT-simplewindowc:NT+simplewindowc], self.acf[centerrind, NT-simplewindowc:NT+simplewindowc], baseline=True)
                 ft = interpolate.interp1d(Taxis, ffit.funcgaussian(pout, Taxis, baseline=True)-(pout[3]+pout[0]/np.e))
                 delta_t_d = optimize.brentq(ft, 0, Taxis[-1])
                 err_t_d = perrs[2]
@@ -251,8 +258,13 @@ class DynamicSpectrum(object):
                 err_t_d = 0.0
 
             try:
-                pout, perrs = ffit.gaussianfit(Faxis[NF//2:3*NF//2], self.acf[NF//2:3*NF//2, centercind], baseline=True)
+                if simplewindowr is None:
+                    simplewindowr = NF//2
+                else:
+                    simplewindowr = int(simplewindowr)
+                pout, perrs = ffit.gaussianfit(Faxis[NF-simplewindowr:NF+simplewindowr], self.acf[NF-simplewindowr:NF+simplewindowr, centercind], baseline=True)
                 fnu = interpolate.interp1d(Faxis, ffit.funcgaussian(pout, Faxis, baseline=True)-(pout[3]+pout[0]/2))
+                
                 delta_nu_d = optimize.brentq(fnu, 0, Faxis[-1])
                 err_nu_d = perrs[2]
             except (ValueError, TypeError) as e:
@@ -263,9 +275,9 @@ class DynamicSpectrum(object):
             # Errors from finite scintle effect:
             bw = self.getBandwidth()
             T = self.getTspan()
-            if delta_t_d == 0.0:
+            if delta_t_d == 0.0 or np.isnan(delta_t_d):
                 N_d = (1+eta * bw/delta_nu_d)
-            elif delta_nu_d == 0.0:
+            elif delta_nu_d == 0.0 or np.isnan(delta_nu_d):
                 N_d = (1+eta*T/delta_t_d)
             else:
                 N_d = (1+eta * bw/delta_nu_d) * (1+eta*T/delta_t_d)
