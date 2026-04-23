@@ -1247,7 +1247,7 @@ class Archive(object):
                 elif isinstance(template, str):
                     artemp = Archive(template, verbose=False)
                     sptemp = SP.SinglePulse(u.center_max(u.normalize(artemp.getData(), simple=True)),
-                                            windowsize=template.getNbin()//8)
+                                            windowsize=artemp.getNbin()//8)
 
                 if mpw is not None: #best way to handle this now?
                     sptemp.mpw = mpw

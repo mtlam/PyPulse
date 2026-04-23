@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `SinglePulse`'s `component_fitting()` now shows a difference plot between the template and the data if `residualsplot=True`. By default it is `False`.
+	- `SinglePulse`'s `component_fitting()` now shows a difference plot between the template and the data if `residualsplot=True`. By default it is `False`.
+
+### Fixed
+
+- 'Archive.getDyanmicSpectrum()` now correctly reads a string as an argument for `template` and parses the number of phase bins.
 
 ## [0.1.2] - 2025-07-21
 
