@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-	- `SinglePulse`'s `component_fitting()` now shows a difference plot between the template and the data if `residualsplot=True`. By default it is `False`.
+- `SinglePulse`'s `component_fitting()` now shows a difference plot between the template and the data if `residualsplot=True`. By default it is `False`.
+- `SinglePulse` now has a `getCentroid()` method which calculates the function centroid.
 
 ### Fixed
 

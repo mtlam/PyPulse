@@ -173,6 +173,18 @@ class SinglePulse(object):
         Uobsbar = np.mean(U)
         return 1.0/Uobsbar
 
+    def getCentroid(self, timeunits=True):
+        """
+        Calculate the function centroid, in time units if timeunits is True and
+        """
+        U = u.normalize(self.data, simple=True)
+        centroid = np.trapz(self.bins*U, x=self.bins)/np.trapz(U, x=self.bins)
+        
+        if timeunits and self.getPeriod() is not None:
+            factor = self.getPeriod()/self.getNbins()
+            centroid *= factor
+        return centroid
+    
     def getSN(self):
         """
         Calculate a very crude S/N
