@@ -126,7 +126,7 @@ class DynamicSpectrum(object):
             y = ffit.funcgaussian(p1, center)
             peak = center[np.argmax(y)]
         elif function == "simple_DISS":
-            area = np.trapz(hist, x=center)
+            area = np.trapezoid(hist, x=center)
             shift = -np.min(center)+1.0
             x = center + shift
             y = np.array(hist, dtype=float)/area

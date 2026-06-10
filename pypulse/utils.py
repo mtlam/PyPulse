@@ -326,7 +326,7 @@ def likelihood_evaluator(x, y, cdf=False, median=False, pm=True, values=None):
     values: use this array
     """
     if not cdf:
-        y = y/np.trapz(y, x=x)
+        y = y/np.trapezoid(y, x=x)
         ycdf = pdf_to_cdf(y, dt=(x[1]-x[0]))
     else: #else given a cdf
         ycdf = y
@@ -392,7 +392,7 @@ def normalize(array, simple=False, minimum=None):
 def normalize_area(array, x=None, full=False):
     if x is None:
         x = np.arange(len(array))
-    area = np.trapz(array, x=x)
+    area = np.trapezoid(array, x=x)
     if full:
         return array/area, area
     return array/area

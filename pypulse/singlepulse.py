@@ -61,15 +61,15 @@ class SinglePulse(object):
             if self.mpw is None and self.ipw is None:
                 self.opw = None #do not define any windows
             elif self.ipw is None:
-                self.opw = self.bins[np.logical_not(np.in1d(self.bins, mpw))]
+                self.opw = self.bins[np.logical_not(np.isin(self.bins, mpw))]
             elif self.mpw is None:
-                self.opw = self.bins[np.logical_not(np.in1d(self.bins, ipw))]
+                self.opw = self.bins[np.logical_not(np.isin(self.bins, ipw))]
             else:
-                self.opw = self.bins[np.logical_not(np.logical_or(np.in1d(self.bins, mpw), np.in1d(self.bins, ipw)))]
+                self.opw = self.bins[np.logical_not(np.logical_or(np.isin(self.bins, mpw), np.isin(self.bins, ipw)))]
         else:
             self.opw = np.array(opw)
             if self.mpw is None:
-                self.mpw = self.bins[np.logical_not(np.in1d(self.bins, opw))]
+                self.mpw = self.bins[np.logical_not(np.isin(self.bins, opw))]
 
         if self.mpw is None and self.ipw is None and self.opw is None:
             self.mpw = np.arange(self.nbins)
@@ -178,7 +178,7 @@ class SinglePulse(object):
         Calculate the function centroid, in time units if timeunits is True and
         """
         U = u.normalize(self.data, simple=True)
-        centroid = np.trapz(self.bins*U, x=self.bins)/np.trapz(U, x=self.bins)
+        centroid = np.trapezoid(self.bins*U, x=self.bins)/np.trapezoid(U, x=self.bins)
         
         if timeunits and self.getPeriod() is not None:
             factor = self.getPeriod()/self.getNbins()
@@ -213,11 +213,11 @@ class SinglePulse(object):
         integral = np.zeros_like(self.data)
         for i in self.bins:
             win = np.arange(i-windowsize//2, i+windowsize//2) % self.nbins
-            integral[i] = np.trapz(self.data[win])
+            integral[i] = np.trapezoid(self.data[win])
         minind = np.argmin(integral)
         self.opw = np.arange(minind-windowsize//2, minind+windowsize//2)
         self.opw = self.opw % self.nbins
-        self.mpw = self.bins[np.logical_not(np.in1d(self.bins, self.opw))]
+        self.mpw = self.bins[np.logical_not(np.isin(self.bins, self.opw))]
         return self.opw
 
     def calcFT(self):

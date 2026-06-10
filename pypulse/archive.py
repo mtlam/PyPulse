@@ -1147,7 +1147,7 @@ class Archive(object):
     def getIntegratedFlux(self, t, f=None):
         """Return the integrated value of the pulses, not typically used"""
         pulse = self.getPulse(t, f)
-        return np.trapz(pulse)
+        return np.trapezoid(pulse)
 
     def getSinglePulses(self, func=None, windowsize=None, **kwargs):
         """Efficiently wraps self.data with SP.SinglePulse"""
