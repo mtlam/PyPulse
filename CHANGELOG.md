@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- 'Archive.getDyanmicSpectrum()` now correctly reads a string as an argument for `template` and parses the number of phase bins.
+- `Archive.getDyanmicSpectrum()` now correctly reads a string as an argument for `template` and parses the number of phase bins.
 
 ## [0.1.2] - 2025-07-21
 
