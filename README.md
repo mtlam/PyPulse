@@ -12,7 +12,7 @@ Read the documentation [here](https://mtlam.github.io/PyPulse/).
 This is an alternate code base from [PSRCHIVE](http://psrchive.sourceforge.net/).
 
 Requires:<br>
-python 2.7 or 3.X<br>
+python 3.X<br>
 numpy<br>
 scipy<br>
 matplotlib<br>
