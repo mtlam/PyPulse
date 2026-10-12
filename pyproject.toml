@@ -1,37 +1,45 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+ 
 [project]
 name = "PyPulse"
-version = "0.1.2"
-authors = [
-  { name="Michael Lam", email="michael.lam@nanograv.org" },
-]
+dynamic = ["version"]
 description = "A python package for handling and analyzing PSRFITS files."
 readme = "README.md"
-requires-python = ">=3.9"
+license = "BSD-3-Clause"
+license-files = ["LICENSE.md"]
+authors = [
+    { name = "Michael Lam", email = "michael.lam@nanograv.org" },
+]
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.1",
+    "scipy>=1.0",
+    "matplotlib>=3.0",
+    "astropy>=7.0",
+]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Astronomy",
 ]
-license = "BSD-3-Clause"
-license-files = ["LICENSE.md"]
-dependencies = [
-    'numpy>=2.1',
-    'scipy>=1.0',
-    'matplotlib>=3.0',
-    'astropy>=7.0',
-]
-
-[build-system]
-requires = ["setuptools >= 77.0.3", "pkginfo>=1.12", "numpy", "matplotlib", "scipy", "astropy"]
-build-backend = "setuptools.build_meta"
-
-#[build-system]
-#requires = ["hatchling >= 1.26", "numpy", "matplotlib", "scipy", "astropy"]
-#build-backend = "hatchling.build"
-
+ 
 [project.urls]
-Homepage = "https://github.com/mtlam/pypulse"
-Issues = "https://github.com/mtlam/pypulse/issues"
+Homepage = "https://github.com/mtlam/PyPulse"
 Documentation = "https://mtlam.github.io/PyPulse/"
+Issues = "https://github.com/mtlam/PyPulse/issues"
+ 
+[tool.setuptools]
+packages = ["pypulse"]
+zip-safe = false
+ 
+[tool.setuptools.package-data]
+pypulse = ["config/*.cfg"]
+ 
+[tool.setuptools.dynamic]
+version = { attr = "pypulse.__version__" }
